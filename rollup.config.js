@@ -1,7 +1,7 @@
 const tasks = []
 
 tasks.push({
-    input: './AppDefinition.js',
+    input: './src/App.js',
     output: {
         file: './dist/release/js/src/appBundle.js',
         format: 'iife',

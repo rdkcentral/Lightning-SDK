@@ -44,7 +44,7 @@ function startApp() {
 
     try {
         var bootstrap = new ux.Ui(options);
-        bootstrap.startApp(new appBundle(bootstrap));
+        bootstrap.startApp(appBundle);
     } catch (e) {
         alert("error " + e)
     }

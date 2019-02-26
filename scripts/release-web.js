@@ -4,8 +4,8 @@ const fs = require("fs");
 const cwd = process.cwd();
 
 const appPath = cwd;
-if (!fs.existsSync(appPath + "/AppDefinition.js")) {
-    console.error("Can't find AppDefinition.js in current working directory.");
+if (!fs.existsSync(appPath + "/src/App.js")) {
+    console.error("Can't find src/App.js in current working directory.");
     process.exit(-1);
 }
 

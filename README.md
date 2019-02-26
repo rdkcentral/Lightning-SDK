@@ -5,7 +5,7 @@ SDK for building apps for the Lightning framework UX
 ## Building app distribution
 
 Create a new repository and add Lightning-sdk as a dependency.
-Add an AppDefinition.js file and an index.html with the following contents:
+Add a src/App.js file and an index.html with the following contents:
 ```
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +16,7 @@ Add an AppDefinition.js file and an index.html with the following contents:
 <body>
 <script type="module">
     import DevLauncher from "./node_modules/wpe-lightning-sdk/DevLauncher.js";
-    import AppDefinition from "./AppDefinition.js";
+    import App from "./src/App.js";
 
     /* Attach the inspector to create a fake DOM that shows where lightning elements can be found. */
     // attachInspector(lng);

@@ -3,9 +3,9 @@ import ux from "./js/src/ux.js";
 
 export default class DevLauncher {
 
-    launch(appDefinition, lightningOptions, options) {
-        this._appDefinition = appDefinition;
-        this._start();
+    launch(appType, lightningOptions, options = {}) {
+        this._appType = appType;
+        this._start(lightningOptions);
     }
 
     _start(options = {}) {
@@ -17,7 +17,7 @@ export default class DevLauncher {
 
     _startApp() {
         const bootstrap = new ux.Ui(this._lightningOptions);
-        bootstrap.startApp(new this._appDefinition(bootstrap));
+        bootstrap.startApp(this._appType);
         const canvas = bootstrap.stage.getCanvas();
         document.body.appendChild(canvas);
         window.ui = bootstrap;
@@ -83,20 +83,6 @@ body {
             191: "Search", // Use "/" for keyboard
             409: "Search"
         };
-    }
-
-    static loadScript(src) {
-        return new Promise(function (resolve, reject) {
-            var script = document.createElement('script');
-            script.onload = function() {
-                resolve();
-            };
-            script.onerror = function(e) {
-                reject(new Error("Script load error for " + src + ": " + e));
-            };
-            script.src = src;
-            document.head.appendChild(script);
-        });
     }
 
 }

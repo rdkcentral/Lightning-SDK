@@ -13,8 +13,8 @@ export default class Ui extends lng.Application {
         return this.tag("Mediaplayer");
     }
 
-    startApp(appDefinition) {
-        this._setState("App.Loading", [appDefinition]);
+    startApp(appClass) {
+        this._setState("App.Loading", [appClass]);
     }
 
     stopApp() {
@@ -33,13 +33,12 @@ export default class Ui extends lng.Application {
                 static _states() {
                     return [
                         class Loading extends this {
-                            $enter(context, appDefinition) {
-                                this._startApp(appDefinition);
+                            $enter(context, appClass) {
+                                this._startApp(appClass);
                             }
-                            _startApp(v) {
+                            _startApp(appClass) {
                                 this._currentApp = {
-                                    def: v,
-                                    type: v.getAppViewType(),
+                                    type: appClass,
                                     fontFaces: []
                                 };
 

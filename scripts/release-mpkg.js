@@ -7,7 +7,9 @@ const babelPresetEnv = require("@babel/preset-env");
 const info = {};
 getName()
     .then(() => ensureDir())
+    .then(() => copyMetadata())
     .then(() => copyAppFiles())
+    .then(() => copyAppSrc())
     .then(() => bundle())
     .then(() => babelify())
     .then(() => pack())
@@ -20,28 +22,32 @@ getName()
 
 function getName() {
     return new Promise((resolve, reject) => {
-        fs.readFile("./AppDefinition.js", function(err, res) {
+        fs.readFile("./metadata.json", function(err, res) {
             if (err) {
-                return reject(new Error("AppDefinition.js file can't be read: run this from a directory containing an AppDefinition.js file."));
+                return reject(new Error("Metadata.json file can't be read: run this from a directory containing a metadata file."));
             }
 
             const contents = res.toString();
-            const match = contents.match(/static\s+get\s+identifier\(\)\s+\{\s+return\s+['"]([^'"]+)['"]/);
-            if (!match) {
-                return reject(new Error("Can't find identifier in AppDefinition file"));
+            info.data = JSON.parse(contents);
+
+            if (!info.data.identifier) {
+                return reject(new Error("Can't find identifier in metadata.json file"));
             }
 
-            const name = match[1];
+            info.identifier = info.data.identifier;
 
-            info.name = name;
-            return resolve(name);
+            return resolve();
         });
     });
 }
 
 function ensureDir() {
-    info.dest = info.name + ".mpkg";
+    info.dest = info.identifier + ".mpkg";
     return exec("rm -rf ./dist/" + info.dest).then(() => exec("mkdir -p ./dist/" + info.dest));
+}
+
+function copyMetadata() {
+    return exec("cp -r ./metadata.json ./dist/" + info.dest);
 }
 
 function copyAppFiles() {
@@ -52,9 +58,17 @@ function copyAppFiles() {
     }
 }
 
+function copyAppSrc() {
+    if (fs.existsSync("./src")) {
+        return exec("cp -r ./src ./dist/" + info.dest);
+    } else {
+        return Promise.resolve();
+    }
+}
+
 function bundle() {
-    return rollup.rollup({input: "./AppDefinition.js"}).then(bundle => {
-        info.qualifier = "APP_" + info.name.replace(/\./g, "_");
+    return rollup.rollup({input: "./src/App.js"}).then(bundle => {
+        info.qualifier = "APP_" + info.identifier.replace(/\./g, "_");
         return bundle.generate({format: 'iife', name: info.qualifier}).then(content => {
             info.bundled = content.code;
         });
@@ -81,7 +95,7 @@ function pack() {
     info.bundleLocation = "./dist/" + info.dest + "/appBundle.es5.js";
     fs.writeFileSync(info.bundleLocation, info.babelified);
 
-    info.mpkg = info.name + ".mpkg.tgz";
+    info.mpkg = info.identifier + ".mpkg.tgz";
     return exec("tar -czf ../" + info.mpkg + " *", {cwd: "./dist/" + info.dest});
 }
 
