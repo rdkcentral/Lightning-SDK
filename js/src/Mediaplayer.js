@@ -31,6 +31,7 @@ export default class Mediaplayer extends lng.Component {
         this.videoEl.setAttribute('id', 'video-player');
         this.videoEl.style.position = 'absolute';
         this.videoEl.style.zIndex = '1';
+        this.videoEl.style.display = 'none';
         this.videoEl.setAttribute('width', '100%');
         this.videoEl.setAttribute('height', '100%');
 
@@ -182,6 +183,8 @@ export default class Mediaplayer extends lng.Component {
         }
         if (this.videoEl.getAttribute('src') === url) return this.reload();
         this.videoEl.setAttribute('src', url);
+
+        this.videoEl.style.display = 'block';
     }
 
     close() {
@@ -193,6 +196,8 @@ export default class Mediaplayer extends lng.Component {
         this.videoEl.load();
 
         this._clearSrc();
+
+        this.videoEl.style.display = 'none';
     }
 
     playPause() {

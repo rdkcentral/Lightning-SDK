@@ -2,6 +2,11 @@ import Mediaplayer from "./Mediaplayer.js";
 
 export default class Ui extends lng.Application {
 
+    constructor(options) {
+        options.defaultFontFace = options.defaultFontFace || "RobotoRegular";
+        super(options);
+    }
+
     static _template() {
         return {
             Mediaplayer: {type: Mediaplayer, textureMode: Ui.hasOption('texture')},
@@ -24,6 +29,18 @@ export default class Ui extends lng.Application {
         window.close();
     }
 
+    static loadFonts(fonts) {
+        const fontFaces = fonts.map(({family, url, descriptors}) => new FontFace(family, `url(${url})`, descriptors));
+        fontFaces.forEach(fontFace => {
+            document.fonts.add(fontFace);
+        });
+        return Promise.all(fontFaces.map(ff => ff.load())).then(() => {return fontFaces});
+    }
+
+    static getFonts() {
+        return [{family: 'RobotoRegular', url: 'static-ux/fonts/roboto-regular.ttf', descriptors: {}}]
+    }
+
     static _states() {
         return [
             class App extends this {
@@ -44,12 +61,8 @@ export default class Ui extends lng.Application {
 
                                 // Preload fonts.
                                 const fonts = this._currentApp.type.getFonts();
-                                const fontFaces = fonts.map(({family, url, descriptors}) => new FontFace(family, `url(${url})`, descriptors));
-                                this._currentApp._fontFaces = fontFaces;
-                                fontFaces.forEach(fontFace => {
-                                    document.fonts.add(fontFace);
-                                });
-                                Promise.all(fontFaces.map(ff => ff.load())).then(() => {
+                                Ui.loadFonts(fonts.concat(Ui.getFonts())).then((fontFaces) => {
+                                    this._currentApp.fontFaces = fontFaces;
                                     this._done();
                                 }).catch((e) => {
                                     console.warn('Font loading issues: ' + e);

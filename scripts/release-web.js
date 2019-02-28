@@ -1,35 +1,126 @@
 const child_process = require("child_process");
+const rollup = require('rollup');
 const fs = require("fs");
-
-const cwd = process.cwd();
-
-const appPath = cwd;
-if (!fs.existsSync(appPath + "/src/App.js")) {
-    console.error("Can't find src/App.js in current working directory.");
-    process.exit(-1);
-}
-
+const babel = require("@babel/core");
+const babelPresetEnv = require("@babel/preset-env");
 
 const dir = __dirname + "/..";
 
-exec(dir + "/node_modules/rollup/bin/rollup -c " + dir + "/rollup.config.js", {cwd: cwd}).then(() => {
-    return exec(dir + "/node_modules/rollup/bin/rollup -c rollup.ux.config.js", {cwd: dir});
-}).then(() => {
-    return copyUxFiles();
-}).then(() => {
-    return copySkeleton();
-}).then(() => {
-    return copyLightning();
-}).then(() => {
-    return copyAppFiles();
-}).then(() => {
-    return exec("node ./node_modules/@babel/cli/bin/babel.js --presets=@babel/preset-env " + cwd + "/dist/release/js/src -d " + cwd + "/dist/release/js/src.es5", {cwd: dir});
-}).catch(err => {
-    console.error(err);
-    process.exit(-1)
-}).then(() => {
-    console.log('Release successfully created! You can find it in dist/release');
-});
+const info = {};
+getName()
+    .then(() => ensureDir())
+    .then(() => copySkeleton())
+    .then(() => copyLightning())
+    .then(() => copyMetadata())
+    .then(() => copyUxFiles())
+    .then(() => copyAppFiles())
+    .then(() => bundleUx())
+    .then(() => bundleApp())
+    .then(() => ensureBabelifyDir())
+    .then(() => babelify())
+    .then(() => console.log('Web release created! ' + process.cwd() + "/dist/" + info.dest))
+    .then(() => console.log('(Use a static web server to host it)'))
+    .catch(err => {
+        console.error(err);
+        process.exit(-1)
+    });
+
+function getName() {
+    return new Promise((resolve, reject) => {
+        fs.readFile("./metadata.json", function(err, res) {
+            if (err) {
+                return reject(new Error("Metadata.json file can't be read: run this from a directory containing a metadata file."));
+            }
+
+            const contents = res.toString();
+            info.data = JSON.parse(contents);
+
+            if (!info.data.identifier) {
+                return reject(new Error("Can't find identifier in metadata.json file"));
+            }
+
+            info.identifier = info.data.identifier;
+
+            return resolve();
+        });
+    });
+}
+
+
+function ensureDir() {
+    info.dest = "web";
+    return exec("rm -rf ./dist/" + info.dest).then(() => exec("mkdir -p ./dist"));
+}
+
+function copySkeleton() {
+    return exec("cp -r " + dir + "/dist/web ./dist/");
+}
+
+function copyMetadata() {
+    return exec("cp -r ./metadata.json ./dist/" + info.dest);
+}
+
+function copyUxFiles() {
+    return exec("cp -r " + dir + "/static-ux ./dist/" + info.dest);
+}
+
+function copyLightning() {
+    return exec("cp -r " + dir + "/node_modules/wpe-lightning/dist/lightning-web.js ./dist/" + info.dest + "/js/src/");
+}
+
+function copyAppFiles() {
+    if (fs.existsSync("./static")) {
+        return exec("cp -r ./static ./dist/" + info.dest);
+    } else {
+        return Promise.resolve();
+    }
+}
+
+function bundleApp() {
+    console.log("Generate rollup bundle for app (src/App.js)");
+    return rollup.rollup({input: "./src/App.js"}).then(bundle => {
+        return bundle.generate({format: 'iife', name: "appBundle"}).then(content => {
+            const location = "./dist/" + info.dest + "/js/src/appBundle.js";
+            fs.writeFileSync(location, content.code);
+        });
+    });
+}
+
+function bundleUx() {
+    console.log("Generate rollup bundle for ux");
+    return rollup.rollup({input: dir + "/js/src/ux.js"}).then(bundle => {
+        return bundle.generate({format: 'iife', name: "ux"}).then(content => {
+            const location = "./dist/" + info.dest + "/js/src/ux.js";
+            fs.writeFileSync(location, content.code);
+        });
+    });
+}
+
+function ensureBabelifyDir() {
+    return exec("mkdir -p ./dist/" + info.dest + "/js/src.es5");
+}
+
+function babelify() {
+    return Promise.all([
+        babelifyFile("./dist/" + info.dest + "/js/src/appBundle.js", "./dist/" + info.dest + "/js/src.es5/appBundle.js"),
+        babelifyFile("./dist/" + info.dest + "/js/src/lightning-web.js", "./dist/" + info.dest + "/js/src.es5/lightning-web.js"),
+        babelifyFile("./dist/" + info.dest + "/js/src/ux.js", "./dist/" + info.dest + "/js/src.es5/ux.js")
+    ])
+}
+function babelifyFile(inputFile, outputFile) {
+    console.log("babelify " + inputFile);
+    return new Promise((resolve, reject) => {
+        babel.transformFile(inputFile, {presets: [babelPresetEnv]}, function(err, result) {
+            if (err) {
+                return reject(err);
+            }
+
+            fs.writeFileSync(outputFile, result.code);
+
+            resolve();
+        });
+    });
+}
 
 function exec(command, opts) {
     return new Promise((resolve, reject) => {
@@ -43,27 +134,5 @@ function exec(command, opts) {
             console.warn(stderr);
             resolve(stdout);
         });
-    });
-}
-
-function copyAppFiles() {
-    if (fs.existsSync("./static")) {
-        return exec("cp -r ./static ./dist/release/", {cwd: cwd});
-    } else {
-        return Promise.resolve();
-    }
-}
-
-function copyUxFiles() {
-    return exec("cp -r " + cwd + "/static ./dist/release/", {cwd: dir});
-}
-
-function copyLightning() {
-    return exec("cp ./node_modules/wpe-lightning/dist/lightning-web.js " + cwd + "/dist/release/js/src/", {cwd: dir});
-}
-
-function copySkeleton() {
-    return exec("mkdir -p ./dist/release").then(() => {
-        return exec("cp -r " + dir + "/dist/release ./dist/", {cwd: cwd});
     });
 }

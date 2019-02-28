@@ -10,7 +10,7 @@ export default class PlayerButton extends lng.Component {
     }
 
     set icon(source) {
-        this.tag("Icon").src = `static/tools/player/img/${source}`;
+        this.tag("Icon").src = `static-ux/tools/player/img/${source}`;
     }
 
     set active(v) {

@@ -10,7 +10,7 @@ getName()
     .then(() => copyMetadata())
     .then(() => copyAppFiles())
     .then(() => copyAppSrc())
-    .then(() => bundle())
+    .then(() => bundleApp())
     .then(() => babelify())
     .then(() => pack())
     .then(() => console.log('MPK file created! ' + process.cwd() + info.mpkg))
@@ -66,11 +66,14 @@ function copyAppSrc() {
     }
 }
 
-function bundle() {
+function bundleApp() {
     return rollup.rollup({input: "./src/App.js"}).then(bundle => {
         info.qualifier = "APP_" + info.identifier.replace(/\./g, "_");
         return bundle.generate({format: 'iife', name: info.qualifier}).then(content => {
             info.bundled = content.code;
+
+            info.bundleLocation = "./dist/" + info.dest + "/appBundle.js";
+            fs.writeFileSync(info.bundleLocation, info.bundled);
         });
     });
 }
@@ -83,18 +86,16 @@ function babelify() {
             }
 
             info.babelified = result.code;
+
+            info.bundleLocation = "./dist/" + info.dest + "/appBundle.es5.js";
+            fs.writeFileSync(info.bundleLocation, info.babelified);
+
             resolve();
         });
     });
 }
 
 function pack() {
-    info.bundleLocation = "./dist/" + info.dest + "/appBundle.js";
-    fs.writeFileSync(info.bundleLocation, info.bundled);
-
-    info.bundleLocation = "./dist/" + info.dest + "/appBundle.es5.js";
-    fs.writeFileSync(info.bundleLocation, info.babelified);
-
     info.mpkg = info.identifier + ".mpkg.tgz";
     return exec("tar -czf ../" + info.mpkg + " *", {cwd: "./dist/" + info.dest});
 }

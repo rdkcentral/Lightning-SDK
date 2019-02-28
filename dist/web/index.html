@@ -7,7 +7,21 @@
 
     <title>Lightning App</title>
 
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <style>
+        *,body{
+            margin:0;
+            padding:0;
+        }
+
+        canvas {
+            position: absolute;
+            z-index: 2;
+        }
+
+        body {
+            background: black;
+        }
+    </style>
 
     <script src="js/polyfills/babel-polyfill-6.23.0.js"></script>
     <script src="js/polyfills/url-polyfill.js"></script>
