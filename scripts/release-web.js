@@ -10,13 +10,13 @@ const info = {};
 getName()
     .then(() => ensureDir())
     .then(() => copySkeleton())
+    .then(() => ensureSrcDirs())
     .then(() => copyLightning())
     .then(() => copyMetadata())
     .then(() => copyUxFiles())
     .then(() => copyAppFiles())
     .then(() => bundleUx())
     .then(() => bundleApp())
-    .then(() => ensureBabelifyDir())
     .then(() => babelify())
     .then(() => console.log('Web release created! ' + process.cwd() + "/dist/" + info.dest))
     .then(() => console.log('(Use a static web server to host it)'))
@@ -96,8 +96,11 @@ function bundleUx() {
     });
 }
 
-function ensureBabelifyDir() {
-    return exec("mkdir -p ./dist/" + info.dest + "/js/src.es5");
+function ensureSrcDirs() {
+    return Promise.all([
+        exec("mkdir -p ./dist/" + info.dest + "/js/src"),
+        exec("mkdir -p ./dist/" + info.dest + "/js/src.es5")
+    ]);
 }
 
 function babelify() {
