@@ -22,7 +22,7 @@ Add a src/App.js file and an index.html with the following contents:
     // attachInspector(lng);
 
     const launcher = new DevLauncher();
-    launcher.launch(AppDefinition, {}, {useInspector: false})
+    launcher.launch(App, {})
 </script>
 </body>
 </html>
