@@ -3,10 +3,27 @@
 This SDK allows you to build Lightning-based apps. It contains [Lightning](https://github.com/WebPlatformForEmbedded/Lightning)
 and a Mediaplayer and other specific utitilies for app development.
 
-## Installation
+# Installation
+First, create a new directory to develop your app in. 
 
-Don't install this repository on its own; you should instead add a dependency in your application code. 
+Add a new package.json for your project:
 
+```
+{
+  "author": "Metrological",
+  "name": "your-app",
+  "version": "1.0.0"
+}
+```
+
+Run `npm i https://github.com/WebPlatformForEmbedded/Lightning-SDK.git --save`
+
+Your application is expected to be in `src/App.js`, and it *must* extend ux.App:
+
+```
+class MyApp extends ux.App {
+}
+```
 
 ## Usage 
 Add an index.html file. Import the DevLauncher from the SDK, and use it to launch your application for development 
@@ -27,12 +44,6 @@ purposes. Example index.html:
 </script>
 </body>
 </html>
-```
-
-Notice that your application is expected to be in `src/App.js`, and it *must* extend ux.App:
-```
-class MyApp extends ux.App {
-}
 ```
 
 ## Building
