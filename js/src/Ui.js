@@ -14,6 +14,10 @@ export default class Ui extends lng.Application {
         };
     }
 
+    static set staticFilesPath(path) {
+        this._staticFilesPath = path;
+    }
+
     get mediaplayer() {
         return this.tag("Mediaplayer");
     }
@@ -37,8 +41,12 @@ export default class Ui extends lng.Application {
         return Promise.all(fontFaces.map(ff => ff.load())).then(() => {return fontFaces});
     }
 
+    static getPath(relPath) {
+        return this._staticFilesPath + "static-ux/" + relPath;
+    }
+
     static getFonts() {
-        return [{family: 'RobotoRegular', url: 'static-ux/fonts/roboto-regular.ttf', descriptors: {}}]
+        return [{family: 'RobotoRegular', url: Ui.getPath('fonts/roboto-regular.ttf'), descriptors: {}}]
     }
 
     static _states() {
@@ -148,3 +156,5 @@ export default class Ui extends lng.Application {
 
 
 }
+
+Ui._staticFilesPath = "./";

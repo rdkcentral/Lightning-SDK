@@ -5,22 +5,39 @@ export default class DevLauncher {
 
     launch(appType, lightningOptions, options = {}) {
         this._appType = appType;
-        this._start(lightningOptions);
+        this._options = options;
+        return this._start(lightningOptions);
+    }
+
+    static set uxPath(uxPath) {
+        this._uxPath = uxPath;
     }
 
     _start(options = {}) {
         this._addStyles();
         this._openFirewall();
         this._lightningOptions = this._getLightningOptions(options.lightningOptions);
-        this._startApp();
+        return this._startApp();
     }
 
     _startApp() {
-        const bootstrap = new ux.Ui(this._lightningOptions);
-        bootstrap.startApp(this._appType);
-        const canvas = bootstrap.stage.getCanvas();
-        document.body.appendChild(canvas);
-        window.ui = bootstrap;
+        ux.Ui.staticFilesPath = DevLauncher._uxPath;
+        return this._loadInspector().then(() => {
+            const bootstrap = new ux.Ui(this._lightningOptions);
+            bootstrap.startApp(this._appType);
+            const canvas = bootstrap.stage.getCanvas();
+            document.body.appendChild(canvas);
+            window.ui = bootstrap;
+        })
+    }
+
+    _loadInspector() {
+        if (this._options.useInspector) {
+            /* Attach the inspector to create a fake DOM that shows where lightning elements can be found. */
+            return this.loadScript(DevLauncher._uxPath + "node_modules/wpe-lightning/devtools/lightning-inspect.js");
+        } else {
+            return Promise.resolve();
+        }
     }
 
     _addStyles() {
@@ -40,6 +57,20 @@ body {
     background: black;
 }`;
         document.head.appendChild(style);
+    }
+
+    loadScript(src) {
+        return new Promise(function (resolve, reject) {
+            var script = document.createElement('script');
+            script.onload = function() {
+                resolve();
+            };
+            script.onerror = function(e) {
+                reject(new Error("Script load error for " + src + ": " + e));
+            };
+            script.src = src;
+            document.head.appendChild(script);
+        });
     }
 
     _openFirewall() {
@@ -86,3 +117,5 @@ body {
     }
 
 }
+
+DevLauncher._uxPath = "./node_modules/wpe-lightning-sdk/";

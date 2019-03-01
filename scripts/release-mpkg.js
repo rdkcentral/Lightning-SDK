@@ -13,7 +13,7 @@ getName()
     .then(() => bundleApp())
     .then(() => babelify())
     .then(() => pack())
-    .then(() => console.log('MPK file created! ' + process.cwd() + info.mpkg))
+    .then(() => console.log('MPK file created! ' + process.cwd() + "/" + info.mpkg))
     .then(() => console.log('(Notice that mpkg files are actually tgz files)'))
     .catch(err => {
         console.error(err);
