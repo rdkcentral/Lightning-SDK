@@ -9,7 +9,7 @@
     "@babel/core": "^7.3.3",
     "@babel/preset-env": "^7.3.1",
     "babel-preset-env": "^1.7.0",
-    "wpe-lightning": "https://github.com/WebPlatformForEmbedded/Lightning.git"
+    "wpe-lightning": "https://github.com/WebPlatformForEmbedded/Lightning.git#1.x"
   },
   "repository": {
     "type": "git",
