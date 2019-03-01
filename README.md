@@ -32,9 +32,6 @@ purposes. Example index.html:
 Notice that your application is expected to be in `src/App.js`, and it *must* extend ux.App:
 ```
 class MyApp extends ux.App {
-    static get identifier() {
-        return "domain.yourname.app.MyApp";
-    }
 }
 ```
 
