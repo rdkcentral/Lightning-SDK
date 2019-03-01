@@ -12,12 +12,6 @@ export default class App extends lng.Component {
         return [];
     }
 
-    get identifier() {
-        const identifier = this.constructor.identifier;
-        if (!identifier) throw new Error("Application does not have an identifier: " + this.constructor.name);
-        return identifier;
-    }
-
     getPath(relPath) {
         return App.getPath(this.constructor, relPath);
     }
