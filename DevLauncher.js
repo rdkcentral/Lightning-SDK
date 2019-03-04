@@ -1,4 +1,4 @@
-import lng from "./node_modules/wpe-lightning/src/lightning.mjs";
+import lng from "../wpe-lightning/src/lightning.mjs";
 import ux from "./js/src/ux.js";
 
 export default class DevLauncher {
@@ -13,10 +13,10 @@ export default class DevLauncher {
         this._uxPath = uxPath;
     }
 
-    _start(options = {}) {
+    _start(lightningOptions = {}) {
         this._addStyles();
         this._openFirewall();
-        this._lightningOptions = this._getLightningOptions(options.lightningOptions);
+        this._lightningOptions = this._getLightningOptions(lightningOptions);
         return this._startApp();
     }
 

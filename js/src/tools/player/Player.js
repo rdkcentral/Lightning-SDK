@@ -158,6 +158,10 @@ export default class Player extends lng.Component {
         return this.tag("Controls");
     }
 
+    _setFocusSettings(settings) {
+        settings.mediaplayer.consumer = this;
+    }
+
     getMediaplayerSettings() {
         return {
             stream: {src: this._stream.link}
