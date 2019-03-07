@@ -1,8 +1,9 @@
-var InputEvent = require('input-event');
+import fs from "fs";
+import InputEvent from 'input-event';
 
 // Notice that you must run as root or otherwise have access to the dev input files.
 
-module.exports = function(handler) {
+export default function(handler) {
     // Linux key mapping to browser keycodes (see tools/genkbmapping.html).
     // US kb.
     var mappings = [0,27,49,50,51,52,53,54,55,56,57,48,189,187,8,9,81,87,69,82,84,89,85,73,79,80,219,221,13,17,65,83,68,70,71,72,74,75,76,186,222,192,16,220,90,88,67,86,66,78,77,188,190,191,16,106,18,32,20,112,113,114,115,116,117,118,119,120,121,144,145,103,104,105,109,100,101,102,107,97,98,99,96,110,-1,-1,-1,122,123,-1,-1,-1,-1,-1,-1,-1,13,17,-1,-1,225,-1,36,38,33,37,39,35,40,34,45,46];
@@ -41,7 +42,6 @@ module.exports = function(handler) {
 
 // Auto-detect the keyboard inputs.
     var getKeyboardEvents = function() {
-        var fs = require('fs');
 
         var files = [];
         if (fs.existsSync("/dev/input")) {

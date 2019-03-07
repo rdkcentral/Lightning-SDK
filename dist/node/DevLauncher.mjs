@@ -1,7 +1,7 @@
 import ux from "./src/ux.mjs";
 import lng from 'wpe-lightning-node';
 import fetch from "node-fetch";
-import keyboard from "./src/keyboard.js";
+import keyboard from "./src/keyboard.mjs";
 
 export default class DevLauncher {
 

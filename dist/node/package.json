@@ -1,11 +1,12 @@
 {
   "author": "",
-  "name": "",
-  "version": "",
+  "name": "yourApp",
+  "version": "0.0.1",
   "scripts": {
     "start": "sudo node --experimental-modules start.mjs"
   },
   "dependencies": {
+    "esm": "^3.2.11",
     "wpe-lightning-node": "https://github.com/WebPlatformForEmbedded/Lightning-node.git",
     "input-event": "^1.2.2",
     "node-fetch": "^1.7.3",
