@@ -2,6 +2,9 @@
   "author": "",
   "name": "",
   "version": "",
+  "scripts": {
+    "start": "sudo node --experimental-modules start.mjs"
+  },
   "dependencies": {
     "wpe-lightning-node": "https://github.com/WebPlatformForEmbedded/Lightning-node.git",
     "input-event": "^1.2.2",
