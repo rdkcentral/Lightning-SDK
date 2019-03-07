@@ -1,0 +1,13 @@
+{
+  "author": "",
+  "name": "",
+  "version": "",
+  "dependencies": {
+    "wpe-lightning-node": "https://github.com/WebPlatformForEmbedded/Lightning-node.git",
+    "input-event": "^1.2.2",
+    "node-fetch": "^1.7.3",
+    "node-localstorage": "^1.3.0",
+    "websocket": "^1.0.25",
+    "xhr2": "^0.1.4"
+  }
+}

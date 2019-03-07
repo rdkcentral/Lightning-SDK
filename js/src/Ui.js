@@ -1,4 +1,5 @@
 import Mediaplayer from "./Mediaplayer.js";
+import NoopMediaplayer from "./NoopMediaplayer.js";
 
 export default class Ui extends lng.Application {
 
@@ -9,7 +10,7 @@ export default class Ui extends lng.Application {
 
     static _template() {
         return {
-            Mediaplayer: {type: Mediaplayer, textureMode: Ui.hasOption('texture')},
+            Mediaplayer: {type: lng.Utils.isWeb ? Mediaplayer : NoopMediaplayer, textureMode: Ui.hasOption('texture')},
             AppWrapper: {}
         };
     }
@@ -30,10 +31,17 @@ export default class Ui extends lng.Application {
     }
 
     _handleBack() {
-        window.close();
+        if (lng.Utils.isWeb) {
+            window.close();
+        }
     }
 
     static loadFonts(fonts) {
+        if (lng.Utils.isNode) {
+            // Font loading not supported. Fonts should be installed in Linux system and then they can be picked up by cairo.
+            return Promise.resolve();
+        }
+
         const fontFaces = fonts.map(({family, url, descriptors}) => new FontFace(family, `url(${url})`, descriptors));
         fontFaces.forEach(fontFace => {
             document.fonts.add(fontFace);
@@ -71,9 +79,9 @@ export default class Ui extends lng.Application {
                                 const fonts = this._currentApp.type.getFonts();
                                 Ui.loadFonts(fonts.concat(Ui.getFonts())).then((fontFaces) => {
                                     this._currentApp.fontFaces = fontFaces;
+                                    this._done();
                                 }).catch((e) => {
                                     console.warn('Font loading issues: ' + e);
-                                }).finally(() => {
                                     this._done();
                                 });
                             }
@@ -133,14 +141,22 @@ export default class Ui extends lng.Application {
     }
 
     static _getCdnProtocol() {
-        return location.protocol === "https" ? "https" : "http";
+        return lng.Utils.isWeb && location.protocol === "https" ? "https" : "http";
     }
 
     static hasOption(name) {
+        if (lng.Utils.isNode) {
+            return false;
+        }
+
         return (document.location.href.indexOf(name) >= 0)
     }
 
     static getOption(name) {
+        if (lng.Utils.isNode) {
+            return undefined;
+        }
+
         return new URL(document.location.href).searchParams.get(name)
     }
 

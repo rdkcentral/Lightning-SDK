@@ -11,6 +11,8 @@ const ux = {
     tools
 };
 
-window.ux = ux;
+if (typeof window !== "undefined") {
+    window.ux = ux;
+}
 
 export default ux;
