@@ -1,4 +1,4 @@
-import lng from "../wpe-lightning/src/lightning.mjs";
+import {} from "../wpe-lightning/dist/lightning-web.js";
 import ux from "./js/src/ux.js";
 
 export default class DevLauncher {
