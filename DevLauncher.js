@@ -3,6 +3,12 @@ import ux from "./js/src/ux.js";
 
 export default class DevLauncher {
 
+    constructor() {
+        if (ux.Ui.hasOption('useInterval')) {
+            
+        }    
+    }
+    
     launch(appType, lightningOptions, options = {}) {
         this._appType = appType;
         this._options = options;
@@ -28,6 +34,7 @@ export default class DevLauncher {
             const canvas = bootstrap.stage.getCanvas();
             document.body.appendChild(canvas);
             window.ui = bootstrap;
+            return bootstrap;
         })
     }
 
