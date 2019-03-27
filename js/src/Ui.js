@@ -54,7 +54,10 @@ export default class Ui extends lng.Application {
     }
 
     static getFonts() {
-        return [{family: 'RobotoRegular', url: Ui.getPath('fonts/roboto-regular.ttf'), descriptors: {}}]
+        return [
+            {family: 'RobotoRegular', url: Ui.getPath('fonts/roboto-regular.ttf'), descriptors: {}},
+            {family: 'Material-Icons', url: Ui.getPath('fonts/Material-Icons.ttf'), descriptors: {}}
+        ]
     }
 
     static _states() {
