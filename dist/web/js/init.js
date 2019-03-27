@@ -1,4 +1,16 @@
 function startApp() {
+    if (ux.Ui.hasOption("useInterval")) {
+        console.log('use interval instead of request animation frame')
+        // Work-around for requestAnimationFrame bug.
+        var targetTime = 0;
+        window.requestAnimationFrame = function(callback) {
+            var currentTime = +new Date;
+            targetTime = Math.max(targetTime + 11, currentTime);
+            var timeoutCb = function() { callback(+new Date); }
+            return window.setTimeout(timeoutCb, targetTime - currentTime);
+        };
+    }
+
     var navigationKeys = {
         8: "Back",
         13: "Enter",
