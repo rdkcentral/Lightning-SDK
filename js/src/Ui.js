@@ -149,7 +149,7 @@ export default class Ui extends lng.Application {
             return false;
         }
 
-        return (document.location.href.indexOf(name) >= 0)
+        return new URL(document.location.href).searchParams.has(name);
     }
 
     static getOption(name) {
@@ -157,7 +157,7 @@ export default class Ui extends lng.Application {
             return undefined;
         }
 
-        return new URL(document.location.href).searchParams.get(name)
+        return new URL(document.location.href).searchParams.get(name);
     }
 
     static getQueryString(url, opts, key = "url") {
