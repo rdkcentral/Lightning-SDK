@@ -65,7 +65,7 @@ function copyUxFiles() {
 }
 
 function copyLightning() {
-    return exec("cp -r " + dir + "/../wpe-lightning/dist/lightning-web.js ./dist/" + info.dest + "/js/src/");
+    return exec("cp -r " + dir + "/js/lib/lightning-web.js ./dist/" + info.dest + "/js/src/");
 }
 
 function copyAppFiles() {
