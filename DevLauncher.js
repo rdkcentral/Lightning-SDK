@@ -4,9 +4,17 @@ import ux from "./js/src/ux.js";
 export default class DevLauncher {
 
     constructor() {
-        if (ux.Ui.hasOption('useInterval')) {
-            
-        }    
+        if (ux.Ui.hasOption("useInterval")) {
+            console.log('use interval instead of request animation frame')
+            // Work-around for requestAnimationFrame bug.
+            var targetTime = 0;
+            window.requestAnimationFrame = function(callback) {
+                var currentTime = +new Date;
+                targetTime = Math.max(targetTime + 11, currentTime);
+                var timeoutCb = function() { callback(+new Date); }
+                return window.setTimeout(timeoutCb, targetTime - currentTime);
+            };
+        }
     }
     
     launch(appType, lightningOptions, options = {}) {
@@ -99,6 +107,15 @@ body {
 
             config.useImageWorker = true;
         }
+
+        if (!config.memoryPressure) {
+            const memoryPressure = ux.Ui.getOption('memoryPressure');
+            if (memoryPressure) {
+                config.memoryPressure = memoryPressure;
+                console.log('GPU memory pressure: ' + memoryPressure);
+            }
+        }
+
 
         options = lng.tools.ObjMerger.merge(options, customOptions);
 
