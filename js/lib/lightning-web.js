@@ -10893,7 +10893,7 @@ var lng = (function () {
                     }
                 }
 
-                let passSignal = (signalParent.__passSignals && signalParent.__passSignals[event]);
+                let passSignal = (this.__passSignals && this.__passSignals[event]);
                 if (passSignal) {
                     // Bubble up.
                     if (passSignal && passSignal !== true) {
@@ -15577,6 +15577,10 @@ var lng = (function () {
             return this._state === Animation.STATES.STOPPING;
         }
 
+        isFinished() {
+            return this._state === Animation.STATES.FINISHED;
+        }
+
         checkActive() {
             if (this.isActive()) {
                 this.manager.addActive(this);
@@ -16336,7 +16340,7 @@ var lng = (function () {
                 37: "Left",
                 39: "Right",
                 13: "Enter",
-                9: "Back",
+                8: "Back",
                 27: "Exit"
             });
         }
