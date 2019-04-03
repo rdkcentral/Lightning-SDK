@@ -83,7 +83,7 @@ export default class Player extends lng.Component {
         this._pressNext();
     }
 
-    play({item, items}) {
+    play({item, items = [item]}) {
         this._items = items;
         this._setItem(item);
         return !!this._stream;
@@ -163,8 +163,13 @@ export default class Player extends lng.Component {
     }
 
     getMediaplayerSettings() {
+        if (this._stream.link) {
+            // Backwards compatibility.
+            this._stream.src = this._stream.link;
+        }
+
         return {
-            stream: {src: this._stream.link}
+            stream: this._stream
         };
     }
 
