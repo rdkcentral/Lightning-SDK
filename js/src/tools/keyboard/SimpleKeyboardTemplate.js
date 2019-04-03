@@ -55,7 +55,7 @@ const template = {
                 {
                     keys: [
                         {action: 'space', c: 'space', w: 183},
-                        {action: 'clear', c: 'delete', w: 183},
+                        {action: 'delete', c: 'delete', w: 183},
                         {action: 'ok', c: 'ok', w: 183}
                     ]
                 }
@@ -101,7 +101,7 @@ const template = {
                 {
                     keys: [
                         {action: 'space', c: 'space', w: 183},
-                        {action: 'clear', c: 'delete', w: 183},
+                        {action: 'delete', c: 'delete', w: 183},
                         {action: 'ok', c: 'ok', w: 183}
                     ]
                 }
