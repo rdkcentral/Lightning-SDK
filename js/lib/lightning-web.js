@@ -7715,6 +7715,10 @@ var lng = (function () {
             return false;
         }
 
+        forEach(f) {
+            this.get().forEach(f);
+        }
+
     }
 
     /**
@@ -10772,6 +10776,10 @@ var lng = (function () {
 
         _setFocusSettings(settings) {
             // Override to add custom settings. See Application._handleFocusSettings().
+        }
+
+        _handleFocusSettings(settings) {
+            // Override to react on custom settings. See Application._handleFocusSettings().
         }
 
         static _template() {
@@ -16301,6 +16309,8 @@ var lng = (function () {
             super(stage, properties);
             Application.booting = false;
 
+            this.__updateFocusCounter = 0;
+
             // We must construct while the application is not yet attached.
             // That's why we 'init' the stage later (which actually emits the attach event).
             this.stage.init();
@@ -16364,28 +16374,31 @@ var lng = (function () {
         }
 
         __updateFocus() {
-            this.__updateFocusRec();
+            const notOverridden = this.__updateFocusRec();
 
-            // Performance optimization: do not gather settings if no handler is defined.
-            if (this._handleFocusSettings !== Application.prototype._handleFocusSettings) {
-                if (!Application.booting) {
-                    this.updateFocusSettings();
-                }
+            if (!Application.booting && notOverridden) {
+                this.updateFocusSettings();
             }
         }
 
-        __updateFocusRec(maxRecursion = 100) {
+        __updateFocusRec() {
+            const updateFocusId = ++this.__updateFocusCounter;
+            this.__updateFocusId = updateFocusId;
+
             const newFocusPath = this.__getFocusPath();
             const newFocusedComponent = newFocusPath[newFocusPath.length - 1];
             const prevFocusedComponent = this._focusPath ? this._focusPath[this._focusPath.length - 1] : undefined;
 
             if (!prevFocusedComponent) {
-                // First focus.
-                this._focusPath = newFocusPath;
-
                 // Focus events.
-                for (let i = 0, n = this._focusPath.length; i < n; i++) {
+                this._focusPath = [];
+                for (let i = 0, n = newFocusPath.length; i < n; i++) {
+                    this._focusPath.push(newFocusPath[i]);
                     this._focusPath[i]._focus(newFocusedComponent, undefined);
+                    const focusOverridden = (this.__updateFocusId !== updateFocusId);
+                    if (focusOverridden) {
+                        return false;
+                    }
                 }
                 return true;
             } else {
@@ -16403,46 +16416,53 @@ var lng = (function () {
                     }
                     // Unfocus events.
                     for (let i = this._focusPath.length - 1; i >= index; i--) {
-                        this._focusPath[i]._unfocus(newFocusedComponent, prevFocusedComponent);
+                        const unfocusedElement = this._focusPath.pop();
+                        unfocusedElement._unfocus(newFocusedComponent, prevFocusedComponent);
+                        const focusOverridden = (this.__updateFocusId !== updateFocusId);
+                        if (focusOverridden) {
+                            return false;
+                        }
                     }
 
-                    this._focusPath = newFocusPath;
-
                     // Focus events.
-                    for (let i = index, n = this._focusPath.length; i < n; i++) {
+                    for (let i = index, n = newFocusPath.length; i < n; i++) {
+                        this._focusPath.push(newFocusPath[i]);
                         this._focusPath[i]._focus(newFocusedComponent, prevFocusedComponent);
+                        const focusOverridden = (this.__updateFocusId !== updateFocusId);
+                        if (focusOverridden) {
+                            return false;
+                        }
                     }
 
                     // Focus changed events.
                     for (let i = 0; i < index; i++) {
                         this._focusPath[i]._focusChange(newFocusedComponent, prevFocusedComponent);
                     }
-
-                    // Focus events could trigger focus changes.
-                    if (maxRecursion-- === 0) {
-                        throw new Error("Max recursion count reached in focus update");
-                    }
-                    this.__updateFocus(maxRecursion);
-
-                    return true;
-                } else {
-                    return false;
                 }
             }
+
+            return true;
         }
 
         updateFocusSettings() {
-            const newFocusPath = this.__getFocusPath();
-            const focusedComponent = newFocusPath[newFocusPath.length - 1];
+            const focusedComponent = this._focusPath[this._focusPath.length - 1];
 
-            // Get focus settings. These can be used for dynamic application-wide settings that depend on the;
+            // Get focus settings. These can be used for dynamic application-wide settings that depend on the
             // focus directly (such as the application background).
             const focusSettings = {};
+            const defaultSetFocusSettings = Component.prototype._setFocusSettings;
             for (let i = 0, n = this._focusPath.length; i < n; i++) {
-                this._focusPath[i]._setFocusSettings(focusSettings);
+                if (this._focusPath[i]._setFocusSettings !== defaultSetFocusSettings) {
+                    this._focusPath[i]._setFocusSettings(focusSettings);
+                }
             }
 
-            this._handleFocusSettings(focusSettings, this.__prevFocusSettings, focusedComponent);
+            const defaultHandleFocusSettings = Component.prototype._handleFocusSettings;
+            for (let i = 0, n = this._focusPath.length; i < n; i++) {
+                if (this._focusPath[i]._handleFocusSettings !== defaultHandleFocusSettings) {
+                    this._focusPath[i]._handleFocusSettings(focusSettings, this.__prevFocusSettings, focusedComponent);
+                }
+            }
 
             this.__prevFocusSettings = focusSettings;
         }
