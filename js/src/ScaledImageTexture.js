@@ -4,6 +4,7 @@ export default class ScaledImageTexture extends lng.textures.ImageTexture {
         super(stage);
 
         this._scalingOptions = undefined;
+        this.precision = 1;
     }
 
     set scalingOptions(options) {
@@ -56,6 +57,15 @@ export default class ScaledImageTexture extends lng.textures.ImageTexture {
         opts.w = opts.w || opts.width || 0;
         opts.h = opts.h || opts.height || 0;
         return opts;
+    }
+
+    get precision() {
+        return this._customPrecision;
+    }
+
+    set precision(v) {
+        this._customPrecision = v;
+        super.precision = this.stage.getRenderPrecision() * this._customPrecision;
     }
 
     _getImageServerSrc(src) {
