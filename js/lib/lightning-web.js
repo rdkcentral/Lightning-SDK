@@ -3002,8 +3002,8 @@ var lng = (function () {
 
         onLoad() {
             if (this.isUsed()) {
-                this.forEachActiveElement(function (element) {
-                    element.onTextureSourceLoaded();
+                this.textures.forEach(texture => {
+                    texture.onLoad();
                 });
             }
         }
@@ -5702,6 +5702,15 @@ var lng = (function () {
             this._source = null;
 
             /**
+             * A resize mode can be set to cover or contain a certain area.
+             * It will reset the texture clipping settings.
+             * When manual texture clipping is performed, the resizeMode is reset.
+             * @type {{type: string, width: number, height: number}}
+             * @private
+             */
+            this._resizeMode = null;
+
+            /**
              * The texture clipping x-offset.
              * @type {number}
              */
@@ -5825,6 +5834,18 @@ var lng = (function () {
             if (this.source) {
                 this.source.incActiveTextureCount();
             }
+        }
+
+        onLoad() {
+            if (this._resizeMode) {
+                this._applyResizeMode();
+            }
+
+            this.elements.forEach(element => {
+                if (element.active) {
+                    element.onTextureSourceLoaded();
+                }
+            });
         }
 
         _checkForNewerReusableTextureSource() {
@@ -6016,7 +6037,61 @@ var lng = (function () {
             }
         }
 
+        set resizeMode({type = "cover", w = 0, h = 0, mountX = 0.5, mountY = 0.5}) {
+            this._resizeMode = {type, w, h, mountX, mountY};
+            if (this.isLoaded()) {
+                this._applyResizeMode();
+            }
+        }
+
+        _clearResizeMode() {
+            this._resizeMode = null;
+        }
+
+        _applyResizeMode() {
+            if (this._resizeMode.type === "cover") {
+                this._applyResizeCover();
+            } else if (this._resizeMode.type === "contain") {
+                this._applyResizeContain();
+            }
+            this._updatePrecision();
+            this._updateClipping();
+        }
+
+        _applyResizeCover() {
+            const scaleX = this._resizeMode.w / this._source.w;
+            const scaleY = this._resizeMode.h / this._source.h;
+            let scale = Math.max(scaleX, scaleY);
+            if (!scale) return;
+            this._precision = 1/scale;
+            if (scaleX && scaleX < scale) {
+                const desiredSize = this._precision * this._resizeMode.w;
+                const choppedOffPixels = this._source.w - desiredSize;
+                this._x = choppedOffPixels * this._resizeMode.mountX;
+                this._w = this._source.w - choppedOffPixels;
+            }
+            if (scaleY && scaleY < scale) {
+                const desiredSize = this._precision * this._resizeMode.h;
+                const choppedOffPixels = this._source.h - desiredSize;
+                this._y = choppedOffPixels * this._resizeMode.mountY;
+                this._h = this._source.h - choppedOffPixels;
+            }
+        }
+
+        _applyResizeContain() {
+            const scaleX = this._resizeMode.w / this._source.w;
+            const scaleY = this._resizeMode.h / this._source.h;
+            let scale = scaleX;
+            if (!scale || scaleY < scale) {
+                scale = scaleY;
+            }
+            if (!scale) return;
+            this._precision = 1/scale;
+        }
+
         enableClipping(x, y, w, h) {
+            this._clearResizeMode();
+
             x *= this._precision;
             y *= this._precision;
             w *= this._precision;
@@ -6027,27 +6102,25 @@ var lng = (function () {
                 this._w = w;
                 this._h = h;
 
-                this.updateClipping(true);
+                this._updateClipping(true);
             }
         }
 
         disableClipping() {
+            this._clearResizeMode();
+
             if (this._x || this._y || this._w || this._h) {
                 this._x = 0;
                 this._y = 0;
                 this._w = 0;
                 this._h = 0;
 
-                this.updateClipping(false);
+                this._updateClipping();
             }
         }
 
-        updateClipping(overrule) {
-            if (overrule === true || overrule === false) {
-                this.clipping = overrule;
-            } else {
-                this.clipping = !!(this._x || this._y || this._w || this._h);
-            }
+        _updateClipping() {
+            this.clipping = !!(this._x || this._y || this._w || this._h);
 
             let self = this;
             this.elements.forEach(function(element) {
@@ -6058,7 +6131,7 @@ var lng = (function () {
             });
         }
 
-        updatePrecision() {
+        _updatePrecision() {
             let self = this;
             this.elements.forEach(function(element) {
                 // Ignore if not the currently displayed texture.
@@ -6099,10 +6172,11 @@ var lng = (function () {
             return this._x / this._precision;
         }
         set x(v) {
+            this._clearResizeMode();
             v = v * this._precision;
             if (this._x !== v) {
                 this._x = v;
-                this.updateClipping();
+                this._updateClipping();
             }
         }
 
@@ -6110,10 +6184,11 @@ var lng = (function () {
             return this._y / this._precision;
         }
         set y(v) {
+            this._clearResizeMode();
             v = v * this._precision;
             if (this._y !== v) {
                 this._y = v;
-                this.updateClipping();
+                this._updateClipping();
             }
         }
 
@@ -6122,10 +6197,11 @@ var lng = (function () {
         }
 
         set w(v) {
+            this._clearResizeMode();
             v = v * this._precision;
             if (this._w !== v) {
                 this._w = v;
-                this.updateClipping();
+                this._updateClipping();
             }
         }
 
@@ -6134,10 +6210,11 @@ var lng = (function () {
         }
 
         set h(v) {
+            this._clearResizeMode();
             v = v * this._precision;
             if (this._h !== v) {
                 this._h = v;
-                this.updateClipping();
+                this._updateClipping();
             }
         }
 
@@ -6146,9 +6223,10 @@ var lng = (function () {
         }
 
         set precision(v) {
+            this._clearResizeMode();
             if (this._precision !== v) {
                 this._precision = v;
-                this.updatePrecision();
+                this._updatePrecision();
             }
         }
 
@@ -11047,35 +11125,11 @@ var lng = (function () {
             this.data = new ArrayBuffer(byteSize);
             this.floats = new Float32Array(this.data);
             this.uints = new Uint32Array(this.data);
-
-            // Set up first quad to the identity quad (reused for filters).
-            let f = this.floats;
-            let u = this.uints;
-            f[0] = -1;
-            f[1] = -1;
-            f[2] = 0;
-            f[3] = 0;
-            u[4] = 0xFFFFFFFF;
-            f[5] = 1;
-            f[6] = -1;
-            f[7] = 1;
-            f[8] = 0;
-            u[9] = 0xFFFFFFFF;
-            f[10] = 1;
-            f[11] = 1;
-            f[12] = 1;
-            f[13] = 1;
-            u[14] = 0xFFFFFFFF;
-            f[15] = -1;
-            f[16] = 1;
-            f[17] = 0;
-            f[18] = 1;
-            u[19] = 0xFFFFFFFF;
         }
 
         getAttribsDataByteOffset(index) {
             // Where this quad can be found in the attribs buffer.
-            return index * 80 + 80;
+            return index * 80;
         }
 
         getQuadContents() {
@@ -11992,14 +12046,14 @@ var lng = (function () {
                     let tx = operation.getTexture(i);
                     if (glTexture !== tx) {
                         gl.bindTexture(gl.TEXTURE_2D, glTexture);
-                        gl.drawElements(gl.TRIANGLES, 6 * (i - pos), gl.UNSIGNED_SHORT, (pos + operation.index + 1) * 6 * 2);
+                        gl.drawElements(gl.TRIANGLES, 6 * (i - pos), gl.UNSIGNED_SHORT, (pos + operation.index) * 6 * 2);
                         glTexture = tx;
                         pos = i;
                     }
                 }
                 if (pos < length) {
                     gl.bindTexture(gl.TEXTURE_2D, glTexture);
-                    gl.drawElements(gl.TRIANGLES, 6 * (length - pos), gl.UNSIGNED_SHORT, (pos + operation.index + 1) * 6 * 2);
+                    gl.drawElements(gl.TRIANGLES, 6 * (length - pos), gl.UNSIGNED_SHORT, (pos + operation.index) * 6 * 2);
                 }
             }
         }
@@ -12233,7 +12287,7 @@ var lng = (function () {
         }
 
         addQuad(renderState, quads, index) {
-            let offset = (index * 20 + 20);
+            let offset = (index * 20);
             const elementCore = quads.quadElements[index];
 
             let r = elementCore._renderContext;
@@ -12292,7 +12346,7 @@ var lng = (function () {
         }
 
         isRenderTextureReusable(renderState, renderTextureInfo) {
-            let offset = (renderState._renderTextureInfo.offset * 80 + 80) / 4;
+            let offset = (renderState._renderTextureInfo.offset * 80) / 4;
             let floats = renderState.quads.floats;
             let uints = renderState.quads.uints;
             return ((floats[offset] === 0) &&
@@ -12319,7 +12373,7 @@ var lng = (function () {
 
         finishRenderState(renderState) {
             // Set extra shader attribute data.
-            let offset = renderState.length * 80 + 80;
+            let offset = renderState.length * 80;
             for (let i = 0, n = renderState.quadOperations.length; i < n; i++) {
                 renderState.quadOperations[i].extraAttribsDataByteOffset = offset;
                 let extra = renderState.quadOperations[i].shader.getExtraAttribBytesPerVertex() * 4 * renderState.quadOperations[i].length;

@@ -1,5 +1,6 @@
 import Mediaplayer from "./Mediaplayer.js";
 import NoopMediaplayer from "./NoopMediaplayer.js";
+import ScaledImageTexture from "./ScaledImageTexture.js";
 
 export default class Ui extends lng.Application {
 
@@ -17,6 +18,10 @@ export default class Ui extends lng.Application {
 
     static set staticFilesPath(path) {
         this._staticFilesPath = path;
+    }
+
+    get useImageServer() {
+        return !Ui.hasOption("noImageServer");
     }
 
     get mediaplayer() {
@@ -134,7 +139,12 @@ export default class Ui extends lng.Application {
         return this._getCdnProtocol() + "://cdn.metrological.com/proxy" + this.getQueryString(url, opts);
     }
 
+    static getImage(url, opts = {}) {
+        return {type: ScaledImageTexture, src: url, scalingOptions: opts};
+    }
+
     static getImageUrl(url, opts = {}) {
+        console.error("{src: Ui.getImageUrl(...)} is deprecated. Please use {texture: Ui.getImage(...)} instead.");
         return this._getCdnProtocol() + "://cdn.metrological.com/image" + this.getQueryString(url, opts);
     }
 
