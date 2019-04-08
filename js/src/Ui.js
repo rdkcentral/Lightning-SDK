@@ -144,8 +144,7 @@ export default class Ui extends lng.Application {
     }
 
     static getImageUrl(url, opts = {}) {
-        console.error("{src: Ui.getImageUrl(...)} is deprecated. Please use {texture: Ui.getImage(...)} instead.");
-        return this._getCdnProtocol() + "://cdn.metrological.com/image" + this.getQueryString(url, opts);
+        throw new Error("{src: Ui.getImageUrl(...)} is deprecated. Please use {texture: Ui.getImage(...)} instead.");
     }
 
     static getQrUrl(url, opts = {}) {
