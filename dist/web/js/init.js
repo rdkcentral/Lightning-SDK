@@ -1,13 +1,20 @@
 function startApp() {
-    if (ux.Ui.hasOption("useInterval")) {
-        console.log('use interval instead of request animation frame')
+    const useInterval = ux.Ui.getOption("useInterval");
+    if (useInterval) {
+        console.log('use interval instead of request animation frame');
+
+        const interval = parseInt(useInterval);
+
         // Work-around for requestAnimationFrame bug.
-        var targetTime = 0;
+        var lastFrameTime = 0;
         window.requestAnimationFrame = function(callback) {
-            var currentTime = +new Date;
-            targetTime = Math.max(targetTime + 11, currentTime);
-            var timeoutCb = function() { callback(+new Date); }
-            return window.setTimeout(timeoutCb, targetTime - currentTime);
+            var currentTime = Date.now();
+            const targetTime = Math.max(lastFrameTime + interval, currentTime);
+
+            return window.setTimeout(function() {
+                lastFrameTime = Date.now();
+                callback();
+            }, targetTime - currentTime);
         };
     }
 
@@ -107,20 +114,24 @@ function loadScript(src) {
 fetch('http://widgets.metrological.com/metrological/nl/test').then(function(){
 });
 
-const folder = isSupportingES6() ? "src" : "src.es5";
+const supportsEs6 = isSupportingES6();
+const folder = supportsEs6 ? "src" : "src.es5";
 function loadJsFile(filename) {
-    return this.loadScript("js/" + folder + "/" + filename);
+    return loadScript("js/" + folder + "/" + filename);
 }
 
-loadJsFile("lightning-web.js").then(function() {
-    return loadJsFile("ux.js").then(function() {
-        return Promise.all([
-            loadJsFile("appBundle.js")
-        ]);
-    })
+const loadPolyfill = supportsEs6 ? Promise.resolve() : loadScript("js/polyfills/babel-polyfill-6.23.0.js");
+
+loadPolyfill.then(function() {
+    return loadJsFile("lightning-web.js").then(function() {
+        return loadJsFile("ux.js").then(function() {
+            return Promise.all([
+                loadJsFile("appBundle.js")
+            ]);
+        });
+    });
 }).catch(function(e) {
     console.error(e);
 }).then(function() {
     startApp();
 });
-
