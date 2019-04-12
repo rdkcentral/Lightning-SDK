@@ -52,7 +52,8 @@ It may be handy to include these as shorthands in your app's package.json file:
 ```
 "scripts": {
     "release-web": "node ./node_modules/wpe-lightning-sdk/scripts/release-web.js",
-    "release-mpkg": "node ./node_modules/wpe-lightning-sdk/scripts/release-mpkg.js"
+    "release-mpkg": "node ./node_modules/wpe-lightning-sdk/scripts/release-mpkg.js",
+    "upload-app": "node ./node_modules/wpe-lightning-sdk/scripts/upload-app-metrological.js"
 }
 ```
 
@@ -64,6 +65,11 @@ and navigate to the index.html file and it should work.
 ### Metrological package.
 Run the `scripts/release-mpkg.js` script from your application directory. It expects a *metadata.json* file containing 
 configuration specific to the Metrological framework.
+
+### Metrological upload.
+Run the `scripts/upload-app-metrological.js` script from your application directory, this will run the package script as
+stated above and upload the package to the Metrological dashboard. You need to provide an Api key as argument: 
+ `npm run upload-app *api-key*`
 
 ### Example
 

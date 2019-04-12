@@ -4,11 +4,12 @@
   "version": "1.0.7",
   "license": "apache",
   "dependencies": {
-    "rollup": "^0.67.0",
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.3",
     "@babel/preset-env": "^7.3.1",
-    "babel-preset-env": "^1.7.0"
+    "babel-preset-env": "^1.7.0",
+    "form-data": "^2.3.3",
+    "rollup": "^0.67.0"
   },
   "repository": {
     "type": "git",
