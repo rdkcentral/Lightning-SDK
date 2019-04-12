@@ -2945,7 +2945,7 @@ var lng = (function () {
             }
         }
 
-        load() {
+        load(forceSync = false) {
             // From the moment of loading (when a texture source becomes used by active elements)
             if (this.isResultTexture) {
                 // Element result texture source, for which the loading is managed by the core.
@@ -2968,7 +2968,7 @@ var lng = (function () {
                             // Emit txError.
                             this.onError(err);
                         } else if (options && options.source) {
-                            if (options.throttle !== false) {
+                            if (!forceSync && options.throttle !== false) {
                                 const textureThrottler = this.stage.textureThrottler;
                                 this._cancelCb = textureThrottler.genericCancelCb;
                                 textureThrottler.add(this, options);
@@ -6042,7 +6042,7 @@ var lng = (function () {
             // Make sure that source is up to date.
             if (this.source) {
                 if (!this.isLoaded()) {
-                    this.source.load();
+                    this.source.load(true);
                 }
             }
         }
@@ -7138,12 +7138,12 @@ var lng = (function () {
 
                 if (p) {
                     p.then(() => {
-                        cb(null, Object.assign({renderInfo: renderer.renderInfo, throttle: false}, this.stage.platform.getTextureOptionsForDrawingCanvas(canvas)));
+                        cb(null, Object.assign({renderInfo: renderer.renderInfo}, this.stage.platform.getTextureOptionsForDrawingCanvas(canvas)));
                     }).catch((err) => {
                         cb(err);
                     });
                 } else {
-                    cb(null, Object.assign({renderInfo: renderer.renderInfo, throttle: false}, this.stage.platform.getTextureOptionsForDrawingCanvas(canvas)));
+                    cb(null, Object.assign({renderInfo: renderer.renderInfo}, this.stage.platform.getTextureOptionsForDrawingCanvas(canvas)));
                 }
             }
         }
@@ -14723,17 +14723,11 @@ var lng = (function () {
             return !!this.root._parent._hasRenderUpdates;
         }
 
-        frame() {
-            this.update();
-
-            this._performForcedZSorts();
-
+        render() {
             // Clear flag to identify if anything changes before the next frame.
             this.root._parent._hasRenderUpdates = 0;
 
-            this.render();
-
-            return true;
+            this._render();
         }
 
         update() {
@@ -14745,6 +14739,8 @@ var lng = (function () {
             if (this.root._hasUpdates) {
                 this._update();
             }
+
+            this._performForcedZSorts();
         }
 
         /**
@@ -14769,7 +14765,7 @@ var lng = (function () {
             this.root.update();
         }
 
-        render() {
+        _render() {
             // Obtain a sequence of the quad operations.
             this._fillRenderState();
 
@@ -16313,12 +16309,18 @@ var lng = (function () {
 
             const changes = this.ctx.hasRenderUpdates();
 
-            this.textureThrottler.processSome();
-
             if (changes) {
                 this._updatingFrame = true;
-                this.ctx.frame();
+                this.ctx.update();
+
+                // Update may cause textures to be loaded in sync, so by processing them here we may be able to show them
+                // during the current frame already.
+                this.textureThrottler.processSome();
+
+                this.ctx.render();
                 this._updatingFrame = false;
+            } else {
+                this.textureThrottler.processSome();
             }
 
             this.platform.nextFrame(changes);
