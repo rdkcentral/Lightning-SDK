@@ -1,15 +1,15 @@
 function startApp() {
-    const useInterval = ux.Ui.getOption("useInterval");
+    var useInterval = ux.Ui.getOption("useInterval");
     if (useInterval) {
         console.log('use interval instead of request animation frame');
 
-        const interval = parseInt(useInterval);
+        var interval = parseInt(useInterval);
 
         // Work-around for requestAnimationFrame bug.
         var lastFrameTime = 0;
         window.requestAnimationFrame = function(callback) {
             var currentTime = Date.now();
-            const targetTime = Math.max(lastFrameTime + interval, currentTime);
+            var targetTime = Math.max(lastFrameTime + interval, currentTime);
 
             return window.setTimeout(function() {
                 lastFrameTime = Date.now();
