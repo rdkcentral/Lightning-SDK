@@ -2825,11 +2825,6 @@ var lng = (function () {
 
         }
 
-        isVolatile() {
-            // Textures sources without a lookup id are regarded as volatile: they are removed whenever no longer used.
-            return this.lookupId === null;
-        }
-
         get loadError() {
             return this._loadError;
         }
@@ -2841,14 +2836,7 @@ var lng = (function () {
         }
 
         removeTexture(v) {
-            if (this.textures.delete(v)) {
-                if (this.textures.size === 0) {
-                    if (this.isLoaded() && this.isVolatile()) {
-                        // Texture no longer used by visible textures: free.
-                        this.free();
-                    }
-                }
-            }
+            this.textures.delete(v);
         }
 
         incActiveTextureCount() {
@@ -7079,11 +7067,6 @@ var lng = (function () {
 
         _getLookupId() {
             let parts = [];
-
-            if (this.text.length > 1) {
-                // We only cache 1 character texts.
-                return null;
-            }
 
             if (this.w !== 0) parts.push("w " + this.w);
             if (this.h !== 0) parts.push("h " + this.h);
