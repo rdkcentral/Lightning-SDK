@@ -4,17 +4,28 @@ import ux from "./js/src/ux.js";
 export default class DevLauncher {
 
     constructor() {
-        if (ux.Ui.hasOption("useInterval")) {
-            console.log('use interval instead of request animation frame')
-            // Work-around for requestAnimationFrame bug.
-            var targetTime = 0;
-            window.requestAnimationFrame = function(callback) {
-                var currentTime = +new Date;
-                targetTime = Math.max(targetTime + 11, currentTime);
-                var timeoutCb = function() { callback(+new Date); }
-                return window.setTimeout(timeoutCb, targetTime - currentTime);
-            };
+        var useInterval = ux.Ui.getOption("useInterval");
+        if (useInterval) {
+            this._setupInterval(useInterval);
         }
+    }
+
+    _setupInterval(useInterval) {
+        console.log('use interval instead of request animation frame');
+
+        var interval = parseInt(useInterval);
+
+        // Work-around for requestAnimationFrame bug.
+        var lastFrameTime = 0;
+        window.requestAnimationFrame = function(callback) {
+            var currentTime = Date.now();
+            var targetTime = Math.max(lastFrameTime + interval, currentTime);
+
+            return window.setTimeout(function() {
+                lastFrameTime = Date.now();
+                callback();
+            }, targetTime - currentTime);
+        };
     }
     
     launch(appType, lightningOptions, options = {}) {
