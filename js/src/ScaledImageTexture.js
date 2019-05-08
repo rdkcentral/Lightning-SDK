@@ -90,7 +90,7 @@ export default class ScaledImageTexture extends lng.textures.ImageTexture {
     }
 
     static _getCdnProtocol() {
-        return lng.Utils.isWeb && location.protocol === "https" ? "https" : "http";
+        return lng.Utils.isWeb && location.protocol === "https:" ? "https" : "http";
     }
 
     static getQueryString(url, opts, key = "url") {
