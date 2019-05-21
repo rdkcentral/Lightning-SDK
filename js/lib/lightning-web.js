@@ -13400,7 +13400,7 @@ var lng = (function () {
                 let image = new Image();
                 if (!(src.substr(0,5) == "data:")) {
                     // Base64.
-                    image.crossOrigin = "Anonymous";
+                    image.crossOrigin = "anonymous";
                 }
                 image.onerror = function(err) {
                     // Ignore error message when cancelled.
@@ -16810,6 +16810,7 @@ var lng = (function () {
             ctx.imageSmoothingEnabled = true;
 
             let img = new Image();
+            img.crossOrigin = "anonymous";
             img.onload = () => {
                 canvas.width = w;
                 canvas.height = h;
