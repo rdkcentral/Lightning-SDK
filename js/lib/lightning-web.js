@@ -2919,7 +2919,7 @@ var lng = (function () {
         }
 
         isLoading() {
-            return this.loadingSince > 0;
+            return (this.loadingSince > 0);
         }
 
         isError() {
@@ -2933,7 +2933,7 @@ var lng = (function () {
             }
         }
 
-        load() {
+        load(forceSync = false) {
             // From the moment of loading (when a texture source becomes used by active elements)
             if (this.isResultTexture) {
                 // Element result texture source, for which the loading is managed by the core.
@@ -2956,12 +2956,22 @@ var lng = (function () {
                             // Emit txError.
                             this.onError(err);
                         } else if (options && options.source) {
-                            this.loadingSince = 0;
-                            this.setSource(options);
+                            if (!forceSync && options.throttle !== false) {
+                                const textureThrottler = this.stage.textureThrottler;
+                                this._cancelCb = textureThrottler.genericCancelCb;
+                                textureThrottler.add(this, options);
+                            } else {
+                                this.processLoadedSource(options);
+                            }
                         }
                     }
                 }, this);
             }
+        }
+
+        processLoadedSource(options) {
+            this.loadingSince = 0;
+            this.setSource(options);
         }
 
         setSource(options) {
@@ -3069,7 +3079,9 @@ var lng = (function () {
         }
 
         free() {
-            this.manager.freeTextureSource(this);
+            if (this.isLoaded()) {
+                this.manager.freeTextureSource(this);
+            }
         }
 
         _isNativeTexture(source) {
@@ -6018,7 +6030,7 @@ var lng = (function () {
             // Make sure that source is up to date.
             if (this.source) {
                 if (!this.isLoaded()) {
-                    this.source.load();
+                    this.source.load(true);
                 }
             }
         }
@@ -6037,11 +6049,15 @@ var lng = (function () {
             }
         }
 
-        set resizeMode({type = "cover", w = 0, h = 0, mountX = 0.5, mountY = 0.5}) {
-            this._resizeMode = {type, w, h, mountX, mountY};
+        set resizeMode({type = "cover", w = 0, h = 0, clipX = 0.5, clipY = 0.5}) {
+            this._resizeMode = {type, w, h, clipX, clipY};
             if (this.isLoaded()) {
                 this._applyResizeMode();
             }
+        }
+
+        get resizeMode() {
+            return this._resizeMode;
         }
 
         _clearResizeMode() {
@@ -6067,13 +6083,13 @@ var lng = (function () {
             if (scaleX && scaleX < scale) {
                 const desiredSize = this._precision * this._resizeMode.w;
                 const choppedOffPixels = this._source.w - desiredSize;
-                this._x = choppedOffPixels * this._resizeMode.mountX;
+                this._x = choppedOffPixels * this._resizeMode.clipX;
                 this._w = this._source.w - choppedOffPixels;
             }
             if (scaleY && scaleY < scale) {
                 const desiredSize = this._precision * this._resizeMode.h;
                 const choppedOffPixels = this._source.h - desiredSize;
-                this._y = choppedOffPixels * this._resizeMode.mountY;
+                this._y = choppedOffPixels * this._resizeMode.clipY;
                 this._h = this._source.h - choppedOffPixels;
             }
         }
@@ -6313,9 +6329,8 @@ var lng = (function () {
                 }
             }
 
-            const platform = this.stage.platform;
-            return function(cb) {
-                return platform.loadSrcTexture({src: src, hasAlpha: hasAlpha}, cb);
+            return (cb) => {
+                return this.stage.platform.loadSrcTexture({src: src, hasAlpha: hasAlpha}, cb);
             }
         }
 
@@ -8571,26 +8586,25 @@ var lng = (function () {
         }
 
         _unsetTagsParent() {
+            if (this.__tags) {
+                this.__tags.forEach((tag) => {
+                    // Remove from treeTags.
+                    let p = this;
+                    while (p = p.__parent) {
+                        let parentTreeTags = p.__treeTags.get(tag);
+                        parentTreeTags.delete(this);
+
+                        if (p.__tagRoot) {
+                            break;
+                        }
+                    }
+                });
+            }
+
             let tags = null;
             let n = 0;
             if (this.__treeTags) {
-                if (this.__tagRoot) {
-                    // Just need to remove the 'local' tags.
-                    if (this.__tags) {
-                        this.__tags.forEach((tag) => {
-                            // Remove from treeTags.
-                            let p = this;
-                            while (p = p.__parent) {
-                                let parentTreeTags = p.__treeTags.get(tag);
-                                parentTreeTags.delete(this);
-
-                                if (p.__tagRoot) {
-                                    break;
-                                }
-                            }
-                        });
-                    }
-                } else {
+                if (!this.__tagRoot) {
                     tags = Utils.iteratorToArray(this.__treeTags.keys());
                     n = tags.length;
 
@@ -8618,32 +8632,32 @@ var lng = (function () {
         };
 
         _setTagsParent() {
-            if (this.__treeTags && this.__treeTags.size) {
-                if (this.__tagRoot) {
-                    // Just copy over the 'local' tags.
-                    if (this.__tags) {
-                        this.__tags.forEach((tag) => {
-                            let p = this;
-                            while (p = p.__parent) {
-                                if (!p.__treeTags) {
-                                    p.__treeTags = new Map();
-                                }
+            // Just copy over the 'local' tags.
+            if (this.__tags) {
+                this.__tags.forEach((tag) => {
+                    let p = this;
+                    while (p = p.__parent) {
+                        if (!p.__treeTags) {
+                            p.__treeTags = new Map();
+                        }
 
-                                let s = p.__treeTags.get(tag);
-                                if (!s) {
-                                    s = new Set();
-                                    p.__treeTags.set(tag, s);
-                                }
+                        let s = p.__treeTags.get(tag);
+                        if (!s) {
+                            s = new Set();
+                            p.__treeTags.set(tag, s);
+                        }
 
-                                s.add(this);
+                        s.add(this);
 
-                                if (p.__tagRoot) {
-                                    break;
-                                }
-                            }
-                        });
+                        if (p.__tagRoot) {
+                            break;
+                        }
                     }
-                } else {
+                });
+            }
+
+            if (this.__treeTags && this.__treeTags.size) {
+                if (!this.__tagRoot) {
                     this.__treeTags.forEach((tagSet, tag) => {
                         let p = this;
                         while (!p.__tagRoot && (p = p.__parent)) {
@@ -8744,21 +8758,23 @@ var lng = (function () {
                 this.__tags.push(tag);
 
                 // Add to treeTags hierarchy.
-                let p = this;
-                do {
-                    if (!p.__treeTags) {
-                        p.__treeTags = new Map();
-                    }
+                let p = this.__parent;
+                if (p) {
+                    do {
+                        if (!p.__treeTags) {
+                            p.__treeTags = new Map();
+                        }
 
-                    let s = p.__treeTags.get(tag);
-                    if (!s) {
-                        s = new Set();
-                        p.__treeTags.set(tag, s);
-                    }
+                        let s = p.__treeTags.get(tag);
+                        if (!s) {
+                            s = new Set();
+                            p.__treeTags.set(tag, s);
+                        }
 
-                    s.add(this);
+                        s.add(this);
 
-                } while (!p.__tagRoot && (p = p.__parent));
+                    } while (!p.__tagRoot && (p = p.__parent));
+                }
             }
         }
 
@@ -8768,13 +8784,15 @@ var lng = (function () {
                 this.__tags.splice(i, 1);
 
                 // Remove from treeTags hierarchy.
-                let p = this;
-                do {
-                    let list = p.__treeTags.get(tag);
-                    if (list) {
-                        list.delete(this);
-                    }
-                } while (!p.__tagRoot && (p = p.__parent));
+                let p = this.__parent;
+                if (p) {
+                    do {
+                        let list = p.__treeTags.get(tag);
+                        if (list) {
+                            list.delete(this);
+                        }
+                    } while (!p.__tagRoot && (p = p.__parent));
+                }
             }
         }
 
@@ -10306,6 +10324,18 @@ var lng = (function () {
             }
         }
 
+        static _supportsSpread() {
+            if (this.__supportsSpread === undefined) {
+                this.__supportsSpread = false;
+                try {
+                    const func = new Function("return [].concat(...arguments);");
+                    func();
+                    this.__supportsSpread = true;
+                } catch(e) {}
+            }
+            return this.__supportsSpread;
+        }
+
         _addMethodRouter(member, descriptors, aliases) {
             const code = [
                 // The line ensures that, while debugging, your IDE won't open many tabs.
@@ -10313,11 +10343,16 @@ var lng = (function () {
                 "const i = this._stateIndex;"
             ];
             let cur = aliases[0];
+            const supportsSpread = StateMachineType._supportsSpread();
             for (let i = 1, n = aliases.length; i < n; i++) {
                 const alias = aliases[i];
                 if (alias !== cur) {
                     if (cur) {
-                        code.push(`if (i < ${i}) return this["${cur}"](...arguments); else`);
+                        if (supportsSpread) {
+                            code.push(`if (i < ${i}) return this["${cur}"](...arguments); else`);
+                        } else {
+                            code.push(`if (i < ${i}) return this["${cur}"].apply(this, arguments); else`);
+                        }
                     } else {
                         code.push(`if (i < ${i}) return ; else`);
                     }
@@ -10325,7 +10360,11 @@ var lng = (function () {
                 cur = alias;
             }
             if (cur) {
-                code.push(`return this["${cur}"](...arguments);`);
+                if (supportsSpread) {
+                    code.push(`return this["${cur}"](...arguments);`);
+                } else {
+                    code.push(`return this["${cur}"].apply(this, arguments);`);
+                }
             } else {
                 code.push(`;`);
             }
@@ -14577,6 +14616,61 @@ var lng = (function () {
 
     }
 
+    /**
+     * Allows throttling of loading texture sources, keeping the app responsive.
+     */
+    class TextureThrottler {
+
+        constructor(stage) {
+            this.stage = stage;
+
+            this.genericCancelCb = (textureSource) => {
+                this._remove(textureSource);
+            };
+
+            this._sources = [];
+            this._data = [];
+        }
+
+        destroy() {
+            this._sources = [];
+            this._data = [];
+        }
+
+        processSome() {
+            if (this._sources.length) {
+                const start = Date.now();
+                do {
+                    this._processItem();
+                } while(this._sources.length && (Date.now() - start < TextureThrottler.MAX_UPLOAD_TIME_PER_FRAME));
+            }
+        }
+
+        _processItem() {
+            const source = this._sources.pop();
+            const data = this._data.pop();
+            if (source.isLoading()) {
+                source.processLoadedSource(data);
+            }
+        }
+
+        add(textureSource, data) {
+            this._sources.push(textureSource);
+            this._data.push(data);
+        }
+
+        _remove(textureSource) {
+            const index = this._sources.indexOf(textureSource);
+            if (index >= 0) {
+                this._sources.splice(index, 1);
+                this._data.splice(index, 1);
+            }
+        }
+
+    }
+
+    TextureThrottler.MAX_UPLOAD_TIME_PER_FRAME = 10;
+
     class CoreContext {
 
         constructor(stage) {
@@ -14612,17 +14706,11 @@ var lng = (function () {
             return !!this.root._parent._hasRenderUpdates;
         }
 
-        frame() {
-            this.update();
-
-            this._performForcedZSorts();
-
+        render() {
             // Clear flag to identify if anything changes before the next frame.
             this.root._parent._hasRenderUpdates = 0;
 
-            this.render();
-
-            return true;
+            this._render();
         }
 
         update() {
@@ -14634,6 +14722,8 @@ var lng = (function () {
             if (this.root._hasUpdates) {
                 this._update();
             }
+
+            this._performForcedZSorts();
         }
 
         /**
@@ -14658,7 +14748,7 @@ var lng = (function () {
             this.root.update();
         }
 
-        render() {
+        _render() {
             // Obtain a sequence of the quad operations.
             this._fillRenderState();
 
@@ -16030,6 +16120,7 @@ var lng = (function () {
             this.animations = new AnimationManager(this);
 
             this.textureManager = new TextureManager(this);
+            this.textureThrottler = new TextureThrottler(this);
 
             this.startTime = 0;
             this.currentTime = 0;
@@ -16203,8 +16294,16 @@ var lng = (function () {
 
             if (changes) {
                 this._updatingFrame = true;
-                this.ctx.frame();
+                this.ctx.update();
+
+                // Update may cause textures to be loaded in sync, so by processing them here we may be able to show them
+                // during the current frame already.
+                this.textureThrottler.processSome();
+
+                this.ctx.render();
                 this._updatingFrame = false;
+            } else {
+                this.textureThrottler.processSome();
             }
 
             this.platform.nextFrame(changes);
