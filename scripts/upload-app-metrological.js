@@ -32,7 +32,7 @@ const checkLoginStatus = ()=>{
                 }
 
                 const {securityContext} = JSON.parse(data);
-                return resolve(securityContext[1]);
+                return resolve(securityContext[0]);
             });
         });
     });
@@ -80,7 +80,7 @@ const handleData = (chunk) =>{
 
 const handleOnEnd = (res)=>{
     if(res.statusCode !== 200){
-        onError();
+        onError({error:"something went wrong"});
     }
 }
 
