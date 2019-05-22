@@ -52,7 +52,9 @@ function getName() {
                 return reject(new Error("Can't find version in metadata.json file"));
             }
 
-            info.identifier = info.data.identifier;
+            if(!info.data.name){
+                return reject(new Error("No name provided for your app"));
+            }
 
             return resolve();
         });
