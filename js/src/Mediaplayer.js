@@ -27,17 +27,24 @@ export default class Mediaplayer extends lng.Component {
     }
 
     _init() {
-        this.videoEl = document.createElement('video');
-        this.videoEl.setAttribute('id', 'video-player');
-        this.videoEl.style.position = 'absolute';
-        this.videoEl.style.zIndex = '1';
-        this.videoEl.style.display = 'none';
-        this.videoEl.setAttribute('width', '100%');
-        this.videoEl.setAttribute('height', '100%');
+        //re-use videotag if already there
+        const videoEls = document.getElementsByTagName('video');
+        if (videoEls && videoEls.length > 0)
+            this.videoEl = videoEls[0];
+        else {
+            this.videoEl = document.createElement('video');
+            this.videoEl.setAttribute('id', 'video-player');
+            this.videoEl.style.position = 'absolute';
+            this.videoEl.style.zIndex = '1';
+            this.videoEl.style.display = 'none';
+            this.videoEl.setAttribute('width', '100%');
+            this.videoEl.setAttribute('height', '100%');
 
-        this.videoEl.style.visibility = (this.textureMode) ? 'hidden' : 'visible';
-        if (this.textureMode) {
-            this._createVideoTexture();
+            this.videoEl.style.visibility = (this.textureMode) ? 'hidden' : 'visible';
+            if (this.textureMode) {
+                this._createVideoTexture();
+            }
+            document.body.appendChild(this.videoEl);
         }
 
         const events = ['timeupdate', 'error', 'ended', 'loadeddata', 'canplay', 'play', 'playing', 'pause', 'loadstart', 'seeking', 'seeked', 'encrypted'];
@@ -46,8 +53,6 @@ export default class Mediaplayer extends lng.Component {
                 this.fire(event, {videoElement: this.videoEl, event: e});
             });
         });
-
-        document.body.appendChild(this.videoEl);
     }
 
     _createVideoTexture() {
