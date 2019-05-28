@@ -7,6 +7,7 @@ export default class Ui extends lng.Application {
     constructor(options) {
         options.defaultFontFace = options.defaultFontFace || "RobotoRegular";
         super(options);
+        this._options = options;
     }
 
     static _template() {
@@ -26,6 +27,10 @@ export default class Ui extends lng.Application {
 
     get mediaplayer() {
         return this.tag("Mediaplayer");
+    }
+
+    _active() {
+        this.tag('Mediaplayer').skipRenderToTexture = this._options.skipRenderToTexture;
     }
 
     startApp(appClass) {

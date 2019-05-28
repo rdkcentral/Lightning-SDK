@@ -1,5 +1,9 @@
 export default class Mediaplayer extends lng.Component {
 
+    _construct(){
+        this._skipRenderToTexture = false;
+    }
+
     static _template() {
         return {
             Video: {
@@ -12,6 +16,10 @@ export default class Mediaplayer extends lng.Component {
                 }
             }
         };
+    }
+
+    set skipRenderToTexture (v) {
+        this._skipRenderToTexture = v;
     }
 
     set textureMode(v) {
@@ -41,10 +49,10 @@ export default class Mediaplayer extends lng.Component {
             this.videoEl.setAttribute('height', '100%');
 
             this.videoEl.style.visibility = (this.textureMode) ? 'hidden' : 'visible';
-            if (this.textureMode) {
-                this._createVideoTexture();
-            }
             document.body.appendChild(this.videoEl);
+        }
+        if (this.textureMode && !this._skipRenderToTexture) {
+            this._createVideoTexture();
         }
 
         const events = ['timeupdate', 'error', 'ended', 'loadeddata', 'canplay', 'play', 'playing', 'pause', 'loadstart', 'seeking', 'seeked', 'encrypted'];
@@ -70,7 +78,7 @@ export default class Mediaplayer extends lng.Component {
     }
 
     _startUpdatingVideoTexture() {
-        if (this.textureMode) {
+        if (this.textureMode && !this._skipRenderToTexture) {
             const stage = this.stage;
             if (!this._updateVideoTexture) {
                 this._updateVideoTexture = () => {
