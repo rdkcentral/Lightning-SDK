@@ -41,7 +41,10 @@ const checkLoginStatus = ()=>{
 checkLoginStatus().then(({type})=>{
     options.path = options.path.replace("@type",type);
 }).then(packager.release.bind(null, true)).then((response)=>{
-    const {identifier, absolutePath, data:{version}} = response;
+
+
+
+    const {absolutePath, data:{version,identifier}} = response;
     const form = new FormData();
 
     form.append("id", identifier);
