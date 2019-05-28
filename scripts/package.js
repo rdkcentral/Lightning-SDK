@@ -88,7 +88,8 @@ function copyAppSrc() {
 
 function bundleApp() {
     return rollup.rollup({input: "./src/App.js"}).then(bundle => {
-        info.qualifier = "APP_" + info.identifier.replace(/\./g, "_");
+
+        info.qualifier = "APP_" + info.data.identifier.replace(/\./g, "_");
         return bundle.generate({format: 'iife', name: info.qualifier}).then(content => {
             info.bundled = content.code;
 
@@ -116,7 +117,7 @@ function babelify() {
 }
 
 function pack() {
-    info.mpkg = info.identifier + ".mpkg.tgz";
+    info.mpkg = info.data.identifier + ".mpkg.tgz";
     return exec("tar -czf ../" + info.mpkg + " *", {cwd: "./dist/" + info.dest});
 }
 
