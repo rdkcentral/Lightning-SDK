@@ -73,5 +73,5 @@ stated above and upload the package to the Metrological dashboard. You need to p
 
 ### Example
 
-Check [Lightning-examples](https://github.com/WebPlatformForEmbedded/Lightning-examples) for an example of a working
+Check [Lightning-SDK-blueprint](https://github.com/WebPlatformForEmbedded/Lightning-SDK-blueprint) for an example of a working
 application development setup using this SDK.
