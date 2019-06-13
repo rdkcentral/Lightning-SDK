@@ -157,7 +157,7 @@ export default class Ui extends lng.Application {
     }
 
     static _getCdnProtocol() {
-        return lng.Utils.isWeb && location.protocol === "https" ? "https" : "http";
+        return lng.Utils.isWeb && location.protocol === "https:" ? "https" : "http";
     }
 
     static hasOption(name) {
