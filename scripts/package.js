@@ -3,6 +3,8 @@ const rollup = require('rollup');
 const fs = require("fs");
 const babel = require("@babel/core");
 const babelPresetEnv = require("@babel/preset-env");
+const shell = require("shelljs");
+const targz = require("targz");
 
 const info = {};
 let logging = true;
@@ -62,17 +64,30 @@ function getName() {
 }
 
 function ensureDir() {
-    info.dest = info.identifier + ".mpkg";
-    return exec("rm -rf ./dist/" + info.dest).then(() => exec("mkdir -p ./dist/" + info.dest));
+    info.dest = `${info.data.identifier}.mpkg`;
+    const rm = (destination)=>{
+        return new Promise((resolve)=>{
+            shell.rm("-rf",destination);
+            resolve();
+        });
+    };
+    return rm(`./dist/${info.dest}`).then(()=>{
+        shell.mkdir("-p",`./dist/${info.dest}`);
+        return Promise.resolve();
+    });
 }
 
 function copyMetadata() {
-    return exec("cp -r ./metadata.json ./dist/" + info.dest);
+    return execShell(()=>{
+        shell.cp("-r","./metadata.json",`./dist/${info.dest}`);
+    });
 }
 
 function copyAppFiles() {
     if (fs.existsSync("./static")) {
-        return exec("cp -r ./static ./dist/" + info.dest);
+        return execShell(()=>{
+            shell.cp("-r","./static",`./dist/${info.dest}`);
+        });
     } else {
         return Promise.resolve();
     }
@@ -80,7 +95,9 @@ function copyAppFiles() {
 
 function copyAppSrc() {
     if (fs.existsSync("./src")) {
-        return exec("cp -r ./src ./dist/" + info.dest);
+        return execShell(()=>{
+            shell.cp("-r","./src",`./dist/${info.dest}`);
+        });
     } else {
         return Promise.resolve();
     }
@@ -118,7 +135,7 @@ function babelify() {
 
 function pack() {
     info.mpkg = info.data.identifier + ".mpkg.tgz";
-    return exec("tar -czf ../" + info.mpkg + " *", {cwd: "./dist/" + info.dest});
+    return tar(`./dist/${info.dest}`,`./dist/${info.dest}.tgz`);
 }
 
 function exec(command, opts) {
@@ -132,6 +149,27 @@ function exec(command, opts) {
             console.warn(stderr);
             resolve(stdout);
         });
+    });
+}
+
+function execShell(cb){
+    cb();
+    return Promise.resolve();
+}
+
+function tar(src,dest){
+    return new Promise((resolve, reject)=>{
+        targz.compress({
+            src, dest
+        },(err)=>{
+            if(err){
+                log("ERR:", err);
+                reject(err);
+            }else{
+                log(`TAR: ${src}`);
+                resolve();
+            }
+        })
     });
 }
 
