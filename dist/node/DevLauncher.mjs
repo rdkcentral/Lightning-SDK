@@ -22,7 +22,6 @@ export default class DevLauncher {
     }
 
     _start(lightningOptions = {}) {
-        this._openFirewall();
         this._lightningOptions = this._getLightningOptions(lightningOptions);
         return this._startApp();
     }
@@ -41,11 +40,6 @@ export default class DevLauncher {
         } else {
             return Promise.resolve();
         }
-    }
-
-    _openFirewall() {
-        // Fetch app store to ensure that proxy/image servers firewall is opened.
-        fetch(`http://widgets.metrological.com/${encodeURIComponent(ux.Ui.getOption('operator') || 'metrological')}/nl/test`).then(() => {});
     }
 
     _getLightningOptions(customOptions = {}) {
