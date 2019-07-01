@@ -1,4 +1,5 @@
 import {} from "./js/lib/lightning-web.js";
+import maf from "./js/src/maf.js";
 import ux from "./js/src/ux.js";
 
 export default class DevLauncher {
