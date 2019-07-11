@@ -98,7 +98,7 @@ var Purchase = (function() {
 								if (callback && callback.call) {
 									if (result.errors && result.errors.length > 0)
 										return callback(result.errors);
-									return callback(NULL, result);
+									return callback(null, result);
 								}
 							} else {
 								if (callback && callback.call) callback(JSON.parse(xhr.response) || 'invalid');
@@ -127,7 +127,7 @@ var Purchase = (function() {
 					if (callback && callback.call) {
 						if (result.errors && result.errors.length > 0)
 							return callback(result.errors);
-						return callback(NULL, result);
+						return callback(null, result);
 					}
 				} else {
 					if (callback && callback.call) callback(['invalid']);
