@@ -16784,6 +16784,44 @@ var lng = (function () {
             return {type: StaticCanvasTexture, content: {factory: canvasFactory, lookupId: lookupId}}
         }
 
+        static getPath(lines = [], strokeWidth){
+            if(!Array.isArray(lines)){
+                throw new Error("Please provide an array of lines");
+            }
+            const factory = (cb, stage)=>{
+                cb(null, this.createPath(stage,lines, strokeWidth));
+            };
+            const id = `path${Math.random()}`;
+            return Tools.getCanvasTexture(factory, id);
+        }
+
+        static createPath(stage, lines = [], strokeWidth=5){
+            const canvas = stage.platform.getDrawingCanvas();
+            const ctx = canvas.getContext("2d");
+            let i = 1, j = lines.length;
+
+            // todo: calculate w / h  / sx / ex / sy / ey from lines
+            // for now we draw it on a 1920x1080 canvas
+            canvas.width = 1920;
+            canvas.height = 1080;
+
+            ctx.imageSmoothEnabled = true;
+            ctx.lineWidth = strokeWidth;
+            ctx.lineJoin = ctx.lineCap = 'round';
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = 'rgb(0,0,0)';
+
+            ctx.beginPath();
+            ctx.moveTo(lines[0][0],lines[0][1]);
+
+            for(; i < j; i++){
+                ctx.lineTo(lines[i][0],lines[i][1]);
+            }
+            ctx.stroke();
+
+            return canvas;
+        }
+
         static getRoundRect(w, h, radius, strokeWidth, strokeColor, fill, fillColor) {
             if (!Array.isArray(radius)){
                 // upper-left, upper-right, bottom-right, bottom-left.
