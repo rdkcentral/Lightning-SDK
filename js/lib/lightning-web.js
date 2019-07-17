@@ -5584,6 +5584,7 @@ var lng = (function () {
         cls.prototype.removeListener = EventEmitter.prototype.removeListener;
         cls.prototype.emit = EventEmitter.prototype.emit;
         cls.prototype.listenerCount = EventEmitter.prototype.listenerCount;
+        cls.prototype.removeAllListeners = EventEmitter.prototype.removeAllListeners;
     };
 
     class Shader {
