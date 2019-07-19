@@ -11,8 +11,7 @@
     "form-data": "^2.3.3",
     "rollup": "^0.67.0",
     "shelljs": "^0.8.3",
-    "targz": "^1.0.1",
-    "wpe-lightning": "^1.0.5"
+    "targz": "^1.0.1"
   },
   "repository": {
     "type": "git",
