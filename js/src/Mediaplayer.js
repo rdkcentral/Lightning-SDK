@@ -1,3 +1,6 @@
+
+const events = ['timeupdate', 'error', 'ended', 'loadeddata', 'canplay', 'play', 'playing', 'pause', 'loadstart', 'seeking', 'seeked', 'encrypted'];
+
 export default class Mediaplayer extends lng.Component {
 
     _construct(){
@@ -55,12 +58,24 @@ export default class Mediaplayer extends lng.Component {
             this._createVideoTexture();
         }
 
-        const events = ['timeupdate', 'error', 'ended', 'loadeddata', 'canplay', 'play', 'playing', 'pause', 'loadstart', 'seeking', 'seeked', 'encrypted'];
+        this.eventHandlers = [];
+    }
+
+    _attach() {
         events.forEach(event => {
-            this.videoEl.addEventListener(event, (e) => {
+            const handler = (e) => {
                 this.fire(event, {videoElement: this.videoEl, event: e});
-            });
+            }
+            this.eventHandlers.push(handler);
+            this.videoEl.addEventListener(event, handler);
         });
+    }
+
+    _detach() {
+        events.forEach((event, index) => {
+            this.videoEl.removeEventListener(event, this.handlers[index]);
+        });
+        this.handlers = [];
     }
 
     _createVideoTexture() {
