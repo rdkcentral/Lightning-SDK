@@ -14,6 +14,11 @@ export default class ScaledImageTexture extends lng.textures.ImageTexture {
         }
     }
 
+    _getLookupId() {
+        const opts = this._scalingOptions;
+        return `${this._src}-${opts.type}-${opts.width}-${opts.height}`;
+    }
+
     _getSourceLoader() {
         let src = this._src;
         if (this.stage.getOption('srcBasePath')) {
