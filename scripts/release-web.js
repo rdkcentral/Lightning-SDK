@@ -6,6 +6,8 @@ const babelPresetEnv = require("@babel/preset-env");
 
 const dir = __dirname + "/..";
 
+const LNG_PATH = require.resolve('wpe-lightning/dist/lightning-web.js');
+
 const info = {};
 getName()
     .then(() => ensureDir())
@@ -65,7 +67,7 @@ function copyUxFiles() {
 }
 
 function copyLightning() {
-    return exec("cp -r " + dir + "/js/lib/lightning-web.js ./dist/" + info.dest + "/js/src/");
+    return exec("cp -r " + LNG_PATH + " ./dist/" + info.dest + "/js/src/");
 }
 
 function copyAppFiles() {
