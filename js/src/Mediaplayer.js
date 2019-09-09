@@ -184,7 +184,22 @@ export default class Mediaplayer extends lng.Component {
                     console.error('Failed to set up MediaKeys');
                 });
             } else if (settings.stream && settings.stream.src) {
-                this.open(settings.stream.src);
+                if(!window.Hls){
+                    window.Hls = class Hls{
+                        static isSupported(){
+                            console.warn("hls-light not included");
+                            return false;
+                        }
+                    };
+                }
+                if (ux.Ui.hasOption("hls") && Hls.isSupported()) {
+                    if (!this._hls) this._hls = new Hls({liveDurationInfinity: true});
+                    this._hls.loadSource(settings.stream.src);
+                    this._hls.attachMedia(this.videoEl);
+                    this.videoEl.style.display = "block";
+                } else {
+                    this.open(settings.stream.src);
+                }
             } else {
                 this.close();
             }
