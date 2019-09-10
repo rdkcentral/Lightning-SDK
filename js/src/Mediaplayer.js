@@ -61,21 +61,29 @@ export default class Mediaplayer extends lng.Component {
         this.eventHandlers = [];
     }
 
-    _attach() {
+    _registerListeners() {
         events.forEach(event => {
             const handler = (e) => {
                 this.fire(event, {videoElement: this.videoEl, event: e});
-            }
+            };
             this.eventHandlers.push(handler);
             this.videoEl.addEventListener(event, handler);
         });
     }
 
-    _detach() {
+    _deregisterListeners() {
         events.forEach((event, index) => {
             this.videoEl.removeEventListener(event, this.eventHandlers[index]);
         });
         this.eventHandlers = [];
+    }
+
+    _attach() {
+        this._registerListeners();
+    }
+
+    _detach() {
+        this._deregisterListeners();
     }
 
     _createVideoTexture() {
