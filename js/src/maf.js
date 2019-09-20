@@ -13,7 +13,7 @@ function setter(obj, key, fn) { return obj.__defineSetter__(key, fn); }
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState === 4) {
 			if (xhr.status === 200 && xhr.responseText)
-				MAF.Geo = JSON.parse(xhr.responseText);
+				MAF.GEO = JSON.parse(xhr.responseText);
 		}
 	}
 	xhr.send();
