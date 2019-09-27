@@ -102,7 +102,7 @@ export default class Ui extends lng.Application {
                                     }),
 
                                     // Preload locale
-                                    Locale.load('static/locale/locale.json')
+                                    Locale.load(this._currentApp.type.getPath('locale/locale.json'))
                                     .catch((e) => console.warn("Localization disabled:", e))
 
                                 ]).finally(()=>{
