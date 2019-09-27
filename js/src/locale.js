@@ -44,6 +44,10 @@ export class Locale {
      * @return {Promise}
      */
     static async load(path) {
+        if (!this.__enabled) {
+            Promise.resolve()
+        }
+
         await fetch(path)
         .then((resp) => resp.json())
         .then((resp) => {
@@ -57,6 +61,7 @@ export class Locale {
      * @param {String} lang 
      */
     static setLanguage(lang) {
+        this.__enabled = true;
         this.language = lang;
     }
 
@@ -84,6 +89,8 @@ export class Locale {
     }
 }
 
+Locale.__enabled = false;
+
 /**
  * Extended string class used for localization.
  */
@@ -99,7 +106,7 @@ class LocalizedString extends String {
      * @param  {...any} args List of arguments for placeholders.
      */
     format(...args) {
-        let sub = this
+        let sub = this;
         args.forEach((arg, index) => {
             sub = sub.split(`{${index}}`).join(arg);
         });

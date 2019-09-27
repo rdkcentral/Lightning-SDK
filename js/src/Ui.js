@@ -2,6 +2,8 @@ import Mediaplayer from "./Mediaplayer.js";
 import NoopMediaplayer from "./NoopMediaplayer.js";
 import ScaledImageTexture from "./ScaledImageTexture.js";
 
+import { Locale } from "./locale.js";
+
 export default class Ui extends lng.Application {
 
     constructor(options) {
@@ -88,13 +90,22 @@ export default class Ui extends lng.Application {
                                     fontFaces: []
                                 };
 
-                                // Preload fonts.
                                 const fonts = this._currentApp.type.getFonts();
-                                Ui.loadFonts(fonts.concat(Ui.getFonts())).then((fontFaces) => {
-                                    this._currentApp.fontFaces = fontFaces;
-                                }).catch((e) => {
-                                    console.warn('Font loading issues: ' + e);
-                                }).finally(()=>{
+
+                                Promise.all([
+                                    // Preload fonts.
+                                    Ui.loadFonts(fonts.concat(Ui.getFonts()))
+                                    .then((fontFaces) => {
+                                        this._currentApp.fontFaces = fontFaces;
+                                    }).catch((e) => {
+                                        console.warn('Font loading issues: ' + e);
+                                    }),
+
+                                    // Preload locale
+                                    Locale.load('static/locale/locale.json')
+                                    .catch((e) => console.warn("Localization disabled:", e))
+
+                                ]).finally(()=>{
                                     this._done();
                                 });
                             }
