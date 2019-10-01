@@ -10,7 +10,7 @@ const ux = {
     Ui,
     App,
     tools,
-    locale: Locale,
+    locale: new Locale()
 };
 
 if (typeof window !== "undefined") {

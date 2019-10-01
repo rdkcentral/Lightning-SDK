@@ -2,8 +2,6 @@ import Mediaplayer from "./Mediaplayer.js";
 import NoopMediaplayer from "./NoopMediaplayer.js";
 import ScaledImageTexture from "./ScaledImageTexture.js";
 
-import { Locale } from "./locale.js";
-
 export default class Ui extends lng.Application {
 
     constructor(options) {
@@ -102,7 +100,7 @@ export default class Ui extends lng.Application {
                                     }),
 
                                     // Preload locale
-                                    Locale.load(this._currentApp.type.getPath('locale/locale.json'))
+                                    ux.locale.load(this._currentApp.type.getPath('locale/locale.json'))
                                     .catch((e) => console.warn("Localization disabled:", e))
 
                                 ]).finally(()=>{

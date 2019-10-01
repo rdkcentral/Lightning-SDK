@@ -37,15 +37,20 @@
  */
 
 export class Locale {
+
+    constructor() {
+        this.__enabled = false;
+    }
+
     /**
      * Loads translation object from external json file.
      *  
      * @param {String} path Path to resource.
      * @return {Promise}
      */
-    static async load(path) {
+    async load(path) {
         if (!this.__enabled) {
-            Promise.resolve()
+            return;
         }
 
         await fetch(path)
@@ -60,7 +65,7 @@ export class Locale {
      *
      * @param {String} lang 
      */
-    static setLanguage(lang) {
+    setLanguage(lang) {
         this.__enabled = true;
         this.language = lang;
     }
@@ -70,7 +75,7 @@ export class Locale {
      *
      * @return {Object}
      */
-    static get tr() {
+    get tr() {
         return this.__trObj[this.language];
     }
 
@@ -79,7 +84,7 @@ export class Locale {
      *
      * @param {Object} trObj 
      */
-    static loadFromObject(trObj) {
+    loadFromObject(trObj) {
         this.__trObj = trObj;
         for (const lang of Object.values(this.__trObj)) {
             for (const str of Object.keys(lang)) {
@@ -88,8 +93,6 @@ export class Locale {
         }
     }
 }
-
-Locale.__enabled = false;
 
 /**
  * Extended string class used for localization.
@@ -106,10 +109,7 @@ class LocalizedString extends String {
      * @param  {...any} args List of arguments for placeholders.
      */
     format(...args) {
-        let sub = this;
-        args.forEach((arg, index) => {
-            sub = sub.split(`{${index}}`).join(arg);
-        });
+        const sub = args.reduce((string, arg, index) => string.split(`{${index}}`).join(arg), this);
         return new LocalizedString(sub);
     }
 }
