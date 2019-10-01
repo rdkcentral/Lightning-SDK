@@ -4,11 +4,13 @@ import Ui from "./Ui.js";
 import App from "./App.js";
 
 import tools from "./tools/tools.js";
+import { Locale } from "./locale.js";
 
 const ux = {
     Ui,
     App,
-    tools
+    tools,
+    locale: new Locale()
 };
 
 if (typeof window !== "undefined") {
