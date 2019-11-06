@@ -123,7 +123,7 @@ function loadJsFile(filename) {
 const loadPolyfill = supportsEs6 ? Promise.resolve() : loadScript("js/polyfills/babel-polyfill-6.23.0.js");
 
 loadPolyfill.then(function() {
-    return loadJsFile("lightning-web.js").then(function() {
+    return loadJsFile("lightning.js").then(function() {
         return loadJsFile("ux.js").then(function() {
             return Promise.all([
                 loadJsFile("appBundle.js")
