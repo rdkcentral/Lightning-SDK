@@ -6,7 +6,7 @@ const babelPresetEnv = require("@babel/preset-env");
 
 const dir = __dirname + "/..";
 
-const LNG_PATH = require.resolve('wpe-lightning/dist/lightning-web.js');
+const LNG_PATH = require.resolve('wpe-lightning/dist/lightning.js');
 
 const info = {};
 getName()
