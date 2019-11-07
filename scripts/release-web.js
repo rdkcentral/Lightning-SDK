@@ -6,7 +6,7 @@ const babelPresetEnv = require("@babel/preset-env");
 
 const dir = __dirname + "/..";
 
-const LNG_PATH = require.resolve('wpe-lightning/dist/lightning-web.js');
+const LNG_PATH = require.resolve('wpe-lightning/dist/lightning.js');
 
 const info = {};
 getName()
@@ -108,7 +108,7 @@ function ensureSrcDirs() {
 function babelify() {
     return Promise.all([
         babelifyFile("./dist/" + info.dest + "/js/src/appBundle.js", "./dist/" + info.dest + "/js/src.es5/appBundle.js"),
-        babelifyFile("./dist/" + info.dest + "/js/src/lightning-web.js", "./dist/" + info.dest + "/js/src.es5/lightning-web.js"),
+        babelifyFile("./dist/" + info.dest + "/js/src/lightning.js", "./dist/" + info.dest + "/js/src.es5/lightning.js"),
         babelifyFile("./dist/" + info.dest + "/js/src/ux.js", "./dist/" + info.dest + "/js/src.es5/ux.js")
     ])
 }
