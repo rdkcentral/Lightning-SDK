@@ -89,7 +89,7 @@ function copyAppFiles() {
             shell.cp("-r","./static",`./dist/${info.dest}`);
         });
     } else {
-        fs.mkdirSync('./dist/static')
+        fs.mkdirSync(`./dist/${info.dest}/static`)
         return Promise.resolve();
     }
 }
