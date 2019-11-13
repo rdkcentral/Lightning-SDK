@@ -60,7 +60,7 @@ export default class DevLauncher {
     _loadInspector() {
         if (this._options.useInspector) {
             /* Attach the inspector to create a fake DOM that shows where lightning elements can be found. */
-            return this.loadScript(DevLauncher._uxPath + "./js/lib/lightning-inspect.js");
+            return this.loadScript(DevLauncher._uxPath + "../wpe-lightning/devtools/lightning-inspect.js");
         } else {
             return Promise.resolve();
         }
