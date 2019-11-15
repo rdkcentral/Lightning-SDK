@@ -1,3 +1,4 @@
+export { default as Application } from './src/Application'
 export { default as AudioPlayer } from './src/AudioPlayer'
 export { default as Inspector } from './src/Inspector'
 export { default as Keyboard } from './src/Keyboard'

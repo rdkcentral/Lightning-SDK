@@ -1,8 +1,8 @@
-import Lightning from 'Lightning'
+// import Lightning from 'Lightning'
 
 const events = ['timeupdate', 'error', 'ended', 'loadeddata', 'canplay', 'play', 'playing', 'pause', 'loadstart', 'seeking', 'seeked', 'encrypted'];
 
-export default class Mediaplayer extends Lightning.Component {
+export default class Mediaplayer extends lng.Component {
 
     _construct(){
         this._skipRenderToTexture = false;
