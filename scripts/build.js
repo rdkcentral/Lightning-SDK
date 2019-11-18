@@ -10,7 +10,7 @@ import commonjs from 'rollup-plugin-commonjs'
 const baseDir = process.env.npm_config_baseDir
 
 const inputOptions = {
-    input: path.join(baseDir, 'src/App.js'),
+    input: path.join(baseDir, 'src/index.js'),
     plugins: [resolve({ browser: true }), commonjs(), babel()],
 }
 

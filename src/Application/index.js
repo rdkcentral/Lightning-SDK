@@ -29,7 +29,6 @@ if (window.innerHeight === 720) {
 
 export default function(App) {
 
-
   return class Application extends lng.Application {
     constructor(options) {
       const config = Deepmerge(defaultOptions, options)
