@@ -1,6 +1,7 @@
 // quick setup just for testing .. this should be made more robust!!
 
 import fs from 'fs'
+import path from 'path'
 import { rollup } from 'rollup'
 import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
@@ -9,14 +10,14 @@ import commonjs from 'rollup-plugin-commonjs'
 const baseDir = process.env.npm_config_baseDir
 
 const inputOptions = {
-    input: baseDir + '/src/App.js',
+    input: path.join(baseDir, 'src/App.js'),
     plugins: [resolve({ browser: true }), commonjs(), babel()],
 }
 
 const outputOptions = {
     format: 'iife',
     name: 'appBundle',
-    file: baseDir + '/dist/appBundle.js',
+    file: path.join(baseDir, '/dist/appBundle.js'),
 }
 
 rollup(inputOptions)
@@ -33,7 +34,12 @@ rollup(inputOptions)
     })
     .catch(console.error)
 
-fs.copyFile('./node_modules/wpe-lightning/dist/lightning.js', baseDir + '/dist/lightning.js', (err) => {
+
+fs.copyFile(
+    path.join(process.cwd(),
+    process.cwd().indexOf('/node_modules/') > -1 ? '..' : 'node_modules',
+    'wpe-lightning/dist/lightning.js'), path.join(baseDir, 'dist/lightning.js'
+), (err) => {
     if(!err) {
         console.log('Lightning copied to ' + baseDir + '/dist/lightning.js')
     }
