@@ -1,4 +1,6 @@
-export default class KeyboardButton extends lng.Component {
+import Lightning from '../Lightning'
+
+export default class KeyboardButton extends Lightning.Component {
     static _template() {
         return {
             Background: {colorTop: 0x80e8e8e8, colorBottom: 0x80d1d1d1},

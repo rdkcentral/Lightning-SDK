@@ -1,7 +1,9 @@
+import Lightning from '../Lightning'
+
 import KeyboardTemplate from "./SimpleKeyboardTemplate.js";
 import KeyboardButton from "./KeyboardButton.js";
 
-export default class Keyboard extends lng.Component {
+export default class Keyboard extends Lightning.Component {
     static _template() {
         return {
 
