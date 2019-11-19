@@ -7,7 +7,7 @@ export const initUtils = (config) => {
 }
 
 export default {
-    getPath(relPath) {
+    asset(relPath) {
         return basePath + '/' + relPath
-    }
+    },
 }

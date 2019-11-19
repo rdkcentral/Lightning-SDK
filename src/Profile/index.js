@@ -35,7 +35,7 @@ export default {
         return getOrSet('householdId', params)
     },
     clientId() {
-        return getOrSet('clinetId', params)
+        return getOrSet('clientId', params)
     },
     locationId() {
         return getOrSet('locationId', params)

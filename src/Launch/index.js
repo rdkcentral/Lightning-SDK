@@ -7,7 +7,9 @@ export default (App, appSettings, platformSettings) => {
     initUtils(platformSettings)
 
     // Initialize plugin profile
-    platformSettings.plugins.profile && initProfile(platformSettings.plugins.profile)
+    if(platformSettings.plugins) {
+        platformSettings.plugins.profile && initProfile(platformSettings.plugins.profile)
+    }
     
     const app = Application(App)
     return new app(appSettings)
