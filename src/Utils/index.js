@@ -1,9 +1,12 @@
 let basePath = null
 
+export const initUtils = (config) => {
+    if(config.path) {
+        basePath = config.path
+    }
+}
+
 export default {
-    setPath(path) {
-        basePath = path
-    },
     getPath(relPath) {
         return basePath + '/' + relPath
     }

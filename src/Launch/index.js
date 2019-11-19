@@ -1,10 +1,10 @@
-import Utils from '../Utils'
+import { initUtils } from '../Utils'
 import { initProfile } from '../Profile'
 import Application from '../Application'
 
 export default (App, appSettings, platformSettings) => {
     
-    Utils.setPath(platformSettings.path)
+    initUtils(platformSettings)
 
     // Initialize plugin profile
     platformSettings.plugins.profile && initProfile(platformSettings.plugins.profile)
