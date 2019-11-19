@@ -10,34 +10,46 @@ const getOrSet = (key, params) => params ? setInfo(key, params) : getInfo(key)
 
 // public API
 export default {
-    zipcode(params) {
-        return getOrSet('zipcode', params)
+    ageRating(params) {
+        return getOrSet('ageRating', params)
     },
-    timezone() {
-        return getOrSet('timezone', params)
+    city(params) {
+        return getOrSet('city', params)
     },
-    partnerId() {
-        return getOrSet('partnerId', params)
+    countryCode(params) {
+        return getOrSet('countryCode', params)
     },
-    receiverId() {
-        return getOrSet('receiverId', params)
+    ip(params) {
+        return getOrSet('ip', params)
     },
-    deviceId() {
-        return getOrSet('deviceId', params)
+    household(params) {
+        return getOrSet('household', params)
     },
-    deviceHash() {
-        return getOrSet('deviceHash', params)
+    language(params) {
+        return getOrSet('language', params)
     },
-    deviceCapabilities() {
-        return getOrSet('deviceCapabilities', params)
+    latlon(params) {
+        return getOrSet('latlon', params)
     },
-    householdId() {
-        return getOrSet('householdId', params)
+    locale(params) {
+        return getOrSet('locale', params)
     },
-    clientId() {
-        return getOrSet('clientId', params)
+    mac(params) {
+        return getOrSet('mac', params)
     },
-    locationId() {
-        return getOrSet('locationId', params)
-    },     
+    operator(params) {
+        return getOrSet('operator', params)
+    },
+    platform(params) {
+        return getOrSet('platform', params)
+    },
+    packages(params) {
+        return getOrSet('packages', params)
+    },
+    uid(params) {
+        return getOrSet('uid', params)
+    },
+    stbType(params) {
+        return getOrSet('stbType', params)
+    }
 }
