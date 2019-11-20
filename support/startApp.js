@@ -1,12 +1,28 @@
 // quick proof of concept for now
 
-window.startApp = function(appSettings, platformSettings, appIdentifier) {
+window.startApp = function(appSettings, platformSettings) {
   console.time('app')
 
-  loadJS('./dist/appBundle.js').then(() => {
-    console.time('app2')
-    const app = window[appIdentifier](appSettings, platformSettings)
-    document.body.appendChild(app.stage.getCanvas())
+  getAppId().then(appIdentifier => {
+    loadJS('./dist/appBundle.js').then(() => {
+      console.time('app2')
+      const app = window[appIdentifier](appSettings, platformSettings)
+      document.body.appendChild(app.stage.getCanvas())
+    })
+  })
+}
+
+const getAppId = () => {
+  return new Promise(resolve => {
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        const metadata = JSON.parse(xhr.responseText)
+        resolve('APP_' + metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_'))
+      }
+    }
+    xhr.open('GET', './metadata.json')
+    xhr.send(null)
   })
 }
 
