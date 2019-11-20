@@ -66,13 +66,13 @@ getName().then( (data) => {
 })
 
 
-fs.copyFile(
-    path.join(process.cwd(),
-    process.cwd().indexOf('/node_modules/') > -1 ? '..' : 'node_modules',
-    'wpe-lightning/dist/lightning.js'), path.join(baseDir, 'dist/lightning.js'
-), (err) => {
-    if(!err) {
-        console.log('Lightning copied to ' + baseDir + '/dist/lightning.js')
-    }
-    else console.error(err)
-})
+// fs.copyFile(
+//     path.join(process.cwd(),
+//     process.cwd().indexOf('/node_modules/') > -1 ? '..' : 'node_modules',
+//     'wpe-lightning/dist/lightning.js'), path.join(baseDir, 'dist/lightning.js'
+// ), (err) => {
+//     if(!err) {
+//         console.log('Lightning copied to ' + baseDir + '/dist/lightning.js')
+//     }
+//     else console.error(err)
+// })
