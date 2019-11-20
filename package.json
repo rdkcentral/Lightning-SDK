@@ -1,6 +1,6 @@
 {
-  "name": "lightning-sdk",
-  "version": "1.0.0",
+  "name": "wpe-lightning-sdk",
+  "version": "2.0.0",
   "scripts": {
     "build": "node -r esm ./scripts/build.js",
     "serve": "node -r esm ./scripts/serve.js",
@@ -39,5 +39,12 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "wpe-lightning": "^1.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:WebPlatformForEmbedded/Lightning-SDK.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WebPlatformForEmbedded/Lightning-SDK/issues"
   }
 }
