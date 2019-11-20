@@ -1,8 +1,8 @@
-// import Lightning from 'Lightning'
+import Lightning from '../Lightning'
 
 const events = ['timeupdate', 'error', 'ended', 'loadeddata', 'canplay', 'play', 'playing', 'pause', 'loadstart', 'seeking', 'seeked', 'encrypted'];
 
-export default class Mediaplayer extends lng.Component {
+export default class Mediaplayer extends Lightning.Component {
 
     _construct(){
         this._skipRenderToTexture = false;
@@ -15,7 +15,7 @@ export default class Mediaplayer extends lng.Component {
                     VideoTexture: {
                         visible: false,
                         pivot: 0.5,
-                        texture: {type: lng.textures.StaticTexture, options: {}}
+                        texture: {type: Lightning.textures.StaticTexture, options: {}}
                     }
                 }
             }
@@ -180,7 +180,7 @@ export default class Mediaplayer extends lng.Component {
             settings = Object.assign(settings, this._consumer.getMediaplayerSettings());
         }
 
-        if (!lng.Utils.equalValues(this._stream, settings.stream)) {
+        if (!Lightning.Utils.equalValues(this._stream, settings.stream)) {
             if (settings.stream && settings.stream.keySystem) {
                 navigator.requestMediaKeySystemAccess(settings.stream.keySystem.id, settings.stream.keySystem.config).then((keySystemAccess) => {
                     return keySystemAccess.createMediaKeys();
@@ -308,7 +308,7 @@ export default class Mediaplayer extends lng.Component {
     }
 
     _setVideoArea(videoPos) {
-        if (lng.Utils.equalValues(this._videoPos, videoPos)) {
+        if (Lightning.Utils.equalValues(this._videoPos, videoPos)) {
             return;
         }
 
