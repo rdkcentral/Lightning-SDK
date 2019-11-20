@@ -4,6 +4,8 @@
   "scripts": {
     "build": "node -r esm ./scripts/build.js",
     "serve": "node -r esm ./scripts/serve.js",
+    "start": "concurrently \"node -r esm ./scripts/build.js\" \"node -r esm ./scripts/serve.js\"",
+    "dev": "concurrently \"node -r esm ./scripts/build.js --watch\" \"node -r esm ./scripts/serve.js\"",
     "lint": "eslint '**/*.js'"
   },
   "lint-staged": {
@@ -20,6 +22,8 @@
   "dependencies": {
     "@babel/core": "^7.7.2",
     "babel-eslint": "^10.0.3",
+    "chokidar": "^3.3.0",
+    "concurrently": "^5.0.0",
     "deepmerge": "^4.2.2",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.7.0",

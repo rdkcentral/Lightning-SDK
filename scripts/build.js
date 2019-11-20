@@ -9,10 +9,23 @@ import commonjs from 'rollup-plugin-commonjs'
 import process from 'process'
 
 const baseDir = process.env.npm_config_baseDir
+const watch = process.argv.pop() === '--watch'
 
 const inputOptions = {
   input: path.join(baseDir, 'src/index.js'),
   plugins: [resolve({ browser: true }), commonjs(), babel()],
+}
+
+if (watch) {
+  console.log(
+    'Sorry, watching mode is not working yet ... for now you need to run `npm run build` for each change you make'
+  )
+  // inputOptions.watch = {
+  //   chokidar: {
+  //     usePolling: true,
+  //   },
+  //   include: path.join(process.env.npm_config_baseDir, '/{src|assets}/**'),
+  // }
 }
 
 let outputOptions = {
