@@ -1,3 +1,1 @@
-export default class AudioPlayer {
-    
-}
+export default class AudioPlayer {}

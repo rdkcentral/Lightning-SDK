@@ -1,4 +1,5 @@
 import Deepmerge from 'deepmerge'
+import Lightning from '../Lightning'
 
 const defaultOptions = {
   stage: { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false },
@@ -28,8 +29,7 @@ if (window.innerHeight === 720) {
 }
 
 export default function(App) {
-
-  return class Application extends lng.Application {
+  return class Application extends Lightning.Application {
     constructor(options) {
       const config = Deepmerge(defaultOptions, options)
       super(config)
@@ -46,11 +46,11 @@ export default function(App) {
 
     _setup() {
       Promise.all([
-        this.loadFonts((App.config && App.config.fonts) || App.getFonts && App.getFonts() || []),
+        this.loadFonts((App.config && App.config.fonts) || (App.getFonts && App.getFonts()) || []),
         // add locale and maybe other stuff
       ])
         .then(() => {
-          this.childList.a({ref: 'App', type: App}) //, MediaPlayer
+          this.childList.a({ ref: 'App', type: App }) //, MediaPlayer
           super._setup()
         })
         .catch(console.error)
@@ -75,5 +75,5 @@ export default function(App) {
     _getFocused() {
       return this.tag('App')
     }
-  }   
+  }
 }

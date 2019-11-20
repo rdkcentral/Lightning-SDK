@@ -3,14 +3,33 @@
   "version": "1.0.0",
   "scripts": {
     "build": "node -r esm ./scripts/build.js",
-    "serve": "node -r esm ./scripts/serve.js"
+    "serve": "node -r esm ./scripts/serve.js",
+    "lint": "eslint '**/*.js'"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "dependencies": {
     "@babel/core": "^7.7.2",
+    "babel-eslint": "^10.0.3",
     "deepmerge": "^4.2.2",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-prettier": "^3.1.1",
     "esm": "^3.2.25",
     "execa": "^3.3.0",
+    "husky": "^3.1.0",
     "instant-server": "^2.0.0",
+    "lint-staged": "^9.4.3",
+    "prettier": "^1.19.1",
     "rollup": "^1.27.0",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
