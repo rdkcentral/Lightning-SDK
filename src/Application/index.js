@@ -40,7 +40,7 @@ export default function(App) {
         w: 1920,
         h: 1080,
         rect: true,
-        color: 0xff000000,
+        color: 0x00000000,
       }
     }
 
