@@ -21,7 +21,7 @@ let outputOptions = {
   file: path.join(baseDir, '/dist/appBundle.js'),
 }
 
-const getName = function() {
+const getMetadata = function() {
   return new Promise((resolve, reject) => {
     fs.readFile(baseDir + '/metadata.json', function(err, res) {
       if (err) {
@@ -53,8 +53,8 @@ const getName = function() {
   })
 }
 
-getName().then(data => {
-  outputOptions.name = 'APP_' + data.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')
+getMetadata().then(data => {
+  outputOptions.name += data.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')
   rollup(inputOptions)
     .then(bundle => {
       return bundle
@@ -69,6 +69,16 @@ getName().then(data => {
     })
     .catch(console.error)
 })
+
+fs.copyFile(
+  path.join(process.cwd(), 'support/startApp.js'),
+  path.join(baseDir, 'dist/startApp.js'),
+  err => {
+    if (!err) {
+      console.log('startApp copied to ' + baseDir + '/dist/startApp.js')
+    } else console.error(err)
+  }
+)
 
 // fs.copyFile(
 //     path.join(process.cwd(),
