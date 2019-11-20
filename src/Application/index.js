@@ -50,7 +50,7 @@ export default function(App) {
         // add locale and maybe other stuff
       ])
         .then(() => {
-          this.childList.a({ ref: 'App', type: App }) //, MediaPlayer
+          this.childList.a({ ref: 'App', type: App })
           super._setup()
         })
         .catch(console.error)
