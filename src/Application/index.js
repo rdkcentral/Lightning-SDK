@@ -1,5 +1,6 @@
 import Deepmerge from 'deepmerge'
 import Lightning from '../Lightning'
+import Locale from '../Locale'
 
 const defaultOptions = {
   stage: { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false },
@@ -47,7 +48,7 @@ export default function(App, appData) {
     _setup() {
       Promise.all([
         this.loadFonts((App.config && App.config.fonts) || (App.getFonts && App.getFonts()) || []),
-        // add locale and maybe other stuff
+        Locale.load((App.config && App.config.locale) || (App.getLocale && App.getLocale())),
       ])
         .then(() => {
           this.childList.a({ ref: 'App', type: App, appData })
