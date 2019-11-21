@@ -28,7 +28,7 @@ if (window.innerHeight === 720) {
   defaultOptions.stage['precision'] = 0.6666666667
 }
 
-export default function(App) {
+export default function(App, appData) {
   return class Application extends Lightning.Application {
     constructor(options) {
       const config = Deepmerge(defaultOptions, options)
@@ -50,7 +50,7 @@ export default function(App) {
         // add locale and maybe other stuff
       ])
         .then(() => {
-          this.childList.a({ ref: 'App', type: App })
+          this.childList.a({ ref: 'App', type: App, appData })
           super._setup()
         })
         .catch(console.error)

@@ -1,12 +1,12 @@
 // quick proof of concept for now
 
-window.startApp = function(appSettings, platformSettings) {
+window.startApp = function(appSettings, platformSettings, appData) {
   console.time('app')
 
   getAppId().then(appIdentifier => {
     loadJS('./dist/appBundle.js').then(() => {
       console.time('app2')
-      const app = window[appIdentifier](appSettings, platformSettings)
+      const app = window[appIdentifier](appSettings, platformSettings, appData)
       document.body.appendChild(app.stage.getCanvas())
     })
   })
