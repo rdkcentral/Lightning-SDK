@@ -31,6 +31,6 @@ const makeQueryString = (url, options = {}, type = 'url') => {
 
 const detectProtocol = () => {
   return window.location.protocol
-  // from old SDK (not sure if this is needed like this)
+  // from old SDK (not sure if this is needed like this?)
   // return lng.Utils.isWeb && location.protocol === "https:" ? "https" : "http";
 }
