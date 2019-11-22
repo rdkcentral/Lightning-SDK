@@ -90,7 +90,7 @@ export default {
       },
       suspend(params = {}) {
         params.url = url
-        sendMetric('media', 'suuspend', params)
+        sendMetric('media', 'suspend', params)
       },
       volumechange(params = {}) {
         params.url = url
