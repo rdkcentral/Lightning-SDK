@@ -20,7 +20,7 @@ const inputOptions = {
 
 export const release = () => {
   return new Promise(resolve => {
-    return build().then(data => {
+    return build({ clean: true, copyStartApp: false }).then(data => {
       pack(data).then(() => {
         data.absolutePath = `${baseDir}/${data.identifier}.tgz`
         log('MPK file created! ' + data.absolutePath)
@@ -30,12 +30,16 @@ export const release = () => {
   })
 }
 
-export const build = () => {
+export const build = (opts = {}) => {
   return new Promise(resolve => {
-    return Promise.all([getName(), copyFiles()])
+    return Promise.all([getName(), copyFiles(opts.clean)])
       .then(res => {
         let data = res[0]
-        return Promise.all([copyStartApp(), bundleApp(data), bundleAppEs5(data)]).then(() => {
+        return Promise.all([
+          copyStartApp(opts.copyStartApp),
+          bundleApp(data),
+          bundleAppEs5(data),
+        ]).then(() => {
           log('Files written to ' + dest)
           resolve(data)
         })
@@ -92,7 +96,7 @@ const bundleAppEs5 = data => {
   const outputOptionsEs5 = {
     format: 'iife',
     name: 'APP_' + data.identifier.replace(/[^0-9a-zA-Z_$]/g, '_'),
-    file: path.join(baseDir, '/dist/appBundle_es5.js'),
+    file: path.join(baseDir, '/dist/appBundle.es5.js'),
   }
 
   return _bundleApp(inputOptionsEs5, outputOptionsEs5)
@@ -113,25 +117,41 @@ const _bundleApp = (_inputOptions, _outputOptions) => {
   })
 }
 
-const copyFiles = () => {
+const copyFiles = clean => {
   return new Promise(resolve => {
     //note: shelljs is sync
-    shell.cp('-r', path.join(baseDir, 'static/'), dest)
-    shell.cp('-r', path.join(baseDir, './src'), dest)
-    fs.copyFile(path.join(baseDir, 'metadata.json'), dest, resolve)
+    shell.cd(baseDir)
+
+    if (clean) {
+      shell.rm('-r', dest)
+      shell.mkdir(dest)
+    }
+
+    shell.cp('-r', baseDir + '/static', dest)
+    shell.cp('-r', baseDir + '/src', dest)
+    shell.cp('metadata.json', dest)
+    resolve()
   })
 }
 
-const copyStartApp = () => {
-  fs.copyFile(
-    path.join(process.cwd(), 'support/startApp.js'),
-    path.join(baseDir, 'dist/startApp.js'),
-    err => {
-      if (!err) {
-        console.log('startApp copied to ' + baseDir + '/dist/startApp.js')
-      } else console.error(err)
-    }
-  )
+const copyStartApp = copyStartApp => {
+  if (copyStartApp === false) return Promise.resolve()
+
+  return new Promise(resolve, reject => {
+    fs.copyFile(
+      path.join(process.cwd(), 'support/startApp.js'),
+      path.join(baseDir, 'dist/startApp.js'),
+      err => {
+        if (!err) {
+          console.log('startApp copied to ' + baseDir + '/dist/startApp.js')
+          resolve()
+        } else {
+          console.error(err)
+          reject(err)
+        }
+      }
+    )
+  })
 }
 
 const pack = data => {
@@ -150,7 +170,7 @@ const tar = (src, dest) => {
           log('ERR:', err)
           reject(err)
         } else {
-          //log(`TAR: ${src}`)
+          log(`TAR: ${src}`)
           resolve()
         }
       }

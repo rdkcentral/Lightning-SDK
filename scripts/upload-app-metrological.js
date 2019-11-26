@@ -2,26 +2,17 @@ import { release } from './package'
 import fs from 'fs'
 import https from 'https'
 import FormData from 'form-data'
-import { argv } from 'process'
+import readline from 'readline'
+import process from 'process'
 
-if (!argv.args || argv.args.length === 0) {
-  console.error('No key provided, please provide key as an argument\n')
-  process.exit(0)
-}
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+})
 
-const key = argv.args[argv.args.length - 1]
 let intervalId = 0
 
-const options = {
-  host: 'api.metrological.com',
-  path: '/api/@type/app-store/upload-lightning',
-  protocol: 'https:',
-  headers: {
-    'X-Api-Token': key,
-  },
-}
-
-const checkLoginStatus = () => {
+const checkLoginStatus = key => {
   let data = ''
   return new Promise((resolve, reject) => {
     https.get(
@@ -47,39 +38,6 @@ const checkLoginStatus = () => {
     )
   })
 }
-
-checkLoginStatus()
-  .then(({ type }) => {
-    options.path = options.path.replace('@type', type)
-  })
-  .then(release.bind(null, true))
-  .then(response => {
-    const {
-      absolutePath,
-      data: { version, identifier },
-    } = response
-    const form = new FormData()
-
-    form.append('id', identifier)
-    form.append('version', version)
-    form.append('upload', fs.createReadStream(absolutePath))
-
-    form.submit(options, (err, res) => {
-      clearInterval(intervalId)
-      if (err) {
-        console.log(err)
-        return
-      }
-      res.on('data', chunk => handleData(chunk))
-      res.on('end', () => handleOnEnd(res))
-    })
-  })
-  .catch(err => {
-    clearInterval(intervalId)
-    log('\x1b[31m%s\x1b[0m', err)
-  })
-
-startLoader()
 
 const log = (color, message) => {
   console.clear()
@@ -129,3 +87,48 @@ const UPLOAD_ERRORS = {
   missing_field_file: 'There is a missing field',
   app_belongs_to_other_user: 'You are not the owner of this app',
 }
+
+const upload = key => {
+  rl.close()
+  startLoader()
+  checkLoginStatus(key)
+    .then(({ type }) => {
+      release({ copyStartApp: false, clean: true }).then(response => {
+        if (!response || !response.version || !response.identifier || !response.absolutePath)
+          throw new Error('Version, Identifier or absolutePath not specified in metadata.json.')
+
+        const options = {
+          host: 'api.metrological.com',
+          path: `/api/${type}/app-store/upload-lightning`,
+          protocol: 'https:',
+          headers: {
+            'X-Api-Token': key,
+          },
+        }
+
+        const form = new FormData()
+
+        form.append('id', response.identifier)
+        form.append('version', response.version)
+        form.append('upload', fs.createReadStream(response.absolutePath))
+
+        form.submit(options, (err, res) => {
+          clearInterval(intervalId)
+          if (err) {
+            console.log(err)
+            return
+          }
+          res.on('data', chunk => handleData(chunk))
+          res.on('end', () => handleOnEnd(res))
+        })
+      })
+    })
+    .catch(err => {
+      clearInterval(intervalId)
+      log('\x1b[31m%s\x1b[0m', err)
+    })
+}
+
+if (process.env.KEY === undefined || process.env.KEY === '')
+  rl.question('Please provide API key: ', upload)
+else upload(process.env.KEY)
