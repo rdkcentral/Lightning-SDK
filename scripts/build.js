@@ -94,7 +94,11 @@ fs.copyFile(
 )
 
 fs.copyFile(
-  path.join(process.cwd(), 'node_modules/wpe-lightning/devtools/lightning-inspect.js'),
+  path.join(
+    process.cwd(),
+    process.cwd().indexOf('/node_modules/') > -1 ? '..' : 'node_modules',
+    'wpe-lightning/devtools/lightning-inspect.js'
+  ),
   path.join(baseDir, 'dist/lightning-inspect.js'),
   err => {
     if (!err) {
