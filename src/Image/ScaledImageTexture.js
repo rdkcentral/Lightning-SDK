@@ -1,10 +1,24 @@
 import Lightning from '../Lightning'
-// todo: review!
-// the original ScaledImageTexture had some overhead I think
-// but at the same this class is probably still missing a lot of stuff
-
+// for now: simplified version of original ScaledImageTexture class
 export default class ScaledImageTexture extends Lightning.textures.ImageTexture {
+  constructor(stage) {
+    super(stage)
+    this._scalingOptions = undefined
+  }
+
+  set scalingOptions(options) {
+    this.resizeMode = this._scalingOptions = options
+  }
+
   _getLookupId() {
-    return `${this._src}-${this.scalingOptions.type}-${this.scalingOptions.width}-${this.scalingOptions.height}`
+    return `${this._src}-${this._scalingOptions.type}-${this._scalingOptions.w}-${this._scalingOptions.h}`
+  }
+
+  getNonDefaults() {
+    const obj = super.getNonDefaults()
+    if (this._src) {
+      obj.src = this._src
+    }
+    return obj
   }
 }
