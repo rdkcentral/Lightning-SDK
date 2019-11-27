@@ -14,6 +14,11 @@ export default {
     // possibly make proxy url configurable from bootstrapper?
     return detectProtocol() + '//cdn.metrological.com/proxy?' + makeQueryString(url, options)
   },
+  getOption(option) {
+    // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
+    const url = new URL(document.location.href)
+    return url.searchParams.has(option)
+  },
 }
 
 const makeQueryString = (url, options = {}, type = 'url') => {

@@ -22,7 +22,7 @@ const inputOptions = {
 
 export const release = () => {
   return new Promise(resolve => {
-    return build({ clean: true, copyStartApp: false, copyLightning: false }).then(data => {
+    return build({ type: 'release' }).then(data => {
       pack(data).then(() => {
         data.absolutePath = `${baseDir}/${data.identifier}.tgz`
         log('MPK file created! ' + data.absolutePath)
@@ -33,11 +33,24 @@ export const release = () => {
 }
 
 export const build = (opts = {}) => {
+  //dev
+  opts.copyStartApp = opts.copyStartApp || opts.type === 'dev' ? true : false
+  opts.copyLightning = opts.copyLightning || opts.type === 'dev' ? true : false
+  opts.copyStartApp = opts.copyStartApp || opts.type === 'dev' ? true : false
+  opts.copyLightningInspect = opts.copyLightningInspect || opts.type === 'dev' ? true : false
+
+  //release
+  opts.makeEs5Build = opts.makeEs5Build || opts.type === 'release' ? true : false
+  opts.clean = opts.clean || opts.type === 'release' ? true : false
+
   return new Promise(resolve => {
     return Promise.all([getName(), copyFiles(opts)])
       .then(res => {
         let data = res[0]
-        return Promise.all([bundleApp(data), bundleAppEs5(data)]).then(() => {
+
+        let buildFns = [bundleApp(data)]
+        if (opts.type === 'release') buildFns.push(bundleAppEs5(data))
+        return Promise.all(buildFns).then(() => {
           log('Files written to ' + dest)
           resolve(data)
         })
@@ -133,6 +146,8 @@ const copyFiles = opts => {
 
     if (opts.copyStartApp !== false) shell.cp(process.cwd() + '/support/startApp.js', dest)
     if (opts.copyLightning !== false) shell.cp(lightningFile, dest)
+    if (opts.copyLightningInspect !== false)
+      shell.cp(process.cwd() + '/node_modules/wpe-lightning/devtools/lightning-inspect.js', dest)
 
     resolve()
   })

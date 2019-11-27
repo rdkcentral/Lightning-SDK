@@ -8,10 +8,13 @@ window.startApp = function(appSettings, platformSettings, appData) {
   console.time('app')
 
   getAppId().then(appIdentifier => {
-    loadJS('./dist/appBundle.js').then(() => {
-      console.time('app2')
-      const app = window[appIdentifier](appSettings, platformSettings, appData)
-      document.body.appendChild(app.stage.getCanvas())
+    loadJS('./dist/lightning-inspect.js').then(() => {
+      loadJS('./dist/appBundle.js').then(() => {
+        window.attachInspector(window.lng)
+        console.time('app2')
+        const app = window[appIdentifier](appSettings, platformSettings, appData)
+        document.body.appendChild(app.stage.getCanvas())
+      })
     })
   })
 }

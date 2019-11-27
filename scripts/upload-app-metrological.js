@@ -93,7 +93,7 @@ const upload = key => {
   startLoader()
   checkLoginStatus(key)
     .then(({ type }) => {
-      release({ copyStartApp: false, clean: true }).then(response => {
+      release().then(response => {
         if (!response || !response.version || !response.identifier || !response.absolutePath)
           throw new Error('Version, Identifier or absolutePath not specified in metadata.json.')
 
