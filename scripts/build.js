@@ -14,6 +14,6 @@ if (watch) {
   // }
 }
 
-build({ copyStartApp: true }).then(() => {
+build().then(() => {
   console.log('\x1b[32m%s\x1b[0m', 'success')
 })

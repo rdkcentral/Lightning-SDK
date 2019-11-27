@@ -8,6 +8,8 @@ import commonjs from 'rollup-plugin-commonjs'
 import resolve from 'rollup-plugin-node-resolve'
 import process from 'process'
 
+const lightningFile = require.resolve('wpe-lightning')
+
 const baseDir = process.env.npm_config_baseDir
 const dest = path.join(baseDir, 'dist/')
 
@@ -20,7 +22,7 @@ const inputOptions = {
 
 export const release = () => {
   return new Promise(resolve => {
-    return build({ clean: true, copyStartApp: false }).then(data => {
+    return build({ clean: true, copyStartApp: false, copyLightning: false }).then(data => {
       pack(data).then(() => {
         data.absolutePath = `${baseDir}/${data.identifier}.tgz`
         log('MPK file created! ' + data.absolutePath)
@@ -32,14 +34,10 @@ export const release = () => {
 
 export const build = (opts = {}) => {
   return new Promise(resolve => {
-    return Promise.all([getName(), copyFiles(opts.clean)])
+    return Promise.all([getName(), copyFiles(opts)])
       .then(res => {
         let data = res[0]
-        return Promise.all([
-          copyStartApp(opts.copyStartApp),
-          bundleApp(data),
-          bundleAppEs5(data),
-        ]).then(() => {
+        return Promise.all([bundleApp(data), bundleAppEs5(data)]).then(() => {
           log('Files written to ' + dest)
           resolve(data)
         })
@@ -117,12 +115,13 @@ const _bundleApp = (_inputOptions, _outputOptions) => {
   })
 }
 
-const copyFiles = clean => {
+const copyFiles = opts => {
   return new Promise(resolve => {
     //note: shelljs is sync
+    let curPwd = process.cwd()
     shell.cd(baseDir)
 
-    if (clean) {
+    if (opts.clean) {
       shell.rm('-r', dest)
       shell.mkdir(dest)
     }
@@ -130,27 +129,12 @@ const copyFiles = clean => {
     shell.cp('-r', baseDir + '/static', dest)
     shell.cp('-r', baseDir + '/src', dest)
     shell.cp('metadata.json', dest)
+    shell.cd(curPwd)
+
+    if (opts.copyStartApp !== false) shell.cp(process.cwd() + '/support/startApp.js', dest)
+    if (opts.copyLightning !== false) shell.cp(lightningFile, dest)
+
     resolve()
-  })
-}
-
-const copyStartApp = copyStartApp => {
-  if (copyStartApp === false) return Promise.resolve()
-
-  return new Promise(resolve, reject => {
-    fs.copyFile(
-      path.join(process.cwd(), 'support/startApp.js'),
-      path.join(baseDir, 'dist/startApp.js'),
-      err => {
-        if (!err) {
-          console.log('startApp copied to ' + baseDir + '/dist/startApp.js')
-          resolve()
-        } else {
-          console.error(err)
-          reject(err)
-        }
-      }
-    )
   })
 }
 
