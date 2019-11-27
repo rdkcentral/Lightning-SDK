@@ -1,2 +1,1 @@
-import Lightning from 'wpe-lightning'
-export default Lightning
+export default window.lng
