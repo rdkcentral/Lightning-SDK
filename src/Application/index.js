@@ -1,5 +1,7 @@
 import Deepmerge from 'deepmerge'
 import Lightning from '../Lightning'
+import Locale from '../Locale'
+import Metrics from '../Metrics'
 
 const defaultOptions = {
   stage: { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false },
@@ -29,6 +31,7 @@ if (window.innerHeight === 720) {
 }
 
 export default function(App, appData) {
+  Metrics.app.launch()
   return class Application extends Lightning.Application {
     constructor(options) {
       const config = Deepmerge(defaultOptions, options)
@@ -47,9 +50,10 @@ export default function(App, appData) {
     _setup() {
       Promise.all([
         this.loadFonts((App.config && App.config.fonts) || (App.getFonts && App.getFonts()) || []),
-        // add locale and maybe other stuff
+        Locale.load((App.config && App.config.locale) || (App.getLocale && App.getLocale())),
       ])
         .then(() => {
+          Metrics.app.loaded()
           this.childList.a({ ref: 'App', type: App, appData })
           super._setup()
         })

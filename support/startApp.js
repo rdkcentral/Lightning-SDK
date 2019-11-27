@@ -1,4 +1,8 @@
-// quick proof of concept for now
+const style = document.createElement('style')
+document.head.appendChild(style)
+style.sheet.insertRule(
+  '@media all { *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black;} }'
+)
 
 window.startApp = function(appSettings, platformSettings, appData) {
   console.time('app')
