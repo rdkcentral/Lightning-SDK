@@ -7,16 +7,20 @@ style.sheet.insertRule(
 window.startApp = function(appSettings, platformSettings, appData) {
   console.time('app')
 
-  getAppId().then(appIdentifier => {
-    loadJS('./dist/lightning-inspect.js').then(() => {
-      loadJS('./dist/appBundle.js').then(() => {
-        window.attachInspector(window.lng)
-        console.time('app2')
-        const app = window[appIdentifier](appSettings, platformSettings, appData)
-        document.body.appendChild(app.stage.getCanvas())
-      })
-    })
-  })
+  let appIdentifier
+
+  sequence([
+    () => getAppId().then(id => (appIdentifier = id)),
+    () => loadJS('./dist/lightning.js'),
+    () => loadJS('./dist/lightning-inspect.js'),
+    () => loadJS('./dist/appBundle.js'),
+    () => {
+      window.attachInspector(window.lng)
+      console.time('app2')
+      const app = window[appIdentifier](appSettings, platformSettings, appData)
+      document.body.appendChild(app.stage.getCanvas())
+    },
+  ])
 }
 
 const getAppId = () => {
@@ -44,4 +48,10 @@ const loadJS = (url, id) => {
 
     document.body.appendChild(tag)
   })
+}
+
+const sequence = steps => {
+  return steps.reduce((promise, method) => {
+    return promise.then(() => method())
+  }, Promise.resolve(null))
 }
