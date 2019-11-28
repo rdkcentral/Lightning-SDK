@@ -1,5 +1,6 @@
 import Lightning from '../Lightning'
 import Utils from '../Utils'
+import Metrics from '../Metrics'
 
 const events = [
   'timeupdate',
@@ -19,6 +20,7 @@ const events = [
 export default class Mediaplayer extends Lightning.Component {
   _construct() {
     this._skipRenderToTexture = false
+    this._metrics = null
   }
 
   static _template() {
@@ -77,6 +79,9 @@ export default class Mediaplayer extends Lightning.Component {
   _registerListeners() {
     events.forEach(event => {
       const handler = e => {
+        if (this._metrics[event] && typeof this._metrics[event] === 'function') {
+          this._metrics[event]({ currentTime: this.videoEl.currentTime })
+        }
         this.fire(event, { videoElement: this.videoEl, event: e })
       }
       this.eventHandlers.push(handler)
@@ -249,6 +254,7 @@ export default class Mediaplayer extends Lightning.Component {
   }
 
   open(url) {
+    this._metrics = Metrics.media(url)
     console.log('Playing stream', url)
     if (this.application.noVideo) {
       console.log('noVideo option set, so ignoring: ' + url)

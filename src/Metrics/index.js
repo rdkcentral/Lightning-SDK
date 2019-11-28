@@ -1,5 +1,5 @@
 let sendMetric = (type, event, params) => {
-  console.log('Sending metric', { type }, { event }, { params })
+  console.log('Sending metric:', type, event, params)
 }
 
 export const initMetrics = config => {
@@ -11,7 +11,18 @@ const metrics = {
   app: ['launch', 'loaded', 'ready', 'close'],
   page: ['view', 'leave'],
   user: ['click', 'input'],
-  media: ['abort', 'canplay', 'ended', 'pause', 'play', 'suspend', 'volumechange', 'waiting'],
+  media: [
+    'abort',
+    'canplay',
+    'ended',
+    'pause',
+    'play',
+    'suspend',
+    'volumechange',
+    'waiting',
+    'seeking',
+    'seeked',
+  ],
 }
 
 // error metric function (added to each category)
