@@ -14,6 +14,7 @@ export default {
     // possibly make proxy url configurable from bootstrapper?
     return detectProtocol() + '//cdn.metrological.com/proxy?' + makeQueryString(url, options)
   },
+  // Todo: maybe we should not do this directly via the url, but use the Settings plugin (and pass options in appSettings / platformSetting)
   getOption(option) {
     // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
     const url = new URL(document.location.href)
