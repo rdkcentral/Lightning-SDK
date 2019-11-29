@@ -17,6 +17,14 @@ const events = [
   'encrypted',
 ]
 
+let mediaUrl = url => url
+
+export const initMediaPlayer = config => {
+  if (config.mediaUrl) {
+    mediaUrl = config.mediaUrl
+  }
+}
+
 export default class Mediaplayer extends Lightning.Component {
   _construct() {
     this._skipRenderToTexture = false
@@ -254,6 +262,8 @@ export default class Mediaplayer extends Lightning.Component {
   }
 
   open(url) {
+    // prep the media url to play depending on platform (mediaPlayerplugin)
+    url = mediaUrl(url)
     this._metrics = Metrics.media(url)
     console.log('Playing stream', url)
     if (this.application.noVideo) {

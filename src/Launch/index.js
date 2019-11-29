@@ -2,6 +2,7 @@ import { initUtils } from '../Utils'
 import { initProfile } from '../Profile'
 import { initMetrics } from '../Metrics'
 import { initSettings } from '../Settings'
+import { initMediaPlayer } from '../MediaPlayer'
 import Application from '../Application'
 
 export default (App, appSettings, platformSettings, appData) => {
@@ -13,6 +14,7 @@ export default (App, appSettings, platformSettings, appData) => {
   if (platformSettings.plugins) {
     platformSettings.plugins.profile && initProfile(platformSettings.plugins.profile)
     platformSettings.plugins.metrics && initMetrics(platformSettings.plugins.metrics)
+    platformSettings.plugins.mediaPlayer && initMediaPlayer(platformSettings.plugins.mediaPlayer)
   }
 
   const app = Application(App, appData)
