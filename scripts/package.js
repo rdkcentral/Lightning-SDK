@@ -146,8 +146,16 @@ const copyFiles = opts => {
 
     if (opts.copyStartApp !== false) shell.cp(process.cwd() + '/support/startApp.js', dest)
     if (opts.copyLightning !== false) shell.cp(lightningFile, dest)
-    if (opts.copyLightningInspect !== false)
-      shell.cp(process.cwd() + '/node_modules/wpe-lightning/devtools/lightning-inspect.js', dest)
+    if (opts.copyLightningInspect !== false) {
+      shell.cp(
+        path.join(
+          process.cwd(),
+          process.cwd().indexOf('/node_modules/') > -1 ? '..' : 'node_modules',
+          'wpe-lightning/devtools/lightning-inspect.js'
+        ),
+        dest
+      )
+    }
 
     resolve()
   })
