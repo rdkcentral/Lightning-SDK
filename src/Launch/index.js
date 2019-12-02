@@ -3,12 +3,14 @@ import { initProfile } from '../Profile'
 import { initMetrics } from '../Metrics'
 import { initSettings } from '../Settings'
 import { initMediaPlayer } from '../MediaPlayer'
+import { initStorage } from '../Storage'
 import Application from '../Application'
 
 export default (App, appSettings, platformSettings, appData) => {
   initSettings(appSettings, platformSettings)
 
   initUtils(platformSettings)
+  initStorage()
 
   // Initialize plugins
   if (platformSettings.plugins) {

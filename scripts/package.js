@@ -17,7 +17,7 @@ let logging = true
 
 const inputOptions = {
   input: path.join(baseDir, 'src/index.js'),
-  plugins: [resolve({ browser: true }), commonjs(), babel()],
+  plugins: [resolve({ mainFields: ['main', 'browser'] }), commonjs(), babel()],
 }
 
 export const release = () => {
