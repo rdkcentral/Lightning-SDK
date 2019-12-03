@@ -19,6 +19,6 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.mediaPlayer && initMediaPlayer(platformSettings.plugins.mediaPlayer)
   }
 
-  const app = Application(App, appData)
+  const app = Application(App, appData, platformSettings)
   return new app(appSettings)
 }

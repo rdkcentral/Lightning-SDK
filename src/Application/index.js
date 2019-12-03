@@ -2,6 +2,7 @@ import Deepmerge from 'deepmerge'
 import Lightning from '../Lightning'
 import Locale from '../Locale'
 import Metrics from '../Metrics'
+import VersionLabel from '../VersionLabel'
 
 const defaultOptions = {
   stage: { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false },
@@ -30,7 +31,7 @@ if (window.innerHeight === 720) {
   defaultOptions.stage['precision'] = 0.6666666667
 }
 
-export default function(App, appData) {
+export default function(App, appData, platformSettings) {
   Metrics.app.launch()
   return class Application extends Lightning.Application {
     constructor(options) {
@@ -54,7 +55,21 @@ export default function(App, appData) {
       ])
         .then(() => {
           Metrics.app.loaded()
-          this.childList.a({ ref: 'App', type: App, appData })
+          this.childList.a({
+            ref: 'App',
+            type: App,
+            appData,
+            forceZIndexContext: !!platformSettings.showVersion,
+          })
+
+          if (platformSettings.showVersion) {
+            this.childList.a({
+              ref: 'VersionLabel',
+              type: VersionLabel,
+              version: platformSettings.appMetadata && platformSettings.appMetadata.version,
+            })
+          }
+
           super._setup()
         })
         .catch(console.error)

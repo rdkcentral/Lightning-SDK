@@ -7,9 +7,9 @@ style.sheet.insertRule(
 window.startApp = function(appSettings, platformSettings, appData) {
   console.time('app')
 
-  let appIdentifier
+  let appMetadata
   sequence([
-    () => getAppId().then(id => (appIdentifier = id)),
+    () => getAppMetadata().then(metadata => (appMetadata = metadata)),
     () => loadJS('./dist/lightning.js'),
     () => loadJS('./dist/appBundle.js'),
     () =>
@@ -18,19 +18,21 @@ window.startApp = function(appSettings, platformSettings, appData) {
         : Promise.resolve(),
     () => {
       console.time('app2')
-      const app = window[appIdentifier](appSettings, platformSettings, appData)
+      platformSettings.appMetadata = appMetadata
+      const app = window[appMetadata.id](appSettings, platformSettings, appData)
       document.body.appendChild(app.stage.getCanvas())
     },
   ])
 }
 
-const getAppId = () => {
+const getAppMetadata = () => {
   return new Promise(resolve => {
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = function() {
       if (xhr.readyState == XMLHttpRequest.DONE) {
         const metadata = JSON.parse(xhr.responseText)
-        resolve('APP_' + metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_'))
+        metadata.id = 'APP_' + metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')
+        resolve(metadata)
       }
     }
     xhr.open('GET', './metadata.json')
