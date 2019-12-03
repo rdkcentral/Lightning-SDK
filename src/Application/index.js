@@ -75,6 +75,16 @@ export default function(App, appData, platformSettings) {
         .catch(console.error)
     }
 
+    _handleBack() {
+      Metrics.app.close()
+      if (typeof platformSettings.onClose === 'function') platformSettings.onClose()
+    }
+
+    _handleExit() {
+      Metrics.app.close()
+      if (typeof platformSettings.onClose === 'function') platformSettings.onClose()
+    }
+
     loadFonts(fonts) {
       return new Promise((resolve, reject) => {
         fonts
