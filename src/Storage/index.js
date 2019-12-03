@@ -14,7 +14,11 @@ const namespacedKey = key => (namespace ? [namespace, key].join('.') : key)
 
 export default {
   get(key) {
-    return JSON.parse(lc.getItem(namespacedKey(key)))
+    try {
+      return JSON.parse(lc.getItem(namespacedKey(key)))
+    } catch (e) {
+      return null
+    }
   },
   set(key, value) {
     try {
