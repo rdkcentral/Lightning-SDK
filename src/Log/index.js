@@ -18,15 +18,15 @@ const prepLog = (type, args) => {
 
 export default {
   info() {
-    Settings.get('app', 'log') && console.log.apply(null, prepLog('Info', arguments))
+    Settings.get('platform', 'log') && console.log.apply(null, prepLog('Info', arguments))
   },
   debug() {
-    Settings.get('app', 'log') && console.debug.apply(null, prepLog('Debug', arguments))
+    Settings.get('platform', 'log') && console.debug.apply(null, prepLog('Debug', arguments))
   },
   error() {
-    Settings.get('app', 'log') && console.error.apply(null, prepLog('Error', arguments))
+    Settings.get('platform', 'log') && console.error.apply(null, prepLog('Error', arguments))
   },
   warn() {
-    Settings.get('app', 'log') && console.warn.apply(null, prepLog('Warn', arguments))
+    Settings.get('platform', 'log') && console.warn.apply(null, prepLog('Warn', arguments))
   },
 }
