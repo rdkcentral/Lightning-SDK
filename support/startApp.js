@@ -26,18 +26,14 @@ window.startApp = function(appSettings, platformSettings, appData) {
 }
 
 const getAppMetadata = () => {
-  return new Promise(resolve => {
-    var xhr = new XMLHttpRequest()
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState == XMLHttpRequest.DONE) {
-        const metadata = JSON.parse(xhr.responseText)
-        metadata.id = 'APP_' + metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')
-        resolve(metadata)
-      }
-    }
-    xhr.open('GET', './metadata.json')
-    xhr.send(null)
-  })
+  return fetch('./metadata.json')
+    .then(response => {
+      return response.json()
+    })
+    .then(metadata => {
+      metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
+      return metadata
+    })
 }
 
 const loadJS = (url, id) => {
