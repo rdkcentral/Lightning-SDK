@@ -76,13 +76,18 @@ export default function(App, appData, platformSettings) {
     }
 
     _handleBack() {
-      Metrics.app.close()
-      if (typeof platformSettings.onClose === 'function') platformSettings.onClose()
+      this.closeApp()
     }
 
     _handleExit() {
-      Metrics.app.close()
-      if (typeof platformSettings.onClose === 'function') platformSettings.onClose()
+      this.closeApp()
+    }
+
+    closeApp() {
+      if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
+        Metrics.app.close()
+        platformSettings.onClose()
+      }
     }
 
     loadFonts(fonts) {
