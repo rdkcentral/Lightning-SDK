@@ -6,7 +6,7 @@ export default (imageUrl, options) => {
   const make = options => {
     return {
       type: ScaledImageTexture,
-      src: /^https?:\/\//i.test(imageUrl) ? imageUrl : Utils.asset(imageUrl),
+      src: /^(?:https:)?\/\//i.test(imageUrl) ? imageUrl : Utils.asset(imageUrl),
       scalingOptions: options,
     }
   }
