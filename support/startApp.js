@@ -18,7 +18,8 @@ window.startApp = function(appSettings, platformSettings, appData) {
         : Promise.resolve(),
     () => {
       console.time('app2')
-      platformSettings.appMetadata = appMetadata
+      appSettings.version = appMetadata.version
+      appSettings.id = appMetadata.identifier
       const app = window[appMetadata.id](appSettings, platformSettings, appData)
       document.body.appendChild(app.stage.getCanvas())
     },

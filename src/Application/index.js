@@ -37,6 +37,7 @@ export default function(App, appData, platformSettings) {
     constructor(options) {
       const config = Deepmerge(defaultOptions, options)
       super(config)
+      this.config = config
     }
 
     static _template() {
@@ -66,7 +67,7 @@ export default function(App, appData, platformSettings) {
             this.childList.a({
               ref: 'VersionLabel',
               type: VersionLabel,
-              version: platformSettings.appMetadata && platformSettings.appMetadata.version,
+              version: this.config.version,
             })
           }
 

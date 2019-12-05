@@ -4,7 +4,7 @@ export default class VersionLabel extends Lightning.Component {
   static _template() {
     return {
       rect: true,
-      color: 0x500078ac,
+      color: 0xbb0078ac,
       h: 40,
       w: 100,
       x: w => w - 50,
