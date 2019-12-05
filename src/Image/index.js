@@ -2,11 +2,19 @@ import Utils from '../Utils'
 import ScaledImageTexture from './ScaledImageTexture'
 
 export default (imageUrl, options) => {
+  // since imageworkers don't work without protocol
+  const validUrl = url => {
+    if (/^\/\//.test(url)) {
+      return `${window.location.protocol}${url}`
+    }
+    return url
+  }
+
   // make and return ScaledImageTexture
   const make = options => {
     return {
       type: ScaledImageTexture,
-      src: /^(?:https?:)?\/\//i.test(imageUrl) ? imageUrl : Utils.asset(imageUrl),
+      src: /^(?:https?:)?\/\//i.test(imageUrl) ? validUrl(imageUrl) : Utils.asset(imageUrl),
       scalingOptions: options,
     }
   }
