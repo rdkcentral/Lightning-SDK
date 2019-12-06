@@ -25,7 +25,6 @@ export default (imageUrl, options) => {
     // and if the asset isn't local to the app (i.e. has same origin)
     if (imageServerUrl && imageUrl.indexOf(window.location.origin) === -1) {
       imageUrl = validUrl(imageServerUrl + '?' + Utils.makeQueryString(imageUrl, options))
-      console.log(imageUrl)
     } else {
       // Lightning will handle the resizing and has only 2 flavours (cover and contain)
       if (options.type === 'crop') options.type = 'cover'
