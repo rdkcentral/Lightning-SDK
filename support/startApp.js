@@ -12,6 +12,7 @@ window.startApp = function(appSettings, platformSettings, appData) {
     () => getAppMetadata().then(metadata => (appMetadata = metadata)),
     () => loadJS('./dist/lightning.js'),
     () => loadJS('./dist/appBundle.js'),
+    () => hasTextureMode().then(mode => (platformSettings.textureMode = mode)),
     () =>
       platformSettings.inspector === true
         ? loadJS('./dist/lightning-inspect.js').then(() => window.attachInspector(window.lng))
@@ -54,4 +55,11 @@ const sequence = steps => {
   return steps.reduce((promise, method) => {
     return promise.then(() => method())
   }, Promise.resolve(null))
+}
+
+const hasTextureMode = () => {
+  return new Promise(resolve => {
+    const url = new URL(document.location.href)
+    resolve(url.searchParams.has('texture'))
+  })
 }

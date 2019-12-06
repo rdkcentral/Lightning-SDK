@@ -1,6 +1,7 @@
 import Lightning from '../Lightning'
 import Utils from '../Utils'
 import Metrics from '../Metrics'
+import Settings from '../Settings'
 
 const events = [
   'timeupdate',
@@ -29,6 +30,9 @@ export default class Mediaplayer extends Lightning.Component {
   _construct() {
     this._skipRenderToTexture = false
     this._metrics = null
+    this._textureMode = Settings.get('platform', 'textureMode') || false
+    // fixme: remove this console.log (as soon as we confirm it's working on a box as well)
+    console.log('Texture mode', this._textureMode)
   }
 
   static _template() {
@@ -47,10 +51,6 @@ export default class Mediaplayer extends Lightning.Component {
 
   set skipRenderToTexture(v) {
     this._skipRenderToTexture = v
-  }
-
-  set textureMode(v) {
-    return (this._textureMode = v)
   }
 
   get textureMode() {
