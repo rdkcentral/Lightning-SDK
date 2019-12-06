@@ -74,7 +74,7 @@ export default (imageUrl, options) => {
         "The 'crop()'-method is deprecated and will be removed. Please use 'cover()' instead"
       )
       // FIXME: change to 'cover', when imageServer has been updated to 1.0.12
-      make(setOptions({ type: 'crop', w, h }))
+      return make(setOptions({ type: 'crop', w, h }))
     },
     fit: (w, h) => {
       console.warn(
