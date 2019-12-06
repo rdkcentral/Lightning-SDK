@@ -94,6 +94,7 @@ const bundleApp = data => {
     format: 'iife',
     name: 'APP_' + data.identifier.replace(/[^0-9a-zA-Z_$]/g, '_'),
     file: path.join(baseDir, '/dist/appBundle.js'),
+    sourcemap: true,
   }
 
   return _bundleApp(inputOptions, outputOptionsEs6)
