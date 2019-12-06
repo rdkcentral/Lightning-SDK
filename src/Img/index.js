@@ -61,10 +61,8 @@ export default (imageUrl, options) => {
     exact: (w, h) => make(setOptions({ type: 'exact', w, h })),
     landscape: (w, h) => make(setOptions({ type: 'landscape', w, h })),
     portrait: (w, h) => make(setOptions({ type: 'portrait', w, h })),
-    // FIXME: change type to cover, when imageServer has been updated to 1.0.12
-    cover: (w, h) => make(setOptions({ type: 'crop', w, h })),
-    // FIXME: change type to contain, when imageServer has been updated to 1.0.12
-    contain: (w, h) => make(setOptions({ type: 'auto', w, h })),
+    cover: (w, h) => make(setOptions({ type: 'cover', w, h })),
+    contain: (w, h) => make(setOptions({ type: 'contain', w, h })),
 
     // todo: add positioning - i.e. top, bottom, center, left etc.
 
@@ -73,8 +71,7 @@ export default (imageUrl, options) => {
       console.warn(
         "The 'crop()'-method is deprecated and will be removed. Please use 'cover()' instead"
       )
-      // FIXME: change to 'cover', when imageServer has been updated to 1.0.12
-      return make(setOptions({ type: 'crop', w, h }))
+      return make(setOptions({ type: 'cover', w, h }))
     },
     fit: (w, h) => {
       console.warn(
@@ -104,8 +101,7 @@ export default (imageUrl, options) => {
       console.warn(
         "The 'auto()'-method is deprecated and will be removed. Please use 'cover()' instead"
       )
-      // FIXME: change to 'contain', when imageServer has been updated to 1.0.12
-      return make(setOptions({ type: 'auto', w, h }))
+      return make(setOptions({ type: 'contain', w, h }))
     },
   }
 }
