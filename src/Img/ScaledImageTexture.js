@@ -1,12 +1,12 @@
 import Lightning from '../Lightning'
-// for now: simplified version of original ScaledImageTexture class
+
 export default class ScaledImageTexture extends Lightning.textures.ImageTexture {
   constructor(stage) {
     super(stage)
     this._scalingOptions = undefined
   }
 
-  set scalingOptions(options) {
+  set options(options) {
     this.resizeMode = this._scalingOptions = options
   }
 

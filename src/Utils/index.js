@@ -2,7 +2,12 @@ let basePath = null
 
 export const initUtils = config => {
   if (config.path) {
-    basePath = config.path
+    // remove leading dot (./static) if configured
+    basePath = config.path.charAt(0) === '.' ? config.path.substr(1) : config.path
+    // add full host path if missing
+    if (!/^(?:https?:)?\/\//i.test(basePath)) {
+      basePath = window.location.origin + basePath
+    }
   }
 }
 
@@ -14,11 +19,8 @@ export default {
     // possibly make proxy url configurable from bootstrapper?
     return detectProtocol() + '//cdn.metrological.com/proxy?' + makeQueryString(url, options)
   },
-  // Todo: maybe we should not do this directly via the url, but use the Settings plugin (and pass options in appSettings / platformSetting)
-  getOption(option) {
-    // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
-    const url = new URL(document.location.href)
-    return url.searchParams.has(option)
+  makeQueryString() {
+    return makeQueryString(...arguments)
   },
 }
 
