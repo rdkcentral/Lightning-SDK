@@ -145,7 +145,13 @@ const copyFiles = opts => {
     shell.cp('metadata.json', dest)
     shell.cd(curPwd)
 
-    if (opts.copyStartApp !== false) shell.cp(process.cwd() + '/support/startApp.js', dest)
+    if (opts.copyStartApp !== false) {
+      if (fs.existsSync(baseDir + '/settings.json')) {
+        shell.cp(baseDir + '/settings.json', dest)
+      }
+      shell.cp(process.cwd() + '/support/startApp.js', dest)
+      shell.cp(process.cwd() + '/support/index.html', dest)
+    }
     if (opts.copyLightning !== false) shell.cp(lightningFile, dest)
     if (opts.copyLightningInspect !== false) {
       shell.cp(

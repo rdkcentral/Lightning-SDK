@@ -4,24 +4,31 @@ style.sheet.insertRule(
   '@media all { *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black;} }'
 )
 
-window.startApp = function(appSettings, platformSettings, appData) {
+const startApp = () => {
   console.time('app')
 
   let appMetadata
+  let settings
+
   sequence([
+    () => getSettings().then(config => (settings = config)),
     () => getAppMetadata().then(metadata => (appMetadata = metadata)),
-    () => loadJS('./dist/lightning.js'),
-    () => loadJS('./dist/appBundle.js'),
-    () => hasTextureMode().then(enabled => (platformSettings.textureMode = enabled)),
+    () => loadJS('./lightning.js'),
+    () => loadJS('./appBundle.js'),
+    () => hasTextureMode().then(enabled => (settings.platformSettings.textureMode = enabled)),
     () =>
-      platformSettings.inspector === true
+      settings.platformSettings.inspector === true
         ? loadJS('./dist/lightning-inspect.js').then(() => window.attachInspector(window.lng))
         : Promise.resolve(),
     () => {
       console.time('app2')
-      appSettings.version = appMetadata.version
-      appSettings.id = appMetadata.identifier
-      const app = window[appMetadata.id](appSettings, platformSettings, appData)
+      settings.appSettings.version = appMetadata.version
+      settings.appSettings.id = appMetadata.identifier
+      const app = window[appMetadata.id](
+        settings.appSettings,
+        settings.platformSettings,
+        settings.appData
+      )
       document.body.appendChild(app.stage.getCanvas())
     },
   ])
@@ -35,6 +42,21 @@ const getAppMetadata = () => {
     .then(metadata => {
       metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
       return metadata
+    })
+}
+
+const getSettings = () => {
+  return fetch('./settings.json')
+    .then(response => {
+      return response.json()
+    })
+    .catch(error => {
+      return {
+        appSettings: {},
+        platformSettings: {
+          path: './static',
+        },
+      }
     })
 }
 
@@ -64,3 +86,5 @@ const hasTextureMode = () => {
     resolve(url.searchParams.has('texture'))
   })
 }
+
+startApp()
