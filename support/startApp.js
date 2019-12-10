@@ -18,7 +18,7 @@ const startApp = () => {
     () => hasTextureMode().then(enabled => (settings.platformSettings.textureMode = enabled)),
     () =>
       settings.platformSettings.inspector === true
-        ? loadJS('./dist/lightning-inspect.js').then(() => window.attachInspector(window.lng))
+        ? loadJS('./lightning-inspect.js').then(() => window.attachInspector(window.lng))
         : Promise.resolve(),
     () => {
       console.time('app2')
