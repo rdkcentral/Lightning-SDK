@@ -1,5 +1,7 @@
+import Log from '../Log'
+
 let sendMetric = (type, event, params) => {
-  console.log('Sending metric:', type, event, params)
+  Log.info('Sending metric', type, event, params)
 }
 
 export const initMetrics = config => {
