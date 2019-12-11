@@ -5,15 +5,6 @@ import ScaledImageTexture from './ScaledImageTexture'
 export default (imageUrl, options) => {
   const imageServerUrl = Settings.get('platform', 'imageServerUrl')
 
-  // since imageworkers don't work without protocol
-  // Fixme: maybe move this to Utils to be used in other places as well
-  const validUrl = url => {
-    if (/^\/\//.test(url)) {
-      return `${window.location.protocol}${url}`
-    }
-    return url
-  }
-
   // make and return ScaledImageTexture
   const make = options => {
     // local asset, wrap it in Utils.asset()
@@ -24,7 +15,9 @@ export default (imageUrl, options) => {
     // only pass to image server if imageServerUrl is configured
     // and if the asset isn't local to the app (i.e. has same origin)
     if (imageServerUrl && imageUrl.indexOf(window.location.origin) === -1) {
-      imageUrl = validUrl(imageServerUrl + '?' + Utils.makeQueryString(imageUrl, options))
+      imageUrl = Utils.ensureUrlWithProtocol(
+        imageServerUrl + '?' + Utils.makeQueryString(imageUrl, options)
+      )
     } else {
       // Lightning will handle the resizing and has only 2 flavours (cover and contain)
       if (options.type === 'crop') options.type = 'cover'

@@ -2,12 +2,10 @@ let basePath = null
 
 export const initUtils = config => {
   if (config.path) {
-    // remove leading dot (./static) if configured
-    basePath = config.path.charAt(0) === '.' ? config.path.substr(1) : config.path
-    // add full host path if missing
-    if (!/^(?:https?:)?\/\//i.test(basePath)) {
-      basePath = window.location.origin + basePath
-    }
+    basePath = ensureUrlWithProtocol(
+      // remove leading dot (./static) if configured
+      config.path.charAt(0) === '.' ? config.path.substr(1) : config.path
+    )
   }
 }
 
@@ -22,6 +20,20 @@ export default {
   makeQueryString() {
     return makeQueryString(...arguments)
   },
+  // since imageworkers don't work without protocol
+  ensureUrlWithProtocol() {
+    return ensureUrlWithProtocol(...arguments)
+  },
+}
+
+const ensureUrlWithProtocol = url => {
+  if (/^\/\//.test(url)) {
+    return window.location.protocol + url
+  }
+  if (!/^(?:https?:)/i.test(url)) {
+    return window.location.origin + url
+  }
+  return url
 }
 
 const makeQueryString = (url, options = {}, type = 'url') => {
