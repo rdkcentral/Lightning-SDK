@@ -1,7 +1,7 @@
 const style = document.createElement('style')
 document.head.appendChild(style)
 style.sheet.insertRule(
-  '@media all { *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black;} }'
+  '@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }'
 )
 
 const startApp = () => {
