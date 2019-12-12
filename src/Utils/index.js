@@ -1,4 +1,5 @@
-let basePath = null
+let basePath
+let proxyUrl
 
 export const initUtils = config => {
   if (config.path) {
@@ -7,6 +8,10 @@ export const initUtils = config => {
       config.path.charAt(0) === '.' ? config.path.substr(1) : config.path
     )
   }
+
+  if (config.proxyUrl) {
+    proxyUrl = ensureUrlWithProtocol(config.proxyUrl)
+  }
 }
 
 export default {
@@ -14,8 +19,7 @@ export default {
     return basePath + '/' + relPath
   },
   proxyUrl(url, options = {}) {
-    // possibly make proxy url configurable from bootstrapper?
-    return detectProtocol() + '//cdn.metrological.com/proxy?' + makeQueryString(url, options)
+    return proxyUrl ? proxyUrl + '?' + makeQueryString(url, options) : url
   },
   makeQueryString() {
     return makeQueryString(...arguments)
