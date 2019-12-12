@@ -27,3 +27,5 @@ Generates a proxy url. Useful when using remote API's that don't have CORS confi
 ```js
 Utils.proxyUrl(url, options)
 ```
+
+Note: during development you need to specify a `proxyUrl` as a platform Setting (in `settings.json`). In production the proxyUrl will be set for you.
