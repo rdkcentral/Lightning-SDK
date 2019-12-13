@@ -56,6 +56,14 @@ Resizes the image in such a way that it is contained within the available area. 
 Img(url).contain(width, height)
 ```
 
+### Original
+
+Generate an image without resizing it (i.e. use the original dimensions), while still passing it through the proxy (and taking advantage of caching).
+
+```js
+Img(url).original()
+```
+
 ## Deprecated methods
 
 In the previous SDK different aliases for the same image resize options were offered. They are supported as deprecated methods until the summer of 2020.

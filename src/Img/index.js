@@ -56,6 +56,7 @@ export default (imageUrl, options) => {
     portrait: (w, h) => make(setOptions({ type: 'portrait', w, h })),
     cover: (w, h) => make(setOptions({ type: 'cover', w, h })),
     contain: (w, h) => make(setOptions({ type: 'contain', w, h })),
+    original: () => make(setOptions({ type: 'contain' })),
 
     // todo: add positioning - i.e. top, bottom, center, left etc.
 
