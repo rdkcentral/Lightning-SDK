@@ -62,6 +62,7 @@ const handleOnEnd = res => {
 const onReady = () => {
   console.clear()
   log('\x1b[32m%s\x1b[0m', 'Succesfully uploaded!')
+  process.exit()
 }
 
 function onError(data = {}) {

@@ -261,7 +261,7 @@ export default class Mediaplayer extends Lightning.Component {
     }
   }
 
-  open(url) {
+  open(url, settings = { hide: false, videoPosition: null }) {
     // prep the media url to play depending on platform (mediaPlayerplugin)
     url = mediaUrl(url)
     this._metrics = Metrics.media(url)
@@ -274,6 +274,9 @@ export default class Mediaplayer extends Lightning.Component {
     this.videoEl.setAttribute('src', url)
 
     this.videoEl.style.display = 'block'
+
+    this._setHide(settings.hide)
+    this._setVideoArea(settings.videoPosition || [0, 0, 1920, 1080])
   }
 
   close() {
