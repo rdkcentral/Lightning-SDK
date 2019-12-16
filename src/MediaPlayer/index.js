@@ -300,6 +300,22 @@ export default class Mediaplayer extends Lightning.Component {
     }
   }
 
+  get muted() {
+    return this.videoEl.muted
+  }
+
+  set muted(v) {
+    this.videoEl.muted = v
+  }
+
+  get loop() {
+    return this.videoEl.loop
+  }
+
+  set loop(v) {
+    this.videoEl.loop = v
+  }
+
   isPlaying() {
     return this._getState() === 'Playing'
   }
