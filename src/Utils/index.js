@@ -14,10 +14,6 @@ export const initUtils = config => {
   }
 }
 
-const url = () => {
-  return new URL(document.location.href)
-}
-
 export default {
   asset(relPath) {
     return basePath + '/' + relPath
@@ -31,12 +27,6 @@ export default {
   // since imageworkers don't work without protocol
   ensureUrlWithProtocol() {
     return ensureUrlWithProtocol(...arguments)
-  },
-  hasOption(option) {
-    return url().searchParams.has(option)
-  },
-  getOption(option) {
-    return url().searchParams.get(option)
   },
 }
 
