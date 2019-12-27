@@ -227,19 +227,23 @@ export default class Mediaplayer extends Lightning.Component {
             console.error('Failed to set up MediaKeys')
           })
       } else if (settings.stream && settings.stream.src) {
-        if (!window.Hls) {
-          window.Hls = class Hls {
-            static isSupported() {
-              console.warn('hls-light not included')
-              return false
+        // This is here to be backwards compatible, will be removed
+        // in future sdk release
+        if (Settings.get('app', 'hls')) {
+          if (!window.Hls) {
+            window.Hls = class Hls {
+              static isSupported() {
+                console.warn('hls-light not included')
+                return false
+              }
             }
           }
-        }
-        if (Utils.getOption('hls') && window.Hls.isSupported()) {
-          if (!this._hls) this._hls = new window.Hls({ liveDurationInfinity: true })
-          this._hls.loadSource(settings.stream.src)
-          this._hls.attachMedia(this.videoEl)
-          this.videoEl.style.display = 'block'
+          if (window.Hls.isSupported()) {
+            if (!this._hls) this._hls = new window.Hls({ liveDurationInfinity: true })
+            this._hls.loadSource(settings.stream.src)
+            this._hls.attachMedia(this.videoEl)
+            this.videoEl.style.display = 'block'
+          }
         } else {
           this.open(settings.stream.src)
         }
