@@ -29,7 +29,7 @@ Img(url).exact(width, height)
 Resizes the image by width, maintaining the ratio.
 
 ```js
-Img(url).landscape(width, height) // fixme: remove height??
+Img(url).landscape(width)
 ```
 
 ### Portrait
@@ -37,7 +37,7 @@ Img(url).landscape(width, height) // fixme: remove height??
 Resizes the image by height, maintaining the ratio
 
 ```js
-Img(url).portrait(width, height) // fixme: remove width??
+Img(url).portrait(height)
 ```
 
 ### Cover
