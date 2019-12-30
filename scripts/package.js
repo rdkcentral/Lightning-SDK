@@ -36,7 +36,6 @@ export const build = (opts = {}) => {
   //dev
   opts.copyStartApp = opts.copyStartApp || opts.type === 'dev' ? true : false
   opts.copyLightning = opts.copyLightning || opts.type === 'dev' ? true : false
-  opts.copyStartApp = opts.copyStartApp || opts.type === 'dev' ? true : false
   opts.copyLightningInspect = opts.copyLightningInspect || opts.type === 'dev' ? true : false
 
   //release
