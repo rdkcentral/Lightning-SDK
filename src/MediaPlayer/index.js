@@ -1,5 +1,4 @@
 import Lightning from '../Lightning'
-import Utils from '../Utils'
 import Metrics from '../Metrics'
 import Settings from '../Settings'
 
