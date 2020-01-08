@@ -3,6 +3,7 @@ import Lightning from '../Lightning'
 import Locale from '../Locale'
 import Metrics from '../Metrics'
 import VersionLabel from '../VersionLabel'
+import Log from '../Log'
 
 const defaultOptions = {
   stage: { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false },
@@ -85,10 +86,12 @@ export default function(App, appData, platformSettings) {
     }
 
     closeApp() {
+      Log.info('Closing App')
       if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
         Metrics.app.close()
         platformSettings.onClose()
       }
+      this.childList.remove(this.tag('App'))
     }
 
     loadFonts(fonts) {
