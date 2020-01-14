@@ -92,6 +92,9 @@ export default function(App, appData, platformSettings) {
         platformSettings.onClose()
       }
       this.childList.remove(this.tag('App'))
+
+      // force texture garbage collect
+      this.stage.gc()
     }
 
     loadFonts(fonts) {
