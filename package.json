@@ -18,11 +18,14 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "rollup -c ./support/rollup.config.js && git add support/startApp.js && lint-staged"
     }
   },
   "dependencies": {
     "@babel/core": "^7.7.2",
+    "@babel/plugin-transform-parameters": "^7.8.3",
+    "@babel/plugin-transform-spread": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
     "babel-eslint": "^10.0.3",
     "chokidar": "^3.3.0",
     "concurrently": "^5.0.0",

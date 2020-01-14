@@ -1,90 +1,260 @@
-const style = document.createElement('style')
+'use strict'
+
+function _newArrowCheck(innerThis, boundThis) {
+  if (innerThis !== boundThis) {
+    throw new TypeError('Cannot instantiate an arrow function')
+  }
+}
+
+var _this = undefined
+
+// Important: this is the source file of 'startApp'.
+// Upon commit it's automatically built to an es5 version (and saved as startApp.js)
+var style = document.createElement('style')
 document.head.appendChild(style)
 style.sheet.insertRule(
   '@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }'
 )
 
-const startApp = () => {
+var startApp = function startApp() {
+  var _this2 = this
+
+  _newArrowCheck(this, _this)
+
   console.time('app')
-
-  let appMetadata
-  let settings
-
+  var appMetadata
+  var settings
   sequence([
-    () => getSettings().then(config => (settings = config)),
-    () => getAppMetadata().then(metadata => (appMetadata = metadata)),
-    () => loadJS('./lightning.js'),
-    () => loadJS('./appBundle.js'),
-    () => hasTextureMode().then(enabled => (settings.platformSettings.textureMode = enabled)),
-    () =>
-      settings.platformSettings.inspector === true
-        ? loadJS('./lightning-inspect.js').then(() => window.attachInspector(window.lng))
-        : Promise.resolve(),
-    () => {
+    function() {
+      var _this3 = this
+
+      _newArrowCheck(this, _this2)
+
+      return getSettings().then(
+        function(config) {
+          _newArrowCheck(this, _this3)
+
+          return (settings = config)
+        }.bind(this)
+      )
+    }.bind(this),
+    function() {
+      var _this4 = this
+
+      _newArrowCheck(this, _this2)
+
+      return getAppMetadata().then(
+        function(metadata) {
+          _newArrowCheck(this, _this4)
+
+          return (appMetadata = metadata)
+        }.bind(this)
+      )
+    }.bind(this),
+    function() {
+      _newArrowCheck(this, _this2)
+
+      return loadPolyfills(settings.platformSettings.esEnv)
+    }.bind(this),
+    function() {
+      _newArrowCheck(this, _this2)
+
+      return loadLightning(settings.platformSettings.esEnv)
+    }.bind(this),
+    function() {
+      _newArrowCheck(this, _this2)
+
+      return loadAppBundle(settings.platformSettings.esEnv)
+    }.bind(this),
+    function() {
+      var _this5 = this
+
+      _newArrowCheck(this, _this2)
+
+      return hasTextureMode().then(
+        function(enabled) {
+          _newArrowCheck(this, _this5)
+
+          return (settings.platformSettings.textureMode = enabled)
+        }.bind(this)
+      )
+    }.bind(this),
+    function() {
+      var _this6 = this
+
+      _newArrowCheck(this, _this2)
+
+      return settings.platformSettings.inspector === true
+        ? loadJS('./lightning-inspect.js').then(
+            function() {
+              _newArrowCheck(this, _this6)
+
+              return window.attachInspector(window.lng)
+            }.bind(this)
+          )
+        : Promise.resolve()
+    }.bind(this),
+    function() {
+      _newArrowCheck(this, _this2)
+
       console.time('app2')
       settings.appSettings.version = appMetadata.version
       settings.appSettings.id = appMetadata.identifier
-      const app = window[appMetadata.id](
+      var app = window[appMetadata.id](
         settings.appSettings,
         settings.platformSettings,
         settings.appData
       )
       document.body.appendChild(app.stage.getCanvas())
-    },
+    }.bind(this),
   ])
-}
+}.bind(undefined)
 
-const getAppMetadata = () => {
+var getAppMetadata = function getAppMetadata() {
+  var _this7 = this
+
+  _newArrowCheck(this, _this)
+
   return fetch('./metadata.json')
-    .then(response => {
-      return response.json()
-    })
-    .then(metadata => {
-      metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
-      return metadata
-    })
-}
+    .then(
+      function(response) {
+        _newArrowCheck(this, _this7)
 
-const getSettings = () => {
+        return response.json()
+      }.bind(this)
+    )
+    .then(
+      function(metadata) {
+        _newArrowCheck(this, _this7)
+
+        metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
+        return metadata
+      }.bind(this)
+    )
+}.bind(undefined)
+
+var getSettings = function getSettings() {
+  var _this8 = this
+
+  _newArrowCheck(this, _this)
+
   return fetch('./settings.json')
-    .then(response => {
-      return response.json()
-    })
-    .catch(error => {
-      return {
-        appSettings: {},
-        platformSettings: {
-          path: './static',
-        },
-      }
-    })
-}
+    .then(
+      function(response) {
+        _newArrowCheck(this, _this8)
 
-const loadJS = (url, id) => {
-  return new Promise(resolve => {
-    console.log('loadJS', url)
-    const tag = document.createElement('script')
-    tag.onload = resolve
-    tag.src = url
+        return response.json()
+      }.bind(this)
+    )
+    .catch(
+      function(error) {
+        _newArrowCheck(this, _this8)
 
-    if (id) tag.id = id
+        return {
+          appSettings: {},
+          platformSettings: {
+            path: './static',
+            esEnv: 'es6',
+          },
+        }
+      }.bind(this)
+    )
+}.bind(undefined)
 
-    document.body.appendChild(tag)
-  })
-}
+var loadLightning = function loadLightning(esEnv) {
+  _newArrowCheck(this, _this)
 
-const sequence = steps => {
-  return steps.reduce((promise, method) => {
-    return promise.then(() => method())
-  }, Promise.resolve(null))
-}
+  var filename = !esEnv || esEnv === 'es6' ? './lightning.js' : './lightning.' + esEnv + '.js'
+  return loadJS(filename)
+}.bind(undefined)
 
-const hasTextureMode = () => {
-  return new Promise(resolve => {
-    // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
-    const url = new URL(document.location.href)
-    resolve(url.searchParams.has('texture'))
-  })
-}
+var loadAppBundle = function loadAppBundle(esEnv) {
+  _newArrowCheck(this, _this)
+
+  var filename = !esEnv || esEnv === 'es6' ? './appBundle.js' : './appBundle.' + esEnv + '.js'
+  return loadJS(filename)
+}.bind(undefined)
+
+var loadPolyfills = function loadPolyfills(esEnv) {
+  var _this9 = this
+
+  _newArrowCheck(this, _this)
+
+  // load polyfills when esEnv is defined and it's not es6
+  if (esEnv && esEnv !== 'es6') {
+    return sequence([
+      function() {
+        _newArrowCheck(this, _this9)
+
+        return loadJS('./polyfills/babel-polyfill7.6.0.js')
+      }.bind(this),
+      function() {
+        _newArrowCheck(this, _this9)
+
+        return loadJS('./polyfills/url.js')
+      }.bind(this),
+    ])
+  }
+
+  return Promise.resolve()
+}.bind(undefined)
+
+var loadJS = function loadJS(url, id) {
+  var _this10 = this
+
+  _newArrowCheck(this, _this)
+
+  return new Promise(
+    function(resolve) {
+      _newArrowCheck(this, _this10)
+
+      console.log('loadJS', url)
+      var tag = document.createElement('script')
+      tag.onload = resolve
+      tag.src = url
+      if (id) tag.id = id
+      document.body.appendChild(tag)
+    }.bind(this)
+  )
+}.bind(undefined)
+
+var sequence = function sequence(steps) {
+  var _this11 = this
+
+  _newArrowCheck(this, _this)
+
+  return steps.reduce(
+    function(promise, method) {
+      var _this12 = this
+
+      _newArrowCheck(this, _this11)
+
+      return promise.then(
+        function() {
+          _newArrowCheck(this, _this12)
+
+          return method()
+        }.bind(this)
+      )
+    }.bind(this),
+    Promise.resolve(null)
+  )
+}.bind(undefined)
+
+var hasTextureMode = function hasTextureMode() {
+  var _this13 = this
+
+  _newArrowCheck(this, _this)
+
+  return new Promise(
+    function(resolve) {
+      _newArrowCheck(this, _this13)
+
+      // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
+      var url = new URL(document.location.href)
+      resolve(url.searchParams.has('texture'))
+    }.bind(this)
+  )
+}.bind(undefined)
 
 startApp()
