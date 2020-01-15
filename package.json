@@ -18,7 +18,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "rollup -c ./support/rollup.config.js && git add support/startApp.js && lint-staged"
+      "pre-commit": "rollup -c ./rollup.config.js && git add support/startApp.js && lint-staged"
     }
   },
   "dependencies": {

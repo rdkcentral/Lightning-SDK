@@ -2,7 +2,7 @@ import babel from 'rollup-plugin-babel'
 
 export default [
   {
-    input: './support/startApp.es6.js',
+    input: './src/startApp.js',
     plugins: [
       babel({
         presets: [

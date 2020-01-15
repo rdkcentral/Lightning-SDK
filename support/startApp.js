@@ -8,8 +8,8 @@ function _newArrowCheck(innerThis, boundThis) {
 
 var _this = undefined
 
-// Important: this is the source file of 'startApp'.
-// Upon commit it's automatically built to an es5 version (and saved as startApp.js)
+// Important: this is the source file of 'startApp' in es6
+// Upon commit it's automatically built to an es5 version (and saved as support/startApp.js)
 var style = document.createElement('style')
 document.head.appendChild(style)
 style.sheet.insertRule(
