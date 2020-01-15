@@ -68,8 +68,8 @@ const getSettings = () => {
 }
 
 const loadLightning = esEnv => {
-  const filename = !esEnv || esEnv === 'es6' ? './lightning.js' : './lightning.' + esEnv + '.js'
-  return loadJS(filename)
+  const filename = !esEnv || esEnv === 'es6' ? 'lightning.js' : 'lightning.' + esEnv + '.js'
+  return loadJS('./lib/' + filename)
 }
 
 const loadAppBundle = esEnv => {
@@ -79,8 +79,8 @@ const loadAppBundle = esEnv => {
 
 const loadLightningInspect = esEnv => {
   const filename =
-    !esEnv || esEnv === 'es6' ? './lightning-inspect.js' : './lightning-inspect.' + esEnv + '.js'
-  return loadJS(filename)
+    !esEnv || esEnv === 'es6' ? 'lightning-inspect.js' : 'lightning-inspect.' + esEnv + '.js'
+  return loadJS('./lib/' + filename)
 }
 
 const loadPolyfills = esEnv => {

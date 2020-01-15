@@ -164,8 +164,8 @@ var getSettings = function getSettings() {
 var loadLightning = function loadLightning(esEnv) {
   _newArrowCheck(this, _this)
 
-  var filename = !esEnv || esEnv === 'es6' ? './lightning.js' : './lightning.' + esEnv + '.js'
-  return loadJS(filename)
+  var filename = !esEnv || esEnv === 'es6' ? 'lightning.js' : 'lightning.' + esEnv + '.js'
+  return loadJS('./lib/' + filename)
 }.bind(undefined)
 
 var loadAppBundle = function loadAppBundle(esEnv) {
@@ -179,8 +179,8 @@ var loadLightningInspect = function loadLightningInspect(esEnv) {
   _newArrowCheck(this, _this)
 
   var filename =
-    !esEnv || esEnv === 'es6' ? './lightning-inspect.js' : './lightning-inspect.' + esEnv + '.js'
-  return loadJS(filename)
+    !esEnv || esEnv === 'es6' ? 'lightning-inspect.js' : 'lightning-inspect.' + esEnv + '.js'
+  return loadJS('./lib/' + filename)
 }.bind(undefined)
 
 var loadPolyfills = function loadPolyfills(esEnv) {
