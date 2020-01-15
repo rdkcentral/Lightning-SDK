@@ -2,6 +2,7 @@
   "name": "wpe-lightning-sdk",
   "version": "2.0.0",
   "scripts": {
+    "postinstall": "node -r esm ./scripts/postinstall.js",
     "build": "node -r esm ./scripts/build.js",
     "serve": "node -r esm ./scripts/serve.js",
     "release": "node -r esm ./scripts/release.js",
