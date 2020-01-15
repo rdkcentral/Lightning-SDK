@@ -85,7 +85,7 @@ var startApp = function startApp() {
       _newArrowCheck(this, _this2)
 
       return settings.platformSettings.inspector === true
-        ? loadJS('./lightning-inspect.js').then(
+        ? loadLightningInspect(settings.platformSettings.esEnv).then(
             function() {
               _newArrowCheck(this, _this6)
 
@@ -172,6 +172,14 @@ var loadAppBundle = function loadAppBundle(esEnv) {
   _newArrowCheck(this, _this)
 
   var filename = !esEnv || esEnv === 'es6' ? './appBundle.js' : './appBundle.' + esEnv + '.js'
+  return loadJS(filename)
+}.bind(undefined)
+
+var loadLightningInspect = function loadLightningInspect(esEnv) {
+  _newArrowCheck(this, _this)
+
+  var filename =
+    !esEnv || esEnv === 'es6' ? './lightning-inspect.js' : './lighnting-inpect.' + esEnv + '.js'
   return loadJS(filename)
 }.bind(undefined)
 

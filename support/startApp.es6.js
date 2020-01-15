@@ -22,7 +22,9 @@ const startApp = () => {
     () => hasTextureMode().then(enabled => (settings.platformSettings.textureMode = enabled)),
     () =>
       settings.platformSettings.inspector === true
-        ? loadJS('./lightning-inspect.js').then(() => window.attachInspector(window.lng))
+        ? loadLightningInspect(settings.platformSettings.esEnv).then(() =>
+            window.attachInspector(window.lng)
+          )
         : Promise.resolve(),
     () => {
       console.time('app2')
@@ -72,6 +74,12 @@ const loadLightning = esEnv => {
 
 const loadAppBundle = esEnv => {
   const filename = !esEnv || esEnv === 'es6' ? './appBundle.js' : './appBundle.' + esEnv + '.js'
+  return loadJS(filename)
+}
+
+const loadLightningInspect = esEnv => {
+  const filename =
+    !esEnv || esEnv === 'es6' ? './lightning-inspect.js' : './lighnting-inpect.' + esEnv + '.js'
   return loadJS(filename)
 }
 
