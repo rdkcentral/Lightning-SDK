@@ -179,7 +179,7 @@ var loadLightningInspect = function loadLightningInspect(esEnv) {
   _newArrowCheck(this, _this)
 
   var filename =
-    !esEnv || esEnv === 'es6' ? './lightning-inspect.js' : './lighnting-inpect.' + esEnv + '.js'
+    !esEnv || esEnv === 'es6' ? './lightning-inspect.js' : './lighnting-inspect.' + esEnv + '.js'
   return loadJS(filename)
 }.bind(undefined)
 
