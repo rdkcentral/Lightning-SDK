@@ -8,8 +8,6 @@ function _newArrowCheck(innerThis, boundThis) {
 
 var _this = undefined
 
-// Important: this is the source file of 'startApp' in es6
-// Upon commit it's automatically built to an es5 version (and saved as support/startApp.js)
 var style = document.createElement('style')
 document.head.appendChild(style)
 style.sheet.insertRule(
@@ -159,7 +157,7 @@ var getSettings = function getSettings() {
         }
       }.bind(this)
     )
-}.bind(undefined)
+}.bind(undefined) // FIXME: these 3 functions could be refactored to a single one receiving 2 arguments (filename, esEnv)
 
 var loadLightning = function loadLightning(esEnv) {
   _newArrowCheck(this, _this)

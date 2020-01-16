@@ -1,7 +1,5 @@
-// Important: this is the source file of 'startApp' in es6
-// Upon commit it's automatically built to an es5 version (and saved as support/startApp.js)
-
 const style = document.createElement('style')
+
 document.head.appendChild(style)
 style.sheet.insertRule(
   '@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }'
@@ -67,6 +65,7 @@ const getSettings = () => {
     })
 }
 
+// FIXME: these 3 functions could be refactored to a single one receiving 2 arguments (filename, esEnv)
 const loadLightning = esEnv => {
   const filename = !esEnv || esEnv === 'es6' ? 'lightning.js' : 'lightning.' + esEnv + '.js'
   return loadJS('./lib/' + filename)
