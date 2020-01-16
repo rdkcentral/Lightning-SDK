@@ -52,7 +52,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "shelljs": "^0.8.3",
     "targz": "^1.0.1",
-    "wpe-lightning": "git+https://github.com/WebPlatformForEmbedded/Lightning.git#feature/es5-bundle"
+    "wpe-lightning": "^1.4.0"
   },
   "repository": {
     "type": "git",
