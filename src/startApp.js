@@ -55,6 +55,7 @@ const getSettings = () => {
       return response.json()
     })
     .catch(error => {
+      console.warn('No settings.json found. Using defaults.')
       return {
         appSettings: {},
         platformSettings: {
