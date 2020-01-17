@@ -36,8 +36,8 @@ const errorMetric = (type, message, code, visible, params = {}) => {
 const Metric = (type, events, options = {}) => {
   return events.reduce(
     (obj, event) => {
-      obj[event] = (params = {}) => {
-        params = { ...options, ...params }
+      obj[event] = (name, params = {}) => {
+        params = { ...options, ...(name ? { name } : {}), ...params }
         sendMetric(type, event, params)
       }
       return obj
