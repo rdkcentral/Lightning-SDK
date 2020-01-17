@@ -1,6 +1,6 @@
 - Getting started
-  - [Installation](getting-started/installation.md)
-  - [Creating a new App](getting-started/creating-a-new-app.md)
+  - [Getting started](getting-started/getting-started.md)
+  - [Tutorial](getting-started/tutorial.md)
   - [Updating an existing App](getting-started/updating.md)
 
 - Plugins
