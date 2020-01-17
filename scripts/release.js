@@ -1,5 +1,15 @@
-import { release } from './package.js'
+import chalk from 'chalk'
 
-release({ type: release }).then(() => {
-  console.log('\x1b[32m%s\x1b[0m', 'success')
-})
+console.log(
+  chalk.red(
+    'The ' + chalk.italic('release') + ' script has been removed from the Lightning-SDK ... '
+  )
+)
+console.log()
+console.log('Please install the ' + chalk.italic('Lightning-CLI') + ' globally on your system:')
+console.log()
+console.log(chalk.bold.dim('npm install -g WebPlatformForEmbedded/Lightning-CLI'))
+console.log()
+console.log(
+  'And then run ' + chalk.green.bold('lng release') + ' in the directory with your Lightning App'
+)

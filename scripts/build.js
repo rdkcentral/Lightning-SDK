@@ -1,19 +1,13 @@
-import { build } from './package.js'
+import chalk from 'chalk'
 
-const watch = process.argv.pop() === '--watch'
-
-if (watch) {
-  console.log(
-    'Sorry, watching mode is not working yet ... for now you need to run `npm run build` for each change you make'
-  )
-  // inputOptions.watch = {
-  //   chokidar: {
-  //     usePolling: true,
-  //   },
-  //   include: path.join(process.env.npm_config_baseDir, '/{src|assets}/**'),
-  // }
-}
-
-build({ type: 'dev' }).then(() => {
-  console.log('\x1b[32m%s\x1b[0m', 'success')
-})
+console.log(
+  chalk.red('The ' + chalk.italic('build') + ' script has been removed from the Lightning-SDK ... ')
+)
+console.log()
+console.log('Please install the ' + chalk.italic('Lightning-CLI') + ' globally on your system:')
+console.log()
+console.log(chalk.bold.dim('npm install -g WebPlatformForEmbedded/Lightning-CLI'))
+console.log()
+console.log(
+  'And then run ' + chalk.green.bold('lng build') + ' in the directory with your Lightning App'
+)
