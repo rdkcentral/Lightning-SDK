@@ -1,6 +1,7 @@
 import Lightning from '../Lightning'
 import Metrics from '../Metrics'
 import Settings from '../Settings'
+import Log from '../Log'
 
 const events = [
   'timeupdate',
@@ -30,8 +31,7 @@ export default class Mediaplayer extends Lightning.Component {
     this._skipRenderToTexture = false
     this._metrics = null
     this._textureMode = Settings.get('platform', 'textureMode') || false
-    // fixme: remove this console.log (as soon as we confirm it's working on a box as well)
-    console.log('Texture mode', this._textureMode)
+    Log.info('Texture mode: ' + this._textureMode)
   }
 
   static _template() {
@@ -97,6 +97,7 @@ export default class Mediaplayer extends Lightning.Component {
   }
 
   _deregisterListeners() {
+    Log.info('Deregistering event listeners MediaPlayer')
     events.forEach((event, index) => {
       this.videoEl.removeEventListener(event, this.eventHandlers[index])
     })
@@ -109,6 +110,7 @@ export default class Mediaplayer extends Lightning.Component {
 
   _detach() {
     this._deregisterListeners()
+    this.close()
   }
 
   _createVideoTexture() {
@@ -165,7 +167,7 @@ export default class Mediaplayer extends Lightning.Component {
                   this.videoTextureView.scaleX = 1
                 }
               } catch (e) {
-                console.error('texImage2d video', e)
+                Log.error('texImage2d video', e)
                 this._stopUpdatingVideoTexture()
                 this.videoTextureView.visible = false
               }
@@ -268,9 +270,9 @@ export default class Mediaplayer extends Lightning.Component {
     // prep the media url to play depending on platform (mediaPlayerplugin)
     url = mediaUrl(url)
     this._metrics = Metrics.media(url)
-    console.log('Playing stream', url)
+    Log.info('Playing stream', url)
     if (this.application.noVideo) {
-      console.log('noVideo option set, so ignoring: ' + url)
+      Log.info('noVideo option set, so ignoring: ' + url)
       return
     }
     if (this.videoEl.getAttribute('src') === url) return this.reload()
