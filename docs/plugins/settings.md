@@ -10,10 +10,13 @@ During development you can configure your own settings in `settings.json` to sim
         "stage": {
             "clearColor": "0x00000000",
             "useImageWorker": true
-        }
+        },
+        "debug": true
     },
     "platformSettings": {
-        "path": "./static"
+        "path": "./static",
+        "log": true,
+        "showVersion": true
     }
 }
 ```
@@ -55,8 +58,20 @@ Type can be either `app` or `platform`. Key can be any of the existing settings.
 
 ### Platform
 
-Todo
+| Key | Type | Description | Default value |
+| --- | ---- | ------------ | ------------- |
+| inspector | Boolean | Whether or not initialize the Lightning Inspector (whch will render out a HTML structure inside the DOM to mimic the canvas) | false |
+| path | String | Path to the folder with the assets of the app. Utils.asset() will use this folder to lookup assets | ./static |
+| log | Boolean | Whether or not to show logs in the console (those that use the Log plugin) | false |
+| showVersion | Boolean | Whether or not to show the App's version in a overlay. Uses the version specified in `metadata.json` | false |
+| textureMode | Boolean | Whether or not to render video as a texture on the active drawing canvas. Can also be set by adding a queryparam `?texture`. | false |
+| esEnv | String | The target ECMAscript environment for the App. Supported values: es6 and es5. | es6 |
+| imageServerUrl | Url | Endpoint to an image server for resizing and / or preprocessing images | null |
+| proxyUrl | Url | Endpoint to an proxy server for caching and / or proxying API calls | null |
 
 ### App
 
-Todo
+| Key | Type | Description | Default value |
+| --- | ---- | ------------ | ------------- |
+| stage | Object | Object with any of the stage configuration options specified in [Lightning Documentation](https://webplatformforembedded.github.io/Lightning/docs/gettingStarted/configuration#stage-configuration-options) | { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false } |
+| debug | Boolean | Whether or not to run Lightning in debug mode | false |
