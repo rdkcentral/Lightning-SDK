@@ -8,7 +8,6 @@
     "release": "node -r esm ./scripts/release.js",
     "upload": "node -r esm ./scripts/upload-app-metrological.js",
     "start": "concurrently \"node -r esm ./scripts/build.js\" \"node -r esm ./scripts/serve.js\"",
-    "dev": "concurrently \"node -r esm ./scripts/build.js --watch\" \"node -r esm ./scripts/serve.js\"",
     "lint": "eslint '**/*.js'"
   },
   "lint-staged": {
