@@ -5,7 +5,7 @@ import process from 'process'
 const target = './support/lib'
 const origin = path.join(
   process.cwd(),
-  process.cwd().indexOf('/node_modules/') > -1 ? '..' : 'node_modules',
+  process.cwd().indexOf('node_modules') > -1 ? '..' : 'node_modules',
   'wpe-lightning'
 )
 
