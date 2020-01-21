@@ -2,7 +2,7 @@ import chalk from 'chalk'
 
 console.log(
   chalk.red(
-    'The ' + chalk.italic('upload') + ' script has been removed from the Lightning-SDK ... '
+    'The ' + chalk.italic('release') + ' script has been removed from the Lightning-SDK ... '
   )
 )
 console.log()
@@ -11,5 +11,5 @@ console.log()
 console.log(chalk.bold.dim('npm install -g WebPlatformForEmbedded/Lightning-CLI'))
 console.log()
 console.log(
-  'And then run ' + chalk.green.bold('lng upload') + ' in the directory with your Lightning App'
+  'And then run ' + chalk.green.bold('lng release') + ' in the directory with your Lightning App'
 )
