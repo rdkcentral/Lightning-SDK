@@ -44,18 +44,16 @@ const getFullPath = path => {
   const pathName = document.location.pathname
   const isRoot = /^\/+$/
 
-  if (isRoot.test(pathName)) {
-    return path
-  } else {
+  if (!isRoot.test(pathName)) {
     const getPath = /(.*)\//
     const matches = getPath.exec(pathName)
 
     if (matches) {
       return matches[1] + path
-    } else {
-      return path
     }
   }
+
+  return path
 }
 
 const makeQueryString = (url, options = {}, type = 'url') => {
