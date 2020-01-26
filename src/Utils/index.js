@@ -5,7 +5,7 @@ export const initUtils = config => {
   if (config.path) {
     basePath = ensureUrlWithProtocol(
       // remove leading dot (./static) if configured
-      config.path.charAt(0) === '.' ? config.path.substr(1) : config.path
+      getFullPath(config.path.charAt(0) === '.' ? config.path.substr(1) : config.path)
     )
   }
 
@@ -38,6 +38,24 @@ const ensureUrlWithProtocol = url => {
     return window.location.origin + url
   }
   return url
+}
+
+const getFullPath = path => {
+  const pathName = document.location.pathname
+  const isRoot = /^\/+$/
+
+  if (isRoot.test(pathName)) {
+    return path
+  } else {
+    const getPath = /(.*)\//
+    const matches = getPath.exec(pathName)
+
+    if (matches) {
+      return matches[1] + path
+    } else {
+      return path
+    }
+  }
 }
 
 const makeQueryString = (url, options = {}, type = 'url') => {
