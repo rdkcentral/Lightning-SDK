@@ -41,19 +41,7 @@ const ensureUrlWithProtocol = url => {
 }
 
 const getFullPath = path => {
-  const pathName = document.location.pathname
-  const isRoot = /^\/+$/
-
-  if (!isRoot.test(pathName)) {
-    const getPath = /(.*)\//
-    const matches = getPath.exec(pathName)
-
-    if (matches) {
-      return matches[1] + path
-    }
-  }
-
-  return path
+  return /(.*)\//.exec(document.location.pathname)[1] + path
 }
 
 const makeQueryString = (url, options = {}, type = 'url') => {
