@@ -37,12 +37,9 @@ const ensureUrlWithProtocol = url => {
   return url
 }
 
-const makeFullStaticPath = (pathname, path) => {
+const makeFullStaticPath = (pathname = '/', path) => {
   // cleanup the pathname
-  const match = /(.*)\//.exec(pathname)
-  if (match) {
-    pathname = match[1]
-  }
+  pathname = /(.*)\//.exec(pathname)[1]
 
   // remove possible leading dot from path
   path = path.charAt(0) === '.' ? path.substr(1) : path
