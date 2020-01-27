@@ -3,10 +3,7 @@ let proxyUrl
 
 export const initUtils = config => {
   if (config.path) {
-    basePath = ensureUrlWithProtocol(
-      // remove leading dot (./static) if configured
-      config.path.charAt(0) === '.' ? config.path.substr(1) : config.path
-    )
+    basePath = ensureUrlWithProtocol(makeFullStaticPath(document.location.pathname, config.path))
   }
 
   if (config.proxyUrl) {
@@ -38,6 +35,18 @@ const ensureUrlWithProtocol = url => {
     return window.location.origin + url
   }
   return url
+}
+
+const makeFullStaticPath = (pathname = '/', path) => {
+  // cleanup the pathname
+  pathname = /(.*)\//.exec(pathname)[1]
+
+  // remove possible leading dot from path
+  path = path.charAt(0) === '.' ? path.substr(1) : path
+  // ensure path has leading slash
+  path = path.charAt(0) !== '/' ? '/' + path : path
+
+  return pathname + path
 }
 
 const makeQueryString = (url, options = {}, type = 'url') => {
