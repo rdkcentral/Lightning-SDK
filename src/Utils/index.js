@@ -27,7 +27,7 @@ export default {
   },
 }
 
-const ensureUrlWithProtocol = url => {
+export const ensureUrlWithProtocol = url => {
   if (/^\/\//.test(url)) {
     return window.location.protocol + url
   }
@@ -38,6 +38,10 @@ const ensureUrlWithProtocol = url => {
 }
 
 const makeFullStaticPath = (pathname = '/', path) => {
+  // if path is URL, we assume it's already the full static path, so we just return it
+  if (/^(?:https?:)?(?:\/\/)/.test(path)) {
+    return path
+  }
   // cleanup the pathname
   pathname = /(.*)\//.exec(pathname)[1]
 
