@@ -8,9 +8,13 @@ function _newArrowCheck(innerThis, boundThis) {
 
 var _this = undefined;
 
-var style = document.createElement('style');
-document.head.appendChild(style);
-style.sheet.insertRule('@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }');
+var isSpark = eval('typeof lng !== "undefined" && lng.Utils.isSpark');
+
+if (!isSpark) {
+  var style = document.createElement('style');
+  document.head.appendChild(style);
+  style.sheet.insertRule('@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }');
+}
 
 var startApp = function startApp() {
   var _this2 = this;
@@ -20,7 +24,7 @@ var startApp = function startApp() {
   console.time('app');
   var appMetadata;
   var settings;
-  sequence([function () {
+  var seq = [function () {
     var _this3 = this;
 
     _newArrowCheck(this, _this2);
@@ -76,11 +80,22 @@ var startApp = function startApp() {
     _newArrowCheck(this, _this2);
 
     console.time('app2');
+
+    if (isSpark) {
+      eval('lng.Stage.platform = SparkPlatform');
+    }
+
     settings.appSettings.version = appMetadata.version;
     settings.appSettings.id = appMetadata.identifier;
-    var app = window[appMetadata.id](settings.appSettings, settings.platformSettings, settings.appData);
-    document.body.appendChild(app.stage.getCanvas());
-  }.bind(this)]);
+    var app = (isSpark ? eval(appMetadata.id) : window[appMetadata.id])(settings.appSettings, settings.platformSettings, settings.appData);
+
+    if (!isSpark) {
+      document.body.appendChild(app.stage.getCanvas());
+    }
+  }.bind(this)];
+  if (isSpark) seq.splice(2, 5); // Spark imports are in index.spark
+
+  sequence(seq);
 }.bind(undefined);
 
 var getAppMetadata = function getAppMetadata() {

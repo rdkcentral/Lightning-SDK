@@ -26,7 +26,7 @@ const defaultOptions = {
   },
 }
 
-if (window.innerHeight === 720) {
+if (Lightning.Utils.isSpark || window.innerHeight === 720) {
   defaultOptions.stage['w'] = 1280
   defaultOptions.stage['h'] = 720
   defaultOptions.stage['precision'] = 0.6666666667
@@ -98,6 +98,11 @@ export default function(App, appData, platformSettings) {
     }
 
     loadFonts(fonts) {
+      if (Lightning.Utils.isSpark) {
+        // Font loading not supported. Fonts should be installed in Linux system and then they can be picked up by cairo.
+        return Promise.resolve()
+      }
+
       return new Promise((resolve, reject) => {
         fonts
           .map(({ family, url, descriptors }) => () => {

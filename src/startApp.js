@@ -1,9 +1,13 @@
-const style = document.createElement('style')
+const isSpark = eval('typeof lng !== "undefined" && lng.Utils.isSpark')
 
-document.head.appendChild(style)
-style.sheet.insertRule(
-  '@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }'
-)
+if (!isSpark) {
+  const style = document.createElement('style')
+
+  document.head.appendChild(style)
+  style.sheet.insertRule(
+    '@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }'
+  )
+}
 
 const startApp = () => {
   console.time('app')
@@ -11,7 +15,7 @@ const startApp = () => {
   let appMetadata
   let settings
 
-  sequence([
+  let seq = [
     () => getSettings().then(config => (settings = config)),
     () => getAppMetadata().then(metadata => (appMetadata = metadata)),
     () => loadPolyfills(settings.platformSettings.esEnv),
@@ -26,16 +30,25 @@ const startApp = () => {
         : Promise.resolve(),
     () => {
       console.time('app2')
+      if (isSpark) {
+        eval('lng.Stage.platform = SparkPlatform')
+      }
       settings.appSettings.version = appMetadata.version
       settings.appSettings.id = appMetadata.identifier
-      const app = window[appMetadata.id](
+      const app = (isSpark ? eval(appMetadata.id) : window[appMetadata.id])(
         settings.appSettings,
         settings.platformSettings,
         settings.appData
       )
-      document.body.appendChild(app.stage.getCanvas())
+      if (!isSpark) {
+        document.body.appendChild(app.stage.getCanvas())
+      }
     },
-  ])
+  ]
+
+  if (isSpark) seq.splice(2, 5) // Spark imports are in index.spark
+
+  sequence(seq)
 }
 
 const getAppMetadata = () => {

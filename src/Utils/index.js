@@ -1,9 +1,13 @@
+import Lightning from '../Lightning'
+
 let basePath
 let proxyUrl
 
 export const initUtils = config => {
   if (config.path) {
-    basePath = ensureUrlWithProtocol(makeFullStaticPath(document.location.pathname, config.path))
+    if (Lightning.Utils.isSpark) basePath = `${__dirname}/${config.path}`.replace('/./', '/')
+    else
+      basePath = ensureUrlWithProtocol(makeFullStaticPath(document.location.pathname, config.path))
   }
 
   if (config.proxyUrl) {

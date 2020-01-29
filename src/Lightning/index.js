@@ -1,1 +1,1 @@
-export default window.lng
+export default typeof window === 'undefined' ? eval('lng') : window.lng
