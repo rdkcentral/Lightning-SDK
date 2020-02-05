@@ -98,9 +98,14 @@ export default function(App, appData, platformSettings) {
     }
 
     loadFonts(fonts) {
-      if (Lightning.Utils.isSpark) {
+      if (Lightning.Utils.isNode && !Lightning.Utils.isSpark) {
         // Font loading not supported. Fonts should be installed in Linux system and then they can be picked up by cairo.
         return Promise.resolve()
+      }
+
+      if (Lightning.Utils.isSpark) {
+        let ret = this.stage.platform.loadFonts(fonts)
+        return Promise.all(ret.promises).then(() => ret.fontResources)
       }
 
       return new Promise((resolve, reject) => {
