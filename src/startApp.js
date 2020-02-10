@@ -35,11 +35,13 @@ const startApp = () => {
       }
       settings.appSettings.version = appMetadata.version
       settings.appSettings.id = appMetadata.identifier
+      if (isSpark) global.beginDrawing()
       const app = (isSpark ? eval(appMetadata.id) : window[appMetadata.id])(
         settings.appSettings,
         settings.platformSettings,
         settings.appData
       )
+      if (isSpark) global.endDrawing()
       if (!isSpark) {
         document.body.appendChild(app.stage.getCanvas())
       }
