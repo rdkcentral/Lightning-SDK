@@ -61,7 +61,7 @@ export default (imageUrl, options) => {
         )
         w_but_actually_h = deprecated_h
       }
-      make(setOptions({ type: 'portrait', h: w_but_actually_h }))
+      return make(setOptions({ type: 'portrait', h: w_but_actually_h }))
     },
     cover: (w, h) => make(setOptions({ type: 'cover', w, h })),
     contain: (w, h) => make(setOptions({ type: 'contain', w, h })),
