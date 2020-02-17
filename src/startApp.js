@@ -14,6 +14,7 @@ const startApp = () => {
   sequence([
     () => getSettings().then(config => (settings = config)),
     () => getAppMetadata().then(metadata => (appMetadata = metadata)),
+    () => injectFavicon(appMetadata),
     () => loadPolyfills(settings.platformSettings.esEnv),
     () => loadLightning(settings.platformSettings.esEnv),
     () => loadAppBundle(settings.platformSettings.esEnv),
@@ -119,6 +120,18 @@ const hasTextureMode = () => {
     const url = new URL(document.location.href)
     resolve(url.searchParams.has('texture'))
   })
+}
+
+const injectFavicon = metadata => {
+  const link = document.createElement('link')
+  link.rel = 'shortcut icon'
+  link.type = 'image/png'
+
+  // set to app icon if it exists, otherwise a transparent pixel
+  link.href =
+    metadata.icon ||
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+  document.head.appendChild(link)
 }
 
 startApp()
