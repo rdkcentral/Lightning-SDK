@@ -5,9 +5,14 @@ let proxyUrl
 
 export const initUtils = config => {
   if (config.path) {
-    if (Lightning.Utils.isSpark) basePath = `${__dirname}/${config.path}`.replace('/./', '/')
-    else
-      basePath = ensureUrlWithProtocol(makeFullStaticPath(document.location.pathname, config.path))
+    basePath = ensureUrlWithProtocol(
+      makeFullStaticPath(
+        Lightning.Utils.isSpark
+          ? require('url').parse(__dirname).pathname
+          : document.location.pathname,
+        config.path
+      )
+    )
   }
 
   if (config.proxyUrl) {
@@ -33,10 +38,18 @@ export default {
 
 export const ensureUrlWithProtocol = url => {
   if (/^\/\//.test(url)) {
-    return window.location.protocol + url
+    return (
+      (Lightning.Utils.isSpark
+        ? require('url').parse(__dirname).protocol
+        : window.location.protocol) + url
+    )
   }
   if (!/^(?:https?:)/i.test(url)) {
-    return window.location.origin + url
+    return (
+      (Lightning.Utils.isSpark
+        ? new (require('url').URL)(__dirname).origin
+        : window.location.origin) + url
+    )
   }
   return url
 }
