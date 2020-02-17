@@ -26,7 +26,7 @@ const defaultOptions = {
   },
 }
 
-if (Lightning.Utils.isSpark || window.innerHeight === 720) {
+if (window.innerHeight === 720) {
   defaultOptions.stage['w'] = 1280
   defaultOptions.stage['h'] = 720
   defaultOptions.stage['precision'] = 0.6666666667
