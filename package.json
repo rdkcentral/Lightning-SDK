@@ -54,7 +54,7 @@
     "targz": "^1.0.1",
     "wpe-lightning": "^1.4.0",
     "wpe-lightning-spark": "github:pxscene/Lightning-Spark",
-    "ThunderJS": "github:rdkcentral/ThunderJS"
+    "ThunderJS": "github:WebPlatformForEmbedded/ThunderJS"
   },
   "repository": {
     "type": "git",
