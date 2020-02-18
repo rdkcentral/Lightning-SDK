@@ -47,6 +47,10 @@ var startApp = function startApp() {
   }.bind(this), function () {
     _newArrowCheck(this, _this2);
 
+    return injectFavicon(appMetadata);
+  }.bind(this), function () {
+    _newArrowCheck(this, _this2);
+
     return loadPolyfills(settings.platformSettings.esEnv);
   }.bind(this), function () {
     _newArrowCheck(this, _this2);
@@ -230,6 +234,17 @@ var hasTextureMode = function hasTextureMode() {
     var url = new URL(document.location.href);
     resolve(url.searchParams.has('texture'));
   }.bind(this));
+}.bind(undefined);
+
+var injectFavicon = function injectFavicon(metadata) {
+  _newArrowCheck(this, _this);
+
+  var link = document.createElement('link');
+  link.rel = 'shortcut icon';
+  link.type = 'image/png'; // set to app icon if it exists, otherwise a transparent pixel
+
+  link.href = metadata.icon || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+  document.head.appendChild(link);
 }.bind(undefined);
 
 startApp();
