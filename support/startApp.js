@@ -230,7 +230,7 @@ var hasTextureMode = function hasTextureMode() {
     _newArrowCheck(this, _this13);
 
     // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
-    var url = new URL(document.location.href);
+    var url = new window.URL(window.location.href);
     resolve(url.searchParams.has('texture'));
   }.bind(this));
 }.bind(undefined);

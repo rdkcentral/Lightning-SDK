@@ -130,7 +130,7 @@ const sequence = steps => {
 const hasTextureMode = () => {
   return new Promise(resolve => {
     // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
-    const url = new URL(document.location.href)
+    const url = new window.URL(window.location.href)
     resolve(url.searchParams.has('texture'))
   })
 }
