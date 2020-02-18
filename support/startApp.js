@@ -24,7 +24,7 @@ var startApp = function startApp() {
   console.time('app');
   var appMetadata;
   var settings;
-  var seq = [function () {
+  sequence([function () {
     var _this3 = this;
 
     _newArrowCheck(this, _this2);
@@ -98,10 +98,7 @@ var startApp = function startApp() {
     if (!isSpark) {
       document.body.appendChild(app.stage.getCanvas());
     }
-  }.bind(this)];
-  if (isSpark) seq.splice(2, 5); // Spark imports are in index.spark
-
-  sequence(seq);
+  }.bind(this)]);
 }.bind(undefined);
 
 var getAppMetadata = function getAppMetadata() {
@@ -192,6 +189,8 @@ var loadJS = function loadJS(url, id) {
 
   _newArrowCheck(this, _this);
 
+  if (isSpark) return Promise.resolve(); // Spark imports are in index.spark
+
   return new Promise(function (resolve) {
     _newArrowCheck(this, _this10);
 
@@ -239,6 +238,7 @@ var hasTextureMode = function hasTextureMode() {
 var injectFavicon = function injectFavicon(metadata) {
   _newArrowCheck(this, _this);
 
+  if (isSpark) return Promise.resolve();
   var link = document.createElement('link');
   link.rel = 'shortcut icon';
   link.type = 'image/png'; // set to app icon if it exists, otherwise a transparent pixel

@@ -15,7 +15,7 @@ const startApp = () => {
   let appMetadata
   let settings
 
-  let seq = [
+  sequence([
     () => getSettings().then(config => (settings = config)),
     () => getAppMetadata().then(metadata => (appMetadata = metadata)),
     () => injectFavicon(appMetadata),
@@ -47,11 +47,7 @@ const startApp = () => {
         document.body.appendChild(app.stage.getCanvas())
       }
     },
-  ]
-
-  if (isSpark) seq.splice(2, 5) // Spark imports are in index.spark
-
-  sequence(seq)
+  ])
 }
 
 const getAppMetadata = () => {
@@ -111,6 +107,8 @@ const loadPolyfills = esEnv => {
 }
 
 const loadJS = (url, id) => {
+  if (isSpark) return Promise.resolve() // Spark imports are in index.spark
+
   return new Promise(resolve => {
     console.log('loadJS', url)
     const tag = document.createElement('script')
@@ -138,6 +136,8 @@ const hasTextureMode = () => {
 }
 
 const injectFavicon = metadata => {
+  if (isSpark) return Promise.resolve()
+
   const link = document.createElement('link')
   link.rel = 'shortcut icon'
   link.type = 'image/png'
