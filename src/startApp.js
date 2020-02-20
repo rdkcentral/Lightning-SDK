@@ -1,5 +1,3 @@
-const isSpark = eval('typeof lng !== "undefined" && lng.Utils.isSpark')
-
 const style = document.createElement('style')
 
 document.head.appendChild(style)
@@ -29,6 +27,7 @@ const startApp = () => {
         : Promise.resolve(),
     () => {
       console.time('app2')
+      const isSpark = eval('typeof lng !== "undefined" && lng.Utils.isSpark')
       if (isSpark) {
         eval('lng.Stage.platform = SparkPlatform')
       }

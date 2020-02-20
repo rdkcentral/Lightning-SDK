@@ -8,7 +8,6 @@ function _newArrowCheck(innerThis, boundThis) {
 
 var _this = undefined;
 
-var isSpark = eval('typeof lng !== "undefined" && lng.Utils.isSpark');
 var style = document.createElement('style');
 document.head.appendChild(style);
 style.sheet.insertRule('@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }');
@@ -81,6 +80,7 @@ var startApp = function startApp() {
     _newArrowCheck(this, _this2);
 
     console.time('app2');
+    var isSpark = eval('typeof lng !== "undefined" && lng.Utils.isSpark');
 
     if (isSpark) {
       eval('lng.Stage.platform = SparkPlatform');
