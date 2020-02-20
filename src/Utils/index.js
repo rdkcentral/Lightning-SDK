@@ -3,7 +3,7 @@ let proxyUrl
 
 export const initUtils = config => {
   if (config.path) {
-    basePath = ensureUrlWithProtocol(makeFullStaticPath(window.location.pathname, config.path))
+    basePath = ensureUrlWithProtocol(makeFullStaticPath(document.location.pathname, config.path))
   }
 
   if (config.proxyUrl) {

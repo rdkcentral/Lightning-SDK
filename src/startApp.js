@@ -1,13 +1,11 @@
 const isSpark = eval('typeof lng !== "undefined" && lng.Utils.isSpark')
 
-if (!isSpark) {
-  const style = document.createElement('style')
+const style = document.createElement('style')
 
-  document.head.appendChild(style)
-  style.sheet.insertRule(
-    '@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }'
-  )
-}
+document.head.appendChild(style)
+style.sheet.insertRule(
+  '@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }'
+)
 
 const startApp = () => {
   console.time('app')
@@ -43,9 +41,7 @@ const startApp = () => {
         settings.appData
       )
       if (isSpark) global.endDrawing()
-      if (!isSpark) {
-        document.body.appendChild(app.stage.getCanvas())
-      }
+      document.body.appendChild(app.stage.getCanvas())
     },
   ])
 }
@@ -107,8 +103,6 @@ const loadPolyfills = esEnv => {
 }
 
 const loadJS = (url, id) => {
-  if (isSpark) return Promise.resolve() // Spark imports are in index.spark
-
   return new Promise(resolve => {
     console.log('loadJS', url)
     const tag = document.createElement('script')
@@ -130,14 +124,12 @@ const sequence = steps => {
 const hasTextureMode = () => {
   return new Promise(resolve => {
     // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
-    const url = new window.URL(window.location.href)
+    const url = new URL(document.location.href)
     resolve(url.searchParams.has('texture'))
   })
 }
 
 const injectFavicon = metadata => {
-  if (isSpark) return Promise.resolve()
-
   const link = document.createElement('link')
   link.rel = 'shortcut icon'
   link.type = 'image/png'

@@ -9,12 +9,9 @@ function _newArrowCheck(innerThis, boundThis) {
 var _this = undefined;
 
 var isSpark = eval('typeof lng !== "undefined" && lng.Utils.isSpark');
-
-if (!isSpark) {
-  var style = document.createElement('style');
-  document.head.appendChild(style);
-  style.sheet.insertRule('@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }');
-}
+var style = document.createElement('style');
+document.head.appendChild(style);
+style.sheet.insertRule('@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }');
 
 var startApp = function startApp() {
   var _this2 = this;
@@ -94,10 +91,7 @@ var startApp = function startApp() {
     if (isSpark) global.beginDrawing();
     var app = (isSpark ? eval(appMetadata.id) : window[appMetadata.id])(settings.appSettings, settings.platformSettings, settings.appData);
     if (isSpark) global.endDrawing();
-
-    if (!isSpark) {
-      document.body.appendChild(app.stage.getCanvas());
-    }
+    document.body.appendChild(app.stage.getCanvas());
   }.bind(this)]);
 }.bind(undefined);
 
@@ -189,8 +183,6 @@ var loadJS = function loadJS(url, id) {
 
   _newArrowCheck(this, _this);
 
-  if (isSpark) return Promise.resolve(); // Spark imports are in index.spark
-
   return new Promise(function (resolve) {
     _newArrowCheck(this, _this10);
 
@@ -230,7 +222,7 @@ var hasTextureMode = function hasTextureMode() {
     _newArrowCheck(this, _this13);
 
     // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
-    var url = new window.URL(window.location.href);
+    var url = new URL(document.location.href);
     resolve(url.searchParams.has('texture'));
   }.bind(this));
 }.bind(undefined);
@@ -238,7 +230,6 @@ var hasTextureMode = function hasTextureMode() {
 var injectFavicon = function injectFavicon(metadata) {
   _newArrowCheck(this, _this);
 
-  if (isSpark) return Promise.resolve();
   var link = document.createElement('link');
   link.rel = 'shortcut icon';
   link.type = 'image/png'; // set to app icon if it exists, otherwise a transparent pixel
