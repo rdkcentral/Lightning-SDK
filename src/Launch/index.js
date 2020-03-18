@@ -17,6 +17,8 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.profile && initProfile(platformSettings.plugins.profile)
     platformSettings.plugins.metrics && initMetrics(platformSettings.plugins.metrics)
     platformSettings.plugins.mediaPlayer && initMediaPlayer(platformSettings.plugins.mediaPlayer)
+  } else {
+    initProfile()
   }
 
   const app = Application(App, appData, platformSettings)

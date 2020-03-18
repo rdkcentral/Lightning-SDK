@@ -1,19 +1,21 @@
 import Settings from '../Settings/index'
-import { initDefaults, defaults } from './defaults'
+import { initDefaults, defaultProfile } from './defaults'
 
 let getInfo = key => {
-  const value = Settings.get('profile', key)
-  if (value) return value
-  return defaults[key]
+  const profile = Settings.get('app', 'profile')
+  if (profile && key in profile) return Promise.resolve(profile[key])
+  return Promise.resolve(defaultProfile[key])
 }
 
 let setInfo = (key, params) => {
-  if (key in defaults) defaults[key] = params
+  if (key in defaultProfile) defaultProfile[key] = params
 }
 
 export const initProfile = config => {
-  getInfo = config.getInfo
-  setInfo = config.setInfo
+  if (config) {
+    getInfo = config.getInfo
+    setInfo = config.setInfo
+  }
   initDefaults()
 }
 

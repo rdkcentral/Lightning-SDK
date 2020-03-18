@@ -1,15 +1,13 @@
+import { getLocale, getLanguage, getCountryCode, getLatLon } from './helpers'
+
 export const initDefaults = () => {
-  fetch('https://jsonip.metrological.com/?maf=true')
-    .then(data => data.json())
-    .then(data => {
-      defaults.city = data.geo.city ? data.geo.city : 'New York'
-      defaults.countryCode = data.geo.country ? data.geo.country : 'US'
-      defaults.latlon = data.geo.ll ? data.geo.ll : [40.7128, 74.006]
-      defaults.ip = data.ip ? data.ip : '127.0.0.1'
-    })
+  defaultProfile.locale = getLocale()
+  defaultProfile.language = getLanguage()
+  defaultProfile.countryCode = getCountryCode()
+  defaultProfile.latlon = getLatLon()
 }
 
-export const defaults = {
+export const defaultProfile = {
   ageRating: 'adult',
   city: 'New York',
   countryCode: 'US',
