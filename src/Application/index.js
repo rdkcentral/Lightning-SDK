@@ -33,7 +33,6 @@ if (window.innerHeight === 720) {
 }
 
 export default function(App, appData, platformSettings) {
-  Metrics.app.launch()
   return class Application extends Lightning.Application {
     constructor(options) {
       const config = Deepmerge(defaultOptions, options)
@@ -86,15 +85,20 @@ export default function(App, appData, platformSettings) {
     }
 
     closeApp() {
-      Log.info('Closing App')
       if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
-        Metrics.app.close()
         platformSettings.onClose()
+      } else {
+        this.close()
       }
+    }
+
+    close() {
+      Log.info('Closing App')
       this.childList.remove(this.tag('App'))
 
       // force texture garbage collect
       this.stage.gc()
+      this.destroy()
     }
 
     loadFonts(fonts) {
