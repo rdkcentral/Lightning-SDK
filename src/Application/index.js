@@ -94,8 +94,6 @@ export default function(App, appData, platformSettings) {
 
     close() {
       Log.info('Closing App')
-      Metrics.app.close()
-
       this.childList.remove(this.tag('App'))
 
       // force texture garbage collect
