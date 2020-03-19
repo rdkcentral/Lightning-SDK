@@ -108,4 +108,4 @@ The MediaPlayer plugin emits the following events:
 - Seeked
 - Encrypted
 
-You can listen to these events in the component that implements the MediaPlayer plugin by adding `$mediaplayer{Event}`-methods (i.e. `$mediaPlayerPause()`).
+You can listen to these events in the component that implements the MediaPlayer plugin by adding `$mediaplayer{Event}`-methods (i.e. `$mediaplayerPause()`).
