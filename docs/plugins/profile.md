@@ -16,11 +16,13 @@ import { Profile } from 'wpe-lightning-sdk'
 
 ## Available methods
 
-When you call a method without params it will _return_ the Profile information. If you pass params, it will _update_ the Profile information.
+When you call a method without params it will _return_ the Profile information in the form of a promise.  
+If you pass params, it will _update_ the Profile information.
 
 ### ageRating
 
-Gets the ageRating.
+Gets the ageRating.  
+Returns `adult` by default
 
 ```js
 Profile.ageRating()
@@ -28,7 +30,8 @@ Profile.ageRating()
 
 ### City
 
-Gets the city.
+Gets the city.  
+Returns `New York` by default
 
 ```js
 Profile.city()
@@ -36,7 +39,8 @@ Profile.city()
 
 ### CountryCode
 
-Gets the countryCode.
+Gets the countryCode.  
+Returns `US` by default
 
 ```js
 Profile.countryCode()
@@ -44,7 +48,8 @@ Profile.countryCode()
 
 ### Ip
 
-Gets the ip.
+Gets the ip.  
+Returns `127.0.0.1` by default
 
 ```js
 Profile.ip()
@@ -52,7 +57,8 @@ Profile.ip()
 
 ### HouseHold
 
-Gets the houseHold
+Gets the houseHold  
+Returns `b2244e9d4c04826ccd5a7b2c2a50e7d4` by default
 
 ```js
 Profile.houseHold()
@@ -60,7 +66,8 @@ Profile.houseHold()
 
 ### Language
 
-Gets the language.
+Gets the language.  
+Returns `en` by default
 
 ```js
 Profile.language()
@@ -68,7 +75,8 @@ Profile.language()
 
 ### LatLon
 
-Gets the LatLon.
+Gets the LatLon.  
+Returns `[40.7128, 74.006]` by default
 
 ```js
 Profile.latLon()
@@ -76,7 +84,8 @@ Profile.latLon()
 
 ### Locale
 
-Get the locale.
+Get the locale.  
+Returns `en-US` by default
 
 ```js
 Profile.locale()
@@ -84,7 +93,8 @@ Profile.locale()
 
 ### Mac
 
-Get the Mac.
+Get the Mac.  
+Returns `00:00:00:00:00:00` by default
 
 ```js
 Profile.mac()
@@ -92,7 +102,8 @@ Profile.mac()
 
 ### Operator
 
-Gets the operator.
+Gets the operator.  
+Returns `Metrological` by default
 
 ```js
 Profile.operator()
@@ -100,7 +111,8 @@ Profile.operator()
 
 ### Platform
 
-Gets the platform.
+Gets the platform.  
+Returns `Metrological` by default
 
 ```js
 Profile.platform()
@@ -108,7 +120,8 @@ Profile.platform()
 
 ### Packages
 
-Gets the packages.
+Gets the packages.  
+Returns `[]` by default
 
 ```js
 Profile.packages()
@@ -116,7 +129,8 @@ Profile.packages()
 
 ### Uid
 
-Gets the uid.
+Gets the uid.  
+Returns `ee6723b8-7ab3-462c-8d93-dbf61227998e` by default
 
 ```js
 Profile.uid()
@@ -124,8 +138,37 @@ Profile.uid()
 
 ### StbType
 
-Gets the stbType.
+Gets the stbType.  
+Returns `Metrological` by default
 
 ```js
 Profile.stbType()
 ```
+
+## Overwriting default values
+
+When you want to overwrite the default values, you can do that by editing the `settings.json` file.  
+Add `profile` in `platformSettings` and only add the values you wish to change here.
+
+```json
+{
+  "platformSettings": {
+      "profile": {
+         "ageRating": "adult",
+         "city": "New York",
+         "countryCode": "US",
+         "ip": "127.0.0.1",
+         "household": "b2244e9d4c04826ccd5a7b2c2a50e7d4",
+         "language": "en",
+         "latlon": [40.7128, 74.006],
+         "locale": "en-US",
+         "mac": "00:00:00:00:00:00",
+         "operator": "Metrological",
+         "platform": "Metrological",
+         "packages": [],
+         "uid": "ee6723b8-7ab3-462c-8d93-dbf61227998e",
+         "stbType": "Metrological"
+      }
+   }
+}
+ ```
