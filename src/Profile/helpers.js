@@ -6,53 +6,54 @@ const formatLocale = locale => {
   }
 }
 
-export const getLocale = () => {
+export const getLocale = defaultValue => {
   if ('language' in navigator) {
     const locale = formatLocale(navigator.language)
     return Promise.resolve(locale)
   } else {
-    return Promise.resolve('en-US')
+    return Promise.resolve(defaultValue)
   }
 }
 
-export const getLanguage = () => {
+export const getLanguage = defaultValue => {
   if ('language' in navigator) {
     const language = formatLocale(navigator.language).slice(0, 2)
     return Promise.resolve(language)
   } else {
-    return Promise.resolve('en')
+    return Promise.resolve(defaultValue)
   }
 }
 
-export const getCountryCode = () => {
+export const getCountryCode = defaultValue => {
   if ('language' in navigator) {
     const countryCode = formatLocale(navigator.language).slice(3, 5)
     return Promise.resolve(countryCode)
   } else {
-    return Promise.resolve('US')
+    return Promise.resolve(defaultValue)
   }
 }
 
-export const getLatLon = () => {
-  const geoLocationSuccess = success => {
-    const coords = success && success.coords
-    return Promise.resolve([coords.latitude, coords.longitude])
-  }
-  const geoLocationError = error => {
-    console.warn('Could not load geolocation ', error)
-    return Promise.resolve([40.7128, 74.006])
-  }
-  const geoLocationOptions = {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0,
-  }
+export const getLatLon = defaultValue => {
+  return new Promise(resolve => {
+    const geoLocationSuccess = success => {
+      const coords = success && success.coords
+      return resolve([coords.latitude, coords.longitude])
+    }
+    const geoLocationError = error => {
+      return resolve(defaultValue)
+    }
+    const geoLocationOptions = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    }
 
-  if ('geolocation' in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      geoLocationSuccess,
-      geoLocationError,
-      geoLocationOptions
-    )
-  }
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        geoLocationSuccess,
+        geoLocationError,
+        geoLocationOptions
+      )
+    }
+  })
 }

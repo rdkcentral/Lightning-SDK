@@ -1,10 +1,9 @@
 import Settings from '../Settings/index'
-import { initDefaults, defaultProfile } from './defaults'
+import { defaultProfile } from './defaults'
 
 let getInfo = key => {
-  const profile = Settings.get('app', 'profile')
-  if (profile && key in profile) return Promise.resolve(profile[key])
-  return Promise.resolve(defaultProfile[key])
+  const profile = { ...defaultProfile, ...Settings.get('app', 'profile') }
+  return Promise.resolve(profile[key])
 }
 
 let setInfo = (key, params) => {
@@ -12,11 +11,8 @@ let setInfo = (key, params) => {
 }
 
 export const initProfile = config => {
-  if (config) {
-    getInfo = config.getInfo
-    setInfo = config.setInfo
-  }
-  initDefaults()
+  getInfo = config.getInfo
+  setInfo = config.setInfo
 }
 
 const getOrSet = (key, params) => (params ? setInfo(key, params) : getInfo(key))
