@@ -2,7 +2,7 @@ import Settings from '../Settings/index'
 import { defaultProfile } from './defaults'
 
 let getInfo = key => {
-  const profile = { ...defaultProfile, ...Settings.get('app', 'profile') }
+  const profile = { ...defaultProfile, ...Settings.get('platform', 'profile') }
   return Promise.resolve(profile[key])
 }
 

@@ -54,6 +54,8 @@ export const getLatLon = defaultValue => {
         geoLocationError,
         geoLocationOptions
       )
+    } else {
+      return resolve(defaultValue)
     }
   })
 }
