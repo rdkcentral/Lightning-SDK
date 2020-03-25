@@ -2,13 +2,13 @@
 
 Sometimes your App might require profile information about the current user. This information generally comes from the platform or operator.
 
-Since each operator / platform may have a different implementation, the Lightning SDK offers a Profile plugin with generic interface to the developer.
+Since each operator / platform may have a different implementation, the Lightning SDK offers a Profile plugin with a generic interface to the developer.
 
 The Profile plugin also offers the ability to update profile information.
 
 ## Usage
 
-Whenever you need to Profile information, import the Profile plugin from the Lightning SDK
+Whenever you need Profile information, import the Profile plugin from the Lightning SDK
 
 ```js
 import { Profile } from 'wpe-lightning-sdk'
@@ -16,13 +16,12 @@ import { Profile } from 'wpe-lightning-sdk'
 
 ## Available methods
 
-When you call a method without params it will _return_ the Profile information in the form of a promise.  
+When you call a method without params it will _return_ the Profile information in the form of a promise.
 If you pass params, it will _update_ the Profile information.
 
 ### ageRating
 
-Gets the ageRating.  
-Returns `adult` by default
+Gets the ageRating. Returns `adult` by default during _local development_.
 
 ```js
 Profile.ageRating()
@@ -30,8 +29,7 @@ Profile.ageRating()
 
 ### City
 
-Gets the city.  
-Returns `New York` by default
+Gets the city. `New York` by default during _local development_.
 
 ```js
 Profile.city()
@@ -39,8 +37,7 @@ Profile.city()
 
 ### CountryCode
 
-Gets the countryCode.  
-Returns `US` by default
+Gets the countryCode. Returns `US` by default during _local development_.
 
 ```js
 Profile.countryCode()
@@ -48,8 +45,7 @@ Profile.countryCode()
 
 ### Ip
 
-Gets the ip.  
-Returns `127.0.0.1` by default
+Gets the ip. Returns `127.0.0.1` by default during _local development_.
 
 ```js
 Profile.ip()
@@ -57,8 +53,7 @@ Profile.ip()
 
 ### HouseHold
 
-Gets the houseHold  
-Returns `b2244e9d4c04826ccd5a7b2c2a50e7d4` by default
+Gets the houseHold-id. Returns `b2244e9d4c04826ccd5a7b2c2a50e7d4` by default during _local development_.
 
 ```js
 Profile.houseHold()
@@ -66,8 +61,7 @@ Profile.houseHold()
 
 ### Language
 
-Gets the language.  
-Returns `en` by default
+Gets the language. Returns `en` by default during _local development_.
 
 ```js
 Profile.language()
@@ -75,8 +69,7 @@ Profile.language()
 
 ### LatLon
 
-Gets the LatLon.  
-Returns `[40.7128, 74.006]` by default
+Gets the LatLon. Returns `[40.7128, 74.006]` by default during _local development_.
 
 ```js
 Profile.latLon()
@@ -84,8 +77,7 @@ Profile.latLon()
 
 ### Locale
 
-Get the locale.  
-Returns `en-US` by default
+Get the locale. Returns `en-US` by default during _local development_.
 
 ```js
 Profile.locale()
@@ -93,8 +85,7 @@ Profile.locale()
 
 ### Mac
 
-Get the Mac.  
-Returns `00:00:00:00:00:00` by default
+Get the Mac. Returns `00:00:00:00:00:00` by default during _local development_.
 
 ```js
 Profile.mac()
@@ -102,8 +93,7 @@ Profile.mac()
 
 ### Operator
 
-Gets the operator.  
-Returns `Metrological` by default
+Gets the operator. Returns `Metrological` by default during _local development_.
 
 ```js
 Profile.operator()
@@ -111,8 +101,7 @@ Profile.operator()
 
 ### Platform
 
-Gets the platform.  
-Returns `Metrological` by default
+Gets the platform. Returns `Metrological` by default during _local development_.
 
 ```js
 Profile.platform()
@@ -120,8 +109,7 @@ Profile.platform()
 
 ### Packages
 
-Gets the packages.  
-Returns `[]` by default
+Gets the packages. Returns `[]` by default during _local development_.
 
 ```js
 Profile.packages()
@@ -129,8 +117,7 @@ Profile.packages()
 
 ### Uid
 
-Gets the uid.  
-Returns `ee6723b8-7ab3-462c-8d93-dbf61227998e` by default
+Gets the uid. Returns `ee6723b8-7ab3-462c-8d93-dbf61227998e` by default during _local development_.
 
 ```js
 Profile.uid()
@@ -138,8 +125,7 @@ Profile.uid()
 
 ### StbType
 
-Gets the stbType.  
-Returns `Metrological` by default
+Gets the stbType. Returns `Metrological` by default during _local development_.
 
 ```js
 Profile.stbType()
@@ -147,8 +133,9 @@ Profile.stbType()
 
 ## Overwriting default values
 
-When you want to overwrite the default values, you can do that by editing the `settings.json` file.  
-Add `profile` in `platformSettings` and only add the values you wish to change here.
+During development you might want to test your App with different profile values (i.e. a different language or age rating).
+When you want to overwrite the default values, you can do so by editing the `settings.json` file.
+Add a `profile` key in `platformSettings` and only add the values you wish to change here.
 
 ```json
 {
