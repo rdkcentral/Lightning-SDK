@@ -6,11 +6,14 @@ const defaultLocale = 'en-US'
 let loadedLanguageFile = undefined
 
 // Init
-Profile.locale().then(locale => {
-  Locale.setLocale(locale).then(isSet => {
-    console.log('Locale is set :', isSet)
+export const initLocale = async () => {
+  return Profile.locale().then(locale => {
+    return Locale.setLocale(locale).then(isSet => {
+      console.log('Locale is set :', isSet) // Testing
+      return isSet
+    })
   })
-})
+}
 
 // public API Locale
 export default {

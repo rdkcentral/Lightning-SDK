@@ -1,10 +1,9 @@
-// import Utils from '../Utils/index'
+import { Utils } from '../../index'
 
 export const loadTranslationFile = isoLocale => {
-  // const basePath = Utils.asset(`locale/${isoLocale}.json`) // Is too late
-  const basePath = `static/locale/${isoLocale}.json` // Testing
+  const localePath = Utils.asset(`locale/${isoLocale}.json`)
 
-  return fetch(basePath).then(response => {
+  return fetch(localePath).then(response => {
     if (response.ok) return response.json()
     console.warn(`Locale: ${isoLocale}.json - ${response.statusText}`)
     return false
