@@ -1,116 +1,33 @@
-/**
- * Simple module for localization of strings.
- *
- * How to use:
- * 1. Create localization file with following JSON format:
- * {
- *   "en" :{
- *     "how": "How do you want your egg today?",
- *     "boiledEgg": "Boiled egg",
- *     "softBoiledEgg": "Soft-boiled egg",
- *     "choice": "How to choose the egg",
- *     "buyQuestion": "I'd like to buy {0} eggs, {1} dollars each."
- *   },
- *
- *   "it": {
- *     "how": "Come vuoi il tuo uovo oggi?",
- *     "boiledEgg": "Uovo sodo",
- *     "softBoiledEgg": "Uovo alla coque",
- *     "choice": "Come scegliere l'uovo",
- *     "buyQuestion": "Mi piacerebbe comprare {0} uova, {1} dollari ciascuna."
- *   }
- * }
- *
- * 2. Use Locale's module load method, specifying path to your localization file and set chosen language, e.g.:
- *    > Locale.load('static/locale/locale.json');
- *    > Locale.setLanguage('en');
- *
- * 3. Use localization strings:
- *    > console.log(Locale.tr.how);
- *    How do you want your egg today?
- *    > console.log(Locale.tr.boiledEgg);
- *    Boiled egg
- *
- * 4. String formatting
- *    > console.log(Locale.tr.buyQuestion.format(10, 0.5));
- *    I'd like to buy 10 eggs, 0.5 dollars each.
- */
+import Locale from './'
+import Profile from '../Profile/index'
+import { loadTranslationFile, format, correctLocale } from './helpers'
 
-class Locale {
-  constructor() {
-    this.__enabled = false
-  }
+const defaultLocale = 'en-US'
+let loadedLanguageFile = undefined
 
-  /**
-   * Loads translation object from external json file.
-   *
-   * @param {String} path Path to resource.
-   * @return {Promise}
-   */
-  async load(path) {
-    if (!this.__enabled) {
-      return
-    }
+// Init
+Profile.locale().then(locale => {
+  Locale.setLocale(locale).then(isSet => {
+    console.log('Locale is set :', isSet)
+  })
+})
 
-    await fetch(path)
-      .then(resp => resp.json())
-      .then(resp => {
-        this.loadFromObject(resp)
-      })
-  }
+// public API Locale
+export default {
+  get(attributeName, ...args) {
+    if (!(loadedLanguageFile && loadedLanguageFile[attributeName])) return attributeName
+    if (args && args.length > 0) return format(loadedLanguageFile[attributeName], args)
+    return loadedLanguageFile[attributeName]
+  },
 
-  /**
-   * Sets language used by module.
-   *
-   * @param {String} lang
-   */
-  setLanguage(lang) {
-    this.__enabled = true
-    this.language = lang
-  }
-
-  /**
-   * Returns reference to translation object for current language.
-   *
-   * @return {Object}
-   */
-  get tr() {
-    return this.__trObj[this.language]
-  }
-
-  /**
-   * Loads translation object from existing object (binds existing object).
-   *
-   * @param {Object} trObj
-   */
-  loadFromObject(trObj) {
-    this.__trObj = trObj
-    for (const lang of Object.values(this.__trObj)) {
-      for (const str of Object.keys(lang)) {
-        lang[str] = new LocalizedString(lang[str])
+  // Set ISO locale code aka: 'en-US, nl-NL, etc' default is en-US.
+  setLocale(locale) {
+    return loadTranslationFile(correctLocale(locale, defaultLocale)).then(languageFile => {
+      if (languageFile) {
+        loadedLanguageFile = languageFile
+        return true
       }
-    }
-  }
+      return false
+    })
+  },
 }
-
-/**
- * Extended string class used for localization.
- */
-class LocalizedString extends String {
-  /**
-   * Returns formatted LocalizedString.
-   * Replaces each placeholder value (e.g. {0}, {1}) with corresponding argument.
-   *
-   * E.g.:
-   * > new LocalizedString('{0} and {1} and {0}').format('A', 'B');
-   * A and B and A
-   *
-   * @param  {...any} args List of arguments for placeholders.
-   */
-  format(...args) {
-    const sub = args.reduce((string, arg, index) => string.split(`{${index}}`).join(arg), this)
-    return new LocalizedString(sub)
-  }
-}
-
-export default new Locale()
