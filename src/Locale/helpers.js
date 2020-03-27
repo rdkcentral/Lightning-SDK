@@ -1,4 +1,4 @@
-import { Utils } from '../../index'
+import Utils from '../Utils/index'
 
 export const loadTranslationFile = isoLocale => {
   const localePath = Utils.asset(`locale/${isoLocale}.json`)
