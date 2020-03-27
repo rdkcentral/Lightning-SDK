@@ -2,6 +2,7 @@ import Utils from '../Utils/index'
 
 export const loadTranslationFile = isoLocale => {
   const localePath = Utils.asset(`locale/${isoLocale}.json`)
+  // console.log('doesUrlExist :', doesUrlExist(localePath))
 
   return fetch(localePath).then(response => {
     if (response.ok) return response.json()
@@ -23,12 +24,8 @@ export const format = (text, args) => {
 }
 
 // Returns corrected locale, en-US instead of EN_us or en-us
-export const correctLocale = (locale, defaultLocale) => {
-  try {
-    Intl.getCanonicalLocales(locale)
-    return Intl.getCanonicalLocales(locale)[0]
-  } catch (e) {
-    console.warn(e)
-    return defaultLocale
-  }
+export const isCorrectLocale = (locale, defaultLocale) => {
+  const isLocale = new RegExp('([a-z][a-z]-[A-Z][A-Z])')
+  if (isLocale.test(locale)) return locale
+  return defaultLocale
 }

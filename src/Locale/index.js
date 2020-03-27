@@ -1,6 +1,6 @@
 import Locale from './'
 import Profile from '../Profile/index'
-import { loadTranslationFile, format, correctLocale } from './helpers'
+import { loadTranslationFile, format, isCorrectLocale } from './helpers'
 
 const defaultLocale = 'en-US'
 let loadedLanguageFile = undefined
@@ -9,7 +9,6 @@ let loadedLanguageFile = undefined
 export const initLocale = async () => {
   return Profile.locale().then(locale => {
     return Locale.setLocale(locale).then(isSet => {
-      console.log('Locale is set :', isSet) // Testing
       return isSet
     })
   })
@@ -25,11 +24,12 @@ export default {
 
   // Set ISO locale code aka: 'en-US, nl-NL, etc' default is en-US.
   setLocale(locale) {
-    return loadTranslationFile(correctLocale(locale, defaultLocale)).then(languageFile => {
+    return loadTranslationFile(isCorrectLocale(locale, defaultLocale)).then(languageFile => {
       if (languageFile) {
         loadedLanguageFile = languageFile
         return true
       }
+      console.warn('Locale: could not set locale:' + locale)
       return false
     })
   },
