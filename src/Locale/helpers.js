@@ -1,13 +1,19 @@
 import Utils from '../Utils/index'
 
-export const loadTranslationFile = isoLocale => {
+export const loadTranslationFile = (isoLocale, defaultLocale) => {
   const localePath = Utils.asset(`locale/${isoLocale}.json`)
-  // console.log('doesUrlExist :', doesUrlExist(localePath))
+  const localeDefaultPath = Utils.asset(`locale/${defaultLocale}.json`)
 
   return fetch(localePath).then(response => {
     if (response.ok) return response.json()
     console.warn(`Locale: ${isoLocale}.json - ${response.statusText}`)
-    return false
+    console.warn(`Locale: Defaulting to /${defaultLocale}.json`)
+
+    return fetch(localeDefaultPath).then(response => {
+      if (response.ok) return response.json()
+      console.warn(`Locale: ${isoLocale}.json - ${response.statusText}`)
+      return false
+    })
   })
 }
 
@@ -23,9 +29,17 @@ export const format = (text, args) => {
   }, text)
 }
 
-// Returns corrected locale, en-US instead of EN_us or en-us
+// Returns locale if naming is correct, else returns default locale
 export const isCorrectLocale = (locale, defaultLocale) => {
-  const isLocale = new RegExp('([a-z][a-z]-[A-Z][A-Z])')
-  if (isLocale.test(locale)) return locale
+  const isLocale = new RegExp('^([a-zA-Z][a-zA-Z]-[a-zA-Z][a-zA-Z])(?!.)')
+  if (isLocale.test(locale)) return formatLocale(locale)
+  console.warn(`Locale: ${locale} is invalid, switching to default`)
   return defaultLocale
+}
+
+// Returns corrected locale, en-US instead of en-us or EN-us
+const formatLocale = locale => {
+  const prefix = locale.slice(0, 2).toLowerCase()
+  const postfix = locale.slice(3, 5).toUpperCase()
+  return `${prefix}-${postfix}`
 }

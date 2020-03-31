@@ -24,13 +24,15 @@ export default {
 
   // Set ISO locale code aka: 'en-US, nl-NL, etc' default is en-US.
   setLocale(locale) {
-    return loadTranslationFile(isCorrectLocale(locale, defaultLocale)).then(languageFile => {
-      if (languageFile) {
-        loadedLanguageFile = languageFile
-        return true
+    return loadTranslationFile(isCorrectLocale(locale, defaultLocale), defaultLocale).then(
+      languageFile => {
+        if (languageFile) {
+          loadedLanguageFile = languageFile
+          return true
+        }
+        console.warn('Locale: could not set locale: ' + locale)
+        return false
       }
-      console.warn('Locale: could not set locale:' + locale)
-      return false
-    })
+    )
   },
 }
