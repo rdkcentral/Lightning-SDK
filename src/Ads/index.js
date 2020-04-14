@@ -79,7 +79,7 @@ const playAd = ad => {
 }
 
 const sendBeacon = (callbacks, event) => {
-  if (callbacks[event]) {
+  if (callbacks && callbacks[event]) {
     Log.info('Ad', 'Sending beacon', event, callbacks[event])
     return callbacks[event].reduce((promise, url) => {
       return promise.then(() =>

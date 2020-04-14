@@ -57,7 +57,7 @@ export default class VideoPlayer extends Lightning.Component {
     this.videoEl.style.height = this.__withPrecision(top - bottom)
   }
 
-  open(url, details) {
+  open(url, details = {}) {
     this._metrics = Metrics.media(url)
     // prep the media url to play depending on platform (mediaPlayerplugin)
     url = mediaUrl(url)
