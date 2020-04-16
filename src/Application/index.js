@@ -52,7 +52,7 @@ export default function(App, appData, platformSettings) {
     _setup() {
       Promise.all([
         this.loadFonts((App.config && App.config.fonts) || (App.getFonts && App.getFonts()) || []),
-        initLocale(),
+        this.loadLocale(App.locale || false),
       ])
         .then(() => {
           Metrics.app.loaded()
@@ -115,6 +115,11 @@ export default function(App, appData, platformSettings) {
           .then(resolve)
           .catch(reject)
       })
+    }
+
+    loadLocale(localeEnabled) {
+      if (localeEnabled) return initLocale()
+      return false
     }
 
     _getFocused() {

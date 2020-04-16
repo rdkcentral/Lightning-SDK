@@ -1,20 +1,31 @@
+import Log from '../Log/index'
 import Utils from '../Utils/index'
 
 export const loadTranslationFile = (isoLocale, defaultLocale) => {
+  isoLocale = isCorrectLocale(isoLocale, defaultLocale)
   const localePath = Utils.asset(`locale/${isoLocale}.json`)
   const localeDefaultPath = Utils.asset(`locale/${defaultLocale}.json`)
+  const sameAsDefaultPath = localePath === localeDefaultPath
+  const noDefaultWarn = `Locale: ${defaultLocale}.json does not exist, please add file to static/locale/`
+  const defaultingWarn = `Locale: ${isoLocale}.json does not exist, defaulting to ${defaultLocale}.json`
 
-  return fetch(localePath).then(response => {
-    if (response.ok) return response.json()
-    console.warn(`Locale: ${isoLocale}.json - ${response.statusText}`)
-    console.warn(`Locale: Defaulting to /${defaultLocale}.json`)
-
-    return fetch(localeDefaultPath).then(response => {
-      if (response.ok) return response.json()
-      console.warn(`Locale: ${isoLocale}.json - ${response.statusText}`)
-      return false
+  return fetch(localePath)
+    .then(response => response.json())
+    .then(translationFile => {
+      return translationFile
     })
-  })
+    .catch(() => {
+      Log.warn(sameAsDefaultPath ? noDefaultWarn : defaultingWarn)
+      if (sameAsDefaultPath) return
+      return fetch(localeDefaultPath)
+        .then(response => response.json())
+        .then(translationFile => {
+          return translationFile
+        })
+        .catch(() => {
+          Log.warn(noDefaultWarn)
+        })
+    })
 }
 
 // Replaces integers within brackets {0} or { 1 } with given arguments
@@ -33,7 +44,7 @@ export const format = (text, args) => {
 export const isCorrectLocale = (locale, defaultLocale) => {
   const isLocale = new RegExp('^([a-zA-Z][a-zA-Z]-[a-zA-Z][a-zA-Z])(?!.)')
   if (isLocale.test(locale)) return formatLocale(locale)
-  console.warn(`Locale: ${locale} is invalid, switching to default`)
+  Log.warn(`Locale: ${locale} is invalid, switching to default`)
   return defaultLocale
 }
 
