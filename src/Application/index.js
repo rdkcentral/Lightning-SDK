@@ -117,8 +117,8 @@ export default function(App, appData, platformSettings) {
       })
     }
 
-    loadLocale(localeEnabled) {
-      if (localeEnabled) return initLocale()
+    loadLocale(locale) {
+      if (locale) return initLocale(locale)
       return false
     }
 

@@ -5,10 +5,13 @@ const defaultLocale = 'en-US'
 let loadedLanguageFile = undefined
 
 // Init
-export const initLocale = async () => {
-  return Profile.locale().then(locale => {
-    return setLocale(locale)
-  })
+export const initLocale = async overwrite => {
+  if (overwrite && typeof overwrite === 'boolean') {
+    return Profile.locale().then(locale => {
+      return setLocale(locale)
+    })
+  }
+  return setLocale(overwrite)
 }
 
 // public API Locale
