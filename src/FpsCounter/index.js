@@ -1,5 +1,6 @@
 import Lightning from '../Lightning'
-
+import Settings from '../Settings'
+import Log from '../Log'
 export default class FpsIndicator extends Lightning.Component {
   static _template() {
     return {
@@ -40,12 +41,29 @@ export default class FpsIndicator extends Lightning.Component {
   }
 
   _setup() {
+    this.config = {
+      ...{
+        log: false,
+        interval: 500,
+        threshold: 1,
+      },
+      ...Settings.get('platform', 'showFps'),
+    }
+
     this.fps = 0
-    this.stage.on('frameStart', () => {
+    this.lastFps = this.fps - this.config.threshold
+
+    const fpsCalculator = () => {
       this.fps = ~~(1 / this.stage.dt)
-    })
+    }
+    this.stage.on('frameStart', fpsCalculator)
+    this.stage.off('framestart', fpsCalculator)
     this.tag('Counter').loadTexture()
-    this.interval = setInterval(this.showFps.bind(this), 100)
+    this.interval = setInterval(this.showFps.bind(this), this.config.interval)
+  }
+
+  _firstActive() {
+    this.showFps()
   }
 
   _detach() {
@@ -53,6 +71,8 @@ export default class FpsIndicator extends Lightning.Component {
   }
 
   showFps() {
+    if (Math.abs(this.lastFps - this.fps) <= this.config.threshold) return
+    this.lastFps = this.fps
     // green
     let bgColor = 0xff008000
     // orange
@@ -62,5 +82,7 @@ export default class FpsIndicator extends Lightning.Component {
 
     this.tag('Background').setSmooth('color', bgColor)
     this.tag('Counter').text = `${this.fps}`
+
+    this.config.log && Log.info('FPS', this.fps)
   }
 }

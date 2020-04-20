@@ -64,7 +64,7 @@ Type can be either `app` or `platform`. Key can be any of the existing settings.
 | path | String | Path to the folder with the assets of the app. Utils.asset() will use this folder to lookup assets | ./static |
 | log | Boolean | Whether or not to show logs in the console (those that use the Log plugin) | false |
 | showVersion | Boolean | Whether or not to show the App's version in any. Uses the version specified in `metadata.json` | false |
-| showFps | Boolean | Whether or not to show an FPS (frames per second) counter in an overlay | false |
+| showFps | Boolean / Object | Whether or not to show an FPS (frames per second) counter in an overlay | false |
 | textureMode | Boolean | Whether or not to render video as a texture on the active drawing canvas. Can also be set by adding a queryparam `?texture`. | false |
 | esEnv | String | The target ECMAscript environment for the App. Supported values: es6 and es5. | es6 |
 | imageServerUrl | Url | Endpoint to an image server for resizing and / or preprocessing images | null |
