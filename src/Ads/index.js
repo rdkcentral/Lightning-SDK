@@ -10,7 +10,9 @@ let getAds = () => {
 }
 
 export const initAds = config => {
-  getAds = config.getAds
+  if (config.getAds) {
+    getAds = config.getAds
+  }
 }
 
 const playSlot = (slot = []) => {

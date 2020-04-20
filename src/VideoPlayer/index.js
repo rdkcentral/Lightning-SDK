@@ -72,21 +72,23 @@ export default class VideoPlayer extends Lightning.Component {
     this.videoEl.onloadedmetadata = () => {
       // unset own callback to prevent endless loop
       this.videoEl.onloadedmetadata = () => {}
-      Ads({ enabled: this._adsEnabled, duration: this.duration, caid: details.videoId }).then(
-        ads => {
-          this.__playingAds = true
-          ads.prerolls().then(() => {
-            this.__playingAds = false
-            this.__registerEventListeners()
-            if (this.src !== url) {
-              this.videoEl.setAttribute('src', url)
-              this.videoEl.load()
-            }
-            this.show()
-            this.play()
-          })
-        }
-      )
+      const config = { enabled: this._adsEnabled, duration: this.duration }
+      if (details.videoId) {
+        config.caid - details.videoId
+      }
+      Ads(config).then(ads => {
+        this.__playingAds = true
+        ads.prerolls().then(() => {
+          this.__playingAds = false
+          this.__registerEventListeners()
+          if (this.src !== url) {
+            this.videoEl.setAttribute('src', url)
+            this.videoEl.load()
+          }
+          this.show()
+          this.play()
+        })
+      })
     }
   }
 
