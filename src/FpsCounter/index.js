@@ -58,7 +58,6 @@ export default class FpsIndicator extends Lightning.Component {
     }
     this.stage.on('frameStart', fpsCalculator)
     this.stage.off('framestart', fpsCalculator)
-    this.tag('Counter').loadTexture()
     this.interval = setInterval(this.showFps.bind(this), this.config.interval)
   }
 
