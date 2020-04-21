@@ -3,6 +3,7 @@ import Lightning from '../Lightning'
 import Locale from '../Locale'
 import Metrics from '../Metrics'
 import VersionLabel from '../VersionLabel'
+import FpsCounter from '../FpsCounter'
 import Log from '../Log'
 
 const defaultOptions = {
@@ -60,7 +61,7 @@ export default function(App, appData, platformSettings) {
             ref: 'App',
             type: App,
             appData,
-            forceZIndexContext: !!platformSettings.showVersion,
+            forceZIndexContext: !!platformSettings.showVersion || !!platformSettings.showFps,
           })
 
           if (platformSettings.showVersion) {
@@ -68,6 +69,13 @@ export default function(App, appData, platformSettings) {
               ref: 'VersionLabel',
               type: VersionLabel,
               version: this.config.version,
+            })
+          }
+
+          if (platformSettings.showFps) {
+            this.childList.a({
+              ref: 'FpsCounter',
+              type: FpsCounter,
             })
           }
 
