@@ -9,15 +9,15 @@ let doPurchase = paymentObj => {
     Profile.operator(),
     Profile.mac(),
   ])
-    .then(values => {
+    .then(([household, country, operator, mac]) => {
       obj = JSON.stringify({
         purchase: paymentObj || {},
         identifier: Settings.get('app', 'id'),
         name: Settings.get('app', 'id'),
-        household: values[0],
-        country: values[1],
-        operator: values[2],
-        mac: values[3],
+        household: household,
+        country: country,
+        operator: operator,
+        mac: mac,
         type: 'in-app',
       })
       return Promise.resolve(obj)
@@ -28,7 +28,7 @@ let doPurchase = paymentObj => {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: JSON.stringify(obj),
+        body: obj,
       })
     })
     .then(response => {
