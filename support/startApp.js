@@ -99,7 +99,7 @@ var getAppMetadata = function getAppMetadata() {
   }.bind(this)).then(function (metadata) {
     _newArrowCheck(this, _this7);
 
-    metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`;
+    metadata.id = "APP_".concat(metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_'));
     return metadata;
   }.bind(this));
 }.bind(undefined);
@@ -159,7 +159,7 @@ var loadPolyfills = function loadPolyfills(esEnv) {
     return sequence([function () {
       _newArrowCheck(this, _this9);
 
-      return loadJS('./polyfills/babel-polyfill7.6.0.js');
+      return loadJS('./polyfills/babel-polyfill.js');
     }.bind(this), function () {
       _newArrowCheck(this, _this9);
 

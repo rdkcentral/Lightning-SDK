@@ -88,7 +88,7 @@ const loadPolyfills = esEnv => {
   // load polyfills when esEnv is defined and it's not es6
   if (esEnv && esEnv !== 'es6') {
     return sequence([
-      () => loadJS('./polyfills/babel-polyfill7.6.0.js'),
+      () => loadJS('./polyfills/babel-polyfill.js'),
       () => loadJS('./polyfills/url.js'),
     ])
   }
