@@ -2,9 +2,7 @@ let basePath
 let proxyUrl
 
 export const initUtils = config => {
-  if (config.path) {
-    basePath = ensureUrlWithProtocol(makeFullStaticPath(document.location.pathname, config.path))
-  }
+  basePath = ensureUrlWithProtocol(makeFullStaticPath(window.location.pathname, config.path || '/'))
 
   if (config.proxyUrl) {
     proxyUrl = ensureUrlWithProtocol(config.proxyUrl)
@@ -13,7 +11,7 @@ export const initUtils = config => {
 
 export default {
   asset(relPath) {
-    return basePath + '/' + relPath
+    return basePath + relPath
   },
   proxyUrl(url, options = {}) {
     return proxyUrl ? proxyUrl + '?' + makeQueryString(url, options) : url
@@ -37,20 +35,34 @@ export const ensureUrlWithProtocol = url => {
   return url
 }
 
-const makeFullStaticPath = (pathname = '/', path) => {
+export const makeFullStaticPath = (pathname = '/', path) => {
+  // ensure path has traling slash
+  path = path.charAt(path.length - 1) !== '/' ? path + '/' : path
+
   // if path is URL, we assume it's already the full static path, so we just return it
   if (/^(?:https?:)?(?:\/\/)/.test(path)) {
     return path
   }
-  // cleanup the pathname
-  pathname = /(.*)\//.exec(pathname)[1]
 
-  // remove possible leading dot from path
-  path = path.charAt(0) === '.' ? path.substr(1) : path
-  // ensure path has leading slash
-  path = path.charAt(0) !== '/' ? '/' + path : path
+  if (path.charAt(0) === '/') {
+    return path
+  } else {
+    // cleanup the pathname (i.e. remove possible index.html)
+    pathname = cleanUpPathName(pathname)
 
-  return pathname + path
+    // remove possible leading dot from path
+    path = path.charAt(0) === '.' ? path.substr(1) : path
+    // ensure path has leading slash
+    path = path.charAt(0) !== '/' ? '/' + path : path
+    return pathname + path
+  }
+}
+
+export const cleanUpPathName = pathname => {
+  if (pathname.slice(-1) === '/') return pathname.slice(0, -1)
+  const parts = pathname.split('/')
+  if (parts[parts.length - 1].indexOf('.') > -1) parts.pop()
+  return parts.join('/')
 }
 
 const makeQueryString = (url, options = {}, type = 'url') => {
@@ -64,10 +76,4 @@ const makeQueryString = (url, options = {}, type = 'url') => {
       return encodeURIComponent(key) + '=' + encodeURIComponent('' + options[key])
     })
     .join('&')
-}
-
-const detectProtocol = () => {
-  return window.location.protocol
-  // from old SDK (not sure if this is needed like this?)
-  // return lng.Utils.isWeb && location.protocol === "https:" ? "https" : "http";
 }
