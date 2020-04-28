@@ -219,8 +219,8 @@ export default class VideoPlayer extends Lightning.Component {
     } else {
       const videoEl = document.createElement('video')
       videoEl.setAttribute('id', 'video-player')
-      videoEl.setAttribute('width', '1920px')
-      videoEl.setAttribute('height', '1080px')
+      videoEl.setAttribute('width', this.__withPrecision(1920))
+      videoEl.setAttribute('height', this.__withPrecision(1080))
       videoEl.style.position = 'absolute'
       videoEl.style.zIndex = '1'
       videoEl.style.display = 'none'
