@@ -74,7 +74,7 @@ export default class VideoPlayer extends Lightning.Component {
       this.videoEl.onloadedmetadata = () => {}
       const config = { enabled: this._adsEnabled, duration: this.duration }
       if (details.videoId) {
-        config.caid - details.videoId
+        config.caid = details.videoId
       }
       Ads(config).then(ads => {
         this.__playingAds = true
