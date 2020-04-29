@@ -86,7 +86,8 @@ const sendBeacon = (callbacks, event) => {
     return callbacks[event].reduce((promise, url) => {
       return promise.then(() =>
         fetch(url)
-          // just resolve in case of a fetch error (so we don't block firing the rest of the beacons for this event)
+          // always resolve, also in case of a fetch error (so we don't block firing the rest of the beacons for this event)
+          .then(() => Promise.resolve(null)) // note: for fetch failed http responses don't throw catch
           .catch(() => Promise.resolve(null))
       )
     }, Promise.resolve(null))
