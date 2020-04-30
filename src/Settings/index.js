@@ -6,7 +6,7 @@ export const initSettings = (appSettings, platformSettings) => {
   settings['platform'] = platformSettings
 }
 
-function publish(type, key, value) {
+const publish = (type, key, value) => {
   subscribers.forEach(subscriber => subscriber(type, key, value))
 }
 
@@ -19,6 +19,10 @@ export default {
     return settings[type] && key in settings[type]
   },
   set(key, value, type = 'user') {
+    if (type === 'app' || type === 'platform') {
+      console.warn('Trying to set app or platform after launch is not allowed')
+      return
+    }
     settings[type] = settings[type] || {}
     settings[type][key] = value
     publish(type, key, value)

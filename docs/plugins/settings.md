@@ -41,18 +41,35 @@ Returns a settings value.
 Settings.get(type, key)
 ```
 
-Type can be either `app` or `platform`. Key can be any of the existing settings.
+The SDK automatically creates the `app` or `platform` types from the Launch params.
+
+### Set
+
+Sets a key, value on a type (default `user`)
+
+```js
+Settings.set(key, value, type = 'user')
+```
+
+Type of `app` or `platform` are reserved and can not be changed.
 
 ### Has
 
-Returns `true` or `false`, depending on wether a settings is defined or not.
+Returns `true` or `false`, depending on whether a setting is defined or not.
 
 ```js
 Settings.has(type, key)
 ```
 
-Type can be either `app` or `platform`. Key can be any of the existing settings.
+### Subscribe
 
+Adds a callback to be notified when a Setting is changed.
+
+```js
+Settings.subscribe(callback)
+```
+
+The callback arguments are `(type, key, value)`
 
 ## Available configuration options
 
