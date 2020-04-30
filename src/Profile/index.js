@@ -1,5 +1,14 @@
-let getInfo = () => Promise.resolve()
-let setInfo = () => Promise.resolve()
+import Settings from '../Settings/index'
+import { defaultProfile } from './defaults'
+
+let getInfo = key => {
+  const profile = { ...defaultProfile, ...Settings.get('platform', 'profile') }
+  return Promise.resolve(profile[key])
+}
+
+let setInfo = (key, params) => {
+  if (key in defaultProfile) defaultProfile[key] = params
+}
 
 export const initProfile = config => {
   getInfo = config.getInfo
