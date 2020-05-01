@@ -1,6 +1,6 @@
 import { isFunction, isPage, isConstructor, isArray, ucfirst } from './utils'
 import { crossFade } from './transitions'
-import { Settings } from 'wpe-lightning-sdk'
+import Settings from '../Settings'
 
 /*
 rouThor

@@ -1,4 +1,4 @@
-import { Lightning } from 'wpe-lightning-sdk'
+import Lightning from '../Lightning'
 
 export const isFunction = v => {
   return typeof v === 'function'
