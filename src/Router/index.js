@@ -2,6 +2,23 @@ import { isFunction, isPage, isConstructor, isArray, ucfirst } from './utils'
 import { crossFade } from './transitions'
 import Settings from '../Settings'
 
+let getHash = () => {
+  return document.location.hash
+}
+
+let setHash = url => {
+  document.location.hash = url
+}
+
+export const initRouter = config => {
+  if (config.getHash) {
+    getHash = config.getHash
+  }
+  if (config.setHash) {
+    setHash = config.setHash
+  }
+}
+
 /*
 rouThor
 -------
@@ -474,7 +491,7 @@ const getRouteByHash = hash => {
       }
 
       // if the non-named groups don't match we let it fail
-      if (routePart.toLowerCase() !== hashPart.toLowerCase()) {
+      if (hashPart && routePart.toLowerCase() !== hashPart.toLowerCase()) {
         isMatching = false
       }
     }
@@ -510,7 +527,7 @@ const getValuesFromHash = (hash, route) => {
 }
 
 const handleHashChange = override => {
-  const hash = override || document.location.hash
+  const hash = override || getHash()
   const route = getRouteByHash(hash)
 
   if (route) {
@@ -538,8 +555,8 @@ const handleHashChange = override => {
   }
 }
 
-export const navigate = (url, store = true) => {
-  const hash = document.location.hash
+export let navigate = (url, store = true) => {
+  const hash = getHash()
   // add current hash to history
   if (hash && store) {
     const toStore = hash.substring(1, hash.length)
@@ -549,7 +566,7 @@ export const navigate = (url, store = true) => {
   }
 
   if (hash !== url) {
-    document.location.hash = url
+    setHash(url)
   }
 }
 
@@ -570,7 +587,7 @@ export const step = (direction = 0) => {
     navigate(route, false)
   } else {
     const hashLastPart = /(\/:?[\w-]+)$/
-    let hash = document.location.hash
+    let hash = getHash()
     let floor = getFloor(hash)
 
     // if we're passed the first floor and our history is empty
@@ -616,7 +633,7 @@ const capture = ({ key }) => {
 export const start = () => {
   const ready = () => {
     // if defined force to root hash
-    if (!document.location.hash && rootHash) {
+    if (!getHash() && rootHash) {
       navigate(rootHash)
     } else {
       handleHashChange()
