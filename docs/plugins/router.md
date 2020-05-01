@@ -1,4 +1,4 @@
-#router
+# router
 
 The routhor provides an easy api that helps you create an url driven (routed) app.
 By default the loading goes via the hash since we don’t want to encounter a page refresh when a navigation to a route starts. This default behaviour is overridable per platform.
@@ -6,7 +6,7 @@ By default the loading goes via the hash since we don’t want to encounter a pa
 The router can work with 2 types of data,
 a child of the Lightning.Component class or a function, the router accepts one Component and multiple function per route. One of the key features is configurable lazy creation and destroy support (runtime) this serves as a big help on low-end devices with less memory and gpu memory
 
-###Features:
+### Features:
 - [Add routes]
 - [navigation helper]()
 - [route driven data providing]()
@@ -21,7 +21,7 @@ a child of the Lightning.Component class or a function, the router accepts one C
 - [widget communication support]()
 - [page transitions]()
 
-##Installation:
+## Installation:
 
 There are 2 ways you can use the router, 
 ##### 1: import in an existing app 
@@ -31,7 +31,7 @@ There are 2 ways you can use the router,
 `lng create —routed` (work in progress)
 
 
-##Routes
+## Routes
 to create a new route we first import the router from the SDK; import {router} from
 
 next we create a new route, and add a component to it (we will later create an instance by adding it to the lightning render-tree)
@@ -57,7 +57,7 @@ Router.route(“player/:playlistId/:assetId”, Player)
 ```Router.route(“*”, NotFound)``` 
 will show the NotFound component when the app or an external Ui tries to route to an url thats undefined i.e 127.0.0.1:8080/#non/existing/route
 
-##Navigation helper
+## Navigation helper
 
 Once you’ve set up the correct routes
 for your app, you can start navigating from one page (Lightning Component) to another.
@@ -69,7 +69,7 @@ Router.navigate(“player/1638”)
 ```
 to start the page loading process.
 
-##Data providing
+## Data providing
 
 The router offers handlers to do some async api requests to grab data and make them available to the page, the providers provides 3 page loading types, on() before() after()
 ```
@@ -97,7 +97,7 @@ We’ve also added an expire time, so if we navigate to the same page again with
 
 Also, we we load the page again but the with a different route: so,127.0.0.1:8080/#player/44/817 instead of 127.0.0.1:8080/#player/267/173688 the router will do the async request / shows loader / cleanup old page and when request resolves show new Component
 
-##before() / after()
+## before() / after()
 Both work almost the same as on(), but the way the page loads is different. 
 ```
 Router.before(“home/browser/:sectionId”, ({page, sectionId})=>{
@@ -115,7 +115,7 @@ will show (or create and show) the new page, after page transition is ready the 
 So a thing they all share is that they support async request and dynamic url
 data will be made available as properties to the page (tip, use setters)
 
-##Dynamic hash groups
+## Dynamic hash groups
 
 There is a lot of usefull data available in the url that will be made available to the page.
 
@@ -130,7 +130,7 @@ class Search extends Lightning.Component{
  }
 }
 ```
-##Deeplinking
+## Deeplinking
 
 Deeplinking is an important feature for your app since it will alow external source (An operator’s Ui) to deeplink directly to one of your app’s routes. Due to the lazy creation support in the page router we can keep memory usage to a minimum (only load what is needed)
 
@@ -138,7 +138,7 @@ If your app is not loaded and a Ui changes the url to cdn.operator.ext/yourApp/#
 
 the router will put Player component on the render-tree and show (and if there is a data providing route first resolve that)
 
-##Backtracking
+## Backtracking
 
 This features is requested by some content providers, they want to allow deeplinking to a page but still control the path back out of the app.
 
@@ -149,13 +149,13 @@ if there is a route defined, it will load that route, otherwise strip of more an
 
 this lets you model your way out of a deeplink.
 
-##History management
+## History management
 
 The router maintains it’s own history and does not rely on a browser api, all the routes we have navigated to can end up in history. We don’t keep route duplicates in history, so /home/player/145 will only be in history once (even if the user navigated to it multiple times) but same route blueprints with different values can live in history, home/player/178 and home/player/91737 or browse/genre/action/50 and browse/genre/popular/50
 
 Remote control backpress will check if there are routes in history, pop the last off navigate to that route (invoking the page loading process as discussed before)
 
-##Routed function calls
+## Routed function calls
 
 You can bind multiple function calls to a route (but only one page component)
 ```
@@ -165,7 +165,7 @@ Router.route(“settings/hotspots/delete/:hotspotId”, ({page, hotspotId})=>{
 ```
 The function will be called when we navigate to i.e settings/hotposts/delete/3
 
-##Lazy creation 
+## Lazy creation 
 
 To keep the memory usage to a minimum (which can really can benefit performance on low end devices) the router had support for lazy creation and destroy. An instance of your page (Lightning Component) will not be created (and appended to the render tree if a user hasn’t visited the corresponding route (thats the reason we attach classes to each route instead of an instance thats already part of the render-tree.
 
@@ -175,7 +175,7 @@ Router.route(“home/settings/wifi”, WifiControl)
 ```
 so when you navigate to home/settings/wifi, the router will test if the page is already an instance, if it’s not an instance of Lightning Component the router will create an instance and add it to the render-tree.
 
-##Lazy destroy
+## Lazy destroy
 
 Next to lazy creation you have the option to configure lazy destroy by setting, lazyDestroy: true. By using the platform settings the platform can override this (for performance reasons on a low end box)
 
