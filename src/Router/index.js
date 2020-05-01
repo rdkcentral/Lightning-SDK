@@ -43,7 +43,7 @@ export let activePage
  * @param routes
  * @param provider
  */
-export const initRouter = ({ appInstance, routes, provider }) => {
+export const startRouter = ({ appInstance, routes, provider }) => {
   app = appInstance
   application = appInstance.application
   host = application.childList
@@ -715,7 +715,7 @@ window.addEventListener('hashchange', () => {
 })
 
 export default {
-  initRouter,
+  startRouter,
   navigate,
   root,
   route,
