@@ -180,11 +180,3 @@ so when you navigate to home/settings/wifi, the router will test if the page is 
 Next to lazy creation you have the option to configure lazy destroy by setting, lazyDestroy: true. By using the platform settings the platform can override this (for performance reasons on a low end box)
 
 Lazy destroy means, when we navigate to a new route we remove the page from the render-tree to free up memory and invalidate textures so the Lightnigs textures garbage collector can start freeing up memory
-
-
-
-
-
- 
-
-Sent from my iPhone
