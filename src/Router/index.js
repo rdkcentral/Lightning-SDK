@@ -562,6 +562,10 @@ export let navigate = (url, store = true) => {
     const toStore = hash.substring(1, hash.length)
     if (history.indexOf(toStore) === -1 || Settings.get('app', 'storeSameHash')) {
       history.push(toStore)
+    } else {
+      const location = history.indexOf(toStore)
+      history.splice(location, 1)
+      history.push(toStore)
     }
   }
 
