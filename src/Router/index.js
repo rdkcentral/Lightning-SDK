@@ -543,8 +543,14 @@ const handleHashChange = override => {
         if (isPage(type, stage)) {
           load({ route, hash })
         } else {
+          const urlParams = getValuesFromHash(hash, route)
+          const params = {}
+          for (const key of urlParams.keys()) {
+            params[key] = urlParams.get(key)
+          }
+
           // invoke
-          type.call(null, application)
+          type.call(null, { application, ...params })
         }
       }
     }
