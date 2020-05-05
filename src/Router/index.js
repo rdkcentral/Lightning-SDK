@@ -1,4 +1,4 @@
-import { isFunction, isPage, isConstructor, isArray, ucfirst } from './utils'
+import { isFunction, isPage, isLightningComponent, isArray, ucfirst } from './utils'
 import { crossFade } from './transitions'
 import Settings from '../Settings'
 
@@ -129,7 +129,7 @@ export const route = (route, type) => {
         stack.push(type)
       } else {
         if (!Settings.get('pltform', 'lazyCreate')) {
-          type = isConstructor(type, stage) ? create(type) : type
+          type = isLightningComponent(type) ? create(type) : type
           host.a(type)
         }
         stack.push(type)
@@ -142,7 +142,7 @@ export const route = (route, type) => {
       // if flag lazy eq false we (test) and create
       // correct component and add it to the childList
       if (!Settings.get('platform', 'lazyCreate')) {
-        type = isConstructor(type, stage) ? create(type) : type
+        type = isLightningComponent(type) ? create(type) : type
         host.a(type)
       }
     }
@@ -187,7 +187,7 @@ const load = ({ route, hash }) => {
   let page = null
 
   // if page is instanceof Component
-  if (!isConstructor(type, stage)) {
+  if (!isLightningComponent(type)) {
     page = type
     // if we have have a data route for current page
     if (providers.has(route)) {
