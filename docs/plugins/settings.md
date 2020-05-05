@@ -45,13 +45,11 @@ The SDK automatically creates the `app` or `platform` types from the Launch para
 
 ### Set
 
-Sets a key, value on a type (default `user`)
+Sets a key, value on `user` type
 
 ```js
-Settings.set(key, value, type = 'user')
+Settings.set(key, value)
 ```
-
-Type of `app` or `platform` are reserved and can not be changed.
 
 ### Has
 
@@ -63,13 +61,13 @@ Settings.has(type, key)
 
 ### Subscribe
 
-Adds a callback to be notified when a Setting is changed.
+Adds a callback to be notified when a user key is changed.
 
 ```js
-Settings.subscribe(callback)
+Settings.subscribe(key, callback)
 ```
 
-The callback arguments are `(type, key, value)`
+The callback argument is `(value)`
 
 ## Available configuration options
 
