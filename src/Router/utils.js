@@ -9,7 +9,7 @@ export const isObject = v => {
 }
 
 export const isPage = (v, stage) => {
-  if (v instanceof Lightning.Element || isConstructor(v, stage)) {
+  if (v instanceof Lightning.Element || isClass(v, stage)) {
     return true
   }
   return false
