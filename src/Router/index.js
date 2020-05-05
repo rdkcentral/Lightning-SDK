@@ -42,6 +42,7 @@ let app
 let stage
 let pages = new Map()
 let providers = new Map()
+let modifiers = new Map()
 let widgets
 let host
 
@@ -95,6 +96,16 @@ export const startRouter = ({ appInstance, routes, provider }) => {
  * @param type - {(Lightning.Component|Function()*)}
  */
 export const route = (route, type) => {
+  const getModifiers = /\/@([xsr]{1,3})$/
+
+  // test for route modifiers and store them
+  if (getModifiers.test(route)) {
+    const mods = getModifiers.exec(route)
+    // cleanup modifier from route for matching
+    route = route.replace(getModifiers, '')
+    modifiers.set(route, mods[1])
+  }
+
   // if the route is defined we try to push
   // the new type on to the stack
   if (pages.has(route)) {
@@ -561,10 +572,20 @@ const handleHashChange = override => {
   }
 }
 
+const routeHasModifier = (route, m) => {
+  if (modifiers.has(route)) {
+    const mod = modifiers.get(route)
+    return mod.indexOf(m) !== -1
+  }
+
+  return false
+}
+
 export let navigate = (url, store = true) => {
   const hash = getHash()
+  const route = getRouteByHash(hash)
   // add current hash to history
-  if (hash && store) {
+  if (hash && store && !routeHasModifier(route, 'x')) {
     const toStore = hash.substring(1, hash.length)
     if (history.indexOf(toStore) === -1 || Settings.get('app', 'storeSameHash')) {
       history.push(toStore)
@@ -596,9 +617,9 @@ export const step = (direction = 0) => {
     const route = history.splice(history.length - 1, 1)
     navigate(route, false)
   } else {
-    const hashLastPart = /(\/:?[\w-]+)$/
     let hash = getHash()
     let floor = getFloor(hash)
+    const hashLastPart = /(\/:?[\w-]+)$/
 
     // if we're passed the first floor and our history is empty
     // we can (for now) safely assume that the current got deeplinked
@@ -608,9 +629,11 @@ export const step = (direction = 0) => {
       while (floor--) {
         // strip of last part
         hash = hash.replace(hashLastPart, '')
-        // if we have a configured route
+        const route = getRouteByHash(hash)
+        // if we have a configured route and
+        // there is no 'x' modifier in the route blueprint
         // we navigate to it
-        if (getRouteByHash(hash)) {
+        if (route && !routeHasModifier(route, 'x')) {
           return navigate(hash, false)
         }
       }
