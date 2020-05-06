@@ -2,12 +2,7 @@
   "name": "wpe-lightning-sdk",
   "version": "2.1.0",
   "scripts": {
-    "postinstall": "node -r esm ./scripts/postinstall.js",
-    "build": "node -r esm ./scripts/build.js",
-    "serve": "node -r esm ./scripts/serve.js",
-    "release": "node -r esm ./scripts/release.js",
-    "upload": "node -r esm ./scripts/upload-app-metrological.js",
-    "start": "concurrently \"node -r esm ./scripts/build.js\" \"node -r esm ./scripts/serve.js\"",
+    "postinstall": "node ./scripts/postinstall.js",
     "lint": "eslint '**/*.js'"
   },
   "lint-staged": {
@@ -26,33 +21,27 @@
     }
   },
   "dependencies": {
+    "@babel/polyfill": "^7.8.7",
+    "deepmerge": "^4.2.2",
+    "localCookie": "github:WebPlatformForEmbedded/localCookie",
+    "shelljs": "^0.8.3",
+    "url-polyfill": "^1.1.8",
+    "wpe-lightning": "^1.7.0"
+  },
+  "devDependencies": {
     "@babel/core": "^7.7.2",
     "@babel/plugin-transform-parameters": "^7.8.3",
     "@babel/plugin-transform-spread": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "babel-eslint": "^10.0.3",
-    "chalk": "^3.0.0",
-    "chokidar": "^3.3.0",
-    "concurrently": "^5.0.0",
-    "deepmerge": "^4.2.2",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-prettier": "^3.1.1",
-    "esm": "^3.2.25",
-    "execa": "^3.3.0",
-    "form-data": "^2.3.3",
-    "http-server": "^0.12.0",
     "husky": "^3.1.0",
     "lint-staged": "^9.4.3",
-    "localCookie": "github:WebPlatformForEmbedded/localCookie#1.2.0",
     "prettier": "^1.19.1",
     "rollup": "^1.27.0",
-    "rollup-plugin-babel": "^4.3.3",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "shelljs": "^0.8.3",
-    "targz": "^1.0.1",
-    "wpe-lightning": "^1.4.0"
+    "rollup-plugin-babel": "^4.3.3"
   },
   "repository": {
     "type": "git",

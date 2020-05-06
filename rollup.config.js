@@ -10,7 +10,7 @@ export default [
             '@babel/env',
             {
               targets: {
-                chrome: '44',
+                chrome: '39',
               },
               spec: true,
               debug: false,
