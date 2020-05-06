@@ -1,5 +1,5 @@
 const settings = {}
-let subscribers = {}
+const subscribers = {}
 
 export const initSettings = (appSettings, platformSettings) => {
   settings['app'] = appSettings
@@ -22,7 +22,7 @@ export default {
   set(key, value) {
     const type = 'user'
     settings[type][key] = value
-    publish(type, key, value)
+    publish(key, value)
   },
   subscribe(key, callback) {
     subscribers[key] = subscribers[key] || []

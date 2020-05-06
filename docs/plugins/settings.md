@@ -69,6 +69,14 @@ Settings.subscribe(key, callback)
 
 The callback argument is `(value)`
 
+### clearSubscribers
+
+Clears subscribers listening for key change
+
+```js
+Settings.clearSubscribers(key)
+```
+
 ## Available configuration options
 
 ### Platform
