@@ -11,7 +11,7 @@ Instead of using console.log (or debug, error, warn) it is recommended to use th
 In order to use the Log plugin, import if from the Lightning SDK.
 
 ```js
-import { Log } from 'wpe-lightning-sdk'
+import { Log } from '@lightningjs/sdk'
 ```
 
 ## Available methods

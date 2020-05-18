@@ -6,7 +6,7 @@ You will use Lightning in almost every component, since components extend the Li
 
 Apart from that you can also use it to take advantage of the default texture and tools made available by Lightning.
 
-See <a href="https://webplatformforembedded.github.io/Lightning/" target="_blank">Lightning documentation</a> for more information.
+See <a href="https://rdkcentral.github.io/Lightning/" target="_blank">Lightning documentation</a> for more information.
 
 ## Usage
 
@@ -15,7 +15,7 @@ See <a href="https://webplatformforembedded.github.io/Lightning/" target="_blank
 All components in your app (including the main App) are required to extend a Lightning component.
 
 ```js
-import { Lightning } from 'wpe-lightning-sdk'
+import { Lightning } from '@lightningjs/sdk'
 
 export default class MyComponent extends Lightning.Component {
   //
@@ -27,7 +27,7 @@ export default class MyComponent extends Lightning.Component {
 Lightning offers a set of tools that you can use in your App.
 
 ```js
-import { Lightning } from 'wpe-lightning-sdk'
+import { Lightning } from '@lightningjs/sdk'
 
 export default class MyComponent extends Lightning.Component {
   static _template() {
@@ -40,12 +40,12 @@ export default class MyComponent extends Lightning.Component {
 }
 ```
 
-See <a href="https://webplatformforembedded.github.io/Lightning/docs/textures/toolbox" target="_blank">Lightning documentation</a> for more information.
+See <a href="https://rdkcentral.github.io/Lightning/docs/textures/toolbox" target="_blank">Lightning documentation</a> for more information.
 
 ### Using Textures from Lightning
 
 ```js
-import { Lightning } from 'wpe-lightning-sdk'
+import { Lightning } from '@lightningjs/sdk'
 
 export default class MyComponent extends Lightning.Component {
   static _template() {

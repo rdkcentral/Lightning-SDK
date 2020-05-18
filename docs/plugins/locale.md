@@ -7,7 +7,7 @@ If your app targets an international public, it might be a good idea to offer yo
 Any time you want to display a translated text in a component, you have to import the Locale plugin.
 
 ```js
-import { Locale } from 'wpe-lightning-sdk'
+import { Locale } from '@lightningjs/sdk'
 ```
 
 ### Specifying translations

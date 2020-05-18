@@ -7,7 +7,7 @@ The Lightning SDK exposes a number of useful helper functions, that can come in 
 Whenever you need such a utility function, import the Utils plugin from the Lightning SDK.
 
 ```js
-import { Utils } from 'wpe-lightning-sdk'
+import { Utils } from '@lighntingjs/sdk'
 ```
 
 ## Available methods

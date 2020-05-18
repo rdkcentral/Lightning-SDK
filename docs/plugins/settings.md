@@ -28,7 +28,7 @@ Be aware that when your App is deployed to the App Store the settings are config
 Most settings are automatically handled by the SDK. But sometimes you may want to access settings in your App code directly. In those cases you can import the _Settings plugin_ from the Lightning SDK.
 
 ```js
-import { Settings } from 'wpe-lightning-sdk'
+import { Settings } from '@lightningjs/sdk'
 ```
 
 ## Available methods
@@ -74,5 +74,5 @@ Type can be either `app` or `platform`. Key can be any of the existing settings.
 
 | Key | Type | Description | Default value |
 | --- | ---- | ------------ | ------------- |
-| stage | Object | Object with any of the stage configuration options specified in [Lightning Documentation](https://webplatformforembedded.github.io/Lightning/docs/gettingStarted/stage-configuration) | { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false } |
+| stage | Object | Object with any of the stage configuration options specified in [Lightning Documentation](https://rdkcentral.github.io/Lightning/docs/gettingStarted/stage-configuration) | { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false } |
 | debug | Boolean | Whether or not to run Lightning in debug mode | false |
