@@ -1,3 +1,4 @@
+
 # router
 
 The routhor provides an easy api that helps you create an url driven (routed) app.
@@ -7,16 +8,16 @@ The router can work with 2 types of data,
 a child of the Lightning.Component class or a function, the router accepts one Component and multiple function per route. One of the key features is configurable lazy creation and destroy support (runtime) this serves as a big help on low-end devices with less memory and gpu memory
 
 ### Features:
-- [Add routes]
-- [navigation helper]()
-- [route driven data providing]()
-- [Dynamic hash value groups]()
-- [deeplinking]()
-- [backtracking]()
-- [history management]()
-- [route driving function calls]()
-- [configurable lazy creation]()
-- [configurable lazy destroy]()
+- [Add routes](#routes)
+- [navigation helper](#navigation-helper)
+- [route driven data providing](#data-providing)
+- [Dynamic hash value groups](#dynamic-hash-groups)
+- [deeplinking](#deeplinking)
+- [backtracking](#backtracking)
+- [history management](#history-management)
+- [route driving function calls](#routed-function-calls)
+- [configurable lazy creation](#lazy-creation)
+- [configurable lazy destroy](#lazy-destroy)
 - [configurable garbage collect]()
 - [widget communication support]()
 - [page transitions]()
@@ -97,7 +98,7 @@ We’ve also added an expire time, so if we navigate to the same page again with
 
 Also, we we load the page again but the with a different route: so,127.0.0.1:8080/#player/44/817 instead of 127.0.0.1:8080/#player/267/173688 the router will do the async request / shows loader / cleanup old page and when request resolves show new Component
 
-## before() / after()
+#### before() / after()
 Both work almost the same as on(), but the way the page loads is different. 
 ```
 Router.before(“home/browser/:sectionId”, ({page, sectionId})=>{
