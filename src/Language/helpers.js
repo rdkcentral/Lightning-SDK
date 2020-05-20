@@ -3,13 +3,13 @@ import Utils from '../Utils/index'
 
 export const loadTranslationFile = (isoLocale, defaultLocale) => {
   isoLocale = isCorrectLocale(isoLocale, defaultLocale)
-  const localePath = Utils.asset(`locale/${isoLocale}.json`)
-  const localeDefaultPath = Utils.asset(`locale/${defaultLocale}.json`)
-  const sameAsDefaultPath = localePath === localeDefaultPath
-  const noDefaultWarn = `Locale: ${defaultLocale}.json does not exist, please add file to static/locale/`
-  const defaultingWarn = `Locale: ${isoLocale}.json does not exist, defaulting to ${defaultLocale}.json`
+  const languagePath = Utils.asset(`language/${isoLocale}.json`)
+  const languageDefaultPath = Utils.asset(`language/${defaultLocale}.json`)
+  const sameAsDefaultPath = languagePath === languageDefaultPath
+  const noDefaultWarn = `Language: ${defaultLocale}.json does not exist, please add file to static/language/`
+  const defaultingWarn = `Language: ${isoLocale}.json does not exist, defaulting to ${defaultLocale}.json`
 
-  return fetch(localePath)
+  return fetch(languagePath)
     .then(response => response.json())
     .then(translationFile => {
       return translationFile
@@ -17,7 +17,7 @@ export const loadTranslationFile = (isoLocale, defaultLocale) => {
     .catch(() => {
       Log.warn(sameAsDefaultPath ? noDefaultWarn : defaultingWarn)
       if (sameAsDefaultPath) return
-      return fetch(localeDefaultPath)
+      return fetch(languageDefaultPath)
         .then(response => response.json())
         .then(translationFile => {
           return translationFile
@@ -44,7 +44,7 @@ export const format = (text, args) => {
 export const isCorrectLocale = (locale, defaultLocale) => {
   const isLocale = new RegExp('^([a-zA-Z][a-zA-Z]-[a-zA-Z][a-zA-Z])(?!.)')
   if (isLocale.test(locale)) return formatLocale(locale)
-  Log.warn(`Locale: ${locale} is invalid, switching to default`)
+  Log.warn(`Language: ${locale} is invalid, switching to default`)
   return defaultLocale
 }
 

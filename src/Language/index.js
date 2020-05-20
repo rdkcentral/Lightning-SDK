@@ -5,7 +5,7 @@ const defaultLocale = 'en-US'
 let loadedLanguageFile = undefined
 
 // Init
-export const initLocale = async overwrite => {
+export const initLanguage = async overwrite => {
   if (overwrite && typeof overwrite === 'boolean') {
     return Profile.locale().then(locale => {
       return setLocale(locale)

@@ -1,6 +1,6 @@
 import Deepmerge from 'deepmerge'
 import Lightning from '../Lightning'
-import { initLocale } from '../Locale/index'
+import { initLanguage } from '../Language/index'
 import Metrics from '../Metrics'
 import VersionLabel from '../VersionLabel'
 import Log from '../Log'
@@ -52,7 +52,7 @@ export default function(App, appData, platformSettings) {
     _setup() {
       Promise.all([
         this.loadFonts((App.config && App.config.fonts) || (App.getFonts && App.getFonts()) || []),
-        this.loadLocale(App.locale || false),
+        this.loadLanguage(App.locale || false),
       ])
         .then(() => {
           Metrics.app.loaded()
@@ -117,8 +117,8 @@ export default function(App, appData, platformSettings) {
       })
     }
 
-    loadLocale(locale) {
-      if (locale) return initLocale(locale)
+    loadLanguage(locale) {
+      if (locale) return initLanguage(locale)
       return false
     }
 
