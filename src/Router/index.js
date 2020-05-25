@@ -23,14 +23,17 @@ export const initRouter = config => {
 rouThor
 -------
 @todo:
-
 - data provider timeout
-- page provide widgets
-- cache widget object (not if pages provide own)
 - add route mapping
 - custom before trigger
 - regex support
 - error page
+- manual expire
+- route to same page (with force expire)
+- define widget via widget()
+- lazy load widgets (?)
+- page define transitions
+
 
  */
 
@@ -94,18 +97,9 @@ export const startRouter = ({ appInstance, routes, provider }) => {
  * create a new route
  * @param route - {string}
  * @param type - {(Lightning.Component|Function()*)}
+ * @param modifiers - {Object{}} - preventStorage | clearHistory | storeLast
  */
-export const route = (route, type) => {
-  const getModifiers = /\/@([xsr]{1,3})$/
-
-  // test for route modifiers and store them
-  if (getModifiers.test(route)) {
-    const mods = getModifiers.exec(route)
-    // cleanup modifier from route for matching
-    route = route.replace(getModifiers, '')
-    modifiers.set(route, mods[1])
-  }
-
+export const route = (route, type, config) => {
   // if the route is defined we try to push
   // the new type on to the stack
   if (pages.has(route)) {
@@ -128,7 +122,7 @@ export const route = (route, type) => {
       if (isFunction(type)) {
         stack.push(type)
       } else {
-        if (!Settings.get('pltform', 'lazyCreate')) {
+        if (!Settings.get('platform', 'lazyCreate')) {
           type = isLightningComponent(type) ? create(type) : type
           host.a(type)
         }
@@ -149,6 +143,11 @@ export const route = (route, type) => {
 
     // if lazy we just store the constructor
     pages.set(route, [type])
+
+    // store router modifiers
+    if (config) {
+      modifiers.set(route, config)
+    }
   }
 }
 
@@ -159,9 +158,9 @@ export const route = (route, type) => {
  * @param route - {string}
  * @param type - {(Lightning.Component|Function()*)}
  */
-export const root = (url, type) => {
+export const root = (url, type, config) => {
   rootHash = url
-  route(url, type)
+  route(url, type, config)
 }
 
 const create = type => {
@@ -200,7 +199,7 @@ const load = ({ route, hash }) => {
       }
     }
 
-    let currentRoute = activePage[Symbol.for('route')]
+    let currentRoute = activePage && activePage[Symbol.for('route')]
 
     // if the new route is equal to the current route it means that both
     // route share the Component instance and stack location / since this case
@@ -262,6 +261,14 @@ const load = ({ route, hash }) => {
     } else {
       const p = activePage
       const r = p && p[Symbol.for('route')]
+
+      let urlValues = getValuesFromHash(hash, route)
+      // we iterate over dynamic values from the current url
+      // and invoke the page setters so that dynamic data
+      // is available before the page loads
+      for (let [name, value] of urlValues) {
+        page[name] = value
+      }
 
       doTransition(page, activePage).then(() => {
         cleanUp(p, r)
@@ -502,7 +509,7 @@ const getRouteByHash = hash => {
       }
 
       // if the non-named groups don't match we let it fail
-      if (hashPart && routePart.toLowerCase() !== hashPart.toLowerCase()) {
+      if (routePart.toLowerCase() !== hashPart.toLowerCase()) {
         isMatching = false
       }
     }
@@ -559,7 +566,6 @@ const handleHashChange = override => {
           for (const key of urlParams.keys()) {
             params[key] = urlParams.get(key)
           }
-
           // invoke
           type.call(null, { application, ...params })
         }
@@ -572,33 +578,45 @@ const handleHashChange = override => {
   }
 }
 
-const routeHasModifier = (route, m) => {
+const routeHasModifier = (route, key) => {
+  console.log(route, key)
   if (modifiers.has(route)) {
-    const mod = modifiers.get(route)
-    return mod.indexOf(m) !== -1
+    const config = modifiers.get(route)
+    console.log(config)
+    if (config[key] && config[key] === true) {
+      return true
+    }
   }
-
   return false
 }
 
-export let navigate = (url, store = true) => {
+export const navigate = (url, store = true) => {
   const hash = getHash()
-  const route = getRouteByHash(hash)
   // add current hash to history
-  if (hash && store && !routeHasModifier(route, 'x')) {
+  if (hash && store && !routeHasModifier(getRouteByHash(hash), 'preventStorage')) {
     const toStore = hash.substring(1, hash.length)
-    if (history.indexOf(toStore) === -1 || Settings.get('app', 'storeSameHash')) {
+    const location = history.indexOf(toStore)
+
+    // store hash if it's not a part of history or flag for
+    // storage of same hash is true
+    if (location === -1 || Settings.get('app', 'storeSameHash')) {
       history.push(toStore)
     } else {
-      const location = history.indexOf(toStore)
-      history.splice(location, 1)
-      history.push(toStore)
+      // if we visit the same route we want to sync history
+      history.push(history.splice(location, 1)[0])
     }
   }
 
   if (hash !== url) {
     setHash(url)
   }
+
+  // clean up history if modifier is set
+  if (routeHasModifier(getRouteByHash(url), 'clearHistory')) {
+    history.length = 0
+  }
+
+  console.log('---', history)
 }
 
 /**
@@ -617,9 +635,9 @@ export const step = (direction = 0) => {
     const route = history.splice(history.length - 1, 1)
     navigate(route, false)
   } else {
+    const hashLastPart = /(\/:?[\w-]+)$/
     let hash = getHash()
     let floor = getFloor(hash)
-    const hashLastPart = /(\/:?[\w-]+)$/
 
     // if we're passed the first floor and our history is empty
     // we can (for now) safely assume that the current got deeplinked
@@ -629,11 +647,9 @@ export const step = (direction = 0) => {
       while (floor--) {
         // strip of last part
         hash = hash.replace(hashLastPart, '')
-        const route = getRouteByHash(hash)
-        // if we have a configured route and
-        // there is no 'x' modifier in the route blueprint
+        // if we have a configured route
         // we navigate to it
-        if (route && !routeHasModifier(route, 'x')) {
+        if (getRouteByHash(hash)) {
           return navigate(hash, false)
         }
       }
@@ -764,6 +780,7 @@ window.addEventListener('hashchange', () => {
   handleHashChange()
 })
 
+// export API
 export default {
   startRouter,
   navigate,
