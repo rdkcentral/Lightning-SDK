@@ -20,7 +20,7 @@ export default {
   seeked: 'Seeked',
   seeking: 'Seeking',
   stalled: 'Stalled',
-  suspend: 'Suspend',
+  // suspend: 'Suspend', // this one is called a looooot for some videos
   timeupdate: 'TimeUpdate',
   volumechange: 'VolumeChange',
   waiting: 'Waiting',

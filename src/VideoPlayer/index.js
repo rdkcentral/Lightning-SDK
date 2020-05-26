@@ -1,270 +1,320 @@
-import Lightning from '../Lightning'
 import Metrics from '../Metrics'
 import Log from '../Log'
 import Ads from '../Ads'
 
 import events from './events'
+import autoSetupMixin from '../helpers/autoSetupMixin'
+import easeExecution from '../helpers/easeExecution'
+import { AppInstance } from '../Launch'
 
-let mediaUrl = url => url
+export let mediaUrl = url => url
+let videoEl
+let metrics
+let consumer
+let precision = 1
 
-export const initMediaPlayer = config => {
+export const initVideoPlayer = config => {
   if (config.mediaUrl) {
     mediaUrl = config.mediaUrl
   }
 }
 
-export default class VideoPlayer extends Lightning.Component {
-  /* Lightning lifecycle hooks */
-  _construct() {
-    this._eventHandlers = {}
-    this._playing = false
-    this._adsEnabled = false
-    this._playingAds = false
-  }
+// todo: add this in a 'Registry' plugin
+// to be able to always clean this up on app close
+let eventHandlers = {}
 
-  _init() {
-    this.videoEl = this.__setupVideoTag()
-  }
+const state = {
+  adsEnabled: false,
+  playing: false,
+  _playingAds: false,
+  get playingAds() {
+    return this._playingAds
+  },
+  set playingAds(val) {
+    this._playingAds = val
+    fireOnConsumer(val === true ? 'AdStart' : 'AdEnd')
+  },
+  skipTime: false,
+}
 
-  _attach() {
-    if (!this._consumer) this._consumer = this.cparent
-  }
+const hooks = {
+  play() {
+    state.playing = true
+  },
+  pause() {
+    state.playing = false
+  },
+}
 
-  _detach() {
-    this.__deregisterEventListeners()
-    this.close()
-  }
+const withPrecision = val => Math.round(precision * val) + 'px'
 
-  /* VideoPlayer public API */
-  consumer(consumer) {
-    this._consumer = consumer
+const fireOnConsumer = (event, args) => {
+  if (consumer) {
+    consumer.fire('$videoPlayer' + event, args)
+    consumer.fire('$videoPlayerEvent', event, args)
   }
+}
 
-  position(left = 0, top = 0) {
-    this.videoEl.style.left = this.__withPrecision(left)
-    this.videoEl.style.top = this.__withPrecision(top)
+const fireHook = (event, args) => {
+  hooks[event] && typeof hooks[event] === 'function' && hooks[event].call(null, event, args)
+}
+
+export const setupVideoTag = () => {
+  const videoEls = document.getElementsByTagName('video')
+  if (videoEls && videoEls.length) {
+    return videoEls[0]
+  } else {
+    const videoEl = document.createElement('video')
+    videoEl.setAttribute('id', 'video-player')
+    videoEl.setAttribute('width', withPrecision(1920))
+    videoEl.setAttribute('height', withPrecision(1080))
+    videoEl.style.position = 'absolute'
+    videoEl.style.zIndex = '1'
+    videoEl.style.display = 'none'
+    videoEl.style.visibility = 'visible'
+    videoEl.style.top = withPrecision(0)
+    videoEl.style.left = withPrecision(0)
+    videoEl.style.width = withPrecision(withPrecision(1920))
+    videoEl.style.height = withPrecision(withPrecision(1080))
+    document.body.appendChild(videoEl)
+    return videoEl
   }
+}
+
+const registerEventListeners = () => {
+  Log.info('Registering event listeners VideoPlayer')
+  Object.keys(events).forEach(event => {
+    const handler = e => {
+      // Fire a metric for each event (if it exists on the metrics object)
+      if (metrics[event] && typeof metrics[event] === 'function') {
+        metrics[event]({ currentTime: videoEl.currentTime })
+      }
+      // fire an internal hook
+      fireHook(event, { videoElement: videoEl, event: e })
+
+      // fire the event (with human friendly event name) to the consumer of the VideoPlayer
+      fireOnConsumer(events[event], { videoElement: videoEl, event: e })
+    }
+
+    eventHandlers[event] = handler
+    videoEl.addEventListener(event, handler)
+  })
+}
+
+const deregisterEventListeners = () => {
+  Log.info('Deregistering event listeners VideoPlayer')
+  Object.keys(eventHandlers).forEach(event => {
+    videoEl.removeEventListener(event, eventHandlers[event])
+  })
+  eventHandlers = {}
+}
+
+const videoPlayerPlugin = {
+  consumer(component) {
+    consumer = component
+  },
+
+  position(top = 0, left = 0) {
+    videoEl.style.left = withPrecision(left)
+    videoEl.style.top = withPrecision(top)
+  },
 
   size(width = 1920, height = 1080) {
-    this.videoEl.style.width = this.__withPrecision(width)
-    this.videoEl.style.height = this.__withPrecision(height)
-  }
+    videoEl.style.width = withPrecision(width)
+    videoEl.style.height = withPrecision(height)
+    videoEl.width = parseFloat(videoEl.style.width)
+    videoEl.height = parseFloat(videoEl.style.height)
+  },
 
-  area(top = 0, left = 0, right = 1920, bottom = 1080) {
-    this.videoEl.style.left = this.__withPrecision(top)
-    this.videoEl.style.top = this.__withPrecision(left)
-    this.videoEl.style.width = this.__withPrecision(left - right)
-    this.videoEl.style.height = this.__withPrecision(top - bottom)
-  }
+  area(top = 0, right = 1920, bottom = 1080, left = 0) {
+    this.position(top, left)
+    this.size(right - left, bottom - top)
+  },
 
   open(url, details = {}) {
-    this._metrics = Metrics.media(url)
-    // prep the media url to play depending on platform (mediaPlayerplugin)
+    if (!this.canInteract) return
+    metrics = Metrics.media(url)
+    // prep the media url to play depending on platform
     url = mediaUrl(url)
 
-    this.hide()
-    this.__deregisterEventListeners()
-
     // preload the video to get duration (for ads)
-    this.videoEl.setAttribute('src', url)
-    this.videoEl.load()
+    videoEl.setAttribute('src', url)
+    videoEl.load()
 
-    this.videoEl.onloadedmetadata = () => {
-      // unset own callback to prevent endless loop
-      this.videoEl.onloadedmetadata = () => {}
-      const config = { enabled: this._adsEnabled, duration: this.duration }
+    this.hide()
+    deregisterEventListeners()
+
+    const onLoadedMetadata = () => {
+      videoEl.removeEventListener('loadedmetadata', onLoadedMetadata)
+      const config = { enabled: state.adsEnabled, duration: this.duration || 300 }
       if (details.videoId) {
         config.caid = details.videoId
       }
-      Ads(config).then(ads => {
-        this.__playingAds = true
+      Ads(config, consumer).then(ads => {
+        state.playingAds = true
         ads.prerolls().then(() => {
-          this.__playingAds = false
-          this.__registerEventListeners()
+          state.playingAds = false
+          registerEventListeners()
           if (this.src !== url) {
-            this.videoEl.setAttribute('src', url)
-            this.videoEl.load()
+            videoEl.setAttribute('src', url)
+            videoEl.load()
           }
           this.show()
           this.play()
         })
       })
     }
-  }
+
+    videoEl.addEventListener('loadedmetadata', onLoadedMetadata)
+  },
 
   reload() {
-    const url = this.videoEl.getAttribute('src')
+    if (!this.canInteract) return
+    const url = videoEl.getAttribute('src')
     this.close()
     this.open(url)
-  }
+  },
 
   close() {
+    if (!this.canInteract) return
     this.clear()
     this.hide()
-    this.__deregisterEventListeners()
-  }
+    deregisterEventListeners()
+  },
 
   clear() {
+    if (!this.canInteract) return
     // pause the video first to disable sound
     this.pause()
-    this.videoEl.removeAttribute('src')
-    this.videoEl.load()
-  }
+    videoEl.removeAttribute('src')
+    videoEl.load()
+  },
 
   play() {
     if (!this.canInteract) return
-    this.videoEl.play()
-  }
+    videoEl.play()
+  },
 
   pause() {
     if (!this.canInteract) return
-    this.videoEl.pause()
-  }
+    videoEl.pause()
+  },
 
   playPause() {
     if (!this.canInteract) return
-    this._playing === true ? this.pause() : this.play()
-  }
+    this.playing === true ? this.pause() : this.play()
+  },
 
   mute(muted = true) {
     if (!this.canInteract) return
-    this.videoEl.muted = muted
-  }
+    videoEl.muted = muted
+  },
 
   loop(looped = true) {
-    this.videoEl.loop = looped
-  }
+    videoEl.loop = looped
+  },
 
   seek(time) {
     if (!this.canInteract) return
     if (!this.src) return
-    this.videoEl.currentTime = Math.max(0, Math.min(time, this.duration))
-  }
+    videoEl.currentTime = Math.max(0, Math.min(time, this.duration))
+  },
 
   skip(seconds) {
     if (!this.canInteract) return
     if (!this.src) return
-    this.seek(this.videoEl.currentTime + seconds)
-  }
+
+    state.skipTime = (state.skipTime || videoEl.currentTime) + seconds
+    easeExecution(() => {
+      this.seek(state.skipTime)
+      state.skipTime = false
+    }, 300)
+  },
 
   show() {
     if (!this.canInteract) return
-    this.videoEl.style.display = 'block'
-    this.videoEl.style.visibility = 'visible'
-  }
+    videoEl.style.display = 'block'
+    videoEl.style.visibility = 'visible'
+  },
 
   hide() {
     if (!this.canInteract) return
-    this.videoEl.style.display = 'none'
-    this.videoEl.style.visibility = 'hidden'
-  }
+    videoEl.style.display = 'none'
+    videoEl.style.visibility = 'hidden'
+  },
 
   enableAds(enabled = true) {
-    this._adsEnabled = enabled
-  }
+    state.adsEnabled = enabled
+  },
 
   /* Public getters */
   get duration() {
-    return isNaN(this.videoEl.duration) ? Infinity : this.videoEl.duration
-  }
+    return videoEl && (isNaN(videoEl.duration) ? Infinity : videoEl.duration)
+  },
 
   get currentTime() {
-    return this.videoEl.currentTime
-  }
+    return videoEl && videoEl.currentTime
+  },
 
   get muted() {
-    return this.videoEl.muted
-  }
+    return videoEl && videoEl.muted
+  },
 
   get looped() {
-    return this.videoEl.loop
-  }
+    return videoEl && videoEl.loop
+  },
 
   get src() {
-    return this.videoEl.getAttribute('src')
-  }
+    return videoEl && videoEl.getAttribute('src')
+  },
 
   get playing() {
-    return this._playing
-  }
+    return state.playing
+  },
 
   get playingAds() {
-    return this._playingAds
-  }
+    return state.playingAds
+  },
 
   get canInteract() {
-    return this._playingAds === false // perhaps add an extra flag wether we allow interactions (i.e. pauze, mute, etc.) during ad playback
-  }
+    // todo: perhaps add an extra flag wether we allow interactions (i.e. pauze, mute, etc.) during ad playback
+    return state.playingAds === false
+  },
 
-  /* Private setters */
-  set __playingAds(val) {
-    this._playingAds = val
-    this.__fireOnConsumer(val === true ? 'AdStart' : 'AdEnd')
-  }
+  get top() {
+    return videoEl && parseFloat(videoEl.style.top)
+  },
 
-  /* Private callbacks */
-  __play() {
-    this._playing = true
-  }
+  get left() {
+    return videoEl && parseFloat(videoEl.style.left)
+  },
 
-  __pause() {
-    this._playing = false
-  }
+  get bottom() {
+    return videoEl && parseFloat(videoEl.style.top - videoEl.style.height)
+  },
 
-  /* Private helper methods */
-  __setupVideoTag() {
-    const videoEls = document.getElementsByTagName('video')
-    if (videoEls && videoEls.length) {
-      return videoEls[0]
-    } else {
-      const videoEl = document.createElement('video')
-      videoEl.setAttribute('id', 'video-player')
-      videoEl.setAttribute('width', this.__withPrecision(1920))
-      videoEl.setAttribute('height', this.__withPrecision(1080))
-      videoEl.style.position = 'absolute'
-      videoEl.style.zIndex = '1'
-      videoEl.style.display = 'none'
-      videoEl.style.visibility = 'visible'
-      document.body.appendChild(videoEl)
-      return videoEl
-    }
-  }
+  get right() {
+    return videoEl && parseFloat(videoEl.style.left - videoEl.style.width)
+  },
 
-  __registerEventListeners() {
-    Log.info('Registering event listeners VideoPlayer')
+  get width() {
+    return videoEl && parseFloat(videoEl.style.width)
+  },
 
-    Object.keys(events).forEach(event => {
-      const handler = e => {
-        // Fire a metric for each event (if it exists on the metrics object)
-        if (this._metrics[event] && typeof this._metrics[event] === 'function') {
-          this._metrics[event]({ currentTime: this.currentTime })
-        }
-        // fire event to VideoPlayer class
-        this.fire('__' + event, { videoElement: this.videoEl, event: e })
-        // fire the event to the consumer of the VideoPlayer
-        this.__fireOnConsumer(events[event], { videoElement: this.videoEl, event: e })
-      }
+  get height() {
+    return videoEl && parseFloat(videoEl.style.height)
+  },
 
-      this._eventHandlers[event] = handler
-      this.videoEl.addEventListener(event, handler)
-    })
-  }
+  get visible() {
+    return videoEl && videoEl.style.display === 'block'
+  },
 
-  __deregisterEventListeners() {
-    Log.info('Deregistering event listeners MediaPlayer')
-    Object.keys(this._eventHandlers).forEach(event => {
-      this.videoEl.removeEventListener(event, this._eventHandlers[event])
-    })
-    this._eventHandlers = {}
-  }
-
-  __withPrecision(val) {
-    return Math.round(this.stage.getRenderPrecision() * val) + 'px'
-  }
-
-  __fireOnConsumer(event, args) {
-    if (this._consumer) {
-      this._consumer.fire('$videoPlayer' + event, args)
-    }
-  }
+  get adsEnabled() {
+    return state.adsEnabled
+  },
 }
+
+export default autoSetupMixin(videoPlayerPlugin, () => {
+  precision = AppInstance.stage.getRenderPrecision()
+  videoEl = setupVideoTag()
+})

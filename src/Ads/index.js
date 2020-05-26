@@ -1,4 +1,7 @@
 import Log from '../Log'
+import { mediaUrl } from '../VideoPlayer'
+
+let consumer
 
 let getAds = () => {
   // todo: enable some default ads during development, maybe from the settings.json
@@ -29,46 +32,66 @@ const playAd = ad => {
     const videoEl = document.getElementsByTagName('video')[0]
     videoEl.style.display = 'block'
     videoEl.style.visibility = 'visible'
-    videoEl.src = ad.url
+    videoEl.src = mediaUrl(ad.url)
+    videoEl.load()
 
     let timeEvents = {}
+    let timeout
 
-    videoEl.onloadedmetadata = () => {
-      // calculate when to fire the time based events (now that duration is known)
-      timeEvents = {
-        firstQuartile: videoEl.duration / 4,
-        midPoint: videoEl.duration / 2,
-        thirdQuartile: (videoEl.duration / 4) * 3,
-      }
-      // unset callback
-      videoEl.onloadedmetadata = () => {}
+    const cleanup = () => {
+      // remove all listeners
+      Object.keys(handlers).forEach(handler =>
+        videoEl.removeEventListener(handler, handlers[handler])
+      )
+      resolve()
     }
-
     const handlers = {
       play() {
         Log.info('Ad', 'Play ad', ad.url)
+        fireOnConsumer('Play', ad)
         sendBeacon(ad.callbacks, 'defaultImpression')
       },
       ended() {
+        fireOnConsumer('Ended', ad)
         sendBeacon(ad.callbacks, 'complete')
-        // remove all listeners
-        Object.keys(handlers).forEach(handler =>
-          videoEl.removeEventListener(handler, handlers[handler])
-        )
-        resolve()
+        cleanup()
       },
       timeupdate() {
         if (timeEvents.firstQuartile && videoEl.currentTime >= timeEvents.firstQuartile) {
+          fireOnConsumer('FirstQuartile', ad)
           delete timeEvents.firstQuartile
           sendBeacon(ad.callbacks, 'firstQuartile')
         }
         if (timeEvents.midPoint && videoEl.currentTime >= timeEvents.midPoint) {
+          fireOnConsumer('MidPoint', ad)
           delete timeEvents.midPoint
           sendBeacon(ad.callbacks, 'midPoint')
         }
         if (timeEvents.thirdQuartile && videoEl.currentTime >= timeEvents.thirdQuartile) {
+          fireOnConsumer('ThirdQuartile', ad)
           delete timeEvents.thirdQuartile
           sendBeacon(ad.callbacks, 'thirdQuartile')
+        }
+      },
+      stalled() {
+        fireOnConsumer('Stalled', ad)
+        timeout = setTimeout(() => {
+          cleanup()
+        }, 5000) // make timeout configurable
+      },
+      canplay() {
+        timeout && clearTimeout(timeout)
+      },
+      error() {
+        fireOnConsumer('Error', ad)
+        cleanup()
+      },
+      loadedmetadata() {
+        // calculate when to fire the time based events (now that duration is known)
+        timeEvents = {
+          firstQuartile: videoEl.duration / 4,
+          midPoint: videoEl.duration / 2,
+          thirdQuartile: (videoEl.duration / 4) * 3,
         }
       },
       // todo: pause, resume, mute, unmute beacons
@@ -87,8 +110,18 @@ const sendBeacon = (callbacks, event) => {
       return promise.then(() =>
         fetch(url)
           // always resolve, also in case of a fetch error (so we don't block firing the rest of the beacons for this event)
-          .then(() => Promise.resolve(null)) // note: for fetch failed http responses don't throw catch
-          .catch(() => Promise.resolve(null))
+          // note: for fetch failed http responses don't throw an Error :)
+          .then(response => {
+            if (response.status === 200) {
+              fireOnConsumer('Beacon' + event + 'Sent')
+            } else {
+              fireOnConsumer('Beacon' + event + 'Failed' + response.status)
+            }
+            Promise.resolve(null)
+          })
+          .catch(() => {
+            Promise.resolve(null)
+          })
       )
     }, Promise.resolve(null))
   } else {
@@ -96,13 +129,23 @@ const sendBeacon = (callbacks, event) => {
   }
 }
 
-export default config => {
-  if (config.enabled === false)
+const fireOnConsumer = (event, args) => {
+  if (consumer) {
+    consumer.fire('$ad' + event, args)
+    consumer.fire('$adEvent', event, args)
+  }
+}
+
+export default (config, videoPlayerConsumer) => {
+  if (config.enabled === false) {
     return Promise.resolve({
       prerolls() {
         return Promise.resolve()
       },
     })
+  }
+
+  consumer = videoPlayerConsumer
 
   return new Promise(resolve => {
     Log.info('Ad', 'Starting session')
@@ -111,8 +154,10 @@ export default config => {
       resolve({
         prerolls() {
           if (ads.preroll) {
+            fireOnConsumer('PrerollSlotImpression', ads)
             sendBeacon(ads.preroll.callbacks, 'slotImpression')
             return playSlot(ads.preroll.ads).then(() => {
+              fireOnConsumer('PrerollSlotEnd', ads)
               sendBeacon(ads.preroll.callbacks, 'slotEnd')
             })
           }

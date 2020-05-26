@@ -1,3 +1,4 @@
+export { default as Ads } from './src/Ads'
 export { default as Application } from './src/Application'
 export { default as AudioPlayer } from './src/AudioPlayer'
 export { default as Img } from './src/Img'
