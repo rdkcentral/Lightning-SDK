@@ -35,6 +35,7 @@ const state = {
     fireOnConsumer(val === true ? 'AdStart' : 'AdEnd')
   },
   skipTime: false,
+  playAfterSeek: null,
 }
 
 const hooks = {
@@ -43,6 +44,10 @@ const hooks = {
   },
   pause() {
     state.playing = false
+  },
+  seeked() {
+    state.playAfterSeek === true && videoPlayerPlugin.play()
+    state.playAfterSeek = null
   },
 }
 
@@ -217,7 +222,14 @@ const videoPlayerPlugin = {
   seek(time) {
     if (!this.canInteract) return
     if (!this.src) return
-    videoEl.currentTime = Math.max(0, Math.min(time, this.duration))
+    // define whether should continue to play after seek is complete (in seeked hook)
+    if (state.playAfterSeek === null) {
+      state.playAfterSeek = !!state.playing
+    }
+    // pause before actually seeking
+    this.pause()
+    // currentTime always between 0 and the duration of the video (minus 0.1s to not set to the final frame and stall the video)
+    videoEl.currentTime = Math.max(0, Math.min(time, this.duration - 0.1))
   },
 
   skip(seconds) {
