@@ -509,7 +509,7 @@ const getRouteByHash = hash => {
       }
 
       // if the non-named groups don't match we let it fail
-      if (routePart.toLowerCase() !== hashPart.toLowerCase()) {
+      if (hashPart && routePart.toLowerCase() !== hashPart.toLowerCase()) {
         isMatching = false
       }
     }
