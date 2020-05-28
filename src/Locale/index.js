@@ -55,6 +55,16 @@
  *    I'd like to buy 10 eggs, 0.5 dollars each.
  */
 
+let warned = false
+const deprecated = (force = false) => {
+  if (force === true || warned === false) {
+    console.warn(
+      "The 'Locale'-plugin in the Lightning-SDK is deprecated and will be removed in future releases. \n\n Please consider using the new 'Language'-plugin instead."
+    )
+  }
+  warned = true
+}
+
 class Locale {
   constructor() {
     this.__enabled = false
@@ -67,6 +77,7 @@ class Locale {
    * @return {Promise}
    */
   async load(path) {
+    deprecated()
     if (!this.__enabled) {
       return
     }
@@ -84,6 +95,7 @@ class Locale {
    * @param {String} lang
    */
   setLanguage(lang) {
+    deprecated()
     this.__enabled = true
     this.language = lang
   }
@@ -94,6 +106,7 @@ class Locale {
    * @return {Object}
    */
   get tr() {
+    deprecated(true)
     return this.__trObj[this.language]
   }
 
@@ -103,6 +116,7 @@ class Locale {
    * @param {Object} trObj
    */
   loadFromObject(trObj) {
+    deprecated()
     this.__trObj = trObj
     for (const lang of Object.values(this.__trObj)) {
       for (const str of Object.keys(lang)) {
