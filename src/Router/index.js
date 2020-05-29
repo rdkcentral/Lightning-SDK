@@ -579,10 +579,8 @@ const handleHashChange = override => {
 }
 
 const routeHasModifier = (route, key) => {
-  console.log(route, key)
   if (modifiers.has(route)) {
     const config = modifiers.get(route)
-    console.log(config)
     if (config[key] && config[key] === true) {
       return true
     }
@@ -615,8 +613,6 @@ export const navigate = (url, store = true) => {
   if (routeHasModifier(getRouteByHash(url), 'clearHistory')) {
     history.length = 0
   }
-
-  console.log('---', history)
 }
 
 /**
@@ -633,7 +629,7 @@ export const step = (direction = 0) => {
   if (history.length) {
     // for now we only support history back
     const route = history.splice(history.length - 1, 1)
-    navigate(route, false)
+    navigate(route[0], false)
   } else {
     const hashLastPart = /(\/:?[\w-]+)$/
     let hash = getHash()
