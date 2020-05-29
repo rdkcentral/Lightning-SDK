@@ -105,7 +105,7 @@ export default class Mediaplayer extends Lightning.Component {
   _registerListeners() {
     events.forEach(event => {
       const handler = e => {
-        if (this._metrics[event] && typeof this._metrics[event] === 'function') {
+        if (this._metrics && this._metrics[event] && typeof this._metrics[event] === 'function') {
           this._metrics[event]({ currentTime: this.videoEl.currentTime })
         }
         this.fire(event, { videoElement: this.videoEl, event: e })
