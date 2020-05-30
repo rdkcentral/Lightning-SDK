@@ -33,6 +33,7 @@ rouThor
 - define widget via widget()
 - lazy load widgets (?)
 - page define transitions
+- strip wildcard from potential route matches
 
 
  */
@@ -46,8 +47,9 @@ let stage
 let pages = new Map()
 let providers = new Map()
 let modifiers = new Map()
-let widgets
-let host
+let widgetsPerRoute = new Map()
+let widgetsHost
+let pagesHost
 
 // widget that has focus
 let activeWidget
@@ -64,20 +66,20 @@ export let activePage
  * @param routes
  * @param provider
  */
-export const startRouter = ({ appInstance, routes, provider }) => {
+export const startRouter = ({ appInstance, routes, provider = () => {}, widgets = () => {} }) => {
   app = appInstance
   application = appInstance.application
-  host = application.childList
+  pagesHost = application.childList
   stage = application.stage
 
   // test if required to host pages in a different child
   if (app.pages) {
-    host = app.pages.childList
+    pagesHost = app.pages.childList
   }
 
   // test if app uses widgets
   if (app.widgets) {
-    widgets = app.widgets.childList
+    widgetsHost = app.widgets.childList
   }
 
   // register step back handler
@@ -88,6 +90,9 @@ export const startRouter = ({ appInstance, routes, provider }) => {
 
   // register routes
   routes()
+
+  // register widgets
+  widgets()
 
   // register step back handler
   app._captureKey = capture.bind(null)
@@ -124,7 +129,7 @@ export const route = (route, type, config) => {
       } else {
         if (!Settings.get('platform', 'lazyCreate')) {
           type = isLightningComponent(type) ? create(type) : type
-          host.a(type)
+          pagesHost.a(type)
         }
         stack.push(type)
       }
@@ -137,7 +142,7 @@ export const route = (route, type, config) => {
       // correct component and add it to the childList
       if (!Settings.get('platform', 'lazyCreate')) {
         type = isLightningComponent(type) ? create(type) : type
-        host.a(type)
+        pagesHost.a(type)
       }
     }
 
@@ -163,11 +168,27 @@ export const root = (url, type, config) => {
   route(url, type, config)
 }
 
+/**
+ * Define the widgets that need to become visible per route
+ * @param url
+ * @param widgets
+ */
+export const widget = (url, widgets = []) => {
+  if (!widgetsPerRoute.has(url)) {
+    if (!isArray(widgets)) {
+      widgets = [widgets]
+    }
+    widgetsPerRoute.set(url, widgets)
+  } else {
+    console.warn(`Widgets already exist for ${url}`)
+  }
+}
+
 const create = type => {
   const page = stage.c({ type, visible: false })
   // if the app has widgets we make them available
   // as an object on the app instance
-  if (widgets) {
+  if (widgetsHost) {
     page.widgets = getWidgetReferences()
   }
 
@@ -210,7 +231,7 @@ const load = ({ route, hash }) => {
     }
   } else {
     page = create(type)
-    host.a(page)
+    pagesHost.a(page)
 
     // update stack
     const location = getPageStackLocation(route)
@@ -225,6 +246,11 @@ const load = ({ route, hash }) => {
       provide = true
     }
   }
+
+  // we store hash and route as properties on the page instance
+  // that way we can easily calculate new behaviour on page reload
+  page[Symbol.for('hash')] = hash
+  page[Symbol.for('route')] = route
 
   // if routes share instance we only update
   // update the page data if needed
@@ -275,11 +301,6 @@ const load = ({ route, hash }) => {
       })
     }
   }
-
-  // we store hash and route as properties on the page instance
-  // that way we can easily calculate new behaviour on page reload
-  page[Symbol.for('hash')] = hash
-  page[Symbol.for('route')] = route
 
   // store reference to active page, probably better to store the
   // route in the future
@@ -369,13 +390,33 @@ const updatePageData = ({ page, route, hash }) => {
 }
 
 /**
- * execute transition between new / old page
+ * execute transition between new / old page and
+ * toggle the defined widgets
  * @todo: platform override default transition
  * @param pageIn
  * @param pageOut
  */
 const doTransition = (pageIn, pageOut = null) => {
+  updateWidgets(pageIn)
   return crossFade(pageIn, pageOut)
+}
+
+/**
+ * update the visibility of the available widgets
+ * for the current page / route
+ * @param page
+ */
+const updateWidgets = page => {
+  // grab active route
+  const route = page[Symbol.for('route')]
+  // force lowercase lookup
+  const configured = (widgetsPerRoute.get(route) || []).map(ref => ref.toLowerCase())
+  // iterate over all available widgets and turn visibility
+  // if they're configured for the current route
+  widgetsHost.forEach(widget => {
+    widget.visible = configured.indexOf(widget.ref.toLowerCase()) !== -1
+  })
+  1
 }
 
 const cleanUp = (page, route) => {
@@ -394,7 +435,7 @@ const cleanUp = (page, route) => {
   pages.set(route, stack)
 
   // actual remove of page from memory
-  host.remove(page)
+  pagesHost.remove(page)
 
   // force texture gc() if configured
   // so we can cleanup textures in the same tick
@@ -734,7 +775,7 @@ export const after = (route, cb, expires = 0) => {
 }
 
 const getWidgetReferences = () => {
-  return widgets.get().reduce((storage, widget) => {
+  return widgetsHost.get().reduce((storage, widget) => {
     const key = widget.ref.toLowerCase()
     storage[key] = widget
     return storage
@@ -743,8 +784,8 @@ const getWidgetReferences = () => {
 
 const getWidgetByName = name => {
   name = ucfirst(name)
-  if (widgets.getByRef(name)) {
-    return widgets.getByRef(name)
+  if (widgetsHost.getByRef(name)) {
+    return widgetsHost.getByRef(name)
   }
   return false
 }
@@ -759,7 +800,11 @@ export const focusWidget = name => {
     // store reference
     activeWidget = widget
     // somewhat experimental
-    app._setState('Widgets', [activeWidget])
+    if (app.state === 'Widgets') {
+      app.reload(activeWidget)
+    } else {
+      app._setState('Widgets', [activeWidget])
+    }
   }
 }
 
