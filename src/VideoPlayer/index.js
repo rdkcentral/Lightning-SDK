@@ -91,7 +91,7 @@ const registerEventListeners = () => {
   Object.keys(events).forEach(event => {
     const handler = e => {
       // Fire a metric for each event (if it exists on the metrics object)
-      if (metrics[event] && typeof metrics[event] === 'function') {
+      if (metrics && metrics[event] && typeof metrics[event] === 'function') {
         metrics[event]({ currentTime: videoEl.currentTime })
       }
       // fire an internal hook
@@ -327,6 +327,6 @@ const videoPlayerPlugin = {
 }
 
 export default autoSetupMixin(videoPlayerPlugin, () => {
-  precision = AppInstance.stage.getRenderPrecision()
+  precision = AppInstance && AppInstance.stage && AppInstance.stage.getRenderPrecision()
   videoEl = setupVideoTag()
 })
