@@ -2,10 +2,9 @@
 
 ## v2.2.1
 
-- Hotfix for Media Player metrics
-
 *1 jun 2020*
 
+- Hotfix for Media Player metrics
 
 ## v2.2.0
 
