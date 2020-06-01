@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.2.1
+
+- Hotfix for Media Player metrics
+
+*1 jun 2020*
+
+
 ## v2.2.0
 
 *6 may 2020*
