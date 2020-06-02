@@ -34,7 +34,7 @@ rouThor
 - lazy load widgets (?)
 - page define transitions
 - strip wildcard from potential route matches
-
+- strip trailing slash from route config
 
  */
 
@@ -59,7 +59,7 @@ let history = []
 
 // page that has focus
 export let activePage
-
+const hasRegex = /\{\/(.*?)\/([igm]{0,3})\}/g
 /**
  * Setup Page router
  * @param {Lightning.Component} appInstance
@@ -297,7 +297,10 @@ const load = ({ route, hash }) => {
       }
 
       doTransition(page, activePage).then(() => {
+        // manage cpu/gpu memory
         cleanUp(p, r)
+        // force focus calculation
+        app._refocus()
       })
     }
   }
@@ -416,7 +419,6 @@ const updateWidgets = page => {
   widgetsHost.forEach(widget => {
     widget.visible = configured.indexOf(widget.ref.toLowerCase()) !== -1
   })
-  1
 }
 
 const cleanUp = (page, route) => {
@@ -502,7 +504,23 @@ const getPageFromStack = route => {
  * @returns {number} - floor
  */
 const getFloor = route => {
-  return route.split('/').length
+  return stripRegex(route).split('/').length
+}
+
+/**
+ * Test if a route is part regular expressed
+ * and replace it for a simple character
+ * @param route
+ * @returns {*}
+ */
+const stripRegex = route => {
+  // if route is part regular expressed we replace
+  // the regular expression for a character to
+  // simplify floor calculation and backtracking
+  if (hasRegex.test(route)) {
+    route = route.replace(hasRegex, 'R')
+  }
+  return route
 }
 
 /**
@@ -529,15 +547,38 @@ const getRoutesByFloor = floor => {
  * @returns {string|boolean} - route
  */
 const getRouteByHash = hash => {
-  const getUrlParts = /(\/?:?[\w-]+)/g
+  const getUrlParts = /(\/?:?[@\w-]+)/g
   // grab possible candidates from stored routes
   const candidates = getRoutesByFloor(getFloor(hash))
   // break hash down in chunks
   const hashParts = hash.match(getUrlParts) || []
+  // test if the part of the hash has a replace
+  // regex lookup id
+  const hasLookupId = /\/@@([0-9]+?)@@/
+
+  // to simplify the route matching and prevent look around
+  // in our getUrlParts regex we get the regex part from
+  // route candidate and store them so that we can reference
+  // them when we perform the actual regex against hash
+  let regexStore = []
 
   let matches = candidates.filter(route => {
     let isMatching = true
     const isNamedGroup = /^\/:/
+
+    // replace regex in route with lookup id => @@{storeId}@@
+    if (hasRegex.test(route)) {
+      const regMatches = route.match(hasRegex)
+      if (regMatches && regMatches.length) {
+        route = regMatches.reduce((fullRoute, regex) => {
+          const lookupId = regexStore.length
+          fullRoute = fullRoute.replace(regex, `@@${lookupId}@@`)
+          regexStore.push(regex.substring(1, regex.length - 1))
+          return fullRoute
+        }, route)
+      }
+    }
+
     const routeParts = route.match(getUrlParts) || []
 
     for (let i = 0, j = routeParts.length; i < j; i++) {
@@ -549,8 +590,26 @@ const getRouteByHash = hash => {
         continue
       }
 
-      // if the non-named groups don't match we let it fail
-      if (hashPart && routePart.toLowerCase() !== hashPart.toLowerCase()) {
+      if (hasLookupId.test(routePart)) {
+        const routeMatches = hasLookupId.exec(routePart)
+        const storeId = routeMatches[1]
+        const routeRegex = regexStore[storeId]
+
+        // split regex and modifiers so we can use both
+        // to create a new RegExp
+        const regMatches = /\/([^\/]+)\/([igm]{0,3})/.exec(routeRegex)
+
+        if (regMatches && regMatches.length) {
+          const expression = regMatches[1]
+          const modifiers = regMatches[2]
+
+          const regex = new RegExp(`^\/${expression}$`, modifiers)
+
+          if (!regex.test(hashPart)) {
+            isMatching = false
+          }
+        }
+      } else if (hashPart && routePart.toLowerCase() !== hashPart.toLowerCase()) {
         isMatching = false
       }
     }
@@ -673,7 +732,7 @@ export const step = (direction = 0) => {
     navigate(route[0], false)
   } else {
     const hashLastPart = /(\/:?[\w-]+)$/
-    let hash = getHash()
+    let hash = stripRegex(getHash())
     let floor = getFloor(hash)
 
     // if we're passed the first floor and our history is empty
