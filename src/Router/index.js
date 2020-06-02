@@ -836,4 +836,5 @@ export default {
   getActivePage,
   focusWidget,
   start,
+  widget,
 }
