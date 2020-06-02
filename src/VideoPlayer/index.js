@@ -325,7 +325,8 @@ const videoPlayerPlugin = {
     return state.adsEnabled
   },
 
-  // prefixed with underscore, because it's not recommended to interact directly with the video element
+  // prefixed with underscore to indicate 'semi-private'
+  // because it's not recommended to interact directly with the video element
   get _videoEl() {
     return videoEl
   },
