@@ -324,6 +324,11 @@ const videoPlayerPlugin = {
   get adsEnabled() {
     return state.adsEnabled
   },
+
+  // prefixed with underscore, because it's not recommended to interact directly with the video element
+  get _videoEl() {
+    return videoEl
+  },
 }
 
 export default autoSetupMixin(videoPlayerPlugin, () => {
