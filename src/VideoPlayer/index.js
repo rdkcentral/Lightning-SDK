@@ -165,7 +165,9 @@ const videoPlayerPlugin = {
             videoEl.load()
           }
           this.show()
-          this.play()
+          setTimeout(() => {
+            this.play()
+          })
         })
       })
     }
@@ -333,6 +335,8 @@ const videoPlayerPlugin = {
 }
 
 export default autoSetupMixin(videoPlayerPlugin, () => {
-  precision = AppInstance && AppInstance.stage && AppInstance.stage.getRenderPrecision()
+  // precision = AppInstance && AppInstance.stage && AppInstance.stage.getRenderPrecision()
+  // temporary:
+  precision = window.innerHeight === 720 ? 0.6666666667 : 1
   videoEl = setupVideoTag()
 })
