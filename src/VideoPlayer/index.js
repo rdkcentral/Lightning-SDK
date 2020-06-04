@@ -149,30 +149,30 @@ const videoPlayerPlugin = {
     this.hide()
     deregisterEventListeners()
 
-    const onLoadedMetadata = () => {
-      videoEl.removeEventListener('loadedmetadata', onLoadedMetadata)
-      const config = { enabled: state.adsEnabled, duration: this.duration || 300 }
-      if (details.videoId) {
-        config.caid = details.videoId
-      }
-      Ads(config, consumer).then(ads => {
-        state.playingAds = true
-        ads.prerolls().then(() => {
-          state.playingAds = false
-          registerEventListeners()
-          if (this.src !== url) {
-            videoEl.setAttribute('src', url)
-            videoEl.load()
-          }
-          this.show()
-          setTimeout(() => {
-            this.play()
-          })
+    // const onLoadedMetadata = () => {
+    // videoEl.removeEventListener('loadedmetadata', onLoadedMetadata)
+    const config = { enabled: state.adsEnabled, duration: 300 } // this.duration ||
+    if (details.videoId) {
+      config.caid = details.videoId
+    }
+    Ads(config, consumer).then(ads => {
+      state.playingAds = true
+      ads.prerolls().then(() => {
+        state.playingAds = false
+        registerEventListeners()
+        if (this.src !== url) {
+          videoEl.setAttribute('src', url)
+          videoEl.load()
+        }
+        this.show()
+        setTimeout(() => {
+          this.play()
         })
       })
-    }
+    })
+    // }
 
-    videoEl.addEventListener('loadedmetadata', onLoadedMetadata)
+    // videoEl.addEventListener('loadedmetadata', onLoadedMetadata)
   },
 
   reload() {
