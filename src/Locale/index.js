@@ -55,6 +55,7 @@
  *    I'd like to buy 10 eggs, 0.5 dollars each.
  */
 
+import Log from '../Log'
 class Locale {
   constructor() {
     this.__enabled = false
@@ -103,6 +104,19 @@ class Locale {
    * @param {Object} trObj
    */
   loadFromObject(trObj) {
+    const fallbackLanguage = 'en'
+    if (Object.keys(trObj).indexOf(this.language) === -1) {
+      Log.warn('No translations found for: ' + this.language)
+      if (Object.keys(trObj).indexOf(fallbackLanguage) > -1) {
+        Log.warn('Using fallback language: ' + fallbackLanguage)
+        this.language = fallbackLanguage
+      } else {
+        const error = 'No translations found for fallback language: ' + fallbackLanguage
+        Log.error(error)
+        throw Error(error)
+      }
+    }
+
     this.__trObj = trObj
     for (const lang of Object.values(this.__trObj)) {
       for (const str of Object.keys(lang)) {
