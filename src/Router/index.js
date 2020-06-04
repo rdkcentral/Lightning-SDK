@@ -26,7 +26,6 @@ rouThor
 - data provider timeout
 - add route mapping
 - custom before trigger
-- regex support
 - error page
 - manual expire
 - route to same page (with force expire)
@@ -257,9 +256,7 @@ const load = ({ route, hash }) => {
   if (routesShareInstance) {
     if (provide) {
       try {
-        updatePageData({ page, route, hash }).then(() => {
-          // ignore? Since we're re-using instance
-        })
+        updatePageData({ page, route, hash })
       } catch (e) {
         // show error page with route / hash
         // and optional error code
@@ -388,7 +385,7 @@ const updatePageData = ({ page, route, hash }) => {
 
   return cb({ page, ...params }).then(() => {
     // set new expire time
-    page[Symbol.for('expires')] = Date.now + expires
+    page[Symbol.for('expires')] = Date.now() + expires
   })
 }
 
@@ -452,7 +449,7 @@ const cleanUp = (page, route) => {
  * @returns {boolean}
  */
 const isPageExpired = page => {
-  if (!page.has(Symbol.for('expires'))) {
+  if (!page[Symbol.for('expires')]) {
     return false
   }
 
@@ -603,7 +600,7 @@ const getRouteByHash = hash => {
           const expression = regMatches[1]
           const modifiers = regMatches[2]
 
-          const regex = new RegExp(`^\/${expression}$`, modifiers)
+          const regex = new RegExp(`^/${expression}$`, modifiers)
 
           if (!regex.test(hashPart)) {
             isMatching = false
