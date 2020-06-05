@@ -627,7 +627,7 @@ const getRouteByHash = hash => {
  * @param route {string} - the route as defined in route
  */
 const getValuesFromHash = (hash, route) => {
-  const getUrlParts = /(\/?:?[\w-]+)/g
+  const getUrlParts = /(\/?:?[\w%-]+)/g
   const hashParts = hash.match(getUrlParts) || []
   const routeParts = route.match(getUrlParts) || []
   const getNamedGroup = /^\/:([\w-]+)\/?/
@@ -635,7 +635,7 @@ const getValuesFromHash = (hash, route) => {
   return routeParts.reduce((storage, value, index) => {
     const match = getNamedGroup.exec(value)
     if (match && match.length) {
-      storage.set(match[1], hashParts[index].replace(/^\//, ''))
+      storage.set(match[1], decodeURIComponent(hashParts[index].replace(/^\//, '')))
     }
     return storage
   }, new Map())
