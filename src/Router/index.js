@@ -26,10 +26,8 @@ rouThor
 - data provider timeout
 - add route mapping
 - custom before trigger
-- error page
 - manual expire
 - route to same page (with force expire)
-- define widget via widget()
 - lazy load widgets (?)
 - page define transitions
 - strip wildcard from potential route matches
@@ -199,7 +197,7 @@ const create = type => {
  * @param {String} route - the route blueprint, used for data provider look up
  * @param {String} hash - current hash we're routing to
  * */
-const load = ({ route, hash }) => {
+const load = async ({ route, hash }) => {
   const type = getPageByRoute(route)
   let routesShareInstance = false
   let provide = false
@@ -256,11 +254,11 @@ const load = ({ route, hash }) => {
   if (routesShareInstance) {
     if (provide) {
       try {
-        updatePageData({ page, route, hash })
+        await updatePageData({ page, route, hash })
       } catch (e) {
         // show error page with route / hash
         // and optional error code
-        console.log(e)
+        handleError(e)
       }
     }
   } else {
@@ -274,12 +272,12 @@ const load = ({ route, hash }) => {
       }
       try {
         if (triggers[loadType]) {
-          triggers[loadType](properties)
+          await triggers[loadType](properties)
+        } else {
+          throw new Error(`${loadType} is not supported`)
         }
       } catch (e) {
-        // show error page with route / hash
-        // and optional error code
-        console.log(e)
+        handleError(page, e)
       }
     } else {
       const p = activePage
@@ -310,6 +308,8 @@ const load = ({ route, hash }) => {
     console.log('[route]:', route)
     console.log('[hash]:', hash)
   }
+
+  return activePage
 }
 
 const triggerAfter = ({ page, old, route, hash }) => {
@@ -356,6 +356,29 @@ const triggerOn = ({ page, old, route, hash }) => {
       // back to root state
       app._setState('')
     })
+}
+
+const handleError = (page, error) => {
+  if (pages.has('!')) {
+    load({ route: '!', hash: page[Symbol.for('hash')] }).then(errorPage => {
+      errorPage.error = { page, error }
+
+      // on() loading type will force the app to go
+      // in a loading state so on error we need to
+      // go back to root state
+      if (app.state === 'Loading') {
+        app._setState('')
+      }
+
+      // make sure we delegate focus to the error page
+      if (activePage !== errorPage) {
+        activePage = errorPage
+        app._refocus()
+      }
+    })
+  } else {
+    console.log(page, error)
+  }
 }
 
 const triggers = {
@@ -627,7 +650,7 @@ const getRouteByHash = hash => {
  * @param route {string} - the route as defined in route
  */
 const getValuesFromHash = (hash, route) => {
-  const getUrlParts = /(\/?:?[\w%-]+)/g
+  const getUrlParts = /(\/?:?[\w-]+)/g
   const hashParts = hash.match(getUrlParts) || []
   const routeParts = route.match(getUrlParts) || []
   const getNamedGroup = /^\/:([\w-]+)\/?/
@@ -635,7 +658,7 @@ const getValuesFromHash = (hash, route) => {
   return routeParts.reduce((storage, value, index) => {
     const match = getNamedGroup.exec(value)
     if (match && match.length) {
-      storage.set(match[1], decodeURIComponent(hashParts[index].replace(/^\//, '')))
+      storage.set(match[1], hashParts[index].replace(/^\//, ''))
     }
     return storage
   }, new Map())
@@ -675,7 +698,11 @@ const handleHashChange = override => {
   }
 }
 
-const routeHasModifier = (route, key) => {
+const hashmod = (hash, key) => {
+  return routemod(getRouteByHash(hash), key)
+}
+
+const routemod = (route, key) => {
   if (modifiers.has(route)) {
     const config = modifiers.get(route)
     if (config[key] && config[key] === true) {
@@ -688,7 +715,7 @@ const routeHasModifier = (route, key) => {
 export const navigate = (url, store = true) => {
   const hash = getHash()
   // add current hash to history
-  if (hash && store && !routeHasModifier(getRouteByHash(hash), 'preventStorage')) {
+  if (hash && store && !hashmod(hash, 'preventStorage')) {
     const toStore = hash.substring(1, hash.length)
     const location = history.indexOf(toStore)
 
@@ -707,7 +734,7 @@ export const navigate = (url, store = true) => {
   }
 
   // clean up history if modifier is set
-  if (routeHasModifier(getRouteByHash(url), 'clearHistory')) {
+  if (hashmod(url, 'clearHistory')) {
     history.length = 0
   }
 }
@@ -869,7 +896,11 @@ export const restoreFocus = () => {
 }
 
 export const getActivePage = () => {
-  return activePage
+  if (activePage && activePage.attached) {
+    return activePage
+  } else {
+    return app
+  }
 }
 
 // listen to url changes
