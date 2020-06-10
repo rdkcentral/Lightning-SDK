@@ -47,7 +47,7 @@ let doPurchase = paymentObj => {
     },
   ]
   if (debugMapping && debugMapping[paymentObj.id])
-    throw new Error(debugCodes.find(x => x.code === debugMapping[paymentObj.id]))
+    throw debugCodes.find(x => x.code === debugMapping[paymentObj.id])
 
   return Promise.all([
     Profile.household(),
@@ -80,7 +80,7 @@ let doPurchase = paymentObj => {
     .then(response => response.json())
     .then(response => {
       if (response.code) throw response
-      return response.json()
+      return response
     })
 }
 let doConfirm = transactionId => {
@@ -92,7 +92,7 @@ let doConfirm = transactionId => {
     body: JSON.stringify({ transactionId: transactionId }),
   }).then(response => {
     console.log(response)
-    if (!response.ok) throw new Error(`${response.status}: ${response.statusText}`)
+    if (!response.ok) throw `${response.status}: ${response.statusText}`
     return response.json()
   })
 }
