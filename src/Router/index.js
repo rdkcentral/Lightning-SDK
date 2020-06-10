@@ -679,7 +679,9 @@ const handleHashChange = override => {
       while (n--) {
         const type = stored[n]
         if (isPage(type, stage)) {
-          load({ route, hash })
+          load({ route, hash }).then(() => {
+            app._refocus()
+          })
         } else {
           const urlParams = getValuesFromHash(hash, route)
           const params = {}
@@ -693,7 +695,9 @@ const handleHashChange = override => {
     }
   } else {
     if (pages.has('*')) {
-      load({ route: '*', hash })
+      load({ route: '*', hash }).then(() => {
+        app._refocus()
+      })
     }
   }
 }
