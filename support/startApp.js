@@ -79,7 +79,7 @@ var startApp = function startApp() {
 
     _newArrowCheck(this, _this2);
 
-    return hasTextureMode().then(function (enabled) {
+    return hasTextureMode(settings.platformSettings).then(function (enabled) {
       _newArrowCheck(this, _this5);
 
       return settings.platformSettings.textureMode = enabled;
@@ -223,7 +223,7 @@ var sequence = function sequence(steps) {
   }.bind(this), Promise.resolve(null));
 }.bind(undefined);
 
-var hasTextureMode = function hasTextureMode() {
+var hasTextureMode = function hasTextureMode(platformSettings) {
   var _this13 = this;
 
   _newArrowCheck(this, _this);
@@ -231,7 +231,8 @@ var hasTextureMode = function hasTextureMode() {
   return new Promise(function (resolve) {
     _newArrowCheck(this, _this13);
 
-    // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
+    if (platformSettings.textureMode === true) resolve(true); // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
+
     var url = new URL(document.location.href);
     resolve(url.searchParams.has('texture'));
   }.bind(this));

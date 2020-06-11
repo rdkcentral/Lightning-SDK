@@ -37,7 +37,10 @@ const startApp = () => {
     () => loadPolyfills(settings.platformSettings.esEnv),
     () => loadLightning(settings.platformSettings.esEnv),
     () => loadAppBundle(settings.platformSettings.esEnv),
-    () => hasTextureMode().then(enabled => (settings.platformSettings.textureMode = enabled)),
+    () =>
+      hasTextureMode(settings.platformSettings).then(
+        enabled => (settings.platformSettings.textureMode = enabled)
+      ),
     () =>
       settings.platformSettings.inspector === true
         ? loadLightningInspect(settings.platformSettings.esEnv).then(() =>
@@ -133,8 +136,9 @@ const sequence = steps => {
   }, Promise.resolve(null))
 }
 
-const hasTextureMode = () => {
+const hasTextureMode = platformSettings => {
   return new Promise(resolve => {
+    if (platformSettings.textureMode === true) resolve(true)
     // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
     const url = new URL(document.location.href)
     resolve(url.searchParams.has('texture'))
