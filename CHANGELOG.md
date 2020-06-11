@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.2
+
+*4 jun 2020*
+
+- Added fallback language (en) to Locale plugin when given language doesn't exist
+
 ## v2.2.1
 
 *1 jun 2020*
