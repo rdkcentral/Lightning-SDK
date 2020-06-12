@@ -33,17 +33,19 @@ export default class VersionLabel extends Lightning.Component {
         w: w => w,
         h: h => h,
         y: 5,
+        x: 20,
         text: {
           fontSize: 22,
-          textAlign: 'center',
+          lineHeight: 26,
         },
       },
     }
   }
 
-  set version(version) {
-    this.tag('Text').text = `v${version}`
+  _firstActive() {
+    this.tag('Text').text = `APP - v${this.version}\nSDK - v${this.sdkVersion}`
     this.tag('Text').loadTexture()
     this.w = this.tag('Text').renderWidth + 40
+    this.h = this.tag('Text').renderHeight + 10
   }
 }
