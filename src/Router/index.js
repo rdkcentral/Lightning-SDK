@@ -1,4 +1,12 @@
-import { isFunction, isPage, isLightningComponent, isArray, ucfirst } from './utils'
+import {
+  isFunction,
+  isPage,
+  isLightningComponent,
+  isArray,
+  ucfirst,
+  isObject,
+  isBoolean,
+} from './utils'
 import { crossFade } from './transitions'
 import Settings from '../Settings'
 
@@ -57,6 +65,8 @@ let history = []
 // page that has focus
 export let activePage
 const hasRegex = /\{\/(.*?)\/([igm]{0,3})\}/g
+let persist = null
+
 /**
  * Setup Page router
  * @param {Lightning.Component} appInstance
@@ -291,6 +301,11 @@ const load = async ({ route, hash }) => {
         page[name] = value
       }
 
+      if (isObject(persist) && persist !== null) {
+        page.persist = persist
+        persist = null
+      }
+
       doTransition(page, activePage).then(() => {
         // manage cpu/gpu memory
         cleanUp(p, r)
@@ -404,6 +419,11 @@ const updatePageData = ({ page, route, hash }) => {
     // store so we can add them as arguments to
     // data request callback
     params[name] = value
+  }
+
+  if (isObject(persist) && persist !== null) {
+    page.persist = persist
+    persist = null
   }
 
   return cb({ page, ...params }).then(() => {
@@ -716,10 +736,23 @@ const routemod = (route, key) => {
   return false
 }
 
-export const navigate = (url, store = true) => {
+export const navigate = (url, args, store) => {
+  let storeHash = true
+
+  if (isObject(args)) {
+    persist = args
+    if (isBoolean(store) && !store) {
+      storeHash = false
+    }
+  } else if (isBoolean(args) && !args) {
+    // if explicit set to false we don't want
+    // to store the route
+    storeHash = !!args
+  }
+
   const hash = getHash()
   // add current hash to history
-  if (hash && store && !hashmod(hash, 'preventStorage')) {
+  if (hash && storeHash && !hashmod(hash, 'preventStorage')) {
     const toStore = hash.substring(1, hash.length)
     const location = history.indexOf(toStore)
 
@@ -733,8 +766,10 @@ export const navigate = (url, store = true) => {
     }
   }
 
-  if (hash !== url) {
+  if (hash.replace(/^#/, '') !== url) {
     setHash(url)
+  } else if (hashmod(url, 'reload')) {
+    handleHashChange(hash)
   }
 
   // clean up history if modifier is set

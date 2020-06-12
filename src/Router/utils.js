@@ -8,6 +8,10 @@ export const isObject = v => {
   return typeof v === 'object'
 }
 
+export const isBoolean = v => {
+  return typeof v === 'boolean'
+}
+
 export const isPage = v => {
   if (v instanceof Lightning.Element || isLightningComponent(v)) {
     return true
