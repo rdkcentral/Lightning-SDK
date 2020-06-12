@@ -36,27 +36,52 @@ There are 2 ways you can use the router,
 to create a new route we first import the router from the SDK; import {router} from
 
 next we create a new route, and add a component to it (we will later create an instance by adding it to the lightning render-tree)
-```
-Router.route(“splash”, Splash);
-Router.route(“home”, Home);
+```js
+Router.route("splash", Splash);
+Router.route("home", Home);
 ```
 these are pretty simple one level routes. You can also define deeper nested routes.
-```
-Router.route(“home/player/“, Player)
-Router.route(“browse/popular”, Popular)
+```js
+Router.route("home/player/", Player)
+Router.route("browse/popular", Popular)
 ```
 this translate to the following, if the url is pointing to: 127.0.0.1:8080/#home, the router will load the attached Component or instance (if it’s already created) of Home and 127.0.0.1:8080/#browse/popular to Player.
 
 Besides static routes you can also define dynamic routes:
-```
-Router.route(“player/:assetId”, Player)
-Router.route(“player/:playlistId/:assetId”, Player)
+```js
+Router.route("player/:assetId", Player)
+Router.route("player/:playlistId/:assetId", Player)
 ```
 
 127.0.0.1:8080/#player/14728 it wil load and show the instance of Player. The router will invoke the setter assetId on the page instance with the value 14728. This way you can access the dynamic url data in your Lightning Component.
 
-```Router.route(“*”, NotFound)``` 
+```js
+Router.route("*", NotFound)
+``` 
 will show the NotFound component when the app or an external Ui tries to route to an url thats undefined i.e 127.0.0.1:8080/#non/existing/route
+
+####modifiers
+By providing an object as third argument to the `route()` function you can control the Router behaviour.
+
+```js
+// this will prevent this page ending up in router history when the Router unloads that url
+Router.route("home/settings", Settings, {preventStorage: true})
+
+```
+
+```js
+// this will clear the Router history upon visit
+Router.route("home", Home, {clearHistory: true})
+
+```
+---
+By default the router is not storing the same hash in history twice so when navigating twice to #home/player/143221 the router will only store the hash once (so we won't navigate to it twice when we're stepping back  in history. By setting storeSameHash:true you can override this behaviour and force the same hash to end up in memory multiple times.
+```js
+Router.route("home/player/:playerId", Settings, {storeSameHash: true})
+
+```
+
+
 
 ## Navigation helper
 
@@ -64,33 +89,65 @@ Once you’ve set up the correct routes
 for your app, you can start navigating from one page (Lightning Component) to another.
 
 first you import {Router } from sdk
-in your component you can call:
+```js
+Router.navigate(url, args, store)
 ```
-Router.navigate(“player/1638”)
+---
+When you call
+```js
+Router.navigate("player/1638")
 ```
-to start the page loading process.
+the router will match the blueprint: `Router.route("player/:assetId", Player)` and the the Router will
+start the page loading process, and load the Player Component 
+
+---
+
+```js
+// pass arguments to the page by providing an Object as second argument
+Router.navigate("player/1638", {a:1, b:2, from: this})
+```
+This will add the `persist` property on the instance of the Page, so you could add a setter
+to the Page class and do something with the persisten data:
+
+```js
+class Player extends Lightning.Component{
+    set persist(args){
+        // do something with navigate argument
+    }
+}
+```
+---
+By default all visited routes will end up in memory so by explicit providing false as a second argument you can prevent the current route to end up in history.
+```js
+Router.navigate("player/1638", false)
+```
+
+or as third argument when your second argument is persistent data
+```js
+Router.navigate("player/1638", {a:1, b:2}, false)
+```
+
 
 ## Data providing
 
 The router offers handlers to do some async api requests to grab data and make them available to the page, the providers provides 3 page loading types, on() before() after()
-```
+```js
 Router.on(route, cb, expireTime)
 ```
 
-```
+```js
 // page instance and dynamic url data 
-// will be available as params to your 
-// callback
-Router.on(“player/:playlistId/:assetId”, async ({page, playlistId, assetId}=>{
+// will be available as params to your callback
+Router.on("player/:playlistId/:assetId", async ({page, playlistId, assetId}=>{
   const data = api.getPlaylistById(playlistId);
-return data.json()(
+return data.json()
 }, 10 * 60)
 ```
 so, when you navigate to: 127.0.0.1:8080/#player/267/173688
 
 the router will hide the current page (and if configured destroy so we can gc textures and memory) show a by the app provided loading Component. Next we wait for the provided request to resolve (cb always needs to return a Promise) and show the new page attached to route
-```
-Router.route(“player/:playlistId/:assetId”, Player)
+```js
+Router.route("player/:playlistId/:assetId", Player)
 ```
 So Player in this case the Player Component (page) will be created and added to the render-tree
 
@@ -100,14 +157,14 @@ Also, we we load the page again but the with a different route: so,127.0.0.1:808
 
 #### before() / after()
 Both work almost the same as on(), but the way the page loads is different. 
-```
-Router.before(“home/browser/:sectionId”, ({page, sectionId})=>{
+```js
+Router.before("home/browser/:sectionId", ({page, sectionId})=>{
   return getSection(sectionId)
 })
 ```
 will first do the async request and keeps the old page visible. When the promise resolves the router will show the new page and hide the old (and optional destroy for memory and performance) this way you can show an in page loading component when a user selects an item.
-```
-Router.after(“home/browser/:sectionId”, ({page, sectionId})=>{
+```js
+Router.after("home/browser/:sectionId", ({page, sectionId})=>{
   return getSection(sectionId)
 })
 ```
@@ -120,8 +177,8 @@ data will be made available as properties to the page (tip, use setters)
 
 There is a lot of usefull data available in the url that will be made available to the page.
 
-So, lets say we have an search page with route: “search/:query/:limit” and we navigate to: /search/vikings/50 the router will set the query and limit properties on the page instance:
-```
+So, lets say we have an search page with route: "search/:query/:limit" and we navigate to: /search/vikings/50 the router will set the query and limit properties on the page instance:
+```js
 class Search extends Lightning.Component{
  set query(v){
    this._query=v;
@@ -159,8 +216,8 @@ Remote control backpress will check if there are routes in history, pop the last
 ## Routed function calls
 
 You can bind multiple function calls to a route (but only one page component)
-```
-Router.route(“settings/hotspots/delete/:hotspotId”, ({page, hotspotId})=>{
+```js
+Router.route("settings/hotspots/delete/:hotspotId", ({page, hotspotId})=>{
   // do something
 })
 ```
@@ -171,8 +228,8 @@ The function will be called when we navigate to i.e settings/hotposts/delete/3
 To keep the memory usage to a minimum (which can really can benefit performance on low end devices) the router had support for lazy creation and destroy. An instance of your page (Lightning Component) will not be created (and appended to the render tree if a user hasn’t visited the corresponding route (thats the reason we attach classes to each route instead of an instance thats already part of the render-tree.
 
 So by setting: lazyCreate: true, no page will be added in memory (and rendertree)
-```
-Router.route(“home/settings/wifi”, WifiControl)
+```js
+Router.route("home/settings/wifi", WifiControl)
 ```
 so when you navigate to home/settings/wifi, the router will test if the page is already an instance, if it’s not an instance of Lightning Component the router will create an instance and add it to the render-tree.
 
