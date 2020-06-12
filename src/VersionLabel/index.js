@@ -46,6 +46,6 @@ export default class VersionLabel extends Lightning.Component {
     this.tag('Text').text = `APP - v${this.version}\nSDK - v${this.sdkVersion}`
     this.tag('Text').loadTexture()
     this.w = this.tag('Text').renderWidth + 40
-    this.h = this.tag('Text').renderHeight + 10
+    this.h = this.tag('Text').renderHeight + 5
   }
 }
