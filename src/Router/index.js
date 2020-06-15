@@ -587,7 +587,7 @@ const getRoutesByFloor = floor => {
  * @returns {string|boolean} - route
  */
 const getRouteByHash = hash => {
-  const getUrlParts = /(\/?:?[@\w-]+)/g
+  const getUrlParts = /(\/?:?[[\w%\s-]]+)/g
   // grab possible candidates from stored routes
   const candidates = getRoutesByFloor(getFloor(hash))
   // break hash down in chunks
@@ -670,7 +670,7 @@ const getRouteByHash = hash => {
  * @param route {string} - the route as defined in route
  */
 const getValuesFromHash = (hash, route) => {
-  const getUrlParts = /(\/?:?[\w%-]+)/g
+  const getUrlParts = /(\/?:?[\w%\s-]+)/g
   const hashParts = hash.match(getUrlParts) || []
   const routeParts = route.match(getUrlParts) || []
   const getNamedGroup = /^\/:([\w-]+)\/?/
@@ -794,7 +794,7 @@ export const step = (direction = 0) => {
     const route = history.splice(history.length - 1, 1)
     navigate(route[0], false)
   } else {
-    const hashLastPart = /(\/:?[\w-]+)$/
+    const hashLastPart = /(\/:?[\w%\s-]+)$/
     let hash = stripRegex(getHash())
     let floor = getFloor(hash)
 
