@@ -51,6 +51,9 @@ const hooks = {
     state.playAfterSeek === true && videoPlayerPlugin.play()
     state.playAfterSeek = null
   },
+  abort() {
+    deregisterEventListeners()
+  },
 }
 
 const withPrecision = val => Math.round(precision * val) + 'px'
@@ -157,7 +160,7 @@ const videoPlayerPlugin = {
     if (details.videoId) {
       config.caid = details.videoId
     }
-    Ads(config, consumer).then(ads => {
+    Ads.get(config, consumer).then(ads => {
       state.playingAds = true
       ads.prerolls().then(() => {
         state.playingAds = false
@@ -185,7 +188,15 @@ const videoPlayerPlugin = {
   },
 
   close() {
-    state.playingAds = false
+    if (state.playingAds) {
+      state.playingAds = false
+      Ads.stop()
+      // call self in next tick
+      setTimeout(() => {
+        this.close()
+      })
+    }
+    if (!this.canInteract) return
     this.clear()
     this.hide()
     deregisterEventListeners()

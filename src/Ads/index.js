@@ -18,6 +18,10 @@ export const initAds = config => {
   }
 }
 
+const state = {
+  active: false,
+}
+
 const playSlot = (slot = []) => {
   return slot.reduce((promise, ad) => {
     return promise.then(() => {
@@ -28,6 +32,9 @@ const playSlot = (slot = []) => {
 
 const playAd = ad => {
   return new Promise(resolve => {
+    if (state.active === false) {
+      return resolve()
+    }
     // is it safe to rely on videoplayer plugin already created the video tag?
     const videoEl = document.getElementsByTagName('video')[0]
     videoEl.style.display = 'block'
@@ -94,6 +101,9 @@ const playAd = ad => {
           thirdQuartile: (videoEl.duration / 4) * 3,
         }
       },
+      abort() {
+        cleanup()
+      },
       // todo: pause, resume, mute, unmute beacons
     }
     // add all listeners
@@ -136,40 +146,50 @@ const fireOnConsumer = (event, args) => {
   }
 }
 
-export default (config, videoPlayerConsumer) => {
-  if (config.enabled === false) {
-    return Promise.resolve({
-      prerolls() {
-        return Promise.resolve()
-      },
-    })
-  }
-
-  consumer = videoPlayerConsumer
-
-  return new Promise(resolve => {
-    Log.info('Ad', 'Starting session')
-    getAds(config).then(ads => {
-      Log.info('Ad', 'API result', ads)
-      resolve({
+export default {
+  get(config, videoPlayerConsumer) {
+    if (config.enabled === false) {
+      return Promise.resolve({
         prerolls() {
-          if (ads.preroll) {
-            fireOnConsumer('PrerollSlotImpression', ads)
-            sendBeacon(ads.preroll.callbacks, 'slotImpression')
-            return playSlot(ads.preroll.ads).then(() => {
-              fireOnConsumer('PrerollSlotEnd', ads)
-              sendBeacon(ads.preroll.callbacks, 'slotEnd')
-            })
-          }
-          return Promise.resolve()
-        },
-        midrolls() {
-          return Promise.resolve()
-        },
-        postrolls() {
           return Promise.resolve()
         },
       })
+    }
+    consumer = videoPlayerConsumer
+
+    return new Promise(resolve => {
+      Log.info('Ad', 'Starting session')
+      getAds(config).then(ads => {
+        Log.info('Ad', 'API result', ads)
+        resolve({
+          prerolls() {
+            if (ads.preroll) {
+              state.active = true
+              fireOnConsumer('PrerollSlotImpression', ads)
+              sendBeacon(ads.preroll.callbacks, 'slotImpression')
+              return playSlot(ads.preroll.ads).then(() => {
+                fireOnConsumer('PrerollSlotEnd', ads)
+                sendBeacon(ads.preroll.callbacks, 'slotEnd')
+                state.active = false
+              })
+            }
+            return Promise.resolve()
+          },
+          midrolls() {
+            return Promise.resolve()
+          },
+          postrolls() {
+            return Promise.resolve()
+          },
+        })
+      })
     })
-  })
+  },
+  stop() {
+    state.active = false
+    // fixme: duplication
+    const videoEl = document.getElementsByTagName('video')[0]
+    videoEl.pause()
+    videoEl.removeAttribute('src')
+  },
 }
