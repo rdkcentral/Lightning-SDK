@@ -31,8 +31,10 @@ const state = {
     return this._playingAds
   },
   set playingAds(val) {
-    this._playingAds = val
-    fireOnConsumer(val === true ? 'AdStart' : 'AdEnd')
+    if (this._playingAds !== val) {
+      this._playingAds = val
+      fireOnConsumer(val === true ? 'AdStart' : 'AdEnd')
+    }
   },
   skipTime: false,
   playAfterSeek: null,
@@ -183,7 +185,7 @@ const videoPlayerPlugin = {
   },
 
   close() {
-    if (!this.canInteract) return
+    state.playingAds = false
     this.clear()
     this.hide()
     deregisterEventListeners()
