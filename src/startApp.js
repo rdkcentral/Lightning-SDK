@@ -62,31 +62,23 @@ const startApp = () => {
 }
 
 const getAppMetadata = () => {
-  return fetch('./metadata.json')
-    .then(response => {
-      return response.json()
-    })
-    .then(metadata => {
-      metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
-      return metadata
-    })
+  return fetchJson('./metadata.json').then(metadata => {
+    metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
+    return metadata
+  })
 }
 
 const getSettings = () => {
-  return fetch('./settings.json')
-    .then(response => {
-      return response.json()
-    })
-    .catch(error => {
-      console.warn('No settings.json found. Using defaults.')
-      return {
-        appSettings: {},
-        platformSettings: {
-          path: './static',
-          esEnv: 'es6',
-        },
-      }
-    })
+  return fetchJson('./settings.json').catch(error => {
+    console.warn('No settings.json found. Using defaults.')
+    return {
+      appSettings: {},
+      platformSettings: {
+        path: './static',
+        esEnv: 'es6',
+      },
+    }
+  })
 }
 
 // FIXME: these 3 functions could be refactored to a single one receiving 2 arguments (filename, esEnv)
@@ -112,6 +104,7 @@ const loadPolyfills = esEnv => {
     return sequence([
       () => loadJS('./polyfills/babel-polyfill.js'),
       () => loadJS('./polyfills/url.js'),
+      () => loadJS('./polyfills/fetch.js'),
     ])
   }
   return Promise.resolve()
@@ -127,6 +120,20 @@ const loadJS = (url, id) => {
     if (id) tag.id = id
 
     document.body.appendChild(tag)
+  })
+}
+
+const fetchJson = file => {
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.status === 200) resolve(JSON.parse(xhr.responseText))
+        else reject(xhr.statusText)
+      }
+    }
+    xhr.open('GET', file)
+    xhr.send(null)
   })
 }
 
