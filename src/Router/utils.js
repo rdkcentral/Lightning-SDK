@@ -5,7 +5,7 @@ export const isFunction = v => {
 }
 
 export const isObject = v => {
-  return typeof v === 'object'
+  return typeof v === 'object' && v !== null
 }
 
 export const isBoolean = v => {
@@ -29,4 +29,8 @@ export const isArray = v => {
 
 export const ucfirst = v => {
   return `${v.charAt(0).toUpperCase()}${v.slice(1)}`
+}
+
+export const isString = v => {
+  return typeof v === 'string'
 }

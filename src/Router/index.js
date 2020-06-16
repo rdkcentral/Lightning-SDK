@@ -6,9 +6,11 @@ import {
   ucfirst,
   isObject,
   isBoolean,
+  isString,
 } from './utils'
-import { crossFade } from './transitions'
+import Transitions from './transitions'
 import Settings from '../Settings'
+import Log from '../Log'
 
 let getHash = () => {
   return document.location.hash
@@ -28,23 +30,25 @@ export const initRouter = config => {
 }
 
 /*
-rouThor
+rouThor ==[x]
 -------
 @todo:
+
 - data provider timeout
 - add route mapping
+- send keepAlive signal on navigate
+- optional flag destroyOnHistoryBack
 - custom before trigger
 - manual expire
 - route to same page (with force expire)
 - lazy load widgets (?)
-- page define transitions
-- strip wildcard from potential route matches
-- strip trailing slash from route config
+- fix on reuseInstance and now data provider
 
  */
 
 // instance of Lightning.Application
 let application
+
 //instance of Lightning.Component
 let app
 
@@ -112,6 +116,7 @@ export const startRouter = ({ appInstance, routes, provider = () => {}, widgets 
  * @param modifiers - {Object{}} - preventStorage | clearHistory | storeLast
  */
 export const route = (route, type, config) => {
+  route = route.replace(/\/+$/, '')
   // if the route is defined we try to push
   // the new type on to the stack
   if (pages.has(route)) {
@@ -171,7 +176,7 @@ export const route = (route, type, config) => {
  * @param type - {(Lightning.Component|Function()*)}
  */
 export const root = (url, type, config) => {
-  rootHash = url
+  rootHash = url.replace(/\/+$/, '')
   route(url, type, config)
 }
 
@@ -301,11 +306,6 @@ const load = async ({ route, hash }) => {
         page[name] = value
       }
 
-      if (isObject(persist) && persist !== null) {
-        page.persist = persist
-        persist = null
-      }
-
       doTransition(page, activePage).then(() => {
         // manage cpu/gpu memory
         cleanUp(p, r)
@@ -319,12 +319,10 @@ const load = async ({ route, hash }) => {
   // route in the future
   activePage = page
 
-  if (Settings.get('platform', 'logRoute')) {
-    console.log('[route]:', route)
-    console.log('[hash]:', hash)
-  }
+  Log.info('[route]:', route)
+  Log.info('[hash]:', hash)
 
-  return activePage
+  return page
 }
 
 const triggerAfter = ({ page, old, route, hash }) => {
@@ -392,7 +390,7 @@ const handleError = (page, error) => {
       }
     })
   } else {
-    console.log(page, error)
+    Log.error(page, error)
   }
 }
 
@@ -421,7 +419,7 @@ const updatePageData = ({ page, route, hash }) => {
     params[name] = value
   }
 
-  if (isObject(persist) && persist !== null) {
+  if (isObject(persist)) {
     page.persist = persist
     persist = null
   }
@@ -440,8 +438,50 @@ const updatePageData = ({ page, route, hash }) => {
  * @param pageOut
  */
 const doTransition = (pageIn, pageOut = null) => {
+  const hasCustomTransitions = !!(pageIn.smoothIn || pageIn.smoothInOut || pageIn.easing)
+  const transitionsDisabled = Settings.get('platform', 'disableTransitions')
+
+  // for now a simple widget visibility toggle
   updateWidgets(pageIn)
-  return crossFade(pageIn, pageOut)
+
+  // default behaviour is a visibility toggle
+  if (!hasCustomTransitions || transitionsDisabled) {
+    pageIn.visible = true
+    if (pageOut) {
+      pageOut.visible = false
+    }
+    return Promise.resolve()
+  }
+
+  if (pageIn.easing && isString(pageIn.easing())) {
+    const type = Transitions[pageIn.easing()]
+    if (type) {
+      return type(pageIn, pageOut)
+    }
+  }
+
+  // if the new instance wants to control both in and out
+  // transition we call the function and provide both instances
+  // as an argument. It's the function's job to
+  // resolve a promise when ready
+  if (pageIn.smoothInOut) {
+    return pageIn.smoothInOut(pageIn, pageOut)
+  } else if (pageIn.smoothIn) {
+    // provide a smooth function that resolves itself
+    // on transition finish
+    const smooth = (p, v, args = {}) => {
+      return new Promise(resolve => {
+        pageIn.visible = true
+        pageIn.setSmooth(p, v, args)
+        pageIn.transition(p).on('finish', () => {
+          resolve()
+        })
+      })
+    }
+    return pageIn.smoothIn({ pageIn, smooth })
+  }
+
+  return Transitions.crossFade(pageIn, pageOut)
 }
 
 /**
@@ -963,4 +1003,5 @@ export default {
   focusWidget,
   start,
   widget,
+  Transitions,
 }

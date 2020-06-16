@@ -1,10 +1,10 @@
-export const fade = (i, o) => {
+const fade = (i, o) => {
   return new Promise(resolve => {
     i.patch({
       alpha: 0,
       visible: true,
       smooth: {
-        alpha: [1, { duration: 0.2, delay: 0.1 }],
+        alpha: [1, { duration: 0.5, delay: 0.1 }],
       },
     })
     // resolve on y finish
@@ -17,19 +17,19 @@ export const fade = (i, o) => {
   })
 }
 
-export const crossFade = (i, o) => {
+const crossFade = (i, o) => {
   return new Promise(resolve => {
     i.patch({
       alpha: 0,
       visible: true,
       smooth: {
-        alpha: [1, { duration: 0.2, delay: 0.1 }],
+        alpha: [1, { duration: 0.5, delay: 0.1 }],
       },
     })
     if (o) {
       o.patch({
         smooth: {
-          alpha: [0, { duration: 0.2, delay: 0.1 }],
+          alpha: [0, { duration: 0.5, delay: 0.3 }],
         },
       })
     }
@@ -40,52 +40,53 @@ export const crossFade = (i, o) => {
   })
 }
 
-export const up = (i, o) => {
+const moveOnAxes = (axis, direction, i, o) => {
+  const bounds = axis === 'x' ? 1920 : 1080
   return new Promise(resolve => {
     i.patch({
-      y: 1080,
+      [`${axis}`]: direction ? bounds * -1 : bounds,
       visible: true,
       smooth: {
-        y: [0, { duration: 0.6, delay: 0.1 }],
+        [`${axis}`]: [0, { duration: 0.4, delay: 0.2 }],
       },
     })
     // out is optional
     if (o) {
       o.patch({
-        y: 0,
+        [`${axis}`]: 0,
         smooth: {
-          y: [-1080, { duration: 0.4, delay: 0.1 }],
+          [`${axis}`]: [direction ? bounds : bounds * -1, { duration: 0.4, delay: 0.2 }],
         },
       })
     }
     // resolve on y finish
-    i.transition('y').on('finish', () => {
+    i.transition(axis).on('finish', () => {
       resolve()
     })
   })
 }
 
-export const left = (i, o) => {
-  return new Promise(resolve => {
-    i.patch({
-      x: 1920,
-      visible: true,
-      smooth: {
-        x: [0, { duration: 0.4, delay: 0.1 }],
-      },
-    })
-    // out is optional
-    if (o) {
-      o.patch({
-        y: 0,
-        smooth: {
-          x: [-1920, { duration: 0.4, delay: 0.1 }],
-        },
-      })
-    }
-    // resolve on y finish
-    i.transition('x').on('ready', () => {
-      resolve()
-    })
-  })
+const up = (i, o) => {
+  return moveOnAxes('y', 0, i, o)
+}
+
+const down = (i, o) => {
+  return moveOnAxes('y', 1, i, o)
+}
+
+const left = (i, o) => {
+  return moveOnAxes('x', 0, i, o)
+}
+
+const right = (i, o) => {
+  return moveOnAxes('x', 1, i, o)
+}
+
+export default {
+  fade,
+  crossFade,
+  up,
+  down,
+  left,
+  right,
 }
