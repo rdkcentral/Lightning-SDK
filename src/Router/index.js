@@ -306,6 +306,11 @@ const load = async ({ route, hash }) => {
         page[name] = value
       }
 
+      if (isObject(persist)) {
+        page.persist = persist
+        persist = null
+      }
+
       doTransition(page, activePage).then(() => {
         // manage cpu/gpu memory
         cleanUp(p, r)
