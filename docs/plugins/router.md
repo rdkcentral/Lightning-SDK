@@ -14,13 +14,13 @@ a child of the Lightning.Component class or a function, the router accepts one C
 - [Dynamic hash value groups](#dynamic-hash-groups)
 - [deeplinking](#deeplinking)
 - [backtracking](#backtracking)
+- [widget communication support](#widget-support)
+- [page transitions](#page-transitions)
 - [history management](#history-management)
 - [route driving function calls](#routed-function-calls)
 - [configurable lazy creation](#lazy-creation)
 - [configurable lazy destroy](#lazy-destroy)
-- [configurable garbage collect]()
-- [widget communication support]()
-- [page transitions]()
+- [configurable garbage collect](#configurable-texture-garbage-collect)
 
 ## Installation:
 
@@ -78,10 +78,7 @@ Router.route("home", Home, {clearHistory: true})
 By default the router is not storing the same hash in history twice so when navigating twice to #home/player/143221 the router will only store the hash once (so we won't navigate to it twice when we're stepping back  in history. By setting storeSameHash:true you can override this behaviour and force the same hash to end up in memory multiple times.
 ```js
 Router.route("home/player/:playerId", Settings, {storeSameHash: true})
-
 ```
-
-
 
 ## Navigation helper
 
@@ -207,6 +204,177 @@ if there is a route defined, it will load that route, otherwise strip of more an
 
 this lets you model your way out of a deeplink.
 
+## Widget support
+
+The page router has support for widgets. Widgets are Lightning Component that can live on multiple pages. 
+
+>  Widgets overlay the pages they always have the highest z-index
+
+Widgets need to be placed inside a `Widget` wrapper on the root level of your app: 
+
+```js
+static _template(){
+    return {
+        Pages: {
+            // this hosts all the pages
+            forceZIndexContext: true
+        },
+        Widgets:{
+            // this hosts all the widgets
+            Menu:{
+                type: Menu
+            },
+            Notification:{
+                type: Notification
+            },
+            StatusBar:{
+                type: Status
+            }
+        }
+    }
+}
+```
+
+By default when you run your app all the widgets attached to the render-tree will be hidden `widgetInstance.visible = false`
+
+Let's say we've configured the following routes for our app: 
+
+```js
+Router.route("splash", Splash);
+Router.route("home", Home);
+Router.route("home/player", Player);
+Router.route("browse/popular", Popular);
+```
+
+and you want to show the you want to show the `Menu` and the `StatusBar` on the `Home` and `Player` page
+
+```js
+Router.widget("home", ["Menu", "StatusBar"]);
+Router.widget("home/player", ["Menu", "StatusBar"]);
+``` 
+
+This will make sure the visibility of `Menu` and `StatusBar` widget will be set to `true` when you do a 
+`Router.navigate("home/player")` or `Router.navigate("home")`. Both will be hidden when you do a `Router.navigate("browse/popular")`
+
+#### Handle remote keypresses
+
+After you've configured the visibility of the widgets for your routes you may want to delegate focus to a widget so that
+it can start listening to remote control keypresses.
+
+>The focus path is determined by calling the _getFocused() method of the app object. By default, or if undefined is returned, the focus path stops here and the app is the active component (and the focus path only contains the app itself). When _getFocused() returns a child component however, that one is also added to the focus path, and its _getFocused() method is also invoked. This process may repeat recursively until the active component is found. To put it another way: the components may delegate focus to descendants.
+
+Since the `Widgets` are not decendants of `Page` we need to a helper function to hand-over focus to a widget (so it can start listening to the remote control)
+
+So, let's say we're on the `Home` page and upon remote control up we want to delegate focus to our `Menu` widget, we can do:
+
+```js
+_handleUp(){
+    Router.focusWidget("Menu")
+}
+```
+
+Now our `Menu` component is listening and consuming the remote control events. 
+
+If we want the page that we got focus from to continue listening to the remote control on `Back press` we can simply restore focus:
+
+```js
+_handleBack(){
+    Router.restoreFocus();
+}
+```
+
+or add the following logic to your statemachine (Widget) state if you want auto restore focus for keys who are now being handled
+by the widget.
+
+```js
+
+_handleKey(){
+    restoreFocus();   
+}
+```
+
+
+## Page transitions
+
+By default a transition from one page to a new page will be a simple toggle of the visibility:
+
+```js
+pageIn.visible = true;
+pageOut.visible = true;
+```
+
+You can override this behaviour in a couple of ways: 
+
+##### default transitions
+
+The Router has a couple of default transitions that you can add to your page: 
+
+-  `Transitions.left` will put the new page on `x:1920` and will do a transition to `x:0`, the old page with do a transition `x:-1920`
+-  `Transitions.right` will put the new page on `x:-1920` and will do a transition to `x:0`, the old page with do a transition `x:1920`
+-  `Transitions.up` will put the new page on `y:1080` and will do a transition to `y:0`, the old page with do a transition `y:-1080`
+-  `Transitions.down` will put the new page on `y:-1080` and will do a transition to `y:0`, the old page with do a transition `y:1080`
+-  `Transitions.fade` will do a transition on the new page from `alpha:0` to `alpha:1`
+-  `Transitions.crossFade` will do a transitions on the new page from `alpha:0` to `alpha:1` and a transitions from `alpha:1` to `alpha:0` of the old page
+
+#### custom transitions
+
+It is possible to tweak the smoothing of both pages (old, new) exactly how you want to, this can be controlled by adding a new method to your class:
+
+```js
+
+class Browse extends Lightning.Component {
+    static _template(){
+        return {...}
+    }
+    
+    smoothInOut(pageIn, pageOut){
+        // 
+    }
+}
+
+```
+
+this gives you full control of the transition and visibility process, so it's your job to toggle visibility of the new page, do some transitions with the arguments
+`PageIn` (instance of the new page you've navigated to) and the `PageOut` (instance of old page that stated the navigation cycle). A `SmoothInOut` always needs to resolve a `Promise`
+so the `PageRouter` knows the transtion is finished and and it can start cleaning up the old page.
+
+
+```js
+smoothInOut(pageIn, pageOut){
+    return new Promise((resolve, reject)=>{
+        // set the start position properties 
+        pageIn.x = 1920;
+        pageIn.rotation = Math.PI;
+        
+        // toggle visibility
+        pageIn.visible = true;
+        
+        // do some transitions
+        pageIn.patch({
+            smooth:{x:0, rotation:0}
+        });
+        
+        // resolve promise when transition on x is finished
+        pageIn.transition("x").on("finish", ()=>{
+            resolve();
+        })
+    })
+}
+```
+
+or use `smoothIn()`, this will return a prepared smoothing function (that automatically resolves) and will only
+affect the new page. The old page will simply be removed or hidden after it's automatically resolves. the `smooth` is 
+wrapper function that performs a transition on one property of the new page, creates a finish listener and auto resolves the Promise.
+
+```js
+smoothIn({smooth, pageIn}){
+   // set some start property 
+   pageIn.x = 1920;
+   // return the call with property, value and arguments.
+   return smooth("x", 0, {duration:2}); 
+}
+```
+
 ## History management
 
 The router maintains it’s own history and does not rely on a browser api, all the routes we have navigated to can end up in history. We don’t keep route duplicates in history, so /home/player/145 will only be in history once (even if the user navigated to it multiple times) but same route blueprints with different values can live in history, home/player/178 and home/player/91737 or browse/genre/action/50 and browse/genre/popular/50
@@ -238,3 +406,9 @@ so when you navigate to home/settings/wifi, the router will test if the page is 
 Next to lazy creation you have the option to configure lazy destroy by setting, lazyDestroy: true. By using the platform settings the platform can override this (for performance reasons on a low end box)
 
 Lazy destroy means, when we navigate to a new route we remove the page from the render-tree to free up memory and invalidate textures so the Lightnigs textures garbage collector can start freeing up memory
+
+## Configurable texture garbage collect
+
+To free up texture memory directly after the old page has been destroyed and not wait for Lightning to start collectionm garbage (texture) you can set the platformsettings flag `gcOnUnload: true`
+
+This will force a texture directly after destroying the page.
