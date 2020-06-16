@@ -26,6 +26,7 @@
     "localCookie": "github:WebPlatformForEmbedded/localCookie",
     "shelljs": "^0.8.4",
     "url-polyfill": "^1.1.8",
+    "whatwg-fetch": "^3.0.0",
     "wpe-lightning": "^1.7.0"
   },
   "devDependencies": {
