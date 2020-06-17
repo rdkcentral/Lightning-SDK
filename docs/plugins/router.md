@@ -18,7 +18,7 @@ a class that extends `Lightning.Component` or a function, the router accepts one
 - [Page transitions](#page-transitions)
 - [History management](#history-management)
 - [Route driving function calls](#routed-function-calls)
-- [Regular Expression support]()
+- [Regular Expression support](#regular-expression-support)
 - [Configurable lazy creation](#lazy-creation)
 - [Configurable lazy destroy](#lazy-destroy)
 - [Configurable garbage collect](#configurable-texture-garbage-collect)
