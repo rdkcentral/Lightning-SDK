@@ -5,22 +5,23 @@ The routhor provides an easy api that helps you create an url driven (routed) ap
 By default the loading goes via the hash since we don’t want to encounter a page refresh when a navigation to a route starts. This default behaviour is overridable per platform.
 
 The router can work with 2 types of data,
-a child of the Lightning.Component class or a function, the router accepts one Component and multiple function per route. One of the key features is configurable lazy creation and destroy support (runtime) this serves as a big help on low-end devices with less memory and gpu memory
+a class that extends `Lightning.Component` or a function, the router accepts one Component and multiple function per route. One of the key features is configurable lazy creation and destroy support (runtime) this serves as a big help on low-end devices with less memory and gpu memory
 
 ### Features:
 - [Add routes](#routes)
-- [navigation helper](#navigation-helper)
-- [route driven data providing](#data-providing)
+- [Navigation helper](#navigation-helper)
+- [Route driven data providing](#data-providing)
 - [Dynamic hash value groups](#dynamic-hash-groups)
-- [deeplinking](#deeplinking)
-- [backtracking](#backtracking)
-- [widget communication support](#widget-support)
-- [page transitions](#page-transitions)
-- [history management](#history-management)
-- [route driving function calls](#routed-function-calls)
-- [configurable lazy creation](#lazy-creation)
-- [configurable lazy destroy](#lazy-destroy)
-- [configurable garbage collect](#configurable-texture-garbage-collect)
+- [Deeplinking](#deeplinking)
+- [Backtracking](#backtracking)
+- [Widget communication support](#widget-support)
+- [Page transitions](#page-transitions)
+- [History management](#history-management)
+- [Route driving function calls](#routed-function-calls)
+- [Regular Expression support]()
+- [Configurable lazy creation](#lazy-creation)
+- [Configurable lazy destroy](#lazy-destroy)
+- [Configurable garbage collect](#configurable-texture-garbage-collect)
 
 ## Installation:
 
@@ -33,7 +34,7 @@ There are 2 ways you can use the router,
 
 
 ## Routes
-to create a new route we first import the router from the SDK; import {router} from
+to create a new route we first import the router from the SDK; import {router} from 'wpe-lightning-sdk'
 
 next we create a new route, and add a component to it (we will later create an instance by adding it to the lightning render-tree)
 ```js
@@ -174,7 +175,20 @@ data will be made available as properties to the page (tip, use setters)
 
 There is a lot of usefull data available in the url that will be made available to the page.
 
-So, lets say we have an search page with route: "search/:query/:limit" and we navigate to: /search/vikings/50 the router will set the query and limit properties on the page instance:
+So, lets say we have an search page with route: 
+
+```js
+Router.route("search/:query/:limit", Search)
+````
+
+and we navigate to: 
+
+```js
+Router.navigate("/search/vikings/50")
+``` 
+
+the router will set the `query` and limit `properties` on the page instance:
+
 ```js
 class Search extends Lightning.Component{
  set query(v){
@@ -316,6 +330,34 @@ The Router has a couple of default transitions that you can add to your page:
 -  `Transitions.fade` will do a transition on the new page from `alpha:0` to `alpha:1`
 -  `Transitions.crossFade` will do a transitions on the new page from `alpha:0` to `alpha:1` and a transitions from `alpha:1` to `alpha:0` of the old page
 
+You attach it to a page by adding a `easing()` method to your Page Class and let the
+function return on of the Transitions properties: 
+
+```js
+class Settings extends Lightning.Component {
+    static _template(){
+        return {...}
+    }
+    
+    easing(){
+        return "left";
+    } 
+}
+
+class Player extends Lightning.Component {
+    static _template(){
+        return {...}
+    }
+    
+    easing(){
+        return "crossFade";
+    } 
+}
+
+```
+
+the default transitions will impact both new and the old page (if there is one)
+
 #### custom transitions
 
 It is possible to tweak the smoothing of both pages (old, new) exactly how you want to, this can be controlled by adding a new method to your class:
@@ -390,6 +432,24 @@ Router.route("settings/hotspots/delete/:hotspotId", ({page, hotspotId})=>{
 })
 ```
 The function will be called when we navigate to i.e settings/hotposts/delete/3
+
+## Regular Expression support
+
+The router has built-in regular expression support so you can add patterns to your route
+to start matching for certain combinations of characters.
+
+Adding regular expression to a route works in addition to the [dynamic hash value groups](#dynamic-hash-groups).
+by adding `${PATTERN/MODIFIERS}` after the dynamic name 
+
+```js
+// this will match #player/1493847
+// but will fail on #player/ah26134
+Router.route("player/:playlistId${/[0-9]{3,8}/i}", Player)
+```
+
+Also, regex patterns are named, and their value will be made available on the Page instance following
+the same rules as [dynamic hash value groups](#dynamic-hash-groups)
+
 
 ## Lazy creation 
 
