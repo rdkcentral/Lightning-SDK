@@ -598,12 +598,12 @@ const getFloor = route => {
  * @param route
  * @returns {*}
  */
-const stripRegex = route => {
+const stripRegex = (route, char = 'R') => {
   // if route is part regular expressed we replace
   // the regular expression for a character to
   // simplify floor calculation and backtracking
   if (hasRegex.test(route)) {
-    route = route.replace(hasRegex, 'R')
+    route = route.replace(hasRegex, char)
   }
   return route
 }
@@ -632,14 +632,14 @@ const getRoutesByFloor = floor => {
  * @returns {string|boolean} - route
  */
 const getRouteByHash = hash => {
-  const getUrlParts = /(\/?:?[\w%\s-]+)/g
+  const getUrlParts = /(\/?:?[@\w%\s-]+)/g
   // grab possible candidates from stored routes
   const candidates = getRoutesByFloor(getFloor(hash))
   // break hash down in chunks
   const hashParts = hash.match(getUrlParts) || []
   // test if the part of the hash has a replace
   // regex lookup id
-  const hasLookupId = /\/@@([0-9]+?)@@/
+  const hasLookupId = /\/:\w+?@@([0-9]+?)@@/
 
   // to simplify the route matching and prevent look around
   // in our getUrlParts regex we get the regex part from
@@ -669,12 +669,10 @@ const getRouteByHash = hash => {
     for (let i = 0, j = routeParts.length; i < j; i++) {
       const routePart = routeParts[i]
       const hashPart = hashParts[i]
-      // we kindly skip namedGroups because this is dynamic
-      // we only need to the static parts
-      if (isNamedGroup.test(routePart)) {
-        continue
-      }
 
+      // Since we support catch-all and regex driven name groups
+      // we first test for regex lookup id and see if the regex
+      // matches the value from the hash
       if (hasLookupId.test(routePart)) {
         const routeMatches = hasLookupId.exec(routePart)
         const storeId = routeMatches[1]
@@ -694,6 +692,10 @@ const getRouteByHash = hash => {
             isMatching = false
           }
         }
+      } else if (isNamedGroup.test(routePart)) {
+        // we kindly skip namedGroups because this is dynamic
+        // we only need to the static and regex drive parts
+        continue
       } else if (hashPart && routePart.toLowerCase() !== hashPart.toLowerCase()) {
         isMatching = false
       }
@@ -715,6 +717,10 @@ const getRouteByHash = hash => {
  * @param route {string} - the route as defined in route
  */
 const getValuesFromHash = (hash, route) => {
+  // replace the regex definition from the route because
+  // we already did the matching part
+  route = stripRegex(route, '')
+
   const getUrlParts = /(\/?:?[\w%\s-]+)/g
   const hashParts = hash.match(getUrlParts) || []
   const routeParts = route.match(getUrlParts) || []
@@ -975,6 +981,10 @@ export const focusWidget = name => {
   }
 }
 
+const hash = () => {
+  return getHash()
+}
+
 export const restoreFocus = () => {
   app._setState('Pages')
 }
@@ -1008,5 +1018,5 @@ export default {
   focusWidget,
   start,
   widget,
-  Transitions,
+  hash,
 }
