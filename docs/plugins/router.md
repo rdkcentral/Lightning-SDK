@@ -22,6 +22,7 @@ a class that extends `Lightning.Component` or a function, the router accepts one
 - [Configurable lazy creation](#lazy-creation)
 - [Configurable lazy destroy](#lazy-destroy)
 - [Configurable garbage collect](#configurable-texture-garbage-collect)
+- [Settings](#settings)
 
 ## Installation:
 
@@ -484,6 +485,31 @@ Router.route("Home/browse/:sectionId", Browse)
 Then the Router doesn't consider `Home/browse/1635454"` and `Home/browse/11928374` to be the same route,
 so they both will by default end up in history.
 
+
+##### navigate()
+
+By default the Router will destroy the old Page when you navigate from page A to B, so a navigate from
+a Browse page to Player page via: 
+
+```js
+Router.navigate("home/browse/1223/play/1h55s")
+```
+
+Will remove the `Browse` page from memory, if you want to prevent this in certain situations, you 
+can add a `keepAlive` signal to the navigation arguments object.
+
+```js
+Router.navigate("home/browse/1223/play/1h55s", {keepAlive: true})
+```
+
+
+##### destroy on history step
+
+Another posibility is to configure the Router that it only remove a page from memory when it gets unloaded 
+via a step back in history. You can do this by adding, `"destroyOnHistoryBack":true` to the
+platform settings.
+
+
 ## Routed function calls
 
 You can bind multiple function calls to a route (but only one page component)
@@ -533,3 +559,69 @@ Lazy destroy means, when we navigate to a new route we remove the page from the 
 To free up texture memory directly after the old page has been destroyed and not wait for Lightning to start collectionm garbage (texture) you can set the platformsettings flag `gcOnUnload: true`
 
 This will force a texture directly after destroying the page.
+
+## Settings 
+
+The `settings.json` file let's you configure Router behaviour:
+
+```json
+{
+  "appSettings": {
+    "stage": {
+      "clearColor": "0x00000000",
+    },
+    "debug": false,
+  },
+  "platformSettings": {
+    "disableTransitions": false,
+    "backtracking": false,
+    "lazyCreate": true,
+    "lazyDestroy": true,
+    "destroyOnHistoryBack": true,
+    "gcOnUnload": true,
+    "reuseInstance": true
+  }
+}
+```
+
+##### disableTransitions
+This will override all custom page transitions and replace them with a simple visibility toggle:
+
+```json
+pageIn.visible = true;
+pageOut.visibile = false;
+```
+
+##### backtracking 
+
+Configure if the Router needs to do [Backtracing](#backtracking) when a Ui is deeplinking to a route
+
+##### gcOnUnload
+
+Force a texture garbage collect directly after removing the page from the render-tree
+
+##### lazyCreate
+
+If set to `true` the Router will not create instances of the configured pages, but will only create them
+when you navigate to a Route. Setting it to `false` will create all the pages on boot and append
+them to the render-tree
+
+##### lazyDestroy
+
+If set to `true` the Router will remove the page from the render-tree when we navigate away from a Page. 
+Setting it to `false` will keep the instance in memory and appended to the render-tree.
+
+##### destroyOnHistoryBack
+
+This let's you configure if you want to remove pages from memory when the unloading and navigation process
+is driven by a step back in history and `lazyDestroy:false`
+
+
+
+
+
+
+
+
+
+
