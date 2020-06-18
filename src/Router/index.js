@@ -36,7 +36,6 @@ rouThor ==[x]
 
 - data provider timeout
 - add route mapping
-- send keepAlive signal on navigate
 - optional flag destroyOnHistoryBack
 - custom before trigger
 - manual expire
@@ -53,12 +52,14 @@ let application
 let app
 
 let stage
-let pages = new Map()
-let providers = new Map()
-let modifiers = new Map()
-let widgetsPerRoute = new Map()
 let widgetsHost
 let pagesHost
+
+const pages = new Map()
+const providers = new Map()
+const modifiers = new Map()
+const widgetsPerRoute = new Map()
+let register = new Map()
 
 // widget that has focus
 let activeWidget
@@ -69,7 +70,6 @@ let history = []
 // page that has focus
 export let activePage
 const hasRegex = /\{\/(.*?)\/([igm]{0,3})\}/g
-let persist = null
 
 /**
  * Setup Page router
@@ -306,14 +306,20 @@ const load = async ({ route, hash }) => {
         page[name] = value
       }
 
-      if (isObject(persist)) {
-        page.persist = persist
-        persist = null
+      if (register.size) {
+        const obj = {}
+        for (let [k, v] of register) {
+          obj[k] = v
+        }
+        page.persist = obj
       }
 
       doTransition(page, activePage).then(() => {
         // manage cpu/gpu memory
-        cleanUp(p, r)
+        if (p) {
+          cleanUp(p, r)
+        }
+
         // force focus calculation
         app._refocus()
       })
@@ -424,9 +430,12 @@ const updatePageData = ({ page, route, hash }) => {
     params[name] = value
   }
 
-  if (isObject(persist)) {
-    page.persist = persist
-    persist = null
+  if (register.size) {
+    const obj = {}
+    for (let [k, v] of register) {
+      obj[k] = v
+    }
+    page.persist = obj
   }
 
   return cb({ page, ...params }).then(() => {
@@ -507,27 +516,37 @@ const updateWidgets = page => {
 }
 
 const cleanUp = (page, route) => {
-  if (!Settings.get('platform', 'lazyDestroy') || !page) {
-    return
+  let doCleanup = false
+  const lazyDestroy = Settings.get('platform', 'lazyDestroy')
+  const destroyOnBack = Settings.get('platform', 'destroyOnHistoryBack')
+  const keepAlive = read('keepAlive')
+  const isFromHistory = read('backtrack')
+
+  if (isFromHistory && (destroyOnBack || lazyDestroy)) {
+    doCleanup = true
+  } else if (lazyDestroy && !keepAlive) {
+    doCleanup = true
   }
 
-  // in lazy create mode we store constructor
-  // and remove the actual page from host
-  const stack = pages.get(route)
-  const location = getPageStackLocation(route)
+  if (doCleanup) {
+    // in lazy create mode we store constructor
+    // and remove the actual page from host
+    const stack = pages.get(route)
+    const location = getPageStackLocation(route)
 
-  // grab original class constructor if statemachine routed
-  // else store constructor
-  stack[location] = page._routedType || page.constructor
-  pages.set(route, stack)
+    // grab original class constructor if statemachine routed
+    // else store constructor
+    stack[location] = page._routedType || page.constructor
+    pages.set(route, stack)
 
-  // actual remove of page from memory
-  pagesHost.remove(page)
+    // actual remove of page from memory
+    pagesHost.remove(page)
 
-  // force texture gc() if configured
-  // so we can cleanup textures in the same tick
-  if (Settings.get('platform', 'gcOnUnload')) {
-    stage.gc()
+    // force texture gc() if configured
+    // so we can cleanup textures in the same tick
+    if (Settings.get('platform', 'gcOnUnload')) {
+      stage.gc()
+    }
   }
 }
 
@@ -787,11 +806,27 @@ const routemod = (route, key) => {
   return false
 }
 
+const read = flag => {
+  if (register.has(flag)) {
+    return register.get(flag)
+  }
+  return false
+}
+
+const createRegister = flags => {
+  const reg = new Map()
+  Object.keys(flags).forEach(key => {
+    reg.set(key, flags[key])
+  })
+  return reg
+}
+
 export const navigate = (url, args, store) => {
   let storeHash = true
+  register.clear()
 
   if (isObject(args)) {
-    persist = args
+    register = createRegister(args)
     if (isBoolean(store) && !store) {
       storeHash = false
     }
@@ -843,7 +878,7 @@ export const step = (direction = 0) => {
   if (history.length) {
     // for now we only support history back
     const route = history.splice(history.length - 1, 1)
-    navigate(route[0], false)
+    navigate(route[0], { backtrack: true }, false)
   } else {
     const hashLastPart = /(\/:?[\w%\s-]+)$/
     let hash = stripRegex(getHash())
@@ -860,7 +895,7 @@ export const step = (direction = 0) => {
         // if we have a configured route
         // we navigate to it
         if (getRouteByHash(hash)) {
-          return navigate(hash, false)
+          return navigate(hash, { backtrack: true }, false)
         }
       }
     }
