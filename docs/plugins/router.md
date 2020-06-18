@@ -61,7 +61,7 @@ Router.route("*", NotFound)
 ``` 
 will show the NotFound component when the app or an external Ui tries to route to an url thats undefined i.e 127.0.0.1:8080/#non/existing/route
 
-####modifiers
+#### modifiers
 By providing an object as third argument to the `route()` function you can control the Router behaviour.
 
 ```js
@@ -307,6 +307,36 @@ _handleKey(){
 }
 ```
 
+##### Page widget interaction
+
+References to the widgets are made available to the page via the property `.widget` so inside your method you can access them
+
+```js
+this.widgets.menu.doSomething();
+this.widgets.statusbar.updateWifiSignal();
+```
+
+All references are lowercase:
+
+```js
+Widgets:{
+    // accessible via: this.widgets.menu
+    Menu:{
+        type: Menu
+    },
+    // accessible via: this.widgets.notification
+    Notification:{
+        type: Notification
+    },
+    // accessible via: this.widgets.statusbar
+    StatusBar:{
+        type: Status
+    }
+}
+```
+
+
+
 
 ## Page transitions
 
@@ -314,7 +344,7 @@ By default a transition from one page to a new page will be a simple toggle of t
 
 ```js
 pageIn.visible = true;
-pageOut.visible = true;
+pageOut.visible = false;
 ```
 
 You can override this behaviour in a couple of ways: 
@@ -422,6 +452,37 @@ smoothIn({smooth, pageIn}){
 The router maintains it’s own history and does not rely on a browser api, all the routes we have navigated to can end up in history. We don’t keep route duplicates in history, so /home/player/145 will only be in history once (even if the user navigated to it multiple times) but same route blueprints with different values can live in history, home/player/178 and home/player/91737 or browse/genre/action/50 and browse/genre/popular/50
 
 Remote control backpress will check if there are routes in history, pop the last off navigate to that route (invoking the page loading process as discussed before)
+
+Some of the Router's functions let you control the history management: 
+
+#### route()
+
+If you want to prevent a route from ending up in history, you can add `preventStorage: true` to arguments
+when you define the routes for the App.
+
+```js
+Router.route("Home/browse/:sectionId", Browse, {preventStorage: true})
+```
+
+By default the router will not store a hash that has been visited multiple times, 
+so if the user is navigating to, 127.0.0.1:8080#home/search twice, it will only end up in the history once. So upon navigating 
+back in history the Router will not load the same page (with same hash) twice. By adding `storeSameHash: true` to the arguments
+the router will store multiple in history (the hash, so: "home/search")
+
+```js
+Router.route("home/search", Search, {storeSameHash: true})
+```
+
+##### Same hash
+
+Let's say we've configured the following route: 
+
+```js
+Router.route("Home/browse/:sectionId", Browse)
+```
+
+Then the Router doesn't consider `Home/browse/1635454"` and `Home/browse/11928374` to be the same route,
+so they both will by default end up in history.
 
 ## Routed function calls
 
