@@ -7,6 +7,9 @@ By default the loading goes via the hash since we don’t want to encounter a pa
 The router can work with 2 types of data,
 a class that extends `Lightning.Component` or a function, the router accepts one Component and multiple function per route. One of the key features is configurable lazy creation and destroy support (runtime) this serves as a big help on low-end devices with less memory and gpu memory
 
+There is an example app available that shows how you can implement and use the router:
+https://github.com/mlapps/router-example-app
+
 ### Features:
 - [Add routes](#routes)
 - [Navigation helper](#navigation-helper)
