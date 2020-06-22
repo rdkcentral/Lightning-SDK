@@ -8,6 +8,24 @@ function _newArrowCheck(innerThis, boundThis) {
 
 var _this = undefined;
 
+/*
+ * If not stated otherwise in this file or this component's LICENSE file the
+ * following copyright and licenses apply:
+ *
+ * Copyright 2020 RDK Management
+ *
+ * Licensed under the Apache License, Version 2.0 (the License);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 var style = document.createElement('style');
 document.head.appendChild(style);
 style.sheet.insertRule('@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }');
@@ -61,7 +79,7 @@ var startApp = function startApp() {
 
     _newArrowCheck(this, _this2);
 
-    return hasTextureMode().then(function (enabled) {
+    return hasTextureMode(settings.platformSettings).then(function (enabled) {
       _newArrowCheck(this, _this5);
 
       return settings.platformSettings.textureMode = enabled;
@@ -92,14 +110,10 @@ var getAppMetadata = function getAppMetadata() {
 
   _newArrowCheck(this, _this);
 
-  return fetch('./metadata.json').then(function (response) {
+  return fetchJson('./metadata.json').then(function (metadata) {
     _newArrowCheck(this, _this7);
 
-    return response.json();
-  }.bind(this)).then(function (metadata) {
-    _newArrowCheck(this, _this7);
-
-    metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`;
+    metadata.id = "APP_".concat(metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_'));
     return metadata;
   }.bind(this));
 }.bind(undefined);
@@ -109,11 +123,7 @@ var getSettings = function getSettings() {
 
   _newArrowCheck(this, _this);
 
-  return fetch('./settings.json').then(function (response) {
-    _newArrowCheck(this, _this8);
-
-    return response.json();
-  }.bind(this)).catch(function (error) {
+  return fetchJson('./settings.json').catch(function (error) {
     _newArrowCheck(this, _this8);
 
     console.warn('No settings.json found. Using defaults.');
@@ -159,11 +169,15 @@ var loadPolyfills = function loadPolyfills(esEnv) {
     return sequence([function () {
       _newArrowCheck(this, _this9);
 
-      return loadJS('./polyfills/babel-polyfill7.6.0.js');
+      return loadJS('./polyfills/babel-polyfill.js');
     }.bind(this), function () {
       _newArrowCheck(this, _this9);
 
       return loadJS('./polyfills/url.js');
+    }.bind(this), function () {
+      _newArrowCheck(this, _this9);
+
+      return loadJS('./polyfills/fetch.js');
     }.bind(this)]);
   }
 
@@ -187,33 +201,55 @@ var loadJS = function loadJS(url, id) {
   }.bind(this));
 }.bind(undefined);
 
-var sequence = function sequence(steps) {
+var fetchJson = function fetchJson(file) {
   var _this11 = this;
 
   _newArrowCheck(this, _this);
 
-  return steps.reduce(function (promise, method) {
-    var _this12 = this;
-
+  return new Promise(function (resolve, reject) {
     _newArrowCheck(this, _this11);
 
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.status === 200) resolve(JSON.parse(xhr.responseText));else reject(xhr.statusText);
+      }
+    };
+
+    xhr.open('GET', file);
+    xhr.send(null);
+  }.bind(this));
+}.bind(undefined);
+
+var sequence = function sequence(steps) {
+  var _this12 = this;
+
+  _newArrowCheck(this, _this);
+
+  return steps.reduce(function (promise, method) {
+    var _this13 = this;
+
+    _newArrowCheck(this, _this12);
+
     return promise.then(function () {
-      _newArrowCheck(this, _this12);
+      _newArrowCheck(this, _this13);
 
       return method();
     }.bind(this));
   }.bind(this), Promise.resolve(null));
 }.bind(undefined);
 
-var hasTextureMode = function hasTextureMode() {
-  var _this13 = this;
+var hasTextureMode = function hasTextureMode(platformSettings) {
+  var _this14 = this;
 
   _newArrowCheck(this, _this);
 
   return new Promise(function (resolve) {
-    _newArrowCheck(this, _this13);
+    _newArrowCheck(this, _this14);
 
-    // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
+    if (platformSettings.textureMode === true) resolve(true); // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
+
     var url = new URL(document.location.href);
     resolve(url.searchParams.has('texture'));
   }.bind(this));
