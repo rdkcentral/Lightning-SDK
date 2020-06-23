@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.3.0
+
+*23 jun 2020*
+
+- Added support for user defined Settings
+- Added fetch polyfill for older ES5 environments
+- Added SDK version to be displayed in Version-label
+- Added fix for setting texture mode in `settings.json`
+
 ## v2.2.2
 
 *4 jun 2020*
