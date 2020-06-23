@@ -383,6 +383,9 @@ const triggerOn = ({ page, old, route, hash }) => {
 }
 
 const handleError = (page, error) => {
+  // force expire
+  page[Symbol.for("expires")] = Date.now();
+
   if (pages.has('!')) {
     load({ route: '!', hash: page[Symbol.for('hash')] }).then(errorPage => {
       errorPage.error = { page, error }
