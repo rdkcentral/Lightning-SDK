@@ -473,7 +473,7 @@ const updatePageData = ({ page, route, hash }) => {
     page.persist = obj
   }
 
-  return cb({ page, ...params }).then(() => {
+  return cb(page, { ...params }).then(() => {
     // set new expire time
     page[Symbol.for('expires')] = Date.now() + expires
   })
@@ -734,6 +734,7 @@ const getRouteByHash = hash => {
 
         // split regex and modifiers so we can use both
         // to create a new RegExp
+        // eslint-disable-next-line
         const regMatches = /\/([^\/]+)\/([igm]{0,3})/.exec(routeRegex)
 
         if (regMatches && regMatches.length) {
@@ -814,7 +815,7 @@ const handleHashChange = override => {
             params[key] = urlParams.get(key)
           }
           // invoke
-          type.call(null, { application, ...params })
+          type.call(null, application, { ...params })
         }
       }
     }
