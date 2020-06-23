@@ -11,6 +11,7 @@ import {
 import Transitions from './transitions'
 import Settings from '../Settings'
 import Log from '../Log'
+import { AppInstance } from '../Launch'
 
 let getHash = () => {
   return document.location.hash
@@ -73,13 +74,14 @@ const hasRegex = /\{\/(.*?)\/([igm]{0,3})\}/g
 
 /**
  * Setup Page router
- * @param {Lightning.Component} appInstance
  * @param routes
  * @param provider
  */
-export const startRouter = ({ appInstance, routes, provider = () => {}, widgets = () => {} }) => {
-  app = appInstance
-  application = appInstance.application
+export const startRouter = config => {
+  const { routes, provider = () => {}, widgets = () => {} } = config
+
+  app = AppInstance.tag('App')
+  application = AppInstance.application
   pagesHost = application.childList
   stage = application.stage
 
@@ -96,17 +98,47 @@ export const startRouter = ({ appInstance, routes, provider = () => {}, widgets 
   // register step back handler
   application._handleBack = step.bind(null, -1)
 
-  // register route data bindings
-  provider()
+  if (typeof routes === 'function') {
+    // register route data bindings
+    provider()
 
-  // register routes
-  routes()
+    // register routes
+    routes()
 
-  // register widgets
-  widgets()
+    // register widgets
+    widgets()
+  } else if (Array.isArray(routes)) {
+    setupRoutes(config)
+  }
 
   // register step back handler
   app._captureKey = capture.bind(null)
+}
+
+const setupRoutes = routesConfig => {
+  const rootHash = routesConfig.root || 'home'
+
+  routesConfig.routes.forEach(r => {
+    if (r.path === rootHash) {
+      root(rootHash, r.component || r.hook, r.options)
+    } else {
+      route(r.path, r.component || r.hook, r.options)
+    }
+    if (r.widgets) {
+      widget(r.path, r.widgets)
+    }
+    if (r.on && typeof r.on === 'function') {
+      on(r.path, r.on, r.cache || 0)
+    }
+    if (r.before && typeof r.before === 'function') {
+      before(r.path, r.before, r.cache || 0)
+    }
+    if (r.after && typeof r.after === 'function') {
+      after(r.path, r.after, r.cache || 0)
+    }
+  })
+
+  start()
 }
 
 /**
@@ -384,7 +416,7 @@ const triggerOn = ({ page, old, route, hash }) => {
 
 const handleError = (page, error) => {
   // force expire
-  page[Symbol.for("expires")] = Date.now();
+  page[Symbol.for('expires')] = Date.now()
 
   if (pages.has('!')) {
     load({ route: '!', hash: page[Symbol.for('hash')] }).then(errorPage => {
