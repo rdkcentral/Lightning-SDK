@@ -79,7 +79,7 @@ var startApp = function startApp() {
 
     _newArrowCheck(this, _this2);
 
-    return hasTextureMode().then(function (enabled) {
+    return hasTextureMode(settings.platformSettings).then(function (enabled) {
       _newArrowCheck(this, _this5);
 
       return settings.platformSettings.textureMode = enabled;
@@ -110,11 +110,7 @@ var getAppMetadata = function getAppMetadata() {
 
   _newArrowCheck(this, _this);
 
-  return fetch('./metadata.json').then(function (response) {
-    _newArrowCheck(this, _this7);
-
-    return response.json();
-  }.bind(this)).then(function (metadata) {
+  return fetchJson('./metadata.json').then(function (metadata) {
     _newArrowCheck(this, _this7);
 
     metadata.id = "APP_".concat(metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_'));
@@ -127,11 +123,7 @@ var getSettings = function getSettings() {
 
   _newArrowCheck(this, _this);
 
-  return fetch('./settings.json').then(function (response) {
-    _newArrowCheck(this, _this8);
-
-    return response.json();
-  }.bind(this)).catch(function (error) {
+  return fetchJson('./settings.json').catch(function (error) {
     _newArrowCheck(this, _this8);
 
     console.warn('No settings.json found. Using defaults.');
@@ -182,6 +174,10 @@ var loadPolyfills = function loadPolyfills(esEnv) {
       _newArrowCheck(this, _this9);
 
       return loadJS('./polyfills/url.js');
+    }.bind(this), function () {
+      _newArrowCheck(this, _this9);
+
+      return loadJS('./polyfills/fetch.js');
     }.bind(this)]);
   }
 
@@ -205,33 +201,55 @@ var loadJS = function loadJS(url, id) {
   }.bind(this));
 }.bind(undefined);
 
-var sequence = function sequence(steps) {
+var fetchJson = function fetchJson(file) {
   var _this11 = this;
 
   _newArrowCheck(this, _this);
 
-  return steps.reduce(function (promise, method) {
-    var _this12 = this;
-
+  return new Promise(function (resolve, reject) {
     _newArrowCheck(this, _this11);
 
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.status === 200) resolve(JSON.parse(xhr.responseText));else reject(xhr.statusText);
+      }
+    };
+
+    xhr.open('GET', file);
+    xhr.send(null);
+  }.bind(this));
+}.bind(undefined);
+
+var sequence = function sequence(steps) {
+  var _this12 = this;
+
+  _newArrowCheck(this, _this);
+
+  return steps.reduce(function (promise, method) {
+    var _this13 = this;
+
+    _newArrowCheck(this, _this12);
+
     return promise.then(function () {
-      _newArrowCheck(this, _this12);
+      _newArrowCheck(this, _this13);
 
       return method();
     }.bind(this));
   }.bind(this), Promise.resolve(null));
 }.bind(undefined);
 
-var hasTextureMode = function hasTextureMode() {
-  var _this13 = this;
+var hasTextureMode = function hasTextureMode(platformSettings) {
+  var _this14 = this;
 
   _newArrowCheck(this, _this);
 
   return new Promise(function (resolve) {
-    _newArrowCheck(this, _this13);
+    _newArrowCheck(this, _this14);
 
-    // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
+    if (platformSettings.textureMode === true) resolve(true); // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
+
     var url = new URL(document.location.href);
     resolve(url.searchParams.has('texture'));
   }.bind(this));

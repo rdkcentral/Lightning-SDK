@@ -37,7 +37,10 @@ const startApp = () => {
     () => loadPolyfills(settings.platformSettings.esEnv),
     () => loadLightning(settings.platformSettings.esEnv),
     () => loadAppBundle(settings.platformSettings.esEnv),
-    () => hasTextureMode().then(enabled => (settings.platformSettings.textureMode = enabled)),
+    () =>
+      hasTextureMode(settings.platformSettings).then(
+        enabled => (settings.platformSettings.textureMode = enabled)
+      ),
     () =>
       settings.platformSettings.inspector === true
         ? loadLightningInspect(settings.platformSettings.esEnv).then(() =>
@@ -59,31 +62,23 @@ const startApp = () => {
 }
 
 const getAppMetadata = () => {
-  return fetch('./metadata.json')
-    .then(response => {
-      return response.json()
-    })
-    .then(metadata => {
-      metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
-      return metadata
-    })
+  return fetchJson('./metadata.json').then(metadata => {
+    metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
+    return metadata
+  })
 }
 
 const getSettings = () => {
-  return fetch('./settings.json')
-    .then(response => {
-      return response.json()
-    })
-    .catch(error => {
-      console.warn('No settings.json found. Using defaults.')
-      return {
-        appSettings: {},
-        platformSettings: {
-          path: './static',
-          esEnv: 'es6',
-        },
-      }
-    })
+  return fetchJson('./settings.json').catch(error => {
+    console.warn('No settings.json found. Using defaults.')
+    return {
+      appSettings: {},
+      platformSettings: {
+        path: './static',
+        esEnv: 'es6',
+      },
+    }
+  })
 }
 
 // FIXME: these 3 functions could be refactored to a single one receiving 2 arguments (filename, esEnv)
@@ -109,6 +104,7 @@ const loadPolyfills = esEnv => {
     return sequence([
       () => loadJS('./polyfills/babel-polyfill.js'),
       () => loadJS('./polyfills/url.js'),
+      () => loadJS('./polyfills/fetch.js'),
     ])
   }
   return Promise.resolve()
@@ -127,14 +123,29 @@ const loadJS = (url, id) => {
   })
 }
 
+const fetchJson = file => {
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.status === 200) resolve(JSON.parse(xhr.responseText))
+        else reject(xhr.statusText)
+      }
+    }
+    xhr.open('GET', file)
+    xhr.send(null)
+  })
+}
+
 const sequence = steps => {
   return steps.reduce((promise, method) => {
     return promise.then(() => method())
   }, Promise.resolve(null))
 }
 
-const hasTextureMode = () => {
+const hasTextureMode = platformSettings => {
   return new Promise(resolve => {
+    if (platformSettings.textureMode === true) resolve(true)
     // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
     const url = new URL(document.location.href)
     resolve(url.searchParams.has('texture'))
