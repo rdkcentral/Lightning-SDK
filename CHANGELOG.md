@@ -2,11 +2,11 @@
 
 ## v2.3.0
 
-*23 jun 2020*
+*24 jun 2020*
 
 - Added support for user defined Settings
 - Added fetch polyfill for older ES5 environments
-- Added SDK version to be displayed in Version-label
+- Added SDK version to be displayed in Version-label (requires Lightning-CLI 1.6.1 and higher)
 - Added fix for setting texture mode in `settings.json`
 
 ## v2.2.2
