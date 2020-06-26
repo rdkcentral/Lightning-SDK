@@ -52,29 +52,53 @@ export const getCountryCode = defaultValue => {
   }
 }
 
+const hasGeoLocationPermission = () => {
+  return new Promise(resolve => {
+    if ('permissions' in navigator && typeof navigator.permissions.query === 'function') {
+      navigator.permissions.query({ name: 'geolocation' }).then(status => {
+        resolve(status.state === 'granted' || status.status === 'granted')
+      })
+    } else {
+      resolve(false)
+    }
+  })
+}
+
 export const getLatLon = defaultValue => {
   return new Promise(resolve => {
-    const geoLocationSuccess = success => {
-      const coords = success && success.coords
-      return resolve([coords.latitude, coords.longitude])
-    }
-    const geoLocationError = error => {
-      return resolve(defaultValue)
-    }
-    const geoLocationOptions = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
-    }
+    hasGeoLocationPermission().then(granted => {
+      if (granted === true) {
+        if ('geolocation' in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            // success
+            result =>
+              result && result.coords && resolve([result.coords.latitude, result.coords.longitude]),
+            // error
+            () => resolve(defaultValue),
+            // options
+            {
+              enableHighAccuracy: true,
+              timeout: 5000,
+              maximumAge: 0,
+            }
+          )
+        } else {
+          return queryForLatLon().then(result => resolve(result || defaultValue))
+        }
+      } else {
+        return queryForLatLon().then(result => resolve(result || defaultValue))
+      }
+    })
+  })
+}
 
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        geoLocationSuccess,
-        geoLocationError,
-        geoLocationOptions
+const queryForLatLon = () => {
+  return new Promise(resolve => {
+    fetch('https://geolocation-db.com/json/')
+      .then(response => response.json())
+      .then(({ latitude, longitude }) =>
+        latitude && longitude ? resolve([latitude, longitude]) : resolve(false)
       )
-    } else {
-      return resolve(defaultValue)
-    }
+      .catch(() => resolve(false))
   })
 }
