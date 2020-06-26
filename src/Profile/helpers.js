@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+import Settings from '../Settings'
+
 const formatLocale = locale => {
   if (locale && locale.length === 2) {
     return `${locale.toLowerCase()}-${locale.toUpperCase()}`
@@ -52,8 +54,10 @@ export const getCountryCode = defaultValue => {
   }
 }
 
-const hasForGeoLocationPermission = () => {
+const hasOrAskForGeoLocationPermission = () => {
   return new Promise(resolve => {
+    // force to prompt for location permission
+    if (Settings.get('platform', 'forceBrowserGeolocation') === true) resolve(true)
     if ('permissions' in navigator && typeof navigator.permissions.query === 'function') {
       navigator.permissions.query({ name: 'geolocation' }).then(status => {
         resolve(status.state === 'granted' || status.status === 'granted')
@@ -66,7 +70,7 @@ const hasForGeoLocationPermission = () => {
 
 export const getLatLon = defaultValue => {
   return new Promise(resolve => {
-    hasForGeoLocationPermission().then(granted => {
+    hasOrAskForGeoLocationPermission().then(granted => {
       if (granted === true) {
         if ('geolocation' in navigator) {
           navigator.geolocation.getCurrentPosition(
