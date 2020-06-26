@@ -52,7 +52,7 @@ export const getCountryCode = defaultValue => {
   }
 }
 
-const hasGeoLocationPermission = () => {
+const hasForGeoLocationPermission = () => {
   return new Promise(resolve => {
     if ('permissions' in navigator && typeof navigator.permissions.query === 'function') {
       navigator.permissions.query({ name: 'geolocation' }).then(status => {
@@ -66,7 +66,7 @@ const hasGeoLocationPermission = () => {
 
 export const getLatLon = defaultValue => {
   return new Promise(resolve => {
-    hasGeoLocationPermission().then(granted => {
+    hasForGeoLocationPermission().then(granted => {
       if (granted === true) {
         if ('geolocation' in navigator) {
           navigator.geolocation.getCurrentPosition(
