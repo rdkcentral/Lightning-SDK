@@ -37,12 +37,12 @@ rouThor ==[x]
 
 - data provider timeout
 - add route mapping
-- optional flag destroyOnHistoryBack
 - custom before trigger
 - manual expire
 - route to same page (with force expire)
 - lazy load widgets (?)
-- fix on reuseInstance and now data provider
+- double create on lazyCreate: false
+- Add boot page
 
  */
 
@@ -74,16 +74,24 @@ const hasRegex = /\{\/(.*?)\/([igm]{0,3})\}/g
 
 /**
  * Setup Page router
- * @param routes
- * @param provider
+ * @param config - route config object
+ * @param instance - instance of the app
  */
-export const startRouter = config => {
-  const { routes, provider = () => {}, widgets = () => {} } = config
+export const startRouter = (config, instance) => {
+  // backwards compatible
+  let { appInstance, routes, provider = () => {}, widgets = () => {} } = config
 
-  app = AppInstance.tag('App')
-  application = AppInstance.application
+  if (instance && isPage(instance)) {
+    app = instance
+  }
+
+  if (!app) {
+    app = appInstance || AppInstance
+  }
+
+  application = app.application
   pagesHost = application.childList
-  stage = application.stage
+  stage = app.stage
 
   // test if required to host pages in a different child
   if (app.pages) {
@@ -96,30 +104,28 @@ export const startRouter = config => {
   }
 
   // register step back handler
-  application._handleBack = step.bind(null, -1)
-
-  if (typeof routes === 'function') {
-    // register route data bindings
-    provider()
-
-    // register routes
-    routes()
-
-    // register widgets
-    widgets()
-  } else if (Array.isArray(routes)) {
-    setupRoutes(config)
-  }
+  app._handleBack = step.bind(null, -1)
 
   // register step back handler
   app._captureKey = capture.bind(null)
+
+  if (isArray(routes)) {
+    setupRoutes(config)
+    start()
+  } else if (isFunction(routes)) {
+    // register route data bindings
+    provider()
+    // register routes
+    routes()
+    // register widgets
+    widgets()
+  }
 }
 
 const setupRoutes = routesConfig => {
-  const rootHash = routesConfig.root || 'home'
-
+  const rootHash = routesConfig.root
   routesConfig.routes.forEach(r => {
-    if (r.path === rootHash) {
+    if (r.path === rootHash && rootHash) {
       root(rootHash, r.component || r.hook, r.options)
     } else {
       route(r.path, r.component || r.hook, r.options)
@@ -127,18 +133,16 @@ const setupRoutes = routesConfig => {
     if (r.widgets) {
       widget(r.path, r.widgets)
     }
-    if (r.on && typeof r.on === 'function') {
+    if (isFunction(r.on)) {
       on(r.path, r.on, r.cache || 0)
     }
-    if (r.before && typeof r.before === 'function') {
+    if (isFunction(r.before)) {
       before(r.path, r.before, r.cache || 0)
     }
-    if (r.after && typeof r.after === 'function') {
+    if (isFunction(r.after)) {
       after(r.path, r.after, r.cache || 0)
     }
   })
-
-  start()
 }
 
 /**
@@ -178,7 +182,6 @@ export const route = (route, type, config) => {
         stack.push(type)
       }
     }
-
     pages.set(route, stack)
   } else {
     if (isPage(type, stage)) {
@@ -299,7 +302,7 @@ const load = async ({ route, hash }) => {
   // if routes share instance we only update
   // update the page data if needed
   if (routesShareInstance) {
-    if (provide) {
+    if (provide || read('reload')) {
       try {
         await updatePageData({ page, route, hash })
       } catch (e) {
@@ -473,7 +476,7 @@ const updatePageData = ({ page, route, hash }) => {
     page.persist = obj
   }
 
-  return cb(page, { ...params }).then(() => {
+  return cb({ page, ...params }).then(() => {
     // set new expire time
     page[Symbol.for('expires')] = Date.now() + expires
   })
@@ -491,7 +494,9 @@ const doTransition = (pageIn, pageOut = null) => {
   const transitionsDisabled = Settings.get('platform', 'disableTransitions')
 
   // for now a simple widget visibility toggle
-  updateWidgets(pageIn)
+  if (widgetsPerRoute.size) {
+    updateWidgets(pageIn)
+  }
 
   // default behaviour is a visibility toggle
   if (!hasCustomTransitions || transitionsDisabled) {
@@ -734,7 +739,6 @@ const getRouteByHash = hash => {
 
         // split regex and modifiers so we can use both
         // to create a new RegExp
-        // eslint-disable-next-line
         const regMatches = /\/([^\/]+)\/([igm]{0,3})/.exec(routeRegex)
 
         if (regMatches && regMatches.length) {
@@ -815,7 +819,7 @@ const handleHashChange = override => {
             params[key] = urlParams.get(key)
           }
           // invoke
-          type.call(null, application, { ...params })
+          type.call(null, app, { ...params })
         }
       }
     }
@@ -890,7 +894,7 @@ export const navigate = (url, args, store) => {
 
   if (hash.replace(/^#/, '') !== url) {
     setHash(url)
-  } else if (hashmod(url, 'reload')) {
+  } else if (read('reload')) {
     handleHashChange(hash)
   }
 
@@ -906,7 +910,7 @@ export const navigate = (url, args, store) => {
  */
 export const step = (direction = 0) => {
   if (!direction) {
-    return
+    return false
   }
 
   // is we still have routes in our history
@@ -914,7 +918,7 @@ export const step = (direction = 0) => {
   if (history.length) {
     // for now we only support history back
     const route = history.splice(history.length - 1, 1)
-    navigate(route[0], { backtrack: true }, false)
+    return navigate(route[0], { backtrack: true }, false)
   } else {
     const hashLastPart = /(\/:?[\w%\s-]+)$/
     let hash = stripRegex(getHash())
