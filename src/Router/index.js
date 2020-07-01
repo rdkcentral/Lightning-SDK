@@ -41,7 +41,7 @@ rouThor ==[x]
 - manual expire
 - route to same page (with force expire)
 - lazy load widgets (?)
-- double create on lazyCreate: false
+- on lazyCreate: false test if instance already exists on duplicate
 - Add boot page
 
  */
@@ -193,7 +193,7 @@ export const route = (route, type, config) => {
       }
     }
 
-    // if lazy we just store the constructor
+    // if lazy we just store the constructor or function
     pages.set(route, [type])
 
     // store router modifiers
@@ -310,6 +310,8 @@ const load = async ({ route, hash }) => {
         // and optional error code
         handleError(e)
       }
+    } else {
+      providePageData({ page, route, hash, provide: false })
     }
   } else {
     if (provide) {
@@ -333,22 +335,7 @@ const load = async ({ route, hash }) => {
       const p = activePage
       const r = p && p[Symbol.for('route')]
 
-      let urlValues = getValuesFromHash(hash, route)
-      // we iterate over dynamic values from the current url
-      // and invoke the page setters so that dynamic data
-      // is available before the page loads
-      for (let [name, value] of urlValues) {
-        page[name] = value
-      }
-
-      if (register.size) {
-        const obj = {}
-        for (let [k, v] of register) {
-          obj[k] = v
-        }
-        page.persist = obj
-      }
-
+      providePageData({ page, route, hash, provide: false })
       doTransition(page, activePage).then(() => {
         // manage cpu/gpu memory
         if (p) {
@@ -453,11 +440,9 @@ export const boot = cb => {
   bootRequest = cb
 }
 
-const updatePageData = ({ page, route, hash }) => {
-  const { cb, expires } = providers.get(route)
+const providePageData = ({ page, route, hash }) => {
   let urlValues = getValuesFromHash(hash, route)
   let params = {}
-
   // we iterate over dynamic values from the current url
   // and invoke the page setters so that dynamic data
   // is available before the page loads
@@ -474,6 +459,17 @@ const updatePageData = ({ page, route, hash }) => {
       obj[k] = v
     }
     page.persist = obj
+  }
+
+  return params
+}
+
+const updatePageData = ({ page, route, hash, provide = true }) => {
+  const { cb, expires } = providers.get(route)
+  const params = providePageData({ page, route, hash })
+
+  if (!provide) {
+    return Promise.resolve()
   }
 
   return cb({ page, ...params }).then(() => {
