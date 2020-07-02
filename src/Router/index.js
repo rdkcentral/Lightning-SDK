@@ -124,6 +124,11 @@ export const startRouter = (config, instance) => {
 
 const setupRoutes = routesConfig => {
   const rootHash = routesConfig.root
+
+  if (isFunction(routesConfig.boot)) {
+    boot(routesConfig.boot)
+  }
+
   routesConfig.routes.forEach(r => {
     if (r.path === rootHash && rootHash) {
       root(rootHash, r.component || r.hook, r.options)
