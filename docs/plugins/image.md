@@ -64,6 +64,29 @@ Generate an image without resizing it (i.e. use the original dimensions), while 
 Img(url).original()
 ```
 
+## Image quality
+
+To increase performance on lower end boxes, especially those with limited GPU memory, there exists a `platform` setting to control the _image quality_.
+Depending on this setting the images returned by the image server will be _smaller_ than actually displayed on the screen.
+Lightning will then _stretch_ the images to fit the desired dimensions. This will save on used GPU memory, but off course impacts the visual quality of the images.
+
+Please note that within the context of the Metrological AppStore this setting is defined as a platform setting _outside_ of the control of the App.
+You can however experiment with this during local development via `settings.json`:
+
+```json
+{
+    "appSettings": {
+    },
+    "platformSettings": {
+        "quality": {
+          "imageSize": 50
+        }
+    }
+}
+```
+
+The platform setting `quality.imageSize` can be a value between `1` and `100` (where 100 equals 100%, high quality)
+
 ## Deprecated methods
 
 In the previous SDK different aliases for the same image resize options were offered. They are supported as deprecated methods until the summer of 2020.
