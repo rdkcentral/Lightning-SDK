@@ -85,7 +85,7 @@ You can however experiment with this during local development via `settings.json
 }
 ```
 
-The platform setting `quality.imageSize` can be a value between `1` and `100` (where 100 equals 100%, high quality)
+The platform setting `quality.imageSize` can be a value between `1` and `100` (where 100 equals 100% - high quality)
 
 ## Deprecated methods
 
