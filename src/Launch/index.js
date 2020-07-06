@@ -39,9 +39,8 @@ export default (App, appSettings, platformSettings, appData) => {
   if (platformSettings.plugins) {
     platformSettings.plugins.profile && initProfile(platformSettings.plugins.profile)
     platformSettings.plugins.metrics && initMetrics(platformSettings.plugins.metrics)
-    platformSettings.plugins.mediaPlayer &&
-      initMediaPlayer(platformSettings.plugins.mediaPlayer) &&
-      initVideoPlayer(platformSettings.plugins.mediaPlayer)
+    platformSettings.plugins.mediaPlayer && initMediaPlayer(platformSettings.plugins.mediaPlayer)
+    platformSettings.plugins.mediaPlayer && initVideoPlayer(platformSettings.plugins.mediaPlayer)
     platformSettings.plugins.ads && initAds(platformSettings.plugins.ads)
   }
 
