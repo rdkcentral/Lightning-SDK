@@ -42,7 +42,7 @@ const playAd = ad => {
     videoEl.src = mediaUrl(ad.url)
     videoEl.load()
 
-    let timeEvents = {}
+    let timeEvents = null
     let timeout
 
     const cleanup = () => {
@@ -64,17 +64,34 @@ const playAd = ad => {
         cleanup()
       },
       timeupdate() {
-        if (timeEvents.firstQuartile && videoEl.currentTime >= timeEvents.firstQuartile) {
+        if (!timeEvents && videoEl.duration) {
+          // calculate when to fire the time based events (now that duration is known)
+          timeEvents = {
+            firstQuartile: videoEl.duration / 4,
+            midPoint: videoEl.duration / 2,
+            thirdQuartile: (videoEl.duration / 4) * 3,
+          }
+          Log.info('Ad', 'Calculated quartiles times', { timeEvents })
+        }
+        if (
+          timeEvents &&
+          timeEvents.firstQuartile &&
+          videoEl.currentTime >= timeEvents.firstQuartile
+        ) {
           fireOnConsumer('FirstQuartile', ad)
           delete timeEvents.firstQuartile
           sendBeacon(ad.callbacks, 'firstQuartile')
         }
-        if (timeEvents.midPoint && videoEl.currentTime >= timeEvents.midPoint) {
+        if (timeEvents && timeEvents.midPoint && videoEl.currentTime >= timeEvents.midPoint) {
           fireOnConsumer('MidPoint', ad)
           delete timeEvents.midPoint
           sendBeacon(ad.callbacks, 'midPoint')
         }
-        if (timeEvents.thirdQuartile && videoEl.currentTime >= timeEvents.thirdQuartile) {
+        if (
+          timeEvents &&
+          timeEvents.thirdQuartile &&
+          videoEl.currentTime >= timeEvents.thirdQuartile
+        ) {
           fireOnConsumer('ThirdQuartile', ad)
           delete timeEvents.thirdQuartile
           sendBeacon(ad.callbacks, 'thirdQuartile')
@@ -93,14 +110,15 @@ const playAd = ad => {
         fireOnConsumer('Error', ad)
         cleanup()
       },
-      loadedmetadata() {
-        // calculate when to fire the time based events (now that duration is known)
-        timeEvents = {
-          firstQuartile: videoEl.duration / 4,
-          midPoint: videoEl.duration / 2,
-          thirdQuartile: (videoEl.duration / 4) * 3,
-        }
-      },
+      // this doesn't work reliably on sky box, moved logic to timeUpdate event
+      // loadedmetadata() {
+      //   // calculate when to fire the time based events (now that duration is known)
+      //   timeEvents = {
+      //     firstQuartile: videoEl.duration / 4,
+      //     midPoint: videoEl.duration / 2,
+      //     thirdQuartile: (videoEl.duration / 4) * 3,
+      //   }
+      // },
       abort() {
         cleanup()
       },
