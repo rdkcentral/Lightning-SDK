@@ -294,7 +294,10 @@ export default class Mediaplayer extends Lightning.Component {
       Log.info('noVideo option set, so ignoring: ' + url)
       return
     }
-    if (this.videoEl.getAttribute('src') === url) return this.reload()
+    // close the video when opening same url as current (effectively reloading)
+    if (this.videoEl.getAttribute('src') === url) {
+      this.close()
+    }
     this.videoEl.setAttribute('src', url)
 
     // force hide, then force show (in next tick!)
