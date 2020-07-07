@@ -147,7 +147,13 @@ const videoPlayerPlugin = {
     // prep the media url to play depending on platform
     url = mediaUrl(url)
 
+    // if url is same as current clear (which is effectively a reload)
+    if (this.src == url) {
+      this.clear()
+    }
+
     // preload the video to get duration (for ads)
+    //.. currently actually not working because loadedmetadata didn't work reliably on Sky boxes
     videoEl.setAttribute('src', url)
     videoEl.load()
 
