@@ -317,9 +317,8 @@ const load = async ({ route, hash }) => {
   if (routesShareInstance) {
     if (provide || read('reload')) {
       try {
-        updatePageData({ page, route, hash }).then(() => {
-          emit(page, ['dataProvided', 'changed'])
-        })
+        await updatePageData({ page, route, hash })
+        emit(page, ['dataProvided', 'changed'])
       } catch (e) {
         // show error page with route / hash
         // and optional error code
@@ -340,9 +339,8 @@ const load = async ({ route, hash }) => {
       }
       try {
         if (triggers[loadType]) {
-          triggers[loadType](properties).then(() => {
-            emit(page, ['dataProvided', isCreated ? 'mounted' : 'changed'])
-          })
+          await triggers[loadType](properties)
+          emit(page, ['dataProvided', isCreated ? 'mounted' : 'changed'])
         } else {
           throw new Error(`${loadType} is not supported`)
         }
@@ -1084,7 +1082,6 @@ export const focusWidget = name => {
 }
 
 export const handleRemote = (type, name) => {
-  console.log(type, name)
   if (type === 'widget') {
     focusWidget(name)
   } else if (type === 'page') {
