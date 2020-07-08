@@ -45,7 +45,6 @@ rouThor ==[x]
 - Add boot page
 
  */
-
 // instance of Lightning.Application
 let application
 
@@ -67,9 +66,12 @@ let activeWidget
 let rootHash
 let bootRequest
 let history = []
+let initialised = false
+let activeRoute
+let activeHash
 
 // page that has focus
-export let activePage
+let activePage
 const hasRegex = /\{\/(.*?)\/([igm]{0,3})\}/g
 
 /**
@@ -123,10 +125,13 @@ export const startRouter = (config, instance) => {
 }
 
 const setupRoutes = routesConfig => {
-  const rootHash = routesConfig.root
-
-  if (isFunction(routesConfig.boot)) {
-    boot(routesConfig.boot)
+  let rootHash
+  if (!initialised) {
+    rootHash = routesConfig.root
+    if (isFunction(routesConfig.boot)) {
+      boot(routesConfig.boot)
+    }
+    initialised = true
   }
 
   routesConfig.routes.forEach(r => {
@@ -257,6 +262,7 @@ const load = async ({ route, hash }) => {
   let routesShareInstance = false
   let provide = false
   let page = null
+  let isCreated = false
 
   // if page is instanceof Component
   if (!isLightningComponent(type)) {
@@ -297,6 +303,8 @@ const load = async ({ route, hash }) => {
     if (providers.has(route)) {
       provide = true
     }
+
+    isCreated = true
   }
 
   // we store hash and route as properties on the page instance
@@ -309,7 +317,9 @@ const load = async ({ route, hash }) => {
   if (routesShareInstance) {
     if (provide || read('reload')) {
       try {
-        await updatePageData({ page, route, hash })
+        updatePageData({ page, route, hash }).then(() => {
+          emit(page, ['dataProvided', 'changed'])
+        })
       } catch (e) {
         // show error page with route / hash
         // and optional error code
@@ -317,6 +327,7 @@ const load = async ({ route, hash }) => {
       }
     } else {
       providePageData({ page, route, hash, provide: false })
+      emit(page, 'changed')
     }
   } else {
     if (provide) {
@@ -329,7 +340,9 @@ const load = async ({ route, hash }) => {
       }
       try {
         if (triggers[loadType]) {
-          await triggers[loadType](properties)
+          triggers[loadType](properties).then(() => {
+            emit(page, ['dataProvided', isCreated ? 'mounted' : 'changed'])
+          })
         } else {
           throw new Error(`${loadType} is not supported`)
         }
@@ -347,6 +360,8 @@ const load = async ({ route, hash }) => {
           cleanUp(p, r)
         }
 
+        emit(page, isCreated ? 'mounted' : 'changed')
+
         // force focus calculation
         app._refocus()
       })
@@ -356,6 +371,8 @@ const load = async ({ route, hash }) => {
   // store reference to active page, probably better to store the
   // route in the future
   activePage = page
+  activeRoute = route
+  activeHash = hash
 
   Log.info('[route]:', route)
   Log.info('[hash]:', hash)
@@ -407,6 +424,18 @@ const triggerOn = ({ page, old, route, hash }) => {
       // back to root state
       app._setState('')
     })
+}
+
+const emit = (page, events = []) => {
+  if (!isArray(events)) {
+    events = [events]
+  }
+  events.forEach(e => {
+    const event = `_on${ucfirst(e)}`
+    if (isFunction(page[event])) {
+      page[event]()
+    }
+  })
 }
 
 const handleError = (page, error) => {
@@ -561,7 +590,7 @@ const cleanUp = (page, route) => {
   const lazyDestroy = Settings.get('platform', 'lazyDestroy')
   const destroyOnBack = Settings.get('platform', 'destroyOnHistoryBack')
   const keepAlive = read('keepAlive')
-  const isFromHistory = read('backtrack')
+  const isFromHistory = read('@router:backtrack')
 
   if (isFromHistory && (destroyOnBack || lazyDestroy)) {
     doCleanup = true
@@ -893,15 +922,15 @@ export const navigate = (url, args, store) => {
     }
   }
 
+  // clean up history if modifier is set
+  if (hashmod(url, 'clearHistory')) {
+    history.length = 0
+  }
+
   if (hash.replace(/^#/, '') !== url) {
     setHash(url)
   } else if (read('reload')) {
     handleHashChange(hash)
-  }
-
-  // clean up history if modifier is set
-  if (hashmod(url, 'clearHistory')) {
-    history.length = 0
   }
 }
 
@@ -920,15 +949,12 @@ export const step = (direction = 0) => {
     // for now we only support history back
     const route = history.splice(history.length - 1, 1)
     return navigate(route[0], { backtrack: true }, false)
-  } else {
+  } else if (Settings.get('platform', 'backtrack')) {
     const hashLastPart = /(\/:?[\w%\s-]+)$/
     let hash = stripRegex(getHash())
     let floor = getFloor(hash)
 
-    // if we're passed the first floor and our history is empty
-    // we can (for now) safely assume that the current got deeplinked
-    // via an external source. We strip of trailing route parts
-    // and test if we have a configured route for it, and navigate to it.
+    // test if we got deeplinked
     if (floor > 1) {
       while (floor--) {
         // strip of last part
@@ -936,7 +962,7 @@ export const step = (direction = 0) => {
         // if we have a configured route
         // we navigate to it
         if (getRouteByHash(hash)) {
-          return navigate(hash, { backtrack: true }, false)
+          return navigate(hash, { '@router:backtrack': true }, false)
         }
       }
     }
@@ -1057,6 +1083,15 @@ export const focusWidget = name => {
   }
 }
 
+export const handleRemote = (type, name) => {
+  console.log(type, name)
+  if (type === 'widget') {
+    focusWidget(name)
+  } else if (type === 'page') {
+    restoreFocus()
+  }
+}
+
 const hash = () => {
   return getHash()
 }
@@ -1071,6 +1106,18 @@ export const getActivePage = () => {
   } else {
     return app
   }
+}
+
+const getActiveRoute = () => {
+  return activeRoute
+}
+
+const getActiveHash = () => {
+  return activeHash
+}
+
+const getActiveWidget = () => {
+  return activeWidget
 }
 
 // listen to url changes
@@ -1090,9 +1137,14 @@ export default {
   boot,
   step,
   restoreFocus,
-  getActivePage,
   focusWidget,
+  handleRemote,
   start,
+  add: setupRoutes,
   widget,
   hash,
+  getActivePage,
+  getActiveWidget,
+  getActiveRoute,
+  getActiveHash,
 }
