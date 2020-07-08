@@ -129,7 +129,7 @@ the router will add the properties `.assetId = 14728` and `.playlistId = 38101` 
 
 ##### setters #####
 
-Or use [setters](#https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic
+Or use [setters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic
 when the properties are being set.
   
 
@@ -371,7 +371,7 @@ class Browse extends Lightning.Component{
 
 ## Events ##
 
-In addition to Lightning's [life-cycle events](#https://rdkcentral.github.io/Lightning/docs/components/overview#component-events) the Router provides extra events
+In addition to Lightning's [life-cycle events](https://rdkcentral.github.io/Lightning/docs/components/overview#component-events) the Router provides extra events
 where your app can listen to: 
 
 ```js
@@ -406,7 +406,7 @@ Widgets are Lightning Component that can live on multiple pages.
 >  Widgets overlay the pages they always have the highest z-index
 
 Widgets need to be placed inside a `Widget` wrapper on the root level of your app, 
-See in [example app](#https://github.com/mlapps/router-example-app/blob/94d46738a399703657bf4c17b0ffd442df939b58/src/App.js#L42) 
+See in [example app](https://github.com/mlapps/router-example-app/blob/94d46738a399703657bf4c17b0ffd442df939b58/src/App.js#L42) 
 
 ```js
 static _template(){
@@ -451,7 +451,7 @@ Widgets are hidden by default, but on `Router.navigate('discover/player/998/2917
 
 ##### handleRemote()
 
-If we want the widget to [handle remote-control keys](#https://rdkcentral.github.io/Lightning/docs/focus/keyhandler)
+If we want the widget to [handle remote-control keys](https://rdkcentral.github.io/Lightning/docs/focus/keyhandler)
 
 ```js
 class Search extends Lightning.Component {
@@ -471,7 +471,7 @@ _handleBack(){
 
 or add the following logic to your statemachine (Widget) state if you want auto restore focus 
 for keys who are now being handled by the widget.\
-See in [example app](#https://github.com/mlapps/router-example-app/blob/94d46738a399703657bf4c17b0ffd442df939b58/src/App.js#L115)
+See in [example app](https://github.com/mlapps/router-example-app/blob/94d46738a399703657bf4c17b0ffd442df939b58/src/App.js#L115)
 
 ```js
 _handleKey(){
@@ -601,7 +601,7 @@ to keep the memory usage to a minimum (which can really can benefit performance 
 
 the router had support for lazy creation and destroy and you can configure them in your `settings.json` file:
 
-*See in [example app](#https://github.com/mlapps/router-example-app/blob/master/settings.json#L23)*.
+*See in [example app](https://github.com/mlapps/router-example-app/blob/master/settings.json#L23)*.
 
 ##### Lazy creation 
 
