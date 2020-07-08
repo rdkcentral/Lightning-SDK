@@ -13,11 +13,11 @@ The router can work with 2 types of data:
 export default class Home extends Lightning.Component {..}
 ``` 
 
-- A function
+- A `function` callback
 
 the router accepts *one* `Component` and *multiple* functions per route. 
 
-###### Memory ######
+###### Memory management ######
 
 One of the key features is configurable [lazy creation and destroy](#memory) support (runtime).
 this serves as a big help on low-end devices with less memory (RAM / VRAM).
@@ -39,10 +39,10 @@ this serves as a big help on low-end devices with less memory (RAM / VRAM).
 
 ## Setup:
 
-######example app######
-We've provided an example app that showcases all the features of the Router: https://github.com/mlapps/router-example-app.
+###### example app ######
+We've provided an example app that showcases all the features of the Router:\
+https://github.com/mlapps/router-example-app.
 
-###### clone ######
 You can clone or download this app and use it as the foundation of your app or copy parts of it to your existing app.
 
 #### Use the router ####
@@ -60,8 +60,8 @@ Router.add(routes)
 ```js
 import {Home, Browse} from './pages';
 export const routes = {
-    async boot(){
-        
+    boot: async (){
+        return api.getToken();
     },
     root: 'home',
     routes:[
@@ -77,9 +77,9 @@ export const routes = {
 }
 ```
 
-#####We have defined 2 routes #####
+##### We have defined 2 routes #####
 
-The Router provides a [`navigate`](#navigation-helper) to navigate to a route:
+The Router provides a function to [`navigate`](#navigation-helper) to a route:
 
 ```js
 Router.navigate("home")
@@ -161,7 +161,7 @@ to start matching for certain combinations of characters. You do this by adding 
 }
 ```
 
-Regex patterns work as explained in: [dynamic urls](#dynamic-urls), and their value will be made available on the Page.
+Regex patterns work as explained in: [dynamic urls](#dynamic-urls) and their value will be made available on the Page.
 
 
 #### Routed function calls
@@ -177,6 +177,24 @@ hook: ({application, hotspotId, actionId})=>{
 ```
 
 
+#### Options
+
+You can configure how the Router should handle this route:
+
+```js
+{
+    path: 'settings/hotspots/delete/:hotspotId/:actionId',
+    options: {preventStorage: true, clearHistory: true}
+}
+```
+
+###### preventStorage ######
+
+Make sure this route never ends up in history
+
+###### clearHistory ######
+
+Upon visit the Router will clear it's own history.
 
 #### Url not found
 
@@ -209,7 +227,7 @@ Router.navigate(url, args, store)
 
 - When you call
 ```js
-Router.navigate("player/1638")
+Router.navigate("player/1638/17421")
 ```
 - the router will match the blueprint: 
 ```js
@@ -222,9 +240,8 @@ Router.navigate("player/1638")
 and the the Router will start loading the `Player` Component 
 
 #### arguments
-
+pass arguments to the page by providing an Object as second argument
 ```js
-// pass arguments to the page by providing an Object as second argument
 Router.navigate("player/1638", {a:1, b:2, from: this})
 ```
 This will add the `persist` property on the instance of the Page:
@@ -250,10 +267,13 @@ or as third argument when your second argument is persistent data
 Router.navigate("player/1638", {a:1, b:2}, false)
 ```
 
-#### events ####
+## keep alive
+By adding `keepAlive` to the arguments you can prevent the current page is [lazyDestroy](#Lazy destroy) is configured.
+This way you can maintain the state of the Page.
 
-You can resibse
-
+```js
+Router.navigate("player/1638", {keepAlive: true, a:1, b:2}, false)
+```
 
 ## Data providing
 
@@ -576,9 +596,13 @@ It will self resolve on finish.
 
 ## Memory
 
-To keep the memory usage to a minimum (which can really can benefit performance on low end devices) the router had support for lazy creation and destroy.
-You can configure them in your `settings.json file`\
-See in [example app](#https://github.com/mlapps/router-example-app/blob/master/settings.json#L23).
+
+De Router works with classes that extend `Lightning.Component` the reason you provide a class and not an instance is
+to keep the memory usage to a minimum (which can really can benefit performance on low end devices) 
+
+the router had support for lazy creation and destroy and you can configure them in your `settings.json` file:
+
+*See in [example app](#https://github.com/mlapps/router-example-app/blob/master/settings.json#L23)*.
 
 ##### Lazy creation 
 
@@ -616,9 +640,21 @@ the router will put Player component on the render-tree and show (and if there i
 
 ## Backtracking
 
-This features is requested by some content providers, they want to allow deeplinking to a page but still control the path back out of the app.
+```js
+"backtrack": true
+```
 
-Lets say a Ui navigates to: cdn.operator.ext/yourApp/#home/browse/12746 that means that (as far as the router is concerned) there is no history, a remote control back press will lead to an exit of the app. By changing platform setting backtracking: true, upon backpress after the deeplinking the router will remove the last part of the hash and tests if he can navigate to that url:
+This will let you control how users step out of the app after a deeplink.
+
+Lets say a Ui navigates to: 
+```
+cdn.operator.ext/yourApp/#home/browse/12746
+``` 
+
+
+
+that means that (as far as the router is concerned) there is no history, a remote control back press will lead to an exit of the app. 
+By changing platform setting backtracking: true, upon backpress after the deeplinking the router will remove the last part of the hash and tests if he can navigate to that url:
 cdn.operator.ext/yourApp/#home/browse
 
 if there is a route defined, it will load that route, otherwise strip of more and test again: cdn.operator.ext/yourApp/#home
