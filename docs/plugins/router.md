@@ -17,7 +17,7 @@ export default class Home extends Lightning.Component {..}
 
 the router accepts *one* `Component` and *multiple* functions per route. 
 
-###### Memory management ######
+##### Memory management #####
 
 One of the key features is configurable [lazy creation and destroy](#memory) support (runtime).
 this serves as a big help on low-end devices with less memory (RAM / VRAM).
@@ -39,7 +39,7 @@ this serves as a big help on low-end devices with less memory (RAM / VRAM).
 
 ## Setup:
 
-###### example app ######
+##### example app #####
 We've provided an example app that showcases all the features of the Router:\
 https://github.com/mlapps/router-example-app.
 
@@ -52,11 +52,11 @@ import {Router} from 'wpe-lightning-sdk'
 ```
 
 After the import you can start the router and provide a config object:
-###### App.js
+##### App.js
 ```js
 Router.add(routes)
 ```
-###### routes.js
+##### routes.js
 ```js
 import {Home, Browse} from './pages';
 export const routes = {
@@ -127,7 +127,7 @@ Add a `:` before a part of the route to make it dynamic.
 If you [navigate](#navigation-helper) to: `127.0.0.1:8080/#player/14728/38101`
 the router will add the properties `.assetId = 14728` and `.playlistId = 38101` to the instance of the *Player* `Component`
 
-###### setters ######
+##### setters #####
 
 Or use [setters](#https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic
 when the properties are being set.
@@ -188,11 +188,11 @@ You can configure how the Router should handle this route:
 }
 ```
 
-###### preventStorage ######
+##### preventStorage #####
 
 Make sure this route never ends up in history
 
-###### clearHistory ######
+##### clearHistory #####
 
 Upon visit the Router will clear it's own history.
 
@@ -321,7 +321,7 @@ we [destroy pages](#memory) for [memory optimizations](#memory)
 Both work almost the same as `on()`, but the way the page loads is different. 
 
 
-###### before
+##### before
 ```js
 {
     path: 'settings/wifi/:hotspotId/connect',
@@ -338,7 +338,7 @@ Both work almost the same as `on()`, but the way the page loads is different.
 3. Wait for the request to resolve.
 4. Show the new page (destory old if configured)
 
-###### after
+##### after
 
 ```js
 {
@@ -433,7 +433,6 @@ static _template(){
 
 ##### widget property
 
-###### routes.js
 ```js
 {
     path: 'discover/player/:userId/:videoId',
