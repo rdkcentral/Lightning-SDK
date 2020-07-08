@@ -1,5 +1,5 @@
 
-# router
+# Router
 
 The routhor provides an easy api that helps you create a url driven routed Lightning app.
 

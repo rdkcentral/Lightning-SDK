@@ -13,6 +13,7 @@
   <!-- - [Purchase](plugins/purchase.md) -->
   - [Locale](plugins/locale.md)
   - [Lightning](plugins/lightning.md)
+  - [Router](plugins/router.md)
   <!-- - [Keyboard](plugins/keyboard.md) -->
   - [Media Player](plugins/mediaplayer.md)
   <!-- - [Audio Player](plugins/audioplayer.md) -->
