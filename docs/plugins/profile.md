@@ -61,7 +61,7 @@ Profile.houseHold()
 
 ### Language
 
-Gets the language. Returns `en` by default during _local development_.
+Gets the language. During _local development_ will attempt to return the browser's language, with a default to `en`.
 
 ```js
 Profile.language()
@@ -69,7 +69,8 @@ Profile.language()
 
 ### LatLon
 
-Gets the LatLon. Returns `[40.7128, 74.006]` by default during _local development_.
+Gets the LatLon. During _local development_ will try to return your actual latitude and longitude from a remote API service. If unsuccessful, will default to `[40.7128, 74.006]`.
+If during _local development_ you want to force to use the browser's built in _geolocation_ for retrieving the latitude and longitude, add the key `forceBrowserGeolocation` with the value `true` as a _platform setting_ in `settings.json`.
 
 ```js
 Profile.latLon()
@@ -77,7 +78,7 @@ Profile.latLon()
 
 ### Locale
 
-Get the locale. Returns `en-US` by default during _local development_.
+Get the locale. During _local development_ will attempt to return the browser's locale, with a fallback to to `en-US`.
 
 ```js
 Profile.locale()

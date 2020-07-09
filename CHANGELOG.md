@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.3.1
+
+*8 jul 2020*
+
+- Added fix to MediaPlayer plugin to solve issue of video rollover (black screen on certain STBs)
+- Added fix to MediaPlayer plugin to solve issue when opening same video asset twice (black screen)
+- Added fix to Profile plugin to solve issue with always requesting the browser location (also in production)
+
 ## v2.3.0
 
 *24 jun 2020*
