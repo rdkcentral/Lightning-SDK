@@ -62,7 +62,7 @@ export default (imageUrl, options) => {
     }
     const imageQuality = Math.max(
       0.1,
-      Math.min(1, (parseFloat(Settings.get('platform', 'quality.imageSize')) || 100) / 100)
+      Math.min(1, (parseFloat(Settings.get('platform', 'image.quality')) || 100) / 100)
     )
 
     options.w = options.w * imageQuality

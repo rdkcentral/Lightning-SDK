@@ -78,14 +78,15 @@ You can however experiment with this during local development via `settings.json
     "appSettings": {
     },
     "platformSettings": {
-        "quality": {
-          "imageSize": 50
+        "image": {
+          "quality": 50
         }
     }
 }
 ```
 
-The platform setting `quality.imageSize` can be a value between `1` and `100` (where 100 equals 100% - high quality)
+The platform setting `image.quality` can be a value between `1` and `100`, where 1 means low quality and 100 equals original image quality.
+If preferred this value can also be defined as a string with a percentage-sign appended (i.e. `"75%"`).
 
 ## Deprecated methods
 
