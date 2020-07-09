@@ -56,14 +56,11 @@ After the import you can start the router and provide a config object:
 ```js
 Router.add(routes)
 ```
-##### routes.js
+###### routes.js
 ```js
 import {Home, Browse} from './pages';
+
 export const routes = {
-    boot: async (){
-        return api.getToken();
-    },
-    root: 'home',
     routes:[
         {
             path: 'home',
@@ -89,14 +86,55 @@ Router.navigate("home/browse/adventure")
 1. On navigate to: `127.0.0.1:8080/#home` the Router will show `Home` (a [Lightning Component](#memory))
 2. On navigate to: `127.0.0.1:8080/#home/browse/adventure` the Router will show `Browse`
 
-#### boot
+#### boot ####
+
+```js
+export const routes = {
+    boot: ()=>{
+        return new Promise((resolve)=>{
+            api.getToken().then(()=>{
+                resolve();
+            })
+        })        
+    },
+    routes:[...]
+}
+```
 
 `boot()` request will always fire (on deeplink or direct launch) you can use this to obtain tokens for instance.
 It must(!) resolve a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
 
-#### root
+#### root ####
+
+```js
+export const routes = {
+    root: 'home',
+    routes:[...]
+}
+```
 
 This is the url where the browser will point to when the app launches (and is not being [deplinked](#deeplinking))
+
+
+#### boot Component ####
+
+Boot `Component` will always be shown even on a deeplink. Can be used as an app `Splash` screen.
+
+```js
+import {Home, Browse, Splash} from './pages';
+{
+   bootComponent: Splash,
+   routes:[...]
+}
+```
+
+##### resume #####
+
+To continue the page loading (deeplink or root) you can do:
+
+```js
+Router.resume();
+```
 
 ## Routes
 
