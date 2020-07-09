@@ -126,10 +126,15 @@ export const startRouter = (config, instance) => {
 
 const setupRoutes = routesConfig => {
   let rootHash
+  let bootPage = routesConfig.bootComponent
+
   if (!initialised) {
     rootHash = routesConfig.root
     if (isFunction(routesConfig.boot)) {
       boot(routesConfig.boot)
+    }
+    if (bootPage && isPage(bootPage)) {
+      route('@boot-page', routesConfig.bootComponent)
     }
     initialised = true
   }
@@ -436,7 +441,7 @@ const emit = (page, events = []) => {
   })
 }
 
-const handleError = (page, error) => {
+const handleError = (page, error = 'error unkown') => {
   // force expire
   page[Symbol.for('expires')] = Date.now()
 
@@ -990,9 +995,20 @@ const capture = ({ key }) => {
 
 // start translating url
 export const start = () => {
+  const bootKey = '@boot-page'
+  const hasBootPage = pages.has('@boot-page')
+
+  // if we refreshed the boot-page we don't want to
+  // redirect to this page so we force rootHash load
+  const isDirectLoad = getHash().indexOf(bootKey) !== -1
+
   const ready = () => {
-    // if defined force to root hash
-    if (!getHash() && rootHash) {
+    if (hasBootPage) {
+      navigate('@boot-page', {
+        resume: isDirectLoad ? rootHash : getHash() || rootHash,
+        reload: true,
+      })
+    } else if (!getHash() && rootHash) {
       navigate(rootHash)
     } else {
       handleHashChange()
@@ -1057,10 +1073,7 @@ const getWidgetReferences = () => {
 
 const getWidgetByName = name => {
   name = ucfirst(name)
-  if (widgetsHost.getByRef(name)) {
-    return widgetsHost.getByRef(name)
-  }
-  return false
+  return widgetsHost.getByRef(name) || false
 }
 
 /**
@@ -1086,6 +1099,16 @@ export const handleRemote = (type, name) => {
     focusWidget(name)
   } else if (type === 'page') {
     restoreFocus()
+  }
+}
+
+/**
+ * Resume Router's page loading process after
+ * the BootComponent became visible;
+ */
+export const resume = () => {
+  if (register.has('resume')) {
+    navigate(register.get('resume'), false)
   }
 }
 
