@@ -1151,6 +1151,7 @@ export default {
   navigate,
   root,
   route,
+  resume,
   on,
   before,
   after,
