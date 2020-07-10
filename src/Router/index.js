@@ -7,11 +7,13 @@ import {
   isObject,
   isBoolean,
   isString,
+  getConfigMap,
 } from './utils'
+
 import Transitions from './transitions'
-import Settings from '../Settings'
 import Log from '../Log'
 import { AppInstance } from '../Launch'
+import { RoutedApp } from './base'
 
 let getHash = () => {
   return document.location.hash
@@ -42,9 +44,9 @@ rouThor ==[x]
 - route to same page (with force expire)
 - lazy load widgets (?)
 - on lazyCreate: false test if instance already exists on duplicate
-- Add boot page
 
  */
+
 // instance of Lightning.Application
 let application
 
@@ -59,7 +61,9 @@ const pages = new Map()
 const providers = new Map()
 const modifiers = new Map()
 const widgetsPerRoute = new Map()
+
 let register = new Map()
+let routerConfig
 
 // widget that has focus
 let activeWidget
@@ -94,6 +98,7 @@ export const startRouter = (config, instance) => {
   application = app.application
   pagesHost = application.childList
   stage = app.stage
+  routerConfig = getConfigMap()
 
   // test if required to host pages in a different child
   if (app.pages) {
@@ -101,7 +106,7 @@ export const startRouter = (config, instance) => {
   }
 
   // test if app uses widgets
-  if (app.widgets) {
+  if (app.widgets && app.widgets.children) {
     widgetsHost = app.widgets.childList
   }
 
@@ -190,7 +195,7 @@ export const route = (route, type, config) => {
       if (isFunction(type)) {
         stack.push(type)
       } else {
-        if (!Settings.get('platform', 'lazyCreate')) {
+        if (!routerConfig.get('lazyCreate')) {
           type = isLightningComponent(type) ? create(type) : type
           pagesHost.a(type)
         }
@@ -202,7 +207,7 @@ export const route = (route, type, config) => {
     if (isPage(type, stage)) {
       // if flag lazy eq false we (test) and create
       // correct component and add it to the childList
-      if (!Settings.get('platform', 'lazyCreate')) {
+      if (!routerConfig.get('lazyCreate')) {
         type = isLightningComponent(type) ? create(type) : type
         pagesHost.a(type)
       }
@@ -478,18 +483,18 @@ export const boot = cb => {
 }
 
 const providePageData = ({ page, route, hash }) => {
-  let urlValues = getValuesFromHash(hash, route)
-  let params = {}
-  // we iterate over dynamic values from the current url
-  // and invoke the page setters so that dynamic data
-  // is available before the page loads
-  for (let [name, value] of urlValues) {
+  const urlValues = getValuesFromHash(hash, route)
+  const pageData = new Map([...urlValues, ...register])
+  const params = {}
+
+  // make dynamic url data available to the page
+  // as instance properties
+  for (let [name, value] of pageData) {
     page[name] = value
-    // store so we can add them as arguments to
-    // data request callback
     params[name] = value
   }
 
+  // check navigation register for persistent data
   if (register.size) {
     const obj = {}
     for (let [k, v] of register) {
@@ -497,6 +502,10 @@ const providePageData = ({ page, route, hash }) => {
     }
     page.persist = obj
   }
+
+  // make url data and persist data available
+  // via params property
+  page.params = params
 
   return params
 }
@@ -524,10 +533,10 @@ const updatePageData = ({ page, route, hash, provide = true }) => {
  */
 const doTransition = (pageIn, pageOut = null) => {
   const hasCustomTransitions = !!(pageIn.smoothIn || pageIn.smoothInOut || pageIn.easing)
-  const transitionsDisabled = Settings.get('platform', 'disableTransitions')
+  const transitionsDisabled = routerConfig.get('disableTransitions')
 
   // for now a simple widget visibility toggle
-  if (widgetsPerRoute.size) {
+  if (widgetsPerRoute.size && widgetsHost) {
     updateWidgets(pageIn)
   }
 
@@ -590,8 +599,8 @@ const updateWidgets = page => {
 
 const cleanUp = (page, route) => {
   let doCleanup = false
-  const lazyDestroy = Settings.get('platform', 'lazyDestroy')
-  const destroyOnBack = Settings.get('platform', 'destroyOnHistoryBack')
+  const lazyDestroy = routerConfig.get('lazyDestroy')
+  const destroyOnBack = routerConfig.get('destroyOnHistoryBack')
   const keepAlive = read('keepAlive')
   const isFromHistory = read('@router:backtrack')
 
@@ -617,7 +626,7 @@ const cleanUp = (page, route) => {
 
     // force texture gc() if configured
     // so we can cleanup textures in the same tick
-    if (Settings.get('platform', 'gcOnUnload')) {
+    if (routerConfig.get('gcOnUnload')) {
       stage.gc()
     }
   }
@@ -917,7 +926,7 @@ export const navigate = (url, args, store) => {
 
     // store hash if it's not a part of history or flag for
     // storage of same hash is true
-    if (location === -1 || Settings.get('app', 'storeSameHash')) {
+    if (location === -1 || routerConfig.get('storeSameHash')) {
       history.push(toStore)
     } else {
       // if we visit the same route we want to sync history
@@ -952,7 +961,7 @@ export const step = (direction = 0) => {
     // for now we only support history back
     const route = history.splice(history.length - 1, 1)
     return navigate(route[0], { backtrack: true }, false)
-  } else if (Settings.get('platform', 'backtrack')) {
+  } else if (routerConfig.get('backtrack')) {
     const hashLastPart = /(\/:?[\w%\s-]+)$/
     let hash = stripRegex(getHash())
     let floor = getFloor(hash)
@@ -1022,6 +1031,7 @@ export const start = () => {
     ready()
   }
 }
+
 /**
  * Data binding to a route will invoke a loading screen
  * @param {String} route - the route
@@ -1112,6 +1122,12 @@ export const resume = () => {
   }
 }
 
+export const restore = () => {
+  if (routerConfig.get('autoRestoreRemote')) {
+    handleRemote('page')
+  }
+}
+
 const hash = () => {
   return getHash()
 }
@@ -1150,8 +1166,8 @@ export default {
   startRouter,
   navigate,
   root,
-  route,
   resume,
+  route,
   on,
   before,
   after,
@@ -1168,4 +1184,5 @@ export default {
   getActiveWidget,
   getActiveRoute,
   getActiveHash,
+  App: RoutedApp,
 }
