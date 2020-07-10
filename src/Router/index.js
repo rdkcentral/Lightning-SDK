@@ -34,7 +34,18 @@ export const initRouter = config => {
 
 /*
 rouThor ==[x]
-*/
+-------
+@todo:
+
+- data provider timeout
+- add route mapping
+- custom before trigger
+- manual expire
+- route to same page (with force expire)
+- lazy load widgets (?)
+- on lazyCreate: false test if instance already exists on duplicate
+
+ */
 
 // instance of Lightning.Application
 let application
@@ -472,18 +483,18 @@ export const boot = cb => {
 }
 
 const providePageData = ({ page, route, hash }) => {
-  let urlValues = getValuesFromHash(hash, route)
-  let params = {}
-  // we iterate over dynamic values from the current url
-  // and invoke the page setters so that dynamic data
-  // is available before the page loads
-  for (let [name, value] of urlValues) {
+  const urlValues = getValuesFromHash(hash, route)
+  const pageData = new Map([...urlValues, ...register])
+  const params = {}
+
+  // make dynamic url data available to the page
+  // as instance properties
+  for (let [name, value] of pageData) {
     page[name] = value
-    // store so we can add them as arguments to
-    // data request callback
     params[name] = value
   }
 
+  // check navigation register for persistent data
   if (register.size) {
     const obj = {}
     for (let [k, v] of register) {
@@ -491,6 +502,10 @@ const providePageData = ({ page, route, hash }) => {
     }
     page.persist = obj
   }
+
+  // make url data and persist data available
+  // via params property
+  page.params = params
 
   return params
 }
