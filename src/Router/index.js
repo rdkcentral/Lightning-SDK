@@ -9,9 +9,11 @@ import {
   isString,
   getConfigMap,
 } from './utils'
+
 import Transitions from './transitions'
 import Log from '../Log'
 import { AppInstance } from '../Launch'
+import { RoutedApp } from './base'
 
 let getHash = () => {
   return document.location.hash
@@ -32,18 +34,7 @@ export const initRouter = config => {
 
 /*
 rouThor ==[x]
--------
-@todo:
-
-- data provider timeout
-- add route mapping
-- custom before trigger
-- manual expire
-- route to same page (with force expire)
-- lazy load widgets (?)
-- on lazyCreate: false test if instance already exists on duplicate
-
- */
+*/
 
 // instance of Lightning.Application
 let application
@@ -104,7 +95,7 @@ export const startRouter = (config, instance) => {
   }
 
   // test if app uses widgets
-  if (app.widgets) {
+  if (app.widgets && app.widgets.children) {
     widgetsHost = app.widgets.childList
   }
 
@@ -530,7 +521,7 @@ const doTransition = (pageIn, pageOut = null) => {
   const transitionsDisabled = routerConfig.get('disableTransitions')
 
   // for now a simple widget visibility toggle
-  if (widgetsPerRoute.size) {
+  if (widgetsPerRoute.size && widgetsHost) {
     updateWidgets(pageIn)
   }
 
@@ -1116,6 +1107,12 @@ export const resume = () => {
   }
 }
 
+export const restore = () => {
+  if (routerConfig.get('autoRestoreRemote')) {
+    handleRemote('page')
+  }
+}
+
 const hash = () => {
   return getHash()
 }
@@ -1172,4 +1169,5 @@ export default {
   getActiveWidget,
   getActiveRoute,
   getActiveHash,
+  App: RoutedApp,
 }
