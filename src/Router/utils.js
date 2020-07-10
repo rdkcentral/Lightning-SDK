@@ -1,4 +1,5 @@
 import Lightning from '../Lightning'
+import Settings from '../Settings'
 
 export const isFunction = v => {
   return typeof v === 'function'
@@ -33,4 +34,22 @@ export const ucfirst = v => {
 
 export const isString = v => {
   return typeof v === 'string'
+}
+
+export const getConfigMap = () => {
+  const routerSettings = Settings.get('platform', 'router')
+  const isObj = isObject(routerSettings)
+
+  return [
+    'backtrack',
+    'gcOnUnload',
+    'destroyOnHistoryBack',
+    'lazyCreate',
+    'lazyDestroy',
+    'reuseInstance',
+    'autoRestoreRemote',
+  ].reduce((config, key) => {
+    config.set(key, isObj ? routerSettings[key] : Settings.get('platform', key))
+    return config
+  }, new Map())
 }
