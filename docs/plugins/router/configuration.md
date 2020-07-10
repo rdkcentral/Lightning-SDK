@@ -6,7 +6,7 @@ The Router plugin can be configured by passing in a _configuration_ object to th
 (typically called in the `_setup` lifecycle event in `App.js`). The configuration object can contain 4 different
 keys: `root`, `boot`, `bootComponent`, and `routes`.
 
-As mentioned before, it is recommendd to specify your routes in a separate file, i.e. `src/routes.js`.
+It is recommendd to specify your routes in a separate file, i.e. `src/routes.js`.
 
 ### Root
 
@@ -35,7 +35,7 @@ the _Splash_ page.
 
 ### Boot
 
-Sometimes you might want execute some functionality _before_ the Router loads the first Page, for example to obtain API tokens.
+Boot provides the ability to execute functionality before the Router loads the first page. For example to obtain API tokens.
 
 If your App requires this, you can specify a _function_  in the `boot` key of the configuration object.
 
@@ -43,7 +43,7 @@ The boot function has to return a _Promise_. And only when the promise resolves 
 initiate it's navigation process.
 
 The _Boot function_ will be executed when you open the App on the _root_ page, but it will also be invoked when you open
-with a deeplink location in the App.
+with a [deeplink](plugins/router/deeplinking.md) location in the App.
 
 ```js
 export default {
