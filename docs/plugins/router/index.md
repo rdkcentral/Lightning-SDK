@@ -29,7 +29,7 @@ Normally your App extends a standard Lightning Component. When you want to make 
 which comes with a default setup for the `template`, `states` and `getters`.
 
 ```js
-import { Routes } from 'wpe-lightning-sdk'
+import { Router } from 'wpe-lightning-sdk'
 
 export default class App extends Router.App {
 
