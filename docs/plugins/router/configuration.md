@@ -2,11 +2,11 @@
 
 ## Router configuration
 
-The Router plugin can be configured by passing in a _configuration_ object to the `Router.add()` method
+The Router plugin can be configured by passing in a _configuration_ object to the `Router.startRouter()` method
 (typically called in the `_setup` lifecycle event in `App.js`). The configuration object can contain 4 different
 keys: `root`, `boot`, `bootComponent`, and `routes`.
 
-It is recommendd to specify your routes in a separate file, i.e. `src/routes.js`.
+It is recommended to specify your routes in a separate file, i.e. `src/routes.js`.
 
 ### Root
 
@@ -101,6 +101,30 @@ You can make a route part dynamic by prefixing it with `:`
 This route will now match for example `localhost:8080#player/27/286`. It will also make available the data from the specific route (i.e. the `assetId` and the
 `playlistId`). See [accessing dat from route components](#accessing-data-from-route-components).
 
+### Accessing data from route components
+
+If you [navigate](#navigation-helper) to: `127.0.0.1:8080/#player/14728/38101`
+the router will add the properties `.assetId = 14728` and `.playlistId = 38101` to the instance of the *Player* `Component`
+
+###### setters ######
+
+Or use [setters](#https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic
+when the properties are being set.
+  
+```js
+class Player extends Lightning.Component {
+    static _template(){
+        return {...}
+    }    
+    set assetId(v){
+        // v === 14728
+    }
+    set playlistId(v){ 
+        // v === 38101
+    }    
+}
+```
+
 ### Using Regular expressions in routes
 
 The Router plugin has built-in regular expression support so you can add patterns to your route to start matching for certain
@@ -114,10 +138,6 @@ combinations of characters. You do this by adding `${PATTERN/MODIFIERS}` after t
     component: Player
 }
 ```
-
-### Accessing data from route components
-
-Todo ...
 
 ### Router hooks
 
@@ -152,11 +172,6 @@ On a per route basis, you can specify an object with `options`, that influences 
 ```
 
 The available options are:
-
-#### store
-
-Whether or not to store this route in history. Possible values: `true` or `false`. Defaults to `true`.
-
 
 #### preventStorage
 
