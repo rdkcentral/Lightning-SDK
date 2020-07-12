@@ -8,6 +8,7 @@ import {
   isBoolean,
   isString,
   getConfigMap,
+  incorrectParams,
 } from './utils'
 
 import Transitions from './transitions'
@@ -34,17 +35,6 @@ export const initRouter = config => {
 
 /*
 rouThor ==[x]
--------
-@todo:
-
-- data provider timeout
-- add route mapping
-- custom before trigger
-- manual expire
-- route to same page (with force expire)
-- lazy load widgets (?)
-- on lazyCreate: false test if instance already exists on duplicate
-
  */
 
 // instance of Lightning.Application
@@ -517,11 +507,24 @@ const updatePageData = ({ page, route, hash, provide = true }) => {
   if (!provide) {
     return Promise.resolve()
   }
-
-  return cb({ page, ...params }).then(() => {
-    // set new expire time
-    page[Symbol.for('expires')] = Date.now() + expires
-  })
+  /**
+   * In the first version of the Router, a reference to the page is made
+   * available to the callback function as property of {params}.
+   * Since this is error prone (named url parts are also being spread inside this object)
+   * we made the page reference the first parameter and url values the second.
+   * -
+   * We keep it backwards compatible for now but a warning is showed in the console.
+   */
+  if (incorrectParams(cb, route)) {
+    // keep page as params property backwards compatible for now
+    return cb({ page, ...params }).then(() => {
+      page[Symbol.for('expires')] = Date.now() + expires
+    })
+  } else {
+    return cb(page, { ...params }).then(() => {
+      page[Symbol.for('expires')] = Date.now() + expires
+    })
+  }
 }
 
 /**
