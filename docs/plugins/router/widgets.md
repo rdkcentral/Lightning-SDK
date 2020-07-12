@@ -79,3 +79,6 @@ _handleKey(){
     Router.handleRemote("page");
 }
 ```
+
+Next: 
+[Settings](settings.md)

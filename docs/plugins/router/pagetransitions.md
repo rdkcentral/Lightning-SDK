@@ -112,3 +112,6 @@ class SearchPage extends Lightning.Component {
 ```
 
 It will self resolve on finish.
+
+Next: 
+[Widgets](widgets.md)

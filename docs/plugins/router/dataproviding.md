@@ -100,3 +100,6 @@ class Browse extends Lightning.Component{
     }
 }
 ```
+
+Next: 
+[Router events](events.md)

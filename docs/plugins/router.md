@@ -89,4 +89,4 @@ Router.navigate('home/browse/adventure')
 Calling these methods will update the browser hash properly for you and handle the entire navigation flow between Pages.
 
 Next:
-[Router configuration](configuration.md)
+[Router configuration](router/configuration.md)

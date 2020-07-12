@@ -68,3 +68,6 @@ In some cases you might want to keep that page around, in order to go back to it
 ```js
 Router.navigate('player/1638', {keepAlive: true, a:1, b:2})
 ```
+
+Next: 
+[Data providing](dataproviding.md)

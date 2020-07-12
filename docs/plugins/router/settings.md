@@ -36,3 +36,6 @@ To free up texture memory directly after the old page has been destroyed and not
     }
 }
 ```
+
+Next: 
+[Deeplinking & History](deeplinking.md)
