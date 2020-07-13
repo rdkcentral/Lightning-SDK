@@ -424,14 +424,14 @@ const triggerOn = ({ page, old, route, hash }) => {
     })
 }
 
-const emit = (page, events = []) => {
+const emit = (page, events = [], params = {}) => {
   if (!isArray(events)) {
     events = [events]
   }
   events.forEach(e => {
     const event = `_on${ucfirst(e)}`
     if (isFunction(page[event])) {
-      page[event]()
+      page[event](params)
     }
   })
 }
@@ -496,6 +496,8 @@ const providePageData = ({ page, route, hash }) => {
   // make url data and persist data available
   // via params property
   page.params = params
+
+  emit(page, ['urlParams'], params)
 
   return params
 }
