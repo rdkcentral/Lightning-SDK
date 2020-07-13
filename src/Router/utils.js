@@ -60,7 +60,7 @@ export const incorrectParams = (cb, route) => {
     console.warn(
       [
         `DEPRECATION: The data-provider for route: ${route} is not correct.`,
-        '"page" is no longer a property of the params object but is now the first argument:',
+        '"page" is no longer a property of the params object but is now the first function parameter: ',
         'https://github.com/rdkcentral/Lightning-SDK/blob/feature/router/docs/plugins/router/dataproviding.md#data-providing',
         "It's supported for now but will be removed in a future release.",
       ].join('\n')

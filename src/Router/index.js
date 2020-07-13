@@ -877,6 +877,13 @@ const handleHashChange = override => {
   }
 }
 
+const getMod = (hash, key) => {
+  const config = modifiers.get(getRouteByHash(hash))
+  if (isObject(config)) {
+    return config[key]
+  }
+}
+
 const hashmod = (hash, key) => {
   return routemod(getRouteByHash(hash), key)
 }
@@ -906,24 +913,32 @@ const createRegister = flags => {
   return reg
 }
 
-export const navigate = (url, args, store) => {
-  let storeHash = true
+export const navigate = (url, args, store = true) => {
   register.clear()
+
+  const hash = getHash()
+  const storeHash = getMod(hash, 'store')
+
+  // keep backwards compatible for now
+  let configPrevent = hashmod(hash, 'preventStorage')
+  let configStore = true
+
+  if ((isBoolean(storeHash) && storeHash === false) || configPrevent) {
+    configStore = false
+  }
 
   if (isObject(args)) {
     register = createRegister(args)
     if (isBoolean(store) && !store) {
-      storeHash = false
+      store = false
     }
   } else if (isBoolean(args) && !args) {
     // if explicit set to false we don't want
     // to store the route
-    storeHash = !!args
+    store = false
   }
 
-  const hash = getHash()
-  // add current hash to history
-  if (hash && storeHash && !hashmod(hash, 'preventStorage')) {
+  if (hash && store && configStore) {
     const toStore = hash.substring(1, hash.length)
     const location = history.indexOf(toStore)
 
