@@ -48,35 +48,30 @@ The value of `widgets` should be an `Array` with the `refs` of the widgets to be
 Considering the example above, whenever you do `Router.navigate('discover/player/998/29174')` the `visible`-property of both `Notification` and `StatusBar` will be set to `true`.
 
 
-### Handle remote keypresses
+### Handling focus
 
-### handleRemote()
+In Lightning key presses are handled by the component that has _focus_ ([handle remote-control keys](https://rdkcentral.github.io/Lightning/docs/focus/keyhandler))
 
-If we want the widget to [handle remote-control keys](https://rdkcentral.github.io/Lightning/docs/focus/keyhandler)
+In a routed App, by default the focus is delegated to the current Page. In order to move the focus from the Page to an
+active `Widget` , you can use the `handleFocus` method exported by the Router plugin and pass it the _reference_ to the
+Widget you want to give focus.
 
 ```js
-class Search extends Lightning.Component {
+class SearchPage extends Lightning.Component {
    _handleUp(){
-       Router.handleRemote("widget", "Menu");
+       Router.handleFocus('Widget.Menu');
    }
 }
 ```
 
-If we want to let the page to handle remote-control keys
+Subsequently you can delagate the focus from a widget back to the active Router page by passing `Pages` as an argument
+in the `handleFocus` method.
 
 ```js
-_handleBack(){
-    Router.handleRemote("page");
-}
-```
-
-or add the following logic to your statemachine (Widget) state if you want auto restore focus
-for keys who are now being handled by the widget.
-See in [example app](https://github.com/mlapps/router-example-app/blob/94d46738a399703657bf4c17b0ffd442df939b58/src/App.js#L115)
-
-```js
-_handleKey(){
-    Router.handleRemote("page");
+class Menu extends Lightning.Component {
+   _handleDown(){
+       Router.handleFocus('Pages');
+   }
 }
 ```
 
