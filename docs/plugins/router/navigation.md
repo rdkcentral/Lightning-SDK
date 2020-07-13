@@ -45,7 +45,8 @@ class Player extends Lightning.Component{
 
 ### Prevent storing in history
 
-By default all visited routes will end up in memory (unless the route this turned of in the configuraton object).
+By default all visited routes will end up in memory (unless the route already turned this off in the
+[configuraton object](plugins/router/configuration?id=store)).
 If you don't want a particular `navigate` to cause a Page to end up in the history stack, you can prevent this by passing
 `false` as a second argument.
 

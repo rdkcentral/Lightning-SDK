@@ -6,7 +6,7 @@ Widgets are Lightning Component that can live on multiple pages.
 
 >  Widgets overlay the pages as they will always have the highest z-index
 
-In you App's `template`, Widgets need to be placed inside a `Widget` wrapper on the root level of your app. For example
+In you App's `template`, Widgets need to be placed inside a `Widget` wrapper on the root level of your app. For example:
 
 ```js
 static _template(){
@@ -45,7 +45,7 @@ The value of `widgets` should be an `Array` with the `refs` of the widgets to be
 }
 ```
 
-Considering the example above, whenever you do `Router.navigate('discover/player/998/29174` the `visible`-property of both `Notification` and `StatusBar` will be set to `true`.
+Considering the example above, whenever you do `Router.navigate('discover/player/998/29174')` the `visible`-property of both `Notification` and `StatusBar` will be set to `true`.
 
 
 ### Handle remote keypresses
@@ -71,7 +71,7 @@ _handleBack(){
 ```
 
 or add the following logic to your statemachine (Widget) state if you want auto restore focus
-for keys who are now being handled by the widget.\
+for keys who are now being handled by the widget.
 See in [example app](https://github.com/mlapps/router-example-app/blob/94d46738a399703657bf4c17b0ffd442df939b58/src/App.js#L115)
 
 ```js
@@ -80,5 +80,5 @@ _handleKey(){
 }
 ```
 
-Next: 
-[Settings](settings.md)
+Next:
+[Settings](plugins/router/settings.md)
