@@ -22,5 +22,5 @@ For example:
 - from `Router.navigate("home/playback/12/10")`
 - to `Router.navigate("home/playback/293/99")`
 
-Next: 
-[Page transitions](pagetransitions.md)
+Next:
+[Page transitions](plugins/router/pagetransitions.md)

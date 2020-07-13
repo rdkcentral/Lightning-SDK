@@ -110,18 +110,18 @@ the router will add the properties `.assetId = 14728` and `.playlistId = 38101` 
 
 Or use [setters](#https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic
 when the properties are being set.
-  
+
 ```js
 class Player extends Lightning.Component {
     static _template(){
         return {...}
-    }    
+    }
     set assetId(v){
         // v === 14728
     }
-    set playlistId(v){ 
+    set playlistId(v){
         // v === 38101
-    }    
+    }
 }
 ```
 
@@ -208,5 +208,5 @@ to display this route, whenever a page's [dataprovider]() returns an error.
 }
 ```
 
-Next: 
-[Navigation](navigation.md)
+Next:
+[Navigation](plugins/router/navigation.md)

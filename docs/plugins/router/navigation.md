@@ -37,7 +37,7 @@ a `params` property on the instance of that Component.
 
 ```js
 class Player extends Lightning.Component{
-    set params(args){
+    set params(args) {
         // do something with data passed in the navigate
     }
 }
@@ -69,5 +69,5 @@ In some cases you might want to keep that page around, in order to go back to it
 Router.navigate('player/1638', {keepAlive: true, a:1, b:2})
 ```
 
-Next: 
-[Data providing](dataproviding.md)
+Next:
+[Data providing](plugins/router/dataproviding.md)
