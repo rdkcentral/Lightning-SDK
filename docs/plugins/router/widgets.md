@@ -59,7 +59,7 @@ Widget you want to give focus.
 ```js
 class SearchPage extends Lightning.Component {
    _handleUp(){
-       Router.handleFocus('Widget.Menu');
+       Router.handleFocus('Widgets.Menu');
    }
 }
 ```
