@@ -1164,15 +1164,15 @@ export const getActivePage = () => {
   }
 }
 
-const getActiveRoute = () => {
+export const getActiveRoute = () => {
   return activeRoute
 }
 
-const getActiveHash = () => {
+export const getActiveHash = () => {
   return activeHash
 }
 
-const getActiveWidget = () => {
+export const getActiveWidget = () => {
   return activeWidget
 }
 
@@ -1194,6 +1194,7 @@ export default {
   boot,
   step,
   restoreFocus,
+  focusPage: restoreFocus,
   focusWidget,
   handleRemote,
   start,
@@ -1205,4 +1206,5 @@ export default {
   getActiveRoute,
   getActiveHash,
   App: RoutedApp,
+  restore,
 }
