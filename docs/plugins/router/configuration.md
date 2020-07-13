@@ -6,7 +6,7 @@ The Router plugin can be configured by passing in a _configuration_ object to th
 (typically called in the `_setup` lifecycle event in `App.js`). The configuration object can contain 4 different
 keys: `root`, `boot`, `bootComponent`, and `routes`.
 
-It is recommended to specify your routes in a separate file, i.e. `src/routes.js`.
+It is recommended to specify this configuration in a separate file, i.e. `src/routes.js`.
 
 ### Root
 
@@ -87,7 +87,7 @@ ready to give back control to the Router plugin.
 
 ### Dynamic routes
 
-So far we have only specified static route paths (i.e. `home/browse/adventure`). But the Router plugin also supports dynamic routes.
+So far we have only specified static route paths (i.e. `home/browse/adventure`). But the Router plugin also supports _dynamic_ routes.
 
 You can make a route part dynamic by prefixing it with `:`
 
@@ -99,35 +99,33 @@ You can make a route part dynamic by prefixing it with `:`
 ```
 
 This route will now match for example `localhost:8080#player/27/286`. It will also make available the data from the specific route (i.e. the `assetId` and the
-`playlistId`). See [accessing dat from route components](#accessing-data-from-route-components).
+`playlistId`). See [accessing data from route components](#accessing-data-from-route-components).
 
 ### Accessing data from route components
 
 If you [navigate](#navigation-helper) to: `127.0.0.1:8080/#player/14728/38101`
 the router will add the properties `.assetId = 14728` and `.playlistId = 38101` to the instance of the *Player* `Component`
 
-###### setters ######
-
-Or use [setters](#https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic
+You can also use [setters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic
 when the properties are being set.
-  
+
 ```js
 class Player extends Lightning.Component {
     static _template(){
         return {...}
-    }    
+    }
     set assetId(v){
         // v === 14728
     }
-    set playlistId(v){ 
+    set playlistId(v){
         // v === 38101
-    }    
+    }
 }
 ```
 
 ### Using Regular expressions in routes
 
-The Router plugin has built-in regular expression support so you can add patterns to your route to start matching for certain
+The Router plugin has _built-in_ regular expression support so you can add patterns to your route to start matching for certain
 combinations of characters. You do this by adding `${PATTERN/MODIFIERS}` after the dynamic name
 
 ```js
@@ -173,9 +171,9 @@ On a per route basis, you can specify an object with `options`, that influences 
 
 The available options are:
 
-#### preventStorage
+#### store
 
-Make sure this route never ends up in history
+Whether or not to store this route in history. Possible values: `true` or `false`. Defaults to `true`.
 
 #### clearHistory
 
@@ -186,7 +184,7 @@ Whether it's own history should be reset when visiting this route. Possible valu
 
 There are 2 _special_ routes that can be configured in the `routes`-array.
 
-### Url not found
+#### Url not found
 
 The `*`-path is used to specify which component to display when an unknown `route-path` is hit.
 
@@ -196,10 +194,10 @@ The `*`-path is used to specify which component to display when an unknown `rout
     component: NotFoundPage,
 }
 ```
-### Error page
+#### Error page
 
 The `!`-path is used to specify which component to display as a global error page. The Router plugin attempts
-to display this route, whenever a page's [dataprovider]() returns an error.
+to display this route, whenever a page's [dataprovider](plugins/router/dataproviding.md) returns an error.
 
 ```js
 {
@@ -208,5 +206,5 @@ to display this route, whenever a page's [dataprovider]() returns an error.
 }
 ```
 
-Next: 
-[Navigation](navigation.md)
+Next:
+[Navigation](plugins/router/navigation.md)

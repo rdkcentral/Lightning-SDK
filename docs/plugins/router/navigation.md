@@ -37,7 +37,7 @@ a `params` property on the instance of that Component.
 
 ```js
 class Player extends Lightning.Component{
-    set params(args){
+    set params(args) {
         // do something with data passed in the navigate
     }
 }
@@ -45,7 +45,8 @@ class Player extends Lightning.Component{
 
 ### Prevent storing in history
 
-By default all visited routes will end up in memory (unless the route this turned of in the configuraton object).
+By default all visited routes will end up in memory (unless the route already turned this off in the
+[configuraton object](plugins/router/configuration?id=store)).
 If you don't want a particular `navigate` to cause a Page to end up in the history stack, you can prevent this by passing
 `false` as a second argument.
 
@@ -69,5 +70,5 @@ In some cases you might want to keep that page around, in order to go back to it
 Router.navigate('player/1638', {keepAlive: true, a:1, b:2})
 ```
 
-Next: 
-[Data providing](dataproviding.md)
+Next:
+[Data providing](plugins/router/dataproviding.md)

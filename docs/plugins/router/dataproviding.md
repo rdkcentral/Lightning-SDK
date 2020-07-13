@@ -88,8 +88,8 @@ Considering the route definiton above, the Router plugin will:
 3. Do the request
 
 
-By adding `_onDataProvided() {..}` to you Lightning Component you can listen when the data-providing is ready. This
-will not fire when the page is not expired (and loaded from [memory-todo](#))
+By adding `_onDataProvided() {..}` to your Lightning Component you can listen to when the data-providing is ready. This
+will not fire when the page is not expired (and loaded from memory).
 
 ```js
 class Browse extends Lightning.Component{
@@ -101,5 +101,5 @@ class Browse extends Lightning.Component{
 }
 ```
 
-Next: 
-[Router events](events.md)
+Next:
+[Router events](plugins/router/events.md)
