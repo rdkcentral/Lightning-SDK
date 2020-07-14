@@ -1138,7 +1138,8 @@ export const handleRemote = (type, name) => {
  */
 export const resume = () => {
   if (register.has('resume')) {
-    navigate(register.get('resume'), false)
+    const hash = register.get('resume').replace(/^#+/, '')
+    navigate(hash, false)
   }
 }
 
