@@ -55,6 +55,10 @@ export const isString = v => {
   return typeof v === 'string'
 }
 
+export const isPromise = v => {
+  return v instanceof Promise
+}
+
 export const getConfigMap = () => {
   const routerSettings = Settings.get('platform', 'router')
   const isObj = isObject(routerSettings)

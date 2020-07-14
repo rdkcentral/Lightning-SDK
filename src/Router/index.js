@@ -28,6 +28,7 @@ import {
   isString,
   getConfigMap,
   incorrectParams,
+  isPromise,
 } from './utils'
 
 import Transitions from './transitions'
