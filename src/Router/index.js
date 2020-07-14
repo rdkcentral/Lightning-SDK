@@ -999,6 +999,11 @@ export const step = (direction = 0) => {
       }
     }
   }
+
+  if (isFunction(app._handleAppClose)) {
+    return app._handleAppClose()
+  }
+
   return false
 }
 
