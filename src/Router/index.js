@@ -537,9 +537,11 @@ const updatePageData = ({ page, route, hash, provide = true }) => {
  * @param pageOut
  */
 const doTransition = (pageIn, pageOut = null) => {
-  const hasCustomTransitions = !!(pageIn.smoothIn || pageIn.smoothInOut || pageIn.easing)
-  const transitionsDisabled = routerConfig.get('disableTransitions')
+  const transition = pageIn.pageTransition || pageIn.easing
+  const transitionType = transition ? transition(pageIn, pageOut) : null
 
+  const hasCustomTransitions = !!(pageIn.smoothIn || pageIn.smoothInOut || transitionType)
+  const transitionsDisabled = routerConfig.get('disableTransitions')
   // for now a simple widget visibility toggle
   if (widgetsPerRoute.size && widgetsHost) {
     updateWidgets(pageIn)
@@ -554,8 +556,8 @@ const doTransition = (pageIn, pageOut = null) => {
     return Promise.resolve()
   }
 
-  if (pageIn.easing && isString(pageIn.easing())) {
-    const type = Transitions[pageIn.easing()]
+  if (transitionType && isString(transitionType)) {
+    const type = Transitions[transition()]
     if (type) {
       return type(pageIn, pageOut)
     }
@@ -565,8 +567,8 @@ const doTransition = (pageIn, pageOut = null) => {
   // transition we call the function and provide both instances
   // as an argument. It's the function's job to
   // resolve a promise when ready
-  if (pageIn.smoothInOut) {
-    return pageIn.smoothInOut(pageIn, pageOut)
+  if (isPromise(transitionType)) {
+    return transitionType
   } else if (pageIn.smoothIn) {
     // provide a smooth function that resolves itself
     // on transition finish
