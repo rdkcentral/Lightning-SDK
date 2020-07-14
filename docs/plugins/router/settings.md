@@ -38,4 +38,4 @@ To free up texture memory directly after the old page has been destroyed and not
 ```
 
 Next:
-[Deeplinking & History](plugins/router/deeplinking.md)
+[Deeplinking & History](deeplinking.md)

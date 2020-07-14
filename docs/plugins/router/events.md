@@ -6,7 +6,7 @@ In addition to Lightning's default [life-cycle events](https://rdkcentral.github
 
 ### _onDataProvided()
 
-When you use [data providing](./plugins/router/dataproviding.md) the `_onDataProvided`-method will be invoked when
+When you use [data providing](dataproviding.md) the `_onDataProvided`-method will be invoked when
 the `on`, `before` or `after` data provider has resolved.
 
 ### _onMounted()
@@ -23,4 +23,4 @@ For example:
 - to `Router.navigate("home/playback/293/99")`
 <br /><br />
 
-Next: [Page transitions](plugins/router/pagetransitions.md)
+Next: [Page transitions](pagetransitions.md)

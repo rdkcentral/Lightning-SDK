@@ -2,7 +2,7 @@
 
 ## Navigation
 
-Once you've set up the [correct routes](plugins/router/configuration) for your app, you can start navigating from one Page to another.
+Once you've set up the [correct routes](configuration) for your app, you can start navigating from one Page to another.
 
 Under the hood the Router plugin listens for URL hash changes, and displays the correct Page based on that. However you should
 not directly change the browsers hash location, because the implementation might differ between platforms.
@@ -46,7 +46,7 @@ class Player extends Lightning.Component{
 ### Prevent storing in history
 
 By default all visited routes will end up in memory (unless the route already turned this off in the
-[configuraton object](plugins/router/configuration?id=store)).
+[configuraton object](configuration?id=store)).
 If you don't want a particular `navigate` to cause a Page to end up in the history stack, you can prevent this by passing
 `false` as a second argument.
 
@@ -62,7 +62,7 @@ Router.navigate("player/1638", {a:1, b:2}, false)
 
 ## Keep alive
 
-When [Lazy destroy]() is configured, whenever you navigate from one page to another the _old_ page is destroyed.
+When [Lazy destroy](settings?id=lazy-destroy) is configured, whenever you navigate from one page to another the _old_ page is destroyed.
 
 In some cases you might want to keep that page around, in order to go back to it in the original state. If you add `keepAlive: true` as one of the data parameters, the _current_ page you are navigating _from_ will remain in memory.
 
@@ -71,4 +71,4 @@ Router.navigate('player/1638', {keepAlive: true, a:1, b:2})
 ```
 
 Next:
-[Data providing](plugins/router/dataproviding.md)
+[Data providing](dataproviding.md)

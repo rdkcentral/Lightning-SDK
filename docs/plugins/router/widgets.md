@@ -76,4 +76,4 @@ class Menu extends Lightning.Component {
 ```
 
 Next:
-[Settings](plugins/router/settings.md)
+[Settings](settings.md)

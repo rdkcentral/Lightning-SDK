@@ -88,4 +88,4 @@ class BrowsePage extends Lightning.Component {
 ```
 
 Next:
-[Widgets](plugins/router/widgets.md)
+[Widgets](widgets.md)

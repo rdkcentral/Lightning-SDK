@@ -6,7 +6,7 @@ The Router is typically used to navigate between _Pages_, which are effectively 
 Optionally you can also attach one or more _Callback_ `functions` to a route.
 
 Besides taking away a lot of boilerplate code, the Router plugin can be beneficial for _memory management_ as well, due to it's configurable
-[lazy creation and destroy](plugins/router/settings?id=lazy-creation) functionality. This is especially helpful when deploying an App on low-end devices with less memory (RAM / VRAM)
+[lazy creation and destroy](settings?id=lazy-creation) functionality. This is especially helpful when deploying an App on low-end devices with less memory (RAM / VRAM)
 
 ## Example app
 
@@ -36,7 +36,7 @@ export default class App extends Router.App {
 }
 ```
 
-The next step is to configure the available routes that exist for your App, using the `Router.startRouter` method, which accepts an object with [router configuration](plugins/router/configuration) as it's first argument. A good place to initiate the router is in your App's `_setup` lifecycle event.
+The next step is to configure the available routes that exist for your App, using the `Router.startRouter` method, which accepts an object with [router configuration](configuration) as it's first argument. A good place to initiate the router is in your App's `_setup` lifecycle event.
 
 ### Basic routes
 
@@ -80,4 +80,4 @@ Router.navigate('home/browse/adventure')
 Calling these methods will update the browser hash properly for you and handle the entire navigation flow between Pages.
 
 Next:
-[Router configuration](plugins/router/configuration.md)
+[Router configuration](configuration.md)

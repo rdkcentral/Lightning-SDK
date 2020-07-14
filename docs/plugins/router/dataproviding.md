@@ -102,4 +102,4 @@ class Browse extends Lightning.Component{
 ```
 
 Next:
-[Router events](plugins/router/events.md)
+[Router events](events.md)

@@ -207,4 +207,4 @@ to display this route, whenever a page's [dataprovider](plugins/router/dataprovi
 ```
 
 Next:
-[Navigation](plugins/router/navigation.md)
+[Navigation](navigation.md)

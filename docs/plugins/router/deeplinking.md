@@ -6,7 +6,7 @@ The Router plugin has built-in support for deeplinking, which means that your Ap
 
 The Lazy creation support in the page router enables to only load what is needed and keep memory usage to a minimum. Also in case of a deeplink, regular dataproviding for a specific route is still executed.
 
-On top of that there is exists the [boot](plugins/router/configuration?id=boot) function that can
+On top of that there is exists the [boot](configuration?id=boot) function that can
 handle any general operations that has need to be executed for you App to functon properly.
 
 ## Backtracking
