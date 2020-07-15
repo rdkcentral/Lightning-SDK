@@ -55,14 +55,23 @@ export const isString = v => {
   return typeof v === 'string'
 }
 
-export const isPromise = v => {
-  return v instanceof Promise
+export const isPromise = method => {
+  let result
+  if (isFunction(method)) {
+    try {
+      result = method.apply(null)
+    } catch (e) {
+      result = e
+    }
+  } else {
+    result = method
+  }
+  return isObject(result) && isFunction(result.then)
 }
 
 export const getConfigMap = () => {
   const routerSettings = Settings.get('platform', 'router')
   const isObj = isObject(routerSettings)
-
   return [
     'backtrack',
     'gcOnUnload',

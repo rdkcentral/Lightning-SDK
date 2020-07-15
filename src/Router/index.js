@@ -558,10 +558,9 @@ const updatePageData = ({ page, route, hash, provide = true }) => {
  */
 const doTransition = (pageIn, pageOut = null) => {
   const transition = pageIn.pageTransition || pageIn.easing
-  const transitionType = transition ? transition(pageIn, pageOut) : null
-
-  const hasCustomTransitions = !!(pageIn.smoothIn || pageIn.smoothInOut || transitionType)
+  const hasCustomTransitions = !!(pageIn.smoothIn || pageIn.smoothInOut || transition)
   const transitionsDisabled = routerConfig.get('disableTransitions')
+
   // for now a simple widget visibility toggle
   if (widgetsPerRoute.size && widgetsHost) {
     updateWidgets(pageIn)
@@ -576,32 +575,40 @@ const doTransition = (pageIn, pageOut = null) => {
     return Promise.resolve()
   }
 
-  if (transitionType && isString(transitionType)) {
-    const type = Transitions[transition()]
-    if (type) {
-      return type(pageIn, pageOut)
+  if (transition) {
+    let type
+    try {
+      type = transition.call(pageIn, pageIn, pageOut)
+    } catch (e) {
+      type = 'crossFade'
     }
-  }
 
-  // if the new instance wants to control both in and out
-  // transition we call the function and provide both instances
-  // as an argument. It's the function's job to
-  // resolve a promise when ready
-  if (isPromise(transitionType)) {
-    return transitionType
-  } else if (pageIn.smoothIn) {
-    // provide a smooth function that resolves itself
-    // on transition finish
-    const smooth = (p, v, args = {}) => {
-      return new Promise(resolve => {
-        pageIn.visible = true
-        pageIn.setSmooth(p, v, args)
-        pageIn.transition(p).on('finish', () => {
-          resolve()
-        })
-      })
+    if (isPromise(type)) {
+      return type
     }
-    return pageIn.smoothIn({ pageIn, smooth })
+
+    if (isString(type)) {
+      const fn = Transitions[type]
+      if (fn) {
+        return fn(pageIn, pageOut)
+      }
+    }
+
+    // keep backwards compatible for now
+    if (pageIn.smoothIn) {
+      // provide a smooth function that resolves itself
+      // on transition finish
+      const smooth = (p, v, args = {}) => {
+        return new Promise(resolve => {
+          pageIn.visible = true
+          pageIn.setSmooth(p, v, args)
+          pageIn.transition(p).on('finish', () => {
+            resolve()
+          })
+        })
+      }
+      return pageIn.smoothIn({ pageIn, smooth })
+    }
   }
 
   return Transitions.crossFade(pageIn, pageOut)
@@ -808,7 +815,6 @@ const getRouteByHash = hash => {
 
         // split regex and modifiers so we can use both
         // to create a new RegExp
-        // eslint-disable-next-line
         const regMatches = /\/([^\/]+)\/([igm]{0,3})/.exec(routeRegex)
 
         if (regMatches && regMatches.length) {
