@@ -335,7 +335,7 @@ const load = async ({ route, hash }) => {
   // if routes share instance we only update
   // update the page data if needed
   if (routesShareInstance) {
-    if (provide || read('reload')) {
+    if (provide) {
       try {
         await updatePageData({ page, route, hash })
         emit(page, ['dataProvided', 'changed'])
