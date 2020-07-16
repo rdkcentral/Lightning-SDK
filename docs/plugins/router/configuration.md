@@ -76,7 +76,7 @@ export default {
             })
         })
     },
-    bootComponent: 'Splash',
+    bootComponent: Splash,
     routes:[...]
 }
 ```

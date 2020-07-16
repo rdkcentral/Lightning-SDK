@@ -32,7 +32,9 @@ which comes with a default setup for the `template`, `states` and `getters`.
 import { Router } from 'wpe-lightning-sdk'
 
 export default class App extends Router.App {
-
+    _setup(){
+        Router.starRouter(routes) 
+    }
 }
 ```
 
