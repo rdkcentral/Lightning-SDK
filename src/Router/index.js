@@ -392,6 +392,10 @@ const load = async ({ route, hash }) => {
   activeRoute = route
   activeHash = hash
 
+  if (widgetsPerRoute.size && widgetsHost) {
+    updateWidgets(page)
+  }
+
   Log.info('[route]:', route)
   Log.info('[hash]:', hash)
 
@@ -561,11 +565,6 @@ const doTransition = (pageIn, pageOut = null) => {
   const hasCustomTransitions = !!(pageIn.smoothIn || pageIn.smoothInOut || transition)
   const transitionsDisabled = routerConfig.get('disableTransitions')
 
-  // for now a simple widget visibility toggle
-  if (widgetsPerRoute.size && widgetsHost) {
-    updateWidgets(pageIn)
-  }
-
   // default behaviour is a visibility toggle
   if (!hasCustomTransitions || transitionsDisabled) {
     pageIn.visible = true
@@ -620,14 +619,16 @@ const doTransition = (pageIn, pageOut = null) => {
  * @param page
  */
 const updateWidgets = page => {
-  // grab active route
   const route = page[Symbol.for('route')]
+
   // force lowercase lookup
   const configured = (widgetsPerRoute.get(route) || []).map(ref => ref.toLowerCase())
-  // iterate over all available widgets and turn visibility
-  // if they're configured for the current route
+
   widgetsHost.forEach(widget => {
     widget.visible = configured.indexOf(widget.ref.toLowerCase()) !== -1
+    if (widget.visible) {
+      emit(widget, ['activated'], page)
+    }
   })
 }
 
