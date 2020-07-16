@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.4.0
+
+*14 jul 2020*
+
+- Added `image.quality` platform setting to tune down the image quality on STB's with lower GPU memory
+- Added _Router_ plugin to SDK
+
 ## v2.3.1
 
 *8 jul 2020*
