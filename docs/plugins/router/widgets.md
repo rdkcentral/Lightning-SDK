@@ -75,5 +75,16 @@ class Menu extends Lightning.Component {
 }
 ```
 
+### Interaction
+
+A `page` can interact with one of the widget via the `widgets` property that is made
+available to the `page` instance. The widgets can be referenced via their lowercase `ref`
+
+```js
+_handleEnter(){
+    this.widgets.notification.notify("hello!")
+}
+```
+
 Next:
 [Settings](settings.md)
