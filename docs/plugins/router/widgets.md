@@ -53,24 +53,23 @@ Considering the example above, whenever you do `Router.navigate('discover/player
 In Lightning key presses are handled by the component that has _focus_ ([handle remote-control keys](https://rdkcentral.github.io/Lightning/docs/focus/keyhandler))
 
 In a routed App, by default the focus is delegated to the current Page. In order to move the focus from the Page to an
-active `Widget` , you can use the `handleFocus` method exported by the Router plugin and pass it the _reference_ to the
+active `Widget` , you can use the `focusWidget` method exported by the Router plugin and pass it the _reference_ to the
 Widget you want to give focus.
 
 ```js
 class SearchPage extends Lightning.Component {
    _handleUp(){
-       Router.handleFocus('Widgets.Menu');
+       Router.focusWidget('Menu');
    }
 }
 ```
 
-Subsequently you can delagate the focus from a widget back to the active Router page by passing `Pages` as an argument
-in the `handleFocus` method.
+Subsequently you can delegate the focus from a widget back to the active Router page by using the `focusPage` method.
 
 ```js
 class Menu extends Lightning.Component {
    _handleDown(){
-       Router.handleFocus('Pages');
+       Router.focusPage();
    }
 }
 ```
