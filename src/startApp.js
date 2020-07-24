@@ -119,10 +119,16 @@ const getSettings = () => {
 
             // remove script tag
             removeJS('appbundle')
-          })
 
-          // show notice to refresh
-          console.log('App closed! Refresh the page to restart the App')
+            // reset vars
+            app = null
+            canvas = null
+            appMetadata = null
+            settings = null
+
+            // show notice to refresh
+            console.log('App closed! Refresh the page to restart the App')
+          })
         }
 
         resolve(settings)

@@ -191,10 +191,15 @@ var getSettings = function getSettings() {
 
           window[appMetadata.id] = null; // remove script tag
 
-          removeJS('appbundle');
-        }.bind(this)); // show notice to refresh
+          removeJS('appbundle'); // reset vars
 
-        console.log('App closed! Refresh the page to restart the App');
+          app = null;
+          canvas = null;
+          appMetadata = null;
+          settings = null; // show notice to refresh
+
+          console.log('App closed! Refresh the page to restart the App');
+        }.bind(this));
       }.bind(this);
 
       resolve(settings);
