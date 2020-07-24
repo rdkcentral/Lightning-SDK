@@ -817,7 +817,7 @@ const getRouteByHash = hash => {
         // split regex and modifiers so we can use both
         // to create a new RegExp
         // eslint-disable-next-line
-        const regMatches = /\/([^\/]+)\/([igm]{0,3})/.exec(routeRegex)
+        const regMatches = /\/([^\/]+)\/([igm]{0,3})/.exec(routeRegex);
 
         if (regMatches && regMatches.length) {
           const expression = regMatches[1]
@@ -1039,6 +1039,9 @@ export const step = (direction = 0) => {
 }
 
 const capture = ({ key }) => {
+  if (!routerConfig.get('numberNavigation')) {
+    return false
+  }
   key = parseInt(key)
   if (!isNaN(key)) {
     let match
