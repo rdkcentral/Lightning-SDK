@@ -127,7 +127,7 @@ const getSettings = () => {
             settings = null
 
             // show notice to refresh
-            console.log('App closed! Refresh the page to restart the App')
+            console.log('👋 App closed!\nRefresh the page to restart the App')
           })
         }
 

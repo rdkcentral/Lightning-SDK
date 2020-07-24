@@ -198,7 +198,7 @@ var getSettings = function getSettings() {
           appMetadata = null;
           settings = null; // show notice to refresh
 
-          console.log('App closed! Refresh the page to restart the App');
+          console.log('👋 App closed!\nRefresh the page to restart the App');
         }.bind(this));
       }.bind(this);
 
