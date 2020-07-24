@@ -29,6 +29,7 @@ import {
   getConfigMap,
   incorrectParams,
   isPromise,
+  getQueryStringParams,
 } from './utils'
 
 import Transitions from './transitions'
@@ -817,7 +818,7 @@ const getRouteByHash = hash => {
         // split regex and modifiers so we can use both
         // to create a new RegExp
         // eslint-disable-next-line
-        const regMatches = /\/([^\/]+)\/([igm]{0,3})/.exec(routeRegex);
+        const regMatches = /\/([^\/]+)\/([igm]{0,3})/.exec(routeRegex)
 
         if (regMatches && regMatches.length) {
           const expression = regMatches[1]
@@ -1065,25 +1066,27 @@ const capture = ({ key }) => {
 export const start = () => {
   const bootKey = '@boot-page'
   const hasBootPage = pages.has('@boot-page')
+  const hash = getHash()
+  const params = getQueryStringParams(hash)
 
   // if we refreshed the boot-page we don't want to
   // redirect to this page so we force rootHash load
-  const isDirectLoad = getHash().indexOf(bootKey) !== -1
+  const isDirectLoad = hash.indexOf(bootKey) !== -1
 
   const ready = () => {
     if (hasBootPage) {
       navigate('@boot-page', {
-        resume: isDirectLoad ? rootHash : getHash() || rootHash,
+        resume: isDirectLoad ? rootHash : hash || rootHash,
         reload: true,
       })
-    } else if (!getHash() && rootHash) {
+    } else if (!hash && rootHash) {
       navigate(rootHash)
     } else {
       handleHashChange()
     }
   }
   if (isFunction(bootRequest)) {
-    bootRequest().then(() => {
+    bootRequest(params).then(() => {
       ready()
     })
   } else {

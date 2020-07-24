@@ -101,3 +101,18 @@ export const incorrectParams = (cb, route) => {
   }
   return false
 }
+
+export const getQueryStringParams = hash => {
+  const getQuery = /([?&].*)/
+  const matches = getQuery.exec(hash)
+  const params = {}
+
+  if (matches && matches.length) {
+    const urlParams = new URLSearchParams(matches[1])
+    for (const [key, value] of urlParams.entries()) {
+      params[key] = value
+    }
+    return params
+  }
+  return false
+}
