@@ -33,7 +33,7 @@ import {
 
 import Transitions from './transitions'
 import Log from '../Log'
-import { AppInstance } from '../Launch'
+import { AppInstance } from '../Application'
 import { RoutedApp } from './base'
 
 let getHash = () => {
@@ -57,7 +57,7 @@ export const initRouter = config => {
 rouThor ==[x]
  */
 
-// instance of Lightning.Application
+// instance of App class in App.js
 let application
 
 //instance of Lightning.Component
