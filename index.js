@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+export { AppData } from './src/Application'
 export { default as Application } from './src/Application'
 export { default as AudioPlayer } from './src/AudioPlayer'
 export { default as Img } from './src/Img'
