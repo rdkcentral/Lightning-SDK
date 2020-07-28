@@ -112,5 +112,5 @@ Settings.clearSubscribers()
 
 | Key | Type | Description | Default value |
 | --- | ---- | ------------ | ------------- |
-| stage | Object | Object with any of the stage configuration options specified in [Lightning Documentation](https://webplatformforembedded.github.io/Lightning/docs/gettingStarted/stage-configuration) | { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false } |
+| stage | Object | Object with any of the stage configuration options specified in [Lightning Documentation](https://rdkcentral.github.io/Lightning/docs/gettingStarted/stage-configuration) | { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false } |
 | debug | Boolean | Whether or not to run Lightning in debug mode | false |
