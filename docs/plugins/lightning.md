@@ -6,7 +6,7 @@ You will use Lightning in almost every component, since components extend the Li
 
 Apart from that you can also use it to take advantage of the default texture and tools made available by Lightning.
 
-See <a href="https://webplatformforembedded.github.io/Lightning/" target="_blank">Lightning documentation</a> for more information.
+See <a href="https://rdkcentral.github.io/Lightning/" target="_blank">Lightning documentation</a> for more information.
 
 ## Usage
 
@@ -40,7 +40,7 @@ export default class MyComponent extends Lightning.Component {
 }
 ```
 
-See <a href="https://webplatformforembedded.github.io/Lightning/docs/textures/toolbox" target="_blank">Lightning documentation</a> for more information.
+See <a href="https://rdkcentral.github.io/Lightning/docs/textures/toolbox" target="_blank">Lightning documentation</a> for more information.
 
 ### Using Textures from Lightning
 
