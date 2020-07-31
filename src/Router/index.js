@@ -989,7 +989,14 @@ export const navigate = (url, args, store = true) => {
   }
 
   if (hash.replace(/^#/, '') !== url) {
-    setHash(url)
+    const updateHash = routerConfig.get('updateHash')
+    // call handleHashChange directly to prevent
+    // hash update
+    if (isBoolean(updateHash) && !updateHash) {
+      handleHashChange(url)
+    } else {
+      setHash(url)
+    }
   } else if (read('reload')) {
     handleHashChange(hash)
   }

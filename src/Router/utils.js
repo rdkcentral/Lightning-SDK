@@ -55,7 +55,7 @@ export const isString = v => {
   return typeof v === 'string'
 }
 
-export const isPromise = method => {
+export const isPromise = (method, args) => {
   let result
   if (isFunction(method)) {
     try {
@@ -80,6 +80,8 @@ export const getConfigMap = () => {
     'lazyDestroy',
     'reuseInstance',
     'autoRestoreRemote',
+    'numberNavigation',
+    'updateHash',
   ].reduce((config, key) => {
     config.set(key, isObj ? routerSettings[key] : Settings.get('platform', key))
     return config
