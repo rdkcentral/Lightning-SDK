@@ -774,6 +774,10 @@ const getRouteByHash = hash => {
   // test if the part of the hash has a replace
   // regex lookup id
   const hasLookupId = /\/:\w+?@@([0-9]+?)@@/
+  const isNamedGroup = /^\/:/
+
+  // we skip wildcard routes
+  const skipRoutes = ['!', '*', '$']
 
   // to simplify the route matching and prevent look around
   // in our getUrlParts regex we get the regex part from
@@ -783,7 +787,10 @@ const getRouteByHash = hash => {
 
   let matches = candidates.filter(route => {
     let isMatching = true
-    const isNamedGroup = /^\/:/
+
+    if (skipRoutes.indexOf(route) !== -1) {
+      return false
+    }
 
     // replace regex in route with lookup id => @@{storeId}@@
     if (hasRegex.test(route)) {
@@ -839,6 +846,10 @@ const getRouteByHash = hash => {
   })
 
   if (matches.length) {
+    // we give prio to static routes over dynamic
+    matches = matches.sort(a => {
+      return isNamedGroup.test(a) ? -1 : 1
+    })
     return matches[0]
   }
 
