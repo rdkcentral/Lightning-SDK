@@ -141,7 +141,6 @@ export const startRouter = (config, instance) => {
 }
 
 const setupRoutes = routesConfig => {
-  let rootHash
   let bootPage = routesConfig.bootComponent
 
   if (!initialised) {
@@ -156,14 +155,12 @@ const setupRoutes = routesConfig => {
   }
 
   routesConfig.routes.forEach(r => {
-    if (r.path === rootHash && rootHash) {
-      root(rootHash, r.component || r.hook, r.options)
-    } else {
-      route(r.path, r.component || r.hook, r.options)
-    }
+    route(r.path, r.component || r.hook, r.options)
+
     if (r.widgets) {
       widget(r.path, r.widgets)
     }
+
     if (isFunction(r.on)) {
       on(r.path, r.on, r.cache || 0)
     }
@@ -1072,7 +1069,6 @@ export const start = () => {
   // if we refreshed the boot-page we don't want to
   // redirect to this page so we force rootHash load
   const isDirectLoad = hash.indexOf(bootKey) !== -1
-
   const ready = () => {
     if (hasBootPage) {
       navigate('@boot-page', {
@@ -1080,7 +1076,13 @@ export const start = () => {
         reload: true,
       })
     } else if (!hash && rootHash) {
-      navigate(rootHash)
+      if (isString(rootHash)) {
+        navigate(rootHash)
+      } else if (isFunction(rootHash)) {
+        rootHash().then(url => {
+          navigate(url)
+        })
+      }
     } else {
       handleHashChange()
     }
