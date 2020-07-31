@@ -84,6 +84,8 @@ let history = []
 let initialised = false
 let activeRoute
 let activeHash
+let updateHash = true
+let forcedHash
 
 // page that has focus
 let activePage
@@ -151,12 +153,14 @@ const setupRoutes = routesConfig => {
     if (bootPage && isPage(bootPage)) {
       route('@boot-page', routesConfig.bootComponent)
     }
+    if (isBoolean(routesConfig.updateHash)) {
+      updateHash = routesConfig.updateHash
+    }
     initialised = true
   }
 
   routesConfig.routes.forEach(r => {
     route(r.path, r.component || r.hook, r.options)
-
     if (r.widgets) {
       widget(r.path, r.widgets)
     }
@@ -958,10 +962,12 @@ const createRegister = flags => {
 export const navigate = (url, args, store = true) => {
   register.clear()
 
-  const hash = getHash()
-  const storeHash = getMod(hash, 'store')
+  let hash = getHash()
+  if (!mustUpdateHash() && forcedHash) {
+    hash = forcedHash
+  }
 
-  // keep backwards compatible for now
+  const storeHash = getMod(hash, 'store')
   let configPrevent = hashmod(hash, 'preventStorage')
   let configStore = true
 
@@ -981,9 +987,8 @@ export const navigate = (url, args, store = true) => {
   }
 
   if (hash && store && configStore) {
-    const toStore = hash.substring(1, hash.length)
+    const toStore = hash.replace(/^\//, '')
     const location = history.indexOf(toStore)
-
     // store hash if it's not a part of history or flag for
     // storage of same hash is true
     if (location === -1 || routerConfig.get('storeSameHash')) {
@@ -1000,10 +1005,8 @@ export const navigate = (url, args, store = true) => {
   }
 
   if (hash.replace(/^#/, '') !== url) {
-    const updateHash = routerConfig.get('updateHash')
-    // call handleHashChange directly to prevent
-    // hash update
-    if (isBoolean(updateHash) && !updateHash) {
+    if (!mustUpdateHash()) {
+      forcedHash = url
       handleHashChange(url)
     } else {
       setHash(url)
@@ -1217,6 +1220,13 @@ export const restore = () => {
 
 const hash = () => {
   return getHash()
+}
+
+const mustUpdateHash = () => {
+  // we need support to either turn change hash off
+  // per platform or per app
+  const updateConfig = routerConfig.get('updateHash')
+  return !((isBoolean(updateConfig) && !updateConfig) || (isBoolean(updateHash) && !updateHash))
 }
 
 export const restoreFocus = () => {
