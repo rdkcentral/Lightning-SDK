@@ -84,8 +84,8 @@ export const setupVideoTag = () => {
     videoEl.style.visibility = 'visible'
     videoEl.style.top = withPrecision(0)
     videoEl.style.left = withPrecision(0)
-    videoEl.style.width = withPrecision(withPrecision(1920))
-    videoEl.style.height = withPrecision(withPrecision(1080))
+    videoEl.style.width = withPrecision(1920)
+    videoEl.style.height = withPrecision(1080)
     document.body.appendChild(videoEl)
     return videoEl
   }
