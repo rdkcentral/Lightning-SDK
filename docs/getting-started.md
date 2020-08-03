@@ -2,7 +2,7 @@
 
 ## Lightning-CLI
 
-The easiest way to get up and running with a Lightning App is by installing the _[Lightning CLI](https://github.com/WebPlatformForEmbedded/Lightning-CLI)_ globally on your system.
+The easiest way to get up and running with a Lightning App is by installing the _[Lightning CLI](https://github.com/rdkcentral/Lightning-CLI)_ globally on your system.
 
 The Lightning CLI provides a set of development tools, that enable you to:
 
@@ -13,7 +13,7 @@ The Lightning CLI provides a set of development tools, that enable you to:
 Install the Lightning-CLI (globally):
 
 ```
-npm install -g WebPlatformForEmbedded/Lightning-CLI
+npm install -g rdkcentral/Lightning-CLI
 ```
 
 Next the Lightning-CLI will be available as `lng <command> [options]`

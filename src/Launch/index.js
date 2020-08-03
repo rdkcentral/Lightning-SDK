@@ -25,6 +25,7 @@ import { initMediaPlayer } from '../MediaPlayer'
 import { initVideoPlayer } from '../VideoPlayer'
 import { initStorage } from '../Storage'
 import { initAds } from '../Ads'
+import { initRouter } from '../Router'
 import Application from '../Application'
 
 export let AppInstance
@@ -42,6 +43,7 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.mediaPlayer && initMediaPlayer(platformSettings.plugins.mediaPlayer)
     platformSettings.plugins.mediaPlayer && initVideoPlayer(platformSettings.plugins.mediaPlayer)
     platformSettings.plugins.ads && initAds(platformSettings.plugins.ads)
+    platformSettings.plugins.router && initRouter(platformSettings.plugins.router)
   }
 
   const app = Application(App, appData, platformSettings)
