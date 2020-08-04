@@ -28,7 +28,7 @@ import { initAds } from '../Ads'
 import { initRouter } from '../Router'
 import Application from '../Application'
 
-export let AppInstance
+export let ApplicationInstance
 
 export default (App, appSettings, platformSettings, appData) => {
   initSettings(appSettings, platformSettings)
@@ -47,6 +47,6 @@ export default (App, appSettings, platformSettings, appData) => {
   }
 
   const app = Application(App, appData, platformSettings)
-  AppInstance = new app(appSettings)
-  return AppInstance
+  ApplicationInstance = new app(appSettings)
+  return ApplicationInstance
 }
