@@ -42,10 +42,11 @@ import { Settings } from 'wpe-lightning-sdk'
 Returns a settings value.
 
 ```js
-Settings.get(type, key)
+Settings.get(type, key, [fallback])
 ```
 
 Type can be either `app`, `platform` or `user`. Key can be any of the existing settings.
+Optionally you can specify a `fallback`-value for when the setting is not defined.
 
 ### Set
 

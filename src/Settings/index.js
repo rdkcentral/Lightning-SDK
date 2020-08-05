@@ -39,8 +39,9 @@ const dotGrab = (obj = {}, key) => {
 }
 
 export default {
-  get(type, key) {
-    return dotGrab(settings[type], key)
+  get(type, key, fallback = undefined) {
+    const val = dotGrab(settings[type], key)
+    return val !== undefined ? val : fallback
   },
   has(type, key) {
     return !!this.get(type, key)
