@@ -5,13 +5,17 @@ import Ads from '../Ads'
 import events from './events'
 import autoSetupMixin from '../helpers/autoSetupMixin'
 import easeExecution from '../helpers/easeExecution'
-import { AppInstance } from '../Launch'
+import { ApplicationInstance } from '../Launch'
+import Settings from '../Settings'
+import VideoTexture from './VideoTexture'
 
 export let mediaUrl = url => url
 let videoEl
+let videoTexture
 let metrics
 let consumer
 let precision = 1
+let textureMode = false
 
 export const initVideoPlayer = config => {
   if (config.mediaUrl) {
@@ -78,10 +82,11 @@ export const setupVideoTag = () => {
     videoEl.setAttribute('id', 'video-player')
     videoEl.setAttribute('width', withPrecision(1920))
     videoEl.setAttribute('height', withPrecision(1080))
+    videoEl.setAttribute('crossorigin', 'anonymous')
     videoEl.style.position = 'absolute'
     videoEl.style.zIndex = '1'
     videoEl.style.display = 'none'
-    videoEl.style.visibility = 'visible'
+    videoEl.style.visibility = 'hidden'
     videoEl.style.top = withPrecision(0)
     videoEl.style.left = withPrecision(0)
     videoEl.style.width = withPrecision(1920)
@@ -89,6 +94,19 @@ export const setupVideoTag = () => {
     document.body.appendChild(videoEl)
     return videoEl
   }
+}
+
+export const setUpVideoTexture = () => {
+  if (!ApplicationInstance.tag('VideoTexture')) {
+    const el = ApplicationInstance.stage.c({
+      type: VideoTexture,
+      ref: 'VideoTexture',
+      zIndex: 0,
+      videoEl,
+    })
+    ApplicationInstance.childList.addAt(el, 0)
+  }
+  return ApplicationInstance.tag('VideoTexture')
 }
 
 const registerEventListeners = () => {
@@ -127,6 +145,9 @@ const videoPlayerPlugin = {
   position(top = 0, left = 0) {
     videoEl.style.left = withPrecision(left)
     videoEl.style.top = withPrecision(top)
+    if (textureMode === true) {
+      videoTexture.position(top, left)
+    }
   },
 
   size(width = 1920, height = 1080) {
@@ -134,6 +155,9 @@ const videoPlayerPlugin = {
     videoEl.style.height = withPrecision(height)
     videoEl.width = parseFloat(videoEl.style.width)
     videoEl.height = parseFloat(videoEl.style.height)
+    if (textureMode === true) {
+      videoTexture.size(width, height)
+    }
   },
 
   area(top = 0, right = 1920, bottom = 1080, left = 0) {
@@ -152,13 +176,13 @@ const videoPlayerPlugin = {
       this.clear()
     }
 
+    this.hide()
+    deregisterEventListeners()
+
     // preload the video to get duration (for ads)
     //.. currently actually not working because loadedmetadata didn't work reliably on Sky boxes
     videoEl.setAttribute('src', url)
     videoEl.load()
-
-    this.hide()
-    deregisterEventListeners()
 
     // const onLoadedMetadata = () => {
     // videoEl.removeEventListener('loadedmetadata', onLoadedMetadata)
@@ -212,12 +236,14 @@ const videoPlayerPlugin = {
     if (!this.canInteract) return
     // pause the video first to disable sound
     this.pause()
+    if (textureMode === true) videoTexture.stop()
     videoEl.removeAttribute('src')
     videoEl.load()
   },
 
   play() {
     if (!this.canInteract) return
+    if (textureMode === true) videoTexture.start()
     videoEl.play()
   },
 
@@ -266,14 +292,22 @@ const videoPlayerPlugin = {
 
   show() {
     if (!this.canInteract) return
-    videoEl.style.display = 'block'
-    videoEl.style.visibility = 'visible'
+    if (textureMode === true) {
+      videoTexture.show()
+    } else {
+      videoEl.style.display = 'block'
+      videoEl.style.visibility = 'visible'
+    }
   },
 
   hide() {
     if (!this.canInteract) return
-    videoEl.style.display = 'none'
-    videoEl.style.visibility = 'hidden'
+    if (textureMode === true) {
+      videoTexture.hide()
+    } else {
+      videoEl.style.display = 'none'
+      videoEl.style.visibility = 'hidden'
+    }
   },
 
   enableAds(enabled = true) {
@@ -339,7 +373,11 @@ const videoPlayerPlugin = {
   },
 
   get visible() {
-    return videoEl && videoEl.style.display === 'block'
+    if (textureMode === true) {
+      return videoTexture.isVisible
+    } else {
+      return videoEl && videoEl.style.display === 'block'
+    }
   },
 
   get adsEnabled() {
@@ -354,8 +392,15 @@ const videoPlayerPlugin = {
 }
 
 export default autoSetupMixin(videoPlayerPlugin, () => {
-  // precision = AppInstance && AppInstance.stage && AppInstance.stage.getRenderPrecision()
-  // temporary:
-  precision = window.innerHeight === 720 ? 0.6666666667 : 1
+  precision =
+    ApplicationInstance &&
+    ApplicationInstance.stage &&
+    ApplicationInstance.stage.getRenderPrecision()
+
   videoEl = setupVideoTag()
+
+  textureMode = Settings.get('platform', 'textureMode', false)
+  if (textureMode === true) {
+    videoTexture = setUpVideoTexture()
+  }
 })

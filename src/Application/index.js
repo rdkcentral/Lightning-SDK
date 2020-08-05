@@ -69,8 +69,6 @@ export default function(App, appData, platformSettings) {
       return {
         w: 1920,
         h: 1080,
-        rect: true,
-        color: 0x00000000,
       }
     }
 
@@ -85,6 +83,7 @@ export default function(App, appData, platformSettings) {
           AppInstance = this.stage.c({
             ref: 'App',
             type: App,
+            zIndex: 1,
             appData,
             forceZIndexContext: !!platformSettings.showVersion || !!platformSettings.showFps,
           })
@@ -100,6 +99,7 @@ export default function(App, appData, platformSettings) {
               type: VersionLabel,
               version: this.config.version,
               sdkVersion: sdkVersion,
+              zIndex: 1,
             })
           }
 
@@ -107,6 +107,7 @@ export default function(App, appData, platformSettings) {
             this.childList.a({
               ref: 'FpsCounter',
               type: FpsCounter,
+              zIndex: 1,
             })
           }
 
