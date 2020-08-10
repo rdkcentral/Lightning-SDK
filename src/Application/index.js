@@ -25,9 +25,9 @@ import VersionLabel from '../VersionLabel'
 import FpsCounter from '../FpsCounter'
 import Log from '../Log'
 import Settings from '../Settings'
+import Registry from '../Registry'
 
 import { version as sdkVersion } from '../../package.json'
-import Registry from '../Registry'
 
 export let AppInstance
 
