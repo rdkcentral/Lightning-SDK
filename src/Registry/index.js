@@ -66,7 +66,7 @@ export default {
 
   clearIntervals() {
     registry.intervals.forEach(intervalId => {
-      this.clearTimeout(intervalId)
+      this.clearInterval(intervalId)
     })
   },
 

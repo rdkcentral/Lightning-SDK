@@ -27,6 +27,7 @@ import Log from '../Log'
 import Settings from '../Settings'
 
 import { version as sdkVersion } from '../../package.json'
+import Registry from '../Registry'
 
 export let AppInstance
 
@@ -127,6 +128,7 @@ export default function(App, appData, platformSettings) {
       Log.info('Closing App')
 
       Settings.clearSubscribers()
+      Registry.clear()
 
       if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
         platformSettings.onClose()
