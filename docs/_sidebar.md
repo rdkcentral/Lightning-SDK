@@ -26,3 +26,4 @@
   - [Image](/plugins/image.md)
   - [Version Label](/plugins/versionlabel.md)
   - [FPS Counter](/plugins/fpscounter.md)
+  - [Registry](/plugins/registry.md)
