@@ -24,5 +24,6 @@
   - [Media Player](/plugins/mediaplayer.md)
   <!-- - [Audio Player](/plugins/audioplayer.md) -->
   - [Image](/plugins/image.md)
+  - [TV](/plugins/tv.md)
   - [Version Label](/plugins/versionlabel.md)
   - [FPS Counter](/plugins/fpscounter.md)
