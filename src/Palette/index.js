@@ -81,11 +81,15 @@ const _cleanUpNormalizedColor = (color) => {
   }
 };
 
-export const add = (colors) => {
+export const add = (colors, value) => {
   if(isObject(colors)) {
     //clean up _normalizedColors if they exist in the to be added colors
     Object.keys(colors).forEach((color) => _cleanUpNormalizedColor(color));
     _colors = Object.assign({}, _colors, colors);
+  }
+  else if(isString(colors) && value) {
+    _cleanUpNormalizedColor(colors);
+    _colors[colors] = value
   }
 };
 
