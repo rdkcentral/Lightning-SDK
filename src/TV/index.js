@@ -89,11 +89,11 @@ export const initTV = config => {
 
 // public API
 export default {
-  channel() {
+  channel(number = null) {
     return new Promise((resolve, reject) => {
       try {
-        methods
-          .getChannel()
+        // call setChannel when number argument is passed, otherwise getChannel
+        methods[number ? 'setChannel' : 'getChannel'](number)
           .then(channel => {
             // to do: ensure consistent formatting of channel info here?
             resolve(channel)
@@ -127,18 +127,6 @@ export default {
           .then(channel => {
             'entitled' in channel ? resolve(!!channel.entitled) : reject()
           })
-          .catch(reject)
-      } catch (e) {
-        reject(e)
-      }
-    })
-  },
-  changeChannel(number) {
-    return new Promise((resolve, reject) => {
-      try {
-        methods
-          .setChannel(number)
-          .then(channel => resolve(channel))
           .catch(reject)
       } catch (e) {
         reject(e)

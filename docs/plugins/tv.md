@@ -1,7 +1,7 @@
 # TV
 
 The TV plugin serves as an abstraction layer to the _live TV_ functionality of a STB. The interface gives you access to the current channel
-and program information, and allows you to change the TV channel from inside an App.
+and program information, and allows you to change the TV channel from inside an App (if your app is _whitelisted_ to do so).
 
 With the TV plugin you can adapt your App _contextually_ to what the user is currently watching on TV.
 
@@ -17,7 +17,9 @@ import { TV } from 'wpe-lightning-sdk'
 
 ### Channel
 
-Retrieves information about the TV channel that is _currently_ being watched.
+Either _retrieves_ information about the TV channel that is _currently_ being watched or _changes_ the current TV channel.
+
+#### Retrieve current Channel
 
 ```js
 TV.channel().then(channel => console.log(channel))
@@ -35,6 +37,21 @@ During _development_ the `channel`-method returns a random mocked channel. Optio
   entitled: true,
 }
 ```
+
+#### Change current channel
+
+```js
+const channelNumber = 2
+TV.channel(channelNumber).then(channel => console.log(channel))
+```
+
+When a channelNumber is passed as an argument to the `channel`-method it will try to change the TV channel.
+It will return a _promise_ which returns the channel information as an object.
+
+During _development_ you can pass either `1`, `2`, or `3` as a `channelNumber`, to select one of the default mocked channels.
+
+Please note, that in a _production_ setting most Apps will **not** be able to change the current Live TV Channel. The functionality is only
+made available to certain _whitelisted_ Apps.
 
 ### Program
 
@@ -69,18 +86,6 @@ TV.entitled().then(entitled => console.log(entitled))
 The `entitled`-method returns a _promise_ which returns `true` when the user is entitled and `false` when not.
 
 During _development_ the `entitled`-method returns the entitlement value of the random mocked channel. Optionally you can [overwrite](#overwriting-default-values) the default values.
-
-### ChangeChannel
-
-Changes the current channel on the TV.
-
-```js
-TV.changeChannel(number).then(newChannel => console.log(newChannel))
-```
-
-The `changeChannel`-method returns a promise which returns the new channel (when the channel change was succesful).
-
-During _development_ you can pass either `1`, `2`, or `3` as a channel `number`, to select one of the default mocked channels.
 
 ### AddEventListener
 
