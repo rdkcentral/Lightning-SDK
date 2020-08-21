@@ -23,4 +23,36 @@ For example:
 - to `Router.navigate("home/playback/293/99")`
 <br /><br />
 
+### _onUrlParams(params)
+
+This will make dynamic url params available to the page. 
+With the following configuration
+
+```js
+export default {
+    routes: [
+        {
+            path: 'account/:user/:device',
+            component: Account
+        }
+    ]
+}
+```
+
+and we navigate to: Router.navigate("account/12456/56783")
+
+```js
+class Account extends Lightning.Component{
+  _onUrlParams(params){
+      // params => {user: 12456, device:56783}  
+  }  
+}
+```
+
+### _activated(page)
+
+This is an event where your `Widgets` can listen to, it will be called at the moment
+that Router changes the visiblity to `true`. The `page` parameter is the reference to the instance
+of the page that activated the widget.
+
 Next: [Page transitions](pagetransitions.md)

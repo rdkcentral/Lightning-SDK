@@ -32,6 +32,10 @@ If you want to enable backtracking in your app.
 By settings `lazyDestroy: false`, and `destroyOnHistoryBack: true` you can make sure that a page 
 only gets destroyed when it gets unloaded via a step back in history.
 
+### updateHash
+
+By settings `updateHash: false` the Router will not update the hash on `navigate()`.
+
 ##### Settings.json 
 
 

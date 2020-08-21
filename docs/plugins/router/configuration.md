@@ -11,8 +11,8 @@ It is recommended to specify this configuration in a separate file, i.e. `src/ro
 ### Root
 
 The `root` key indicates which _route path_ to use as the _entry point_ of your App, when no location hash
-in the url has been specified. The value of `root` should be a _String_ and match with the _path_ of one of
-the defined _routes_.
+in the url has been specified. The value of `root` should be a _String_ or function that must return a _Promise_ and resolves a _String_. 
+The value must match a _path_ of one of the defined _routes_.
 
 Typically you would specify either the path to a _Splash_ or the _Home_ page as `root`.
 
@@ -29,6 +29,24 @@ export default {
   ]
 }
 ```
+
+or function
+
+
+```js
+export default {
+  root: ()=>{
+    return new Promise((resolve)=>{
+        if(authenticated){
+            resolve("browse")
+        }else{
+            resolve("login")
+        }          
+    })
+  }
+}
+```
+
 In the example above, upon opening your App, the Router plugin will navigate to `localhost:8080#splash` and subsequently display
 the _Splash_ page.
 
@@ -55,6 +73,19 @@ export default {
         })
     },
     routes:[...]
+}
+```
+
+
+The `querystring` will be made available as on `Object`.
+If you would point the browser to: `localhost:8080#splash?deviceId=1801&partnerId=145`
+
+```js
+export default {
+    boot: (qs) => {
+        // qs => {deviceId:"1801", partnerId:"145"}
+        return Promise.resolve();
+    }
 }
 ```
 
