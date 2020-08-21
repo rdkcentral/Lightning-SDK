@@ -15,7 +15,7 @@ const _normalizedColors = {
   //store for normalized colors
 };
 
-export const color = (value, options) => {
+export const get = (value, options) => {
   //create color tag for storage
   let tag = `${value}${options !== undefined ? JSON.stringify(options) : ''}`;
   //check if value is not a number, or if options is not undefined
@@ -94,13 +94,13 @@ export const add = (colors, value) => {
 };
 
 export const mix = (color1, color2, p) => {
-  color1 = color(color1);
-  color2 = color(color2);
+  color1 = get(color1);
+  color2 = get(color2);
   return mergeColors(color1, color2, p);
 };
 
 export default {
-  color,
+  get,
   add,
   mix
 };
