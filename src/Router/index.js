@@ -58,7 +58,7 @@ export const initRouter = config => {
 rouThor ==[x]
  */
 
-// instance of App class in App.js
+// instance of Lightning.Application
 let application
 
 //instance of Lightning.Component
@@ -431,22 +431,25 @@ const triggerBefore = ({ page, old, route, hash }) => {
 }
 
 const triggerOn = ({ page, old, route, hash }) => {
-  // force app in loading state
+  const previousState = app.state || ''
   app._setState('Loading')
 
   if (old) {
     cleanUp(old, old[Symbol.for('route')])
   }
 
-  // update provided page data
   return updatePageData({ page, route, hash })
     .then(() => {
       // @todo: fix zIndex for transition
       return doTransition(page)
     })
     .then(() => {
-      // back to root state
-      app._setState('')
+      // @todo: make state configurable
+      if (previousState === 'Widgets') {
+        app._setState('Widgets', [activeWidget])
+      } else {
+        app._setState('')
+      }
     })
 }
 
