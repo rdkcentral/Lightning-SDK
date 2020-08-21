@@ -29,11 +29,12 @@ import {
   getConfigMap,
   incorrectParams,
   isPromise,
+  getQueryStringParams,
 } from './utils'
 
 import Transitions from './transitions'
 import Log from '../Log'
-import { AppInstance } from '../Launch'
+import { AppInstance } from '../Application'
 import { RoutedApp } from './base'
 
 let getHash = () => {
@@ -83,6 +84,8 @@ let history = []
 let initialised = false
 let activeRoute
 let activeHash
+let updateHash = true
+let forcedHash
 
 // page that has focus
 let activePage
@@ -140,7 +143,6 @@ export const startRouter = (config, instance) => {
 }
 
 const setupRoutes = routesConfig => {
-  let rootHash
   let bootPage = routesConfig.bootComponent
 
   if (!initialised) {
@@ -151,18 +153,18 @@ const setupRoutes = routesConfig => {
     if (bootPage && isPage(bootPage)) {
       route('@boot-page', routesConfig.bootComponent)
     }
+    if (isBoolean(routesConfig.updateHash)) {
+      updateHash = routesConfig.updateHash
+    }
     initialised = true
   }
 
   routesConfig.routes.forEach(r => {
-    if (r.path === rootHash && rootHash) {
-      root(rootHash, r.component || r.hook, r.options)
-    } else {
-      route(r.path, r.component || r.hook, r.options)
-    }
+    route(r.path, r.component || r.hook, r.options)
     if (r.widgets) {
       widget(r.path, r.widgets)
     }
+
     if (isFunction(r.on)) {
       on(r.path, r.on, r.cache || 0)
     }
@@ -392,6 +394,10 @@ const load = async ({ route, hash }) => {
   activeRoute = route
   activeHash = hash
 
+  if (widgetsPerRoute.size && widgetsHost) {
+    updateWidgets(page)
+  }
+
   Log.info('[route]:', route)
   Log.info('[hash]:', hash)
 
@@ -425,22 +431,25 @@ const triggerBefore = ({ page, old, route, hash }) => {
 }
 
 const triggerOn = ({ page, old, route, hash }) => {
-  // force app in loading state
+  const previousState = app.state || ''
   app._setState('Loading')
 
   if (old) {
     cleanUp(old, old[Symbol.for('route')])
   }
 
-  // update provided page data
   return updatePageData({ page, route, hash })
     .then(() => {
       // @todo: fix zIndex for transition
       return doTransition(page)
     })
     .then(() => {
-      // back to root state
-      app._setState('')
+      // @todo: make state configurable
+      if (previousState === 'Widgets') {
+        app._setState('Widgets', [activeWidget])
+      } else {
+        app._setState('')
+      }
     })
 }
 
@@ -561,11 +570,6 @@ const doTransition = (pageIn, pageOut = null) => {
   const hasCustomTransitions = !!(pageIn.smoothIn || pageIn.smoothInOut || transition)
   const transitionsDisabled = routerConfig.get('disableTransitions')
 
-  // for now a simple widget visibility toggle
-  if (widgetsPerRoute.size && widgetsHost) {
-    updateWidgets(pageIn)
-  }
-
   // default behaviour is a visibility toggle
   if (!hasCustomTransitions || transitionsDisabled) {
     pageIn.visible = true
@@ -620,15 +624,21 @@ const doTransition = (pageIn, pageOut = null) => {
  * @param page
  */
 const updateWidgets = page => {
-  // grab active route
   const route = page[Symbol.for('route')]
+
   // force lowercase lookup
   const configured = (widgetsPerRoute.get(route) || []).map(ref => ref.toLowerCase())
-  // iterate over all available widgets and turn visibility
-  // if they're configured for the current route
+
   widgetsHost.forEach(widget => {
     widget.visible = configured.indexOf(widget.ref.toLowerCase()) !== -1
+    if (widget.visible) {
+      emit(widget, ['activated'], page)
+    }
   })
+
+  if (app.state === 'Widgets' && !activeWidget.visible) {
+    app._setState('')
+  }
 }
 
 const cleanUp = (page, route) => {
@@ -775,6 +785,10 @@ const getRouteByHash = hash => {
   // test if the part of the hash has a replace
   // regex lookup id
   const hasLookupId = /\/:\w+?@@([0-9]+?)@@/
+  const isNamedGroup = /^\/:/
+
+  // we skip wildcard routes
+  const skipRoutes = ['!', '*', '$']
 
   // to simplify the route matching and prevent look around
   // in our getUrlParts regex we get the regex part from
@@ -784,7 +798,10 @@ const getRouteByHash = hash => {
 
   let matches = candidates.filter(route => {
     let isMatching = true
-    const isNamedGroup = /^\/:/
+
+    if (skipRoutes.indexOf(route) !== -1) {
+      return false
+    }
 
     // replace regex in route with lookup id => @@{storeId}@@
     if (hasRegex.test(route)) {
@@ -840,6 +857,10 @@ const getRouteByHash = hash => {
   })
 
   if (matches.length) {
+    // we give prio to static routes over dynamic
+    matches = matches.sort(a => {
+      return isNamedGroup.test(a) ? -1 : 1
+    })
     return matches[0]
   }
 
@@ -948,10 +969,12 @@ const createRegister = flags => {
 export const navigate = (url, args, store = true) => {
   register.clear()
 
-  const hash = getHash()
-  const storeHash = getMod(hash, 'store')
+  let hash = getHash()
+  if (!mustUpdateHash() && forcedHash) {
+    hash = forcedHash
+  }
 
-  // keep backwards compatible for now
+  const storeHash = getMod(hash, 'store')
   let configPrevent = hashmod(hash, 'preventStorage')
   let configStore = true
 
@@ -971,9 +994,8 @@ export const navigate = (url, args, store = true) => {
   }
 
   if (hash && store && configStore) {
-    const toStore = hash.substring(1, hash.length)
+    const toStore = hash.replace(/^\//, '')
     const location = history.indexOf(toStore)
-
     // store hash if it's not a part of history or flag for
     // storage of same hash is true
     if (location === -1 || routerConfig.get('storeSameHash')) {
@@ -990,7 +1012,12 @@ export const navigate = (url, args, store = true) => {
   }
 
   if (hash.replace(/^#/, '') !== url) {
-    setHash(url)
+    if (!mustUpdateHash()) {
+      forcedHash = url
+      handleHashChange(url)
+    } else {
+      setHash(url)
+    }
   } else if (read('reload')) {
     handleHashChange(hash)
   }
@@ -1038,6 +1065,9 @@ export const step = (direction = 0) => {
 }
 
 const capture = ({ key }) => {
+  if (!routerConfig.get('numberNavigation')) {
+    return false
+  }
   key = parseInt(key)
   if (!isNaN(key)) {
     let match
@@ -1061,25 +1091,32 @@ const capture = ({ key }) => {
 export const start = () => {
   const bootKey = '@boot-page'
   const hasBootPage = pages.has('@boot-page')
+  const hash = getHash()
+  const params = getQueryStringParams(hash)
 
   // if we refreshed the boot-page we don't want to
   // redirect to this page so we force rootHash load
-  const isDirectLoad = getHash().indexOf(bootKey) !== -1
-
+  const isDirectLoad = hash.indexOf(bootKey) !== -1
   const ready = () => {
     if (hasBootPage) {
       navigate('@boot-page', {
-        resume: isDirectLoad ? rootHash : getHash() || rootHash,
+        resume: isDirectLoad ? rootHash : hash || rootHash,
         reload: true,
       })
-    } else if (!getHash() && rootHash) {
-      navigate(rootHash)
+    } else if (!hash && rootHash) {
+      if (isString(rootHash)) {
+        navigate(rootHash)
+      } else if (isFunction(rootHash)) {
+        rootHash().then(url => {
+          navigate(url)
+        })
+      }
     } else {
       handleHashChange()
     }
   }
   if (isFunction(bootRequest)) {
-    bootRequest().then(() => {
+    bootRequest(params).then(() => {
       ready()
     })
   } else {
@@ -1192,8 +1229,16 @@ const hash = () => {
   return getHash()
 }
 
+const mustUpdateHash = () => {
+  // we need support to either turn change hash off
+  // per platform or per app
+  const updateConfig = routerConfig.get('updateHash')
+  return !((isBoolean(updateConfig) && !updateConfig) || (isBoolean(updateHash) && !updateHash))
+}
+
 export const restoreFocus = () => {
-  app._setState('Pages')
+  activeWidget = null
+  app._setState('')
 }
 
 export const getActivePage = () => {

@@ -23,6 +23,22 @@ When lazy destroy is enabled (i.e. `lazyDestroy: true`), Pages will be removed f
 
 To free up texture memory directly after the old page has been destroyed and not wait for Lightning to start collecting garbage (texture) you can set the flag `gcOnUnload: true`. This will force a texture directly after destroying the page.
 
+### Backtrack
+
+If you want to enable backtracking in your app.
+
+### Destroy on history back
+
+By settings `lazyDestroy: false`, and `destroyOnHistoryBack: true` you can make sure that a page 
+only gets destroyed when it gets unloaded via a step back in history.
+
+### updateHash
+
+By settings `updateHash: false` the Router will not update the hash on `navigate()`.
+
+##### Settings.json 
+
+
 ```json
 {
     "appSettings": {
@@ -30,8 +46,10 @@ To free up texture memory directly after the old page has been destroyed and not
     "platformSettings": {
         "router": {
           "lazyCreate": true,
-          "lazyDestroy": false,
-          "gcOnUnload": true
+          "lazyDestroy": true,
+          "gcOnUnload": true,
+          "backtrack": true,
+          "destroyOnHistoryBack": false
         }
     }
 }
