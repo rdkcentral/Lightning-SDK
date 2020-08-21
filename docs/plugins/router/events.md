@@ -25,7 +25,7 @@ For example:
 
 ### _onUrlParams(params)
 
-This will make dynamic url params available to the page. 
+This will make dynamic url params available to the page.
 With the following configuration
 
 ```js
@@ -39,13 +39,13 @@ export default {
 }
 ```
 
-and we navigate to: Router.navigate("account/12456/56783")
+and we navigate to: Router.navigate('account/12456/56783')
 
 ```js
 class Account extends Lightning.Component{
   _onUrlParams(params){
-      // params => {user: 12456, device:56783}  
-  }  
+      // params => {user: 12456, device:56783}
+  }
 }
 ```
 
