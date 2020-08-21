@@ -635,6 +635,10 @@ const updateWidgets = page => {
       emit(widget, ['activated'], page)
     }
   })
+
+  if (app.state === 'Widgets' && !activeWidget.visible) {
+    app._setState('')
+  }
 }
 
 const cleanUp = (page, route) => {
@@ -1233,7 +1237,8 @@ const mustUpdateHash = () => {
 }
 
 export const restoreFocus = () => {
-  app._setState('Pages')
+  activeWidget = null
+  app._setState('')
 }
 
 export const getActivePage = () => {
