@@ -30,13 +30,21 @@ const publish = (key, value) => {
   subscribers[key] && subscribers[key].forEach(subscriber => subscriber(value))
 }
 
-// todo: support key for nested settings with dot notation? e.g. stage.useImageworker from 'app' settings
+const dotGrab = (obj = {}, key) => {
+  const keys = key.split('.')
+  for (let i = 0; i < keys.length; i++) {
+    obj = obj[keys[i]] = obj[keys[i]] !== undefined ? obj[keys[i]] : {}
+  }
+  return typeof obj === 'object' ? (Object.keys(obj).length ? obj : undefined) : obj
+}
+
 export default {
-  get(type, key) {
-    return settings[type] && settings[type][key]
+  get(type, key, fallback = undefined) {
+    const val = dotGrab(settings[type], key)
+    return val !== undefined ? val : fallback
   },
   has(type, key) {
-    return settings[type] && key in settings[type]
+    return !!this.get(type, key)
   },
   set(key, value) {
     settings['user'][key] = value
