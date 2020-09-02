@@ -78,7 +78,6 @@ class Locale {
    * @return {Promise}
    */
   async load(path) {
-    deprecated()
     if (!this.__enabled) {
       return
     }
