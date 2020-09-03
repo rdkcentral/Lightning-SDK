@@ -167,7 +167,7 @@ export default function(App, appData, platformSettings) {
     }
 
     loadLanguage(config) {
-      let file = Utils.asset('language.json')
+      let file = Utils.asset('translations.json')
       let language = null
 
       if (typeof config === 'object' && ('file' in config || 'language' in config)) {
