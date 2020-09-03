@@ -8,7 +8,7 @@
   - [Metrics](/plugins/metrics.md)
   - [Profile](/plugins/profile.md)
   <!-- - [Purchase](/plugins/purchase.md) -->
-  - [Locale](/plugins/locale.md)
+  - [Language](/plugins/language.md)
   - [Lightning](/plugins/lightning.md)
   - [Router](/plugins/router/index.md)
     - [Router configuration](/plugins/router/configuration.md)
