@@ -125,7 +125,6 @@ export default class PinDialog extends Lightning.Component {
 
     this._msg = v
     if (this._msg) {
-      console.log('hide!!')
       this.tag('Msg').text = this._msg
       this.tag('Info').setSmooth('alpha', 0.5)
       this.tag('Code').setSmooth('alpha', 0.5)
