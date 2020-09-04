@@ -18,6 +18,8 @@
  */
 
 import Settings from '../Settings'
+import PinDialog from './dialog'
+import { ApplicationInstance } from '../Launch'
 
 // only used during local development
 let unlocked = false
@@ -48,13 +50,28 @@ export const initPin = config => {
   }
 }
 
+let pinDialog = null
+
 // Public API
 export default {
   show() {
-    console.log('todo: show PIN dialog')
+    return new Promise((resolve, reject) => {
+      pinDialog = ApplicationInstance.stage.c({
+        ref: 'PinDialog',
+        type: PinDialog,
+        resolve,
+        reject,
+      })
+      ApplicationInstance.childList.a(pinDialog)
+      ApplicationInstance.focus = pinDialog
+    })
   },
   hide() {
-    console.log('todo: hide PIN dialog')
+    ApplicationInstance.focus = null
+    ApplicationInstance.children = ApplicationInstance.children.map(
+      child => child !== pinDialog && child
+    )
+    pinDialog = null
   },
   submit(pin) {
     return new Promise((resolve, reject) => {

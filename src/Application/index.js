@@ -160,8 +160,13 @@ export default function(App, appData, platformSettings) {
       })
     }
 
+    set focus(v) {
+      this._focussed = v
+      this._refocus()
+    }
+
     _getFocused() {
-      return this.tag('App')
+      return this._focussed || this.tag('App')
     }
   }
 }
