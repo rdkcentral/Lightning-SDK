@@ -55,7 +55,7 @@ export const isString = v => {
   return typeof v === 'string'
 }
 
-export const isPromise = method => {
+export const isPromise = (method, args) => {
   let result
   if (isFunction(method)) {
     try {
@@ -80,6 +80,8 @@ export const getConfigMap = () => {
     'lazyDestroy',
     'reuseInstance',
     'autoRestoreRemote',
+    'numberNavigation',
+    'updateHash',
   ].reduce((config, key) => {
     config.set(key, isObj ? routerSettings[key] : Settings.get('platform', key))
     return config
@@ -98,6 +100,21 @@ export const incorrectParams = (cb, route) => {
       ].join('\n')
     )
     return true
+  }
+  return false
+}
+
+export const getQueryStringParams = hash => {
+  const getQuery = /([?&].*)/
+  const matches = getQuery.exec(hash)
+  const params = {}
+
+  if (matches && matches.length) {
+    const urlParams = new URLSearchParams(matches[1])
+    for (const [key, value] of urlParams.entries()) {
+      params[key] = value
+    }
+    return params
   }
   return false
 }

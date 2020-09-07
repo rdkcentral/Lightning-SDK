@@ -29,6 +29,7 @@ import Settings from '../Settings'
 import { version as sdkVersion } from '../../package.json'
 
 export let AppInstance
+export let AppData
 
 const defaultOptions = {
   stage: { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false },
@@ -82,10 +83,11 @@ export default function(App, appData, platformSettings) {
         .then(() => {
           Metrics.app.loaded()
 
+          AppData = appData
+
           AppInstance = this.stage.c({
             ref: 'App',
             type: App,
-            appData,
             forceZIndexContext: !!platformSettings.showVersion || !!platformSettings.showFps,
           })
 

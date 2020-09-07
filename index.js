@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+export { AppData } from './src/Application'
 export { default as Application } from './src/Application'
 export { default as AudioPlayer } from './src/AudioPlayer'
 export { default as Img } from './src/Img'
@@ -33,4 +34,5 @@ export { default as Purchase } from './src/Purchase'
 export { default as Router } from './src/Router'
 export { default as Settings } from './src/Settings'
 export { default as Storage } from './src/Storage'
+export { default as TV } from './src/TV'
 export { default as Utils } from './src/Utils'

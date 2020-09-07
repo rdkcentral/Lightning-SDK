@@ -1,6 +1,6 @@
 {
   "name": "wpe-lightning-sdk",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "scripts": {
     "postinstall": "node ./scripts/postinstall.js",
     "lint": "eslint '**/*.js'"
