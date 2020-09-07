@@ -42,10 +42,11 @@ use this method to send the Pincode.
 Pin.submit('0000').then(() => console.log('Unlocked!')).catch(e => console.log('Pin error', e))
 ```
 
-The `submit`-method returns a _promise_ which _resolves_ when the supplied Pincode is correct and the STB is successfully unlocked.
-When the Pincode is wrong, or the middleware is unable to unlock the STB, the promise will be _rejected_.
+The `submit`-method returns a _promise_ which _resolves_ `true` when the supplied Pincode is correct and the STB is successfully unlocked.
+When the Pincode is wrong, the _promise_ will resolve `false`. In case the middleware is unable to unlock the STB, the promise will be
+_rejected_ (with an optional error message).
 
-During development the default Pincode will be `0000`. Optionally you can overwrite this development default by editing the
+During development the default Pincode will be `0000`. Optionally you can overwrite the default Pincode during development by editing the
 `settings.json` file and adding the key `pin` as a `platformSetting` with a different valid Pincode.
 
 ### Unlocked
