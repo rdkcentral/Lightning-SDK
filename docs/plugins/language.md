@@ -1,6 +1,6 @@
 # Language
 
-The Language plugin helps to make your App multilanguage.
+The language plugin supports internationalisation features for your App.
 
 ## Usage
 
