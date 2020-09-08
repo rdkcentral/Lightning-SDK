@@ -15,7 +15,7 @@ import { Language } from 'wpe-lightning-sdk'
 You can automatically load and initialize the Language plugin when your App boots, by specifying a `static` method `language()`
 on the `App`-class in `src/App.js`.
 
-The `language`-method should return which language to use initially. This can either be a string or a Promise that resolves a
+The `language`-method should return which language to use on initialisation. This can either be a string or a Promise that resolves a
 string with the language code.
 
 
