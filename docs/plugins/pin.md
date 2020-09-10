@@ -55,7 +55,7 @@ Checks if the STB is currently _unlocked_.
 
 ```js
 Pin.unlocked()
-  .then(unlocked => unlocked === true ? console.log('STB is unlocked') : console.log('STB is unlocked'))
+  .then(unlocked => unlocked === true ? console.log('STB is unlocked') : console.log('STB is locked'))
 ```
 
 The `unlocked`-method returns a _promise_ which _resolves_ `true` when the device is _unlocked_ and `false` when the device is _locked_.
@@ -67,7 +67,7 @@ Checks if the STB is currently _locked_.
 
 ```js
 Pin.locked()
-  .then(locked => locked === true ? console.log('STB is locked') : console.log('STB is locked'))
+  .then(locked => locked === true ? console.log('STB is locked') : console.log('STB is unlocked'))
 ```
 
 The `locked`-method is the exact counter part of the `unlocked`-method. It returns a _promise_ which _resolves_ `true` when
