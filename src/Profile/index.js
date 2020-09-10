@@ -44,6 +44,9 @@ export default {
   city(params) {
     return getOrSet('city', params)
   },
+  zipCode(params) {
+    return getOrSet('zipCode', params)
+  },
   countryCode(params) {
     return getOrSet('countryCode', params)
   },
