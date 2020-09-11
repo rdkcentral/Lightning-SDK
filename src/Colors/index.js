@@ -1,6 +1,6 @@
 import { mergeColors, calculateAlpha, isObject, isString } from './utils.js'
 
-let _colors = {
+let colors = {
   white: '#ffffff',
   black: '#000000',
   red: '#ff0000',
@@ -11,34 +11,12 @@ let _colors = {
   magenta: '#ff00ff',
 }
 
-const _normalizedColors = {
+const normalizedColors = {
   //store for normalized colors
 }
 
-export const get = (value, options) => {
-  //create color tag for storage
-  let tag = `${value}${options !== undefined ? JSON.stringify(options) : ''}`
-  //check if value is not a number, or if options is not undefined
-  if (isNaN(value) || options) {
-    //check if tag is stored in colors;
-    if (_normalizedColors[tag]) {
-      //return stored color
-      return _normalizedColors[tag]
-    }
-  }
-
-  //calculate a new color
-  const targetColor = _calculateColor(value, options)
-
-  //store calculated color if its not stored
-  if (!_normalizedColors[tag]) {
-    _normalizedColors[tag] = targetColor
-  }
-  return targetColor || 0
-}
-
-const _calculateColor = (value, options) => {
-  let targetColor = _normalizeColor(value)
+const calculateColor = (value, options) => {
+  let targetColor = normalizeColor(value)
   if (!isNaN(options)) {
     options = { alpha: options }
   }
@@ -62,8 +40,8 @@ const _calculateColor = (value, options) => {
   return targetColor || 0
 }
 
-const _normalizeColor = color => {
-  let targetColor = _colors[color]
+const normalizeColor = color => {
+  let targetColor = colors[color]
   if (!targetColor) {
     targetColor = color
   }
@@ -73,27 +51,49 @@ const _normalizeColor = color => {
   return targetColor || 0xffffffff
 }
 
-const _cleanUpNormalizedColor = color => {
-  for (let c in _normalizedColors) {
+const cleanUpNormalizedColor = color => {
+  for (let c in normalizedColors) {
     if (c.indexOf(color) > -1) {
-      _normalizedColors[c] = undefined
-      delete _normalizedColors[c]
+      normalizedColors[c] = undefined
+      delete normalizedColors[c]
     }
   }
 }
 
-export const add = (colors, value) => {
+const get = (value, options) => {
+  //create color tag for storage
+  let tag = `${value}${options !== undefined ? JSON.stringify(options) : ''}`
+  //check if value is not a number, or if options is not undefined
+  if (isNaN(value) || options) {
+    //check if tag is stored in colors;
+    if (normalizedColors[tag]) {
+      //return stored color
+      return normalizedColors[tag]
+    }
+  }
+
+  //calculate a new color
+  const targetColor = calculateColor(value, options)
+
+  //store calculated color if its not stored
+  if (!normalizedColors[tag]) {
+    normalizedColors[tag] = targetColor
+  }
+  return targetColor || 0
+}
+
+const add = (colors, value) => {
   if (isObject(colors)) {
-    //clean up _normalizedColors if they exist in the to be added colors
-    Object.keys(colors).forEach(color => _cleanUpNormalizedColor(color))
-    _colors = Object.assign({}, _colors, colors)
+    //clean up normalizedColors if they exist in the to be added colors
+    Object.keys(colors).forEach(color => cleanUpNormalizedColor(color))
+    colors = Object.assign({}, colors, colors)
   } else if (isString(colors) && value) {
-    _cleanUpNormalizedColor(colors)
-    _colors[colors] = value
+    cleanUpNormalizedColor(colors)
+    colors[colors] = value
   }
 }
 
-export const mix = (color1, color2, p) => {
+const mix = (color1, color2, p) => {
   color1 = get(color1)
   color2 = get(color2)
   return mergeColors(color1, color2, p)
