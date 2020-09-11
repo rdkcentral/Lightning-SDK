@@ -60,47 +60,42 @@ const cleanUpNormalizedColor = color => {
   }
 }
 
-const get = (value, options) => {
-  //create color tag for storage
-  let tag = `${value}${options !== undefined ? JSON.stringify(options) : ''}`
-  //check if value is not a number, or if options is not undefined
-  if (isNaN(value) || options) {
-    //check if tag is stored in colors;
-    if (normalizedColors[tag]) {
-      //return stored color
-      return normalizedColors[tag]
-    }
-  }
-
-  //calculate a new color
-  const targetColor = calculateColor(value, options)
-
-  //store calculated color if its not stored
-  if (!normalizedColors[tag]) {
-    normalizedColors[tag] = targetColor
-  }
-  return targetColor || 0
-}
-
-const add = (colors, value) => {
-  if (isObject(colors)) {
-    //clean up normalizedColors if they exist in the to be added colors
-    Object.keys(colors).forEach(color => cleanUpNormalizedColor(color))
-    colors = Object.assign({}, colors, colors)
-  } else if (isString(colors) && value) {
-    cleanUpNormalizedColor(colors)
-    colors[colors] = value
-  }
-}
-
-const mix = (color1, color2, p) => {
-  color1 = get(color1)
-  color2 = get(color2)
-  return mergeColors(color1, color2, p)
-}
-
 export default {
-  get,
-  add,
-  mix,
+  get(value, options) {
+    // create color tag for storage
+    let tag = `${value}${options !== undefined ? JSON.stringify(options) : ''}`
+    // check if value is not a number, or if options is not undefined
+    if (isNaN(value) || options) {
+      // check if tag is stored in colors;
+      if (normalizedColors[tag]) {
+        // return stored color
+        return normalizedColors[tag]
+      }
+    }
+
+    // calculate a new color
+    const targetColor = calculateColor(value, options)
+
+    // store calculated color if its not stored
+    if (!normalizedColors[tag]) {
+      normalizedColors[tag] = targetColor
+    }
+    return targetColor || 0
+  },
+
+  add(colors, value) {
+    if (isObject(colors)) {
+      // clean up normalizedColors if they exist in the to be added colors
+      Object.keys(colors).forEach(color => cleanUpNormalizedColor(color))
+      colors = Object.assign({}, colors, colors)
+    } else if (isString(colors) && value) {
+      cleanUpNormalizedColor(colors)
+      colors[colors] = value
+    }
+  },
+  mix(color1, color2, p) {
+    color1 = this.get(color1)
+    color2 = this.get(color2)
+    return mergeColors(color1, color2, p)
+  },
 }
