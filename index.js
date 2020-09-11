@@ -19,6 +19,7 @@
 
 export { default as Application } from './src/Application'
 export { default as AudioPlayer } from './src/AudioPlayer'
+export { default as Colors } from './src/Colors'
 export { default as Img } from './src/Img'
 export { default as Keyboard } from './src/Keyboard'
 export { default as Launch } from './src/Launch'
