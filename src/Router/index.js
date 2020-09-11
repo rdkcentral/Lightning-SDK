@@ -504,26 +504,30 @@ const emit = (page, events = [], params = {}) => {
   })
 }
 
-const handleError = ({ page, error }) => {
-  // force expire
-  page[Symbol.for('expires')] = Date.now()
-  if (pages.has('!')) {
-    load({ route: '!', hash: page[Symbol.for('hash')] }).then(errorPage => {
-      errorPage.error = { page, error }
-      // on() loading type will force the app to go
-      // in a loading state so on error we need to
-      // go back to root state
-      if (app.state === 'Loading') {
-        app._setState('')
-      }
-      // make sure we delegate focus to the error page
-      if (activePage !== errorPage) {
-        activePage = errorPage
-        app._refocus()
-      }
-    })
+const handleError = args => {
+  if (!args.page) {
+    console.error(args)
   } else {
-    Log.error(page, error)
+    // force expire
+    args.page[Symbol.for('expires')] = Date.now()
+    if (pages.has('!')) {
+      load({ route: '!', hash: args.page[Symbol.for('hash')] }).then(errorPage => {
+        errorPage.error = { page: args.page, error: args.error }
+        // on() loading type will force the app to go
+        // in a loading state so on error we need to
+        // go back to root state
+        if (app.state === 'Loading') {
+          app._setState('')
+        }
+        // make sure we delegate focus to the error page
+        if (activePage !== errorPage) {
+          activePage = errorPage
+          app._refocus()
+        }
+      })
+    } else {
+      Log.error(args.page, args.error)
+    }
   }
 }
 
