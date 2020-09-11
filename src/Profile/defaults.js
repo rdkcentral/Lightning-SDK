@@ -22,6 +22,7 @@ import { getLocale, getLanguage, getCountryCode, getLatLon } from './helpers'
 export const defaultProfile = {
   ageRating: 'adult',
   city: 'New York',
+  zipCode: '27505',
   countryCode: () => getCountryCode('US'),
   ip: '127.0.0.1',
   household: 'b2244e9d4c04826ccd5a7b2c2a50e7d4',
