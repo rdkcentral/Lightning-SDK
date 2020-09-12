@@ -382,7 +382,7 @@ const loader = async ({ route, hash, routeReg: register }) => {
     register,
     create: isCreated,
     share: sharedInstance,
-    event: ['dataProvided', isCreated ? 'mounted' : 'changed'],
+    event: [isCreated ? 'mounted' : 'changed'],
   }
 
   try {
@@ -392,11 +392,11 @@ const loader = async ({ route, hash, routeReg: register }) => {
       payload.loadType = loadType
       await triggers[sharedInstance ? 'shared' : loadType](payload)
 
+      emit(page, 'dataProvided')
       // resolve promise
       return payload
     } else {
       addPersistData(payload)
-      payload.event = 'changed'
       return payload
     }
   } catch (e) {
@@ -622,10 +622,14 @@ const execProvider = args => {
  * @param pageOut
  */
 const doTransition = (pageIn, pageOut = null) => {
-  const transition = pageIn.pageTransition || pageIn.easing
+  let transition = pageIn.pageTransition || pageIn.easing
+
   const hasCustomTransitions = !!(pageIn.smoothIn || pageIn.smoothInOut || transition)
   const transitionsDisabled = routerConfig.get('disableTransitions')
 
+  if (pageIn.easing) {
+    console.warn('easing() method is deprecated and will be removed. Use pageTransition()')
+  }
   // default behaviour is a visibility toggle
   if (!hasCustomTransitions || transitionsDisabled) {
     pageIn.visible = true
