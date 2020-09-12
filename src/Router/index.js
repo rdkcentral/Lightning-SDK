@@ -698,7 +698,7 @@ const cleanUp = (page, route, register) => {
   const lazyDestroy = routerConfig.get('lazyDestroy')
   const destroyOnBack = routerConfig.get('destroyOnHistoryBack')
   const keepAlive = read('keepAlive', register)
-  const isFromHistory = read('@router:backtrack', register)
+  const isFromHistory = read(symbols.backtrack, register)
   let doCleanup = false
 
   if (isFromHistory && (destroyOnBack || lazyDestroy)) {
@@ -1028,7 +1028,9 @@ const read = (flag, register) => {
 
 const createRegister = flags => {
   const reg = new Map()
-  Object.keys(flags).forEach(key => {
+  // store user defined and router
+  // defined flags in register
+  ;[...Object.keys(flags), ...Object.getOwnPropertySymbols(flags)].forEach(key => {
     reg.set(key, flags[key])
   })
   return reg
@@ -1255,8 +1257,8 @@ export const handleRemote = (type, name) => {
  * the BootComponent became visible;
  */
 export const resume = () => {
-  if (register.has([symbols.resume])) {
-    const hash = register.get([symbols.resume]).replace(/^#+/, '')
+  if (register.has(symbols.resume)) {
+    const hash = register.get(symbols.resume).replace(/^#+/, '')
     if (getRouteByHash(hash) && hash) {
       navigate(hash, false)
     } else if (rootHash) {

@@ -123,7 +123,6 @@ export const symbols = {
   route: Symbol('route'),
   hash: Symbol('hash'),
   store: Symbol('store'),
-  keepAlive: Symbol('keepAlive'),
   fromHistory: Symbol('fromHistory'),
   expires: Symbol('expires'),
   resume: Symbol('resume'),
