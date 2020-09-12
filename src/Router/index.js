@@ -30,6 +30,7 @@ import {
   incorrectParams,
   isPromise,
   getQueryStringParams,
+  symbols,
 } from './utils'
 
 import Transitions from './transitions'
@@ -346,11 +347,11 @@ const loader = async ({ route, hash, routeReg: register }) => {
     page = type
     // if we have have a data route for current page
     if (providers.has(route)) {
-      if (isPageExpired(type) || type[Symbol.for('hash')] !== hash) {
+      if (isPageExpired(type) || type[symbols.hash] !== hash) {
         provide = true
       }
     }
-    let currentRoute = activePage && activePage[Symbol.for('route')]
+    let currentRoute = activePage && activePage[symbols.route]
     // if the new route is equal to the current route it means that both
     // route share the Component instance and stack location / since this case
     // is conflicting with the way before() and after() loading works we flag it,
@@ -370,8 +371,8 @@ const loader = async ({ route, hash, routeReg: register }) => {
 
   // we store hash and route as properties on the page instance
   // that way we can easily calculate new behaviour on page reload
-  page[Symbol.for('hash')] = hash
-  page[Symbol.for('route')] = route
+  page[symbols.hash] = hash
+  page[symbols.route] = route
 
   const payload = {
     page,
@@ -445,7 +446,7 @@ const onRouteFulfilled = ({ page, route, event, hash, share }, register) => {
   // active page that is not being shared
   // between current and previous route
   if (activePage && !share) {
-    cleanUp(activePage, activePage[Symbol.for('route')], register)
+    cleanUp(activePage, activePage[symbols.route], register)
   }
 
   activePage = page
@@ -509,9 +510,9 @@ const handleError = args => {
     console.error(args)
   } else {
     // force expire
-    args.page[Symbol.for('expires')] = Date.now()
+    args.page[symbols.expires] = Date.now()
     if (pages.has('!')) {
-      load({ route: '!', hash: args.page[Symbol.for('hash')] }).then(errorPage => {
+      load({ route: '!', hash: args.page[symbols.hash] }).then(errorPage => {
         errorPage.error = { page: args.page, error: args.error }
         // on() loading type will force the app to go
         // in a loading state so on error we need to
@@ -533,7 +534,7 @@ const handleError = args => {
 
 const updateHistory = hash => {
   const storeHash = getMod(hash, 'store')
-  const regStore = register.get('@navigateForceStore')
+  const regStore = register.get(symbols.store)
   let configPrevent = hashmod(hash, 'preventStorage')
   let configStore = true
 
@@ -602,11 +603,11 @@ const execProvider = args => {
   if (incorrectParams(cb, args.route)) {
     // keep page as params property backwards compatible for now
     return cb({ page: args.page, ...params }).then(() => {
-      args.page[Symbol.for('expires')] = Date.now() + expires
+      args.page[symbols.expires] = Date.now() + expires
     })
   } else {
     return cb(args.page, { ...params }).then(() => {
-      args.page[Symbol.for('expires')] = Date.now() + expires
+      args.page[symbols.expires] = Date.now() + expires
     })
   }
 }
@@ -677,7 +678,7 @@ const doTransition = (pageIn, pageOut = null) => {
  * @param page
  */
 const updateWidgets = page => {
-  const route = page[Symbol.for('route')]
+  const route = page[symbols.route]
 
   // force lowercase lookup
   const configured = (widgetsPerRoute.get(route) || []).map(ref => ref.toLowerCase())
@@ -744,11 +745,11 @@ const cleanUp = (page, route, register) => {
  * @returns {boolean}
  */
 const isPageExpired = page => {
-  if (!page[Symbol.for('expires')]) {
+  if (!page[symbols.expires]) {
     return false
   }
 
-  const expires = page[Symbol.for('expires')]
+  const expires = page[symbols.expires]
   const now = Date.now()
 
   return now >= expires
@@ -1054,7 +1055,7 @@ export const navigate = (url, args, store = true) => {
 
   // we only store complete routes, so we set
   // a special register flag
-  register.set('@navigateForceStore', store)
+  register.set(symbols.store, store)
 
   if (hash.replace(/^#/, '') !== url) {
     if (!mustUpdateHash()) {
@@ -1082,7 +1083,7 @@ export const step = (direction = 0) => {
   if (history.length) {
     // for now we only support history back
     const route = history.splice(history.length - 1, 1)
-    return navigate(route[0], { '@router:backtrack': true }, false)
+    return navigate(route[0], { [symbols.backtrack]: true }, false)
   } else if (routerConfig.get('backtrack')) {
     const hashLastPart = /(\/:?[\w%\s-]+)$/
     let hash = stripRegex(getHash())
@@ -1096,7 +1097,7 @@ export const step = (direction = 0) => {
         // if we have a configured route
         // we navigate to it
         if (getRouteByHash(hash)) {
-          return navigate(hash, { '@router:backtrack': true }, false)
+          return navigate(hash, { [symbols.backtrack]: true }, false)
         }
       }
     }
@@ -1145,7 +1146,7 @@ export const start = () => {
   const ready = () => {
     if (hasBootPage) {
       navigate('@boot-page', {
-        resume: isDirectLoad ? rootHash : hash || rootHash,
+        [symbols.resume]: isDirectLoad ? rootHash : hash || rootHash,
         reload: true,
       })
     } else if (!hash && rootHash) {
@@ -1254,8 +1255,8 @@ export const handleRemote = (type, name) => {
  * the BootComponent became visible;
  */
 export const resume = () => {
-  if (register.has('resume')) {
-    const hash = register.get('resume').replace(/^#+/, '')
+  if (register.has([symbols.resume])) {
+    const hash = register.get([symbols.resume]).replace(/^#+/, '')
     if (getRouteByHash(hash) && hash) {
       navigate(hash, false)
     } else if (rootHash) {
