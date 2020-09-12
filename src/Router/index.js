@@ -93,6 +93,7 @@ let previousState
 // page that has focus
 let activePage
 const hasRegex = /\{\/(.*?)\/([igm]{0,3})\}/g
+const isWildcard = /^[!*$]$/
 
 /**
  * Setup Page router
@@ -417,9 +418,10 @@ const onRouteFulfilled = ({ page, route, event, hash, share }, register) => {
   // clean up history if modifier is set
   if (hashmod(hash, 'clearHistory')) {
     history.length = 0
-  } else if (activeHash) {
+  } else if (activeHash && !isWildcard.test(route)) {
     updateHistory(activeHash)
   }
+
   // we only update the stackLocation if a route
   // is not expired before it resolves
   const location = getPageStackLocation(route)
@@ -850,9 +852,6 @@ const getRouteByHash = hash => {
   const hasLookupId = /\/:\w+?@@([0-9]+?)@@/
   const isNamedGroup = /^\/:/
 
-  // we skip wildcard routes
-  const skipRoutes = ['!', '*', '$']
-
   // to simplify the route matching and prevent look around
   // in our getUrlParts regex we get the regex part from
   // route candidate and store them so that we can reference
@@ -862,7 +861,7 @@ const getRouteByHash = hash => {
   let matches = candidates.filter(route => {
     let isMatching = true
 
-    if (skipRoutes.indexOf(route) !== -1) {
+    if (isWildcard.test(route)) {
       return false
     }
 
