@@ -51,3 +51,7 @@ export const getRgbaComponents = argb => {
   let a = (argb / 16777216) | 0
   return [r, g, b, a]
 }
+
+export const limitWithinRange = (num, min, max) => {
+  return Math.min(Math.max(num, min), max)
+}

@@ -1,4 +1,4 @@
-import { mergeColors, calculateAlpha, isObject, isString } from './utils.js'
+import { mergeColors, calculateAlpha, limitWithinRange, isObject, isString } from './utils.js'
 
 let colors = {
   white: '#ffffff',
@@ -16,17 +16,21 @@ const normalizedColors = {
 }
 
 const calculateColor = (value, options) => {
-  let targetColor = normalizeColor(value)
+  let targetColor = normalizeHexToARGB(value)
   if (!isNaN(options)) {
     options = { alpha: options }
   }
   if (options && isObject(options)) {
     if (!isNaN(options.darken)) {
-      targetColor = mergeColors(targetColor, 0xff000000, 1 - options.darken)
+      targetColor = mergeColors(targetColor, 0xff000000, 1 - limitWithinRange(options.darken, 0, 1))
     }
 
     if (!isNaN(options.lighten)) {
-      targetColor = mergeColors(targetColor, 0xffffffff, 1 - options.lighten)
+      targetColor = mergeColors(
+        targetColor,
+        0xffffffff,
+        1 - limitWithinRange(options.lighten, 0, 1)
+      )
     }
 
     if (!isNaN(options.opacity)) {
@@ -40,13 +44,23 @@ const calculateColor = (value, options) => {
   return targetColor || 0
 }
 
-const normalizeColor = color => {
+const normalizeHexToARGB = color => {
   let targetColor = colors[color]
   if (!targetColor) {
     targetColor = color
   }
-  if (isString(targetColor) && /^#[0-9A-F]{6}$/i.test(targetColor.toUpperCase())) {
-    targetColor = `0xff${targetColor.slice(1)}` * 1
+  const check = /^#([0-9A-F]{3}|[0-9A-F]{6})$/i
+  if (isString(targetColor) && check.test(targetColor)) {
+    let hex = check.exec(targetColor)[1]
+    if (hex.length === 3) {
+      hex = hex
+        .split('')
+        .map(value => {
+          return value + value
+        })
+        .join('')
+    }
+    targetColor = `0xff${hex}` * 1
   }
   return targetColor || 0xffffffff
 }
@@ -64,13 +78,10 @@ export default {
   get(value, options) {
     // create color tag for storage
     let tag = `${value}${options !== undefined ? JSON.stringify(options) : ''}`
-    // check if value is not a number, or if options is not undefined
-    if (isNaN(value) || options) {
-      // check if tag is stored in colors;
-      if (normalizedColors[tag]) {
-        // return stored color
-        return normalizedColors[tag]
-      }
+    // check if tag is stored in colors;
+    if (normalizedColors[tag]) {
+      // return stored color
+      return normalizedColors[tag]
     }
 
     // calculate a new color
