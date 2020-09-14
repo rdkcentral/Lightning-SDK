@@ -68,7 +68,6 @@ const normalizeHexToARGB = color => {
 const cleanUpNormalizedColor = color => {
   for (let c in normalizedColors) {
     if (c.indexOf(color) > -1) {
-      normalizedColors[c] = undefined
       delete normalizedColors[c]
     }
   }
