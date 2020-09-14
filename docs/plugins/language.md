@@ -152,7 +152,7 @@ Language.translate('introduction1', 'John', 'Doe', 18)
 Or a _key-value_-object for name based replacements.
 
 ```js
-Language.translate('introduction2', {lastname: 'Smith', firstname: 'Joe', kids: 27}) // name based replacements
+Language.translate('introduction2', {lastname: 'Smith', firstname: 'Joe', age: 27}) // name based replacements
 // Hi, my name is Joe, my lastname is Smith and I am 27 years old
 ```
 
