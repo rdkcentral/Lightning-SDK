@@ -172,7 +172,7 @@ Array of objects
 
 ```js
 Language.available()
-// [{code: 'en', name: 'English', code: 'nl', name: 'Nederlands'}]
+// [{code: 'en', name: 'English'}, {code: 'nl', name: 'Nederlands'}]
 ```
 
 ### Translations
