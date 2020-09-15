@@ -18,23 +18,41 @@
  */
 
 import Log from '../Log'
+import Utils from '../Utils'
 
 let meta = {}
 let translations = {}
 let language = null
 let dictionary = null
 
-export const initLanguage = (file, lng = null) => {
-  return fetch(file)
-    .then(response => response.json())
-    .then(json => {
-      setTranslations(json)
-      // set language (directly or in a promise)
-      typeof lng === 'object' && 'then' in lng && typeof lng.then === 'function'
-        ? lng.then(l => setLanguage(l)).catch(Log.error)
-        : setLanguage(lng)
-    })
-    .catch(() => Log.error('Language file ' + file + ' not found'))
+export const initLanguage = (file, language = null) => {
+  return new Promise((resolve, reject) => {
+    fetch(file)
+      .then(response => response.json())
+      .then(json => {
+        setTranslations(json)
+        // set language (directly or in a promise)
+        typeof language === 'object' && 'then' in language && typeof language.then === 'function'
+          ? language
+              .then(lang =>
+                setLanguage(lang)
+                  .then(resolve)
+                  .catch(reject)
+              )
+              .catch(e => {
+                Log.error(e)
+                reject(e)
+              })
+          : setLanguage(language)
+              .then(resolve)
+              .catch(reject)
+      })
+      .catch(() => {
+        const error = 'Language file ' + file + ' not found'
+        Log.error(error)
+        reject(error)
+      })
+  })
 }
 
 const setTranslations = obj => {
@@ -48,27 +66,55 @@ const setTranslations = obj => {
 const setLanguage = lng => {
   language = null
   dictionary = null
-  if (lng in translations) {
-    language = lng
-  } else {
-    if ('map' in meta && lng in meta.map && meta.map[lng] in translations) {
-      language = meta.map[lng]
-    } else if ('default' in meta && meta.default in translations) {
-      language = meta.default
-      Log.warn(
-        'Translations for Language ' +
+
+  return new Promise((resolve, reject) => {
+    if (lng in translations) {
+      language = lng
+    } else {
+      if ('map' in meta && lng in meta.map && meta.map[lng] in translations) {
+        language = meta.map[lng]
+      } else if ('default' in meta && meta.default in translations) {
+        language = meta.default
+        const error =
+          'Translations for Language ' +
           language +
           ' not found. Using default language ' +
           meta.default
-      )
-    } else {
-      Log.error('Translations for Language ' + language + ' not found.')
+        Log.warn(error)
+        reject(error)
+      } else {
+        const error = 'Translations for Language ' + language + ' not found.'
+        Log.error(error)
+        reject(error)
+      }
     }
-  }
-  if (language) {
-    Log.info('Setting language to', language)
-    dictionary = translations[language]
-  }
+
+    if (language) {
+      Log.info('Setting language to', language)
+
+      const translationsObj = translations[language]
+      if (typeof translationsObj === 'object') {
+        dictionary = translationsObj
+        resolve()
+      } else if (typeof translationsObj === 'string') {
+        const url = Utils.asset(translationsObj)
+
+        fetch(url)
+          .then(response => response.json())
+          .then(json => {
+            // save the translations for this language (to prevent loading twice)
+            translations[language] = json
+            dictionary = json
+            resolve()
+          })
+          .catch(e => {
+            const error = 'Error while fetching ' + url
+            Log.error(error, e)
+            reject(error)
+          })
+      }
+    }
+  })
 }
 
 export default {

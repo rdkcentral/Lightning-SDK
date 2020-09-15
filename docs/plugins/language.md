@@ -1,6 +1,6 @@
 # Language
 
-The language plugin supports internationalisation features for your App.
+The Language plugin supports internationalisation features for your App.
 
 ## Usage
 
@@ -97,6 +97,43 @@ Optionally you can add an extra `meta`-key to `translations.json` with more deta
 }
 ```
 
+#### Splitting up in several files
+
+Depending on the size of an App and the number of supported languages, the translations file may grow rather large.
+This can make managing translations more cumbersome during development. But it can also negatively affect loading time
+(since the entire `translations.json` is loaded upon boot).
+
+For this reason, the Language plugin offers the option to split the translations in different files (i.e. `en.json` and `nl.json`).
+Each file must contain a basic _JSON_ object with keys and their translated values. For example:
+
+```json
+{
+  "key": "translated string in English",
+  "another key": "another translated string in English"
+}
+```
+
+Next, in the main `translations.json` the different language files must be properly wired up.
+
+Instead of specifying an entire _JSON_ object, the location of the corresponding JSON file in the `static`-folder should be specified as a `String`.
+
+For example:
+
+```json
+{
+  "meta": {
+    "default": "en",
+  },
+  "en": "translations/en.json",
+  "nl": "translations/dutch.json"
+}
+```
+
+It is possible to use both inline JSON objects and references to external language files in the same `translations.json` file.
+
+External language files are loaded on the fly when a specific language is being set. This may add some load time
+when switching languages.
+
 ## Available methods
 
 ### Set
@@ -105,8 +142,14 @@ Sets or changes the current Language.
 
 ```js
 const languageCode = 'en'
-Language.set(languageCode)
+Language.set(languageCode).then(() => {
+  // the current language is now 'en'
+}).catch()
 ```
+
+The `set`-method returns a Promise, that resolves when the Language has been properly changed.
+Setting the language is _instant_ for translations specified inline in the `translations.json` file.
+In the case of external language files an _asynchronous_ load request will be made.
 
 The language code should match with one of the language-keys specified in your `translations.json`.
 
