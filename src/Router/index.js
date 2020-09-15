@@ -35,8 +35,10 @@ import {
 
 import Transitions from './transitions'
 import Log from '../Log'
+import Settings from '../Settings'
 import { AppInstance } from '../Application'
 import { RoutedApp } from './base'
+import stats from './stats'
 
 let getHash = () => {
   return document.location.hash
@@ -390,9 +392,14 @@ const loader = async ({ route, hash, routeReg: register }) => {
       const { type: loadType } = providers.get(route)
       // update payload
       payload.loadType = loadType
+      // update statistics
+      send(hash, `${loadType}-start`, Date.now())
+
       await triggers[sharedInstance ? 'shared' : loadType](payload)
 
       emit(page, 'dataProvided')
+      send(hash, `${loadType}-end`, Date.now())
+
       // resolve promise
       return payload
     } else {
@@ -451,6 +458,9 @@ const onRouteFulfilled = ({ page, route, event, hash, share }, register) => {
     cleanUp(activePage, activePage[symbols.route], register)
   }
 
+  // flag this navigation cycle as ready
+  send(hash, 'ready')
+
   activePage = page
   activeRoute = route
   activeHash = hash
@@ -507,14 +517,23 @@ const emit = (page, events = [], params = {}) => {
   })
 }
 
+const send = (hash, key, value) => {
+  if (Settings.get('platform', 'stats')) {
+    stats.send(hash, key, value)
+  }
+}
+
 const handleError = args => {
   if (!args.page) {
     console.error(args)
   } else {
+    const hash = args.page[symbols.hash]
+    // flag this navigation cycle as rejected
+    send(hash, 'e', args.error)
     // force expire
     args.page[symbols.expires] = Date.now()
     if (pages.has('!')) {
-      load({ route: '!', hash: args.page[symbols.hash] }).then(errorPage => {
+      load({ route: '!', hash }).then(errorPage => {
         errorPage.error = { page: args.page, error: args.error }
         // on() loading type will force the app to go
         // in a loading state so on error we need to
@@ -743,6 +762,7 @@ const cleanUp = (page, route, register) => {
       visible: false,
     })
   }
+  send(page[symbols.hash], 'stop')
 }
 
 /**
@@ -962,6 +982,9 @@ const handleHashChange = override => {
   const hash = override || getHash()
   const route = getRouteByHash(hash)
 
+  // add a new record for page statistics
+  send(hash)
+
   // store last requested hash so we can
   // prevent a route that resolved later
   // from displaying itself
@@ -971,6 +994,8 @@ const handleHashChange = override => {
     // would be strange if this fails but we do check
     if (pages.has(route)) {
       let stored = pages.get(route)
+
+      send(hash, 'route', route)
       if (!isArray(stored)) {
         stored = [stored]
       }
