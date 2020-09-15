@@ -295,7 +295,7 @@ const load = async ({ route, hash }) => {
   const routeReg = new Map(register)
   try {
     const payload = await loader({ hash, route, routeReg })
-    if (payload.hash === lastHash) {
+    if (payload && payload.hash === lastHash) {
       // in case of on() providing we need to reset
       // app state;
       if (app.state === 'Loading') {
@@ -323,7 +323,6 @@ const load = async ({ route, hash }) => {
       }
     } else {
       onRouteFulfilled(payload, routeReg)
-
       // resolve promise
       return payload.page
     }
@@ -392,16 +391,19 @@ const loader = async ({ route, hash, routeReg: register }) => {
       const { type: loadType } = providers.get(route)
       // update payload
       payload.loadType = loadType
+
       // update statistics
       send(hash, `${loadType}-start`, Date.now())
-
       await triggers[sharedInstance ? 'shared' : loadType](payload)
-
-      emit(page, 'dataProvided')
       send(hash, `${loadType}-end`, Date.now())
 
-      // resolve promise
-      return payload
+      if (hash !== lastHash) {
+        return false
+      } else {
+        emit(page, 'dataProvided')
+        // resolve promise
+        return payload
+      }
     } else {
       addPersistData(payload)
       return payload
