@@ -36,6 +36,12 @@ only gets destroyed when it gets unloaded via a step back in history.
 
 By settings `updateHash: false` the Router will not update the hash on `navigate()`.
 
+### reuseInstance 
+
+When the new hash we navigate to shares the same route and the previous:  `settings/hotspot/12` && `settings/hotspot/22` 
+share: `settings/hotspot/:id` the Router will by default re-use the current Page instance. If you want to prevent this
+you set `resuseInstance: false`. This can be overriden per [route](configuration.md) via de options. 
+
 ##### Settings.json 
 
 
@@ -49,6 +55,7 @@ By settings `updateHash: false` the Router will not update the hash on `navigate
           "lazyDestroy": true,
           "gcOnUnload": true,
           "backtrack": true,
+          "reuseInstance": false,
           "destroyOnHistoryBack": false
         }
     }

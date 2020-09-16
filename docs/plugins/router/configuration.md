@@ -195,7 +195,8 @@ On a per route basis, you can specify an object with `options`, that influences 
     path: 'settings/hotspots/delete/:hotspotId/:actionId',
     options: {
       preventStorage: true,
-      clearHistory: true
+      clearHistory: true,
+      reuseInstance: false
     }
 }
 ```
@@ -210,6 +211,11 @@ Whether or not to store this route in history. Possible values: `true` or `false
 
 Whether it's own history should be reset when visiting this route. Possible values: `true` or `false`. Defaults to `false`.
 
+### reuseInstance 
+
+When the new hash we navigate to shares the same route and the previous:  `settings/hotspot/12` && `settings/hotspot/22` 
+share: `settings/hotspot/:id` the Router will by default re-use the current Page instance. If you want to prevent this
+you set `resuseInstance: false`. This [setting](navigation.md) is also globally available.
 
 ### Special routes
 
@@ -228,7 +234,7 @@ The `*`-path is used to specify which component to display when an unknown `rout
 #### Error page
 
 The `!`-path is used to specify which component to display as a global error page. The Router plugin attempts
-to display this route, whenever a page's [dataprovider](plugins/router/dataproviding.md) returns an error.
+to display this route, whenever a page's [dataprovider](dataproviding.md) returns an error.
 
 ```js
 {
