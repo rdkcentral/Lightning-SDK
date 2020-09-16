@@ -338,14 +338,20 @@ const load = async ({ route, hash }) => {
 }
 
 const loader = async ({ route, hash, routeReg: register }) => {
-  const type = getPageByRoute(route)
+  let type = getPageByRoute(route)
+  let isComponent = isLightningComponent(type)
   let sharedInstance = false
   let provide = false
   let page = null
   let isCreated = false
 
+  if (!mustReuse(route) && !isComponent) {
+    type = type.constructor
+    isComponent = true
+  }
+
   // If type is not a constructor
-  if (!isLightningComponent(type)) {
+  if (!isComponent) {
     page = type
     // if we have have a data route for current page
     if (providers.has(route)) {
@@ -577,6 +583,17 @@ const updateHistory = hash => {
       history.push(history.splice(location, 1)[0])
     }
   }
+}
+
+export const mustReuse = route => {
+  const mod = routemod(route, 'reuseInstance')
+  const config = routerConfig.get('reuseInstance')
+
+  // route always has final decision
+  if (isBoolean(mod)) {
+    return mod
+  }
+  return !(isBoolean(config) && config === false)
 }
 
 export const boot = cb => {
@@ -1042,11 +1059,8 @@ const hashmod = (hash, key) => {
 const routemod = (route, key) => {
   if (modifiers.has(route)) {
     const config = modifiers.get(route)
-    if (config[key] && config[key] === true) {
-      return true
-    }
+    return config[key]
   }
-  return false
 }
 
 const read = (flag, register) => {
