@@ -131,7 +131,7 @@ export default function(App, appData, platformSettings) {
       Settings.clearSubscribers()
 
       if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
-        platformSettings.onClose()
+        platformSettings.onClose(...arguments)
       } else {
         this.close()
       }
