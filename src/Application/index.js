@@ -29,6 +29,7 @@ import Settings from '../Settings'
 import { version as sdkVersion } from '../../package.json'
 
 export let AppInstance
+export let AppData
 
 const defaultOptions = {
   stage: { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false },
@@ -80,11 +81,12 @@ export default function(App, appData, platformSettings) {
         .then(() => {
           Metrics.app.loaded()
 
+          AppData = appData
+
           AppInstance = this.stage.c({
             ref: 'App',
             type: App,
             zIndex: 1,
-            appData,
             forceZIndexContext: !!platformSettings.showVersion || !!platformSettings.showFps,
           })
 
@@ -161,8 +163,13 @@ export default function(App, appData, platformSettings) {
       })
     }
 
+    set focus(v) {
+      this._focussed = v
+      this._refocus()
+    }
+
     _getFocused() {
-      return this.tag('App')
+      return this._focussed || this.tag('App')
     }
   }
 }

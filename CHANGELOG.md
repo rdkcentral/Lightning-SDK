@@ -1,5 +1,29 @@
 # Changelog
 
+## v2.6.0
+
+*11 sep 2020*
+
+- Added Pin Plugin
+- Added zipCode to profile
+
+## v2.5.0
+
+*21 aug 2020*
+
+- Added fallback value to `Settings.get()`
+- Added access to AppData
+- Removed black body background during development
+- Added proper App-cleanup on close during development
+- Various Router updates
+  - support for querystring parameters
+  - support for function as a value for `root` in router config
+  - support for navigation without a hash update
+  - fixes:
+    - static routes take priority over dynamic matches (`settings/account` vs `settings/:type`)
+    - remain focus on an active widget after an `on()`-resolve
+- Added new TV plugin
+
 ## v2.4.0
 
 *14 jul 2020*

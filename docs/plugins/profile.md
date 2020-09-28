@@ -35,6 +35,15 @@ Gets the city. `New York` by default during _local development_.
 Profile.city()
 ```
 
+
+### ZipCode
+
+Gets the zipCode. Returns `27505` by default during _local development_.
+
+```js
+Profile.zipCode()
+```
+
 ### CountryCode
 
 Gets the countryCode. Returns `US` by default during _local development_.
@@ -144,6 +153,7 @@ Add a `profile` key in `platformSettings` and only add the values you wish to ch
       "profile": {
          "ageRating": "adult",
          "city": "New York",
+         "zipCode": "27505",
          "countryCode": "US",
          "ip": "127.0.0.1",
          "household": "b2244e9d4c04826ccd5a7b2c2a50e7d4",
