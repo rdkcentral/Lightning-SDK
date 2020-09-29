@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.6.0
+
+*11 sep 2020*
+
+- Added Pin Plugin
+- Added zipCode to profile
+
 ## v2.5.0
 
 *21 aug 2020*
