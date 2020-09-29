@@ -151,8 +151,6 @@ export default {
 
   available() {
     const languageKeys = Object.keys(translations)
-    return 'names' in meta
-      ? languageKeys.map(key => ({ code: key, name: meta.names[key] || key }))
-      : languageKeys
+    return languageKeys.map(key => ({ code: key, name: (meta.names && meta.names[key]) || key }))
   },
 }

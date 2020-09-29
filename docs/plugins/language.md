@@ -204,18 +204,15 @@ Language.translate('introduction2', {lastname: 'Smith', firstname: 'Joe', age: 2
 Returns an Array with the available languages as specified in `translations.json`, which can for example be used to display
 a dynamic language switcher in your App.
 
-By default it will return a simple Array with the available language codes:
+The `available`-method will return an Array of objects with a `code` and a `name` property.
 
-```js
-Language.available() // ['en', 'nl', 'fr']
-```
-
-If you have specified an object with `names` in the `meta` key of your translations file, the `available`-method will return an
-Array of objects
+The `name` property will be set to the language name as specified in the `meta.names` property of your translation file.
+If you have not specified `names`, or if a particular language does not have a name defined, the property will default to
+the `code`-value.
 
 ```js
 Language.available()
-// [{code: 'en', name: 'English'}, {code: 'nl', name: 'Nederlands'}]
+// [{code: 'en', name: 'English'}, {code: 'nl', name: 'Nederlands'}, {code: 'de': name: 'de'}]
 ```
 
 ### Translations
