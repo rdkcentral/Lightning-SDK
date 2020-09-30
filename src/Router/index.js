@@ -132,7 +132,10 @@ export const startRouter = (config, instance) => {
   }
 
   // register step back handler
-  app._handleBack = step.bind(null, -1)
+  app._handleBack = e => {
+    step(-1)
+    e.preventDefault()
+  }
 
   // register step back handler
   app._captureKey = capture.bind(null)
