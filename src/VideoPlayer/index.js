@@ -110,7 +110,7 @@ export const setUpVideoTexture = () => {
 }
 
 const registerEventListeners = () => {
-  Log.info('Registering event listeners VideoPlayer')
+  Log.info('VideoPlayer', 'Registering event listeners')
   Object.keys(events).forEach(event => {
     const handler = e => {
       // Fire a metric for each event (if it exists on the metrics object)
@@ -130,7 +130,7 @@ const registerEventListeners = () => {
 }
 
 const deregisterEventListeners = () => {
-  Log.info('Deregistering event listeners VideoPlayer')
+  Log.info('VideoPlayer', 'Deregistering event listeners')
   Object.keys(eventHandlers).forEach(event => {
     videoEl.removeEventListener(event, eventHandlers[event])
   })
@@ -218,6 +218,7 @@ const videoPlayerPlugin = {
   },
 
   close() {
+    Ads.cancel()
     if (state.playingAds) {
       state.playingAds = false
       Ads.stop()
@@ -392,10 +393,15 @@ const videoPlayerPlugin = {
 }
 
 export default autoSetupMixin(videoPlayerPlugin, () => {
-  precision =
-    ApplicationInstance &&
-    ApplicationInstance.stage &&
-    ApplicationInstance.stage.getRenderPrecision()
+  // todo: enable this code when merging!
+
+  // precision =
+  //   ApplicationInstance &&
+  //   ApplicationInstance.stage &&
+  //   ApplicationInstance.stage.getRenderPrecision()
+
+  // temporary hack to enable 2 SDKs at the same time
+  precision = window.innerHeight === 720 ? 0.6666666667 : 1
 
   videoEl = setupVideoTag()
 

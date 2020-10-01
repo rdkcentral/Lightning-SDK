@@ -33,6 +33,7 @@ const playSlot = (slot = []) => {
 const playAd = ad => {
   return new Promise(resolve => {
     if (state.active === false) {
+      Log.info('Ad', 'Skipping add due to inactive state')
       return resolve()
     }
     // is it safe to rely on videoplayer plugin already created the video tag?
@@ -203,7 +204,12 @@ export default {
       })
     })
   },
+  cancel() {
+    Log.info('Ad', 'Cancel Ad')
+    state.active = false
+  },
   stop() {
+    Log.info('Ad', 'Stop Ad')
     state.active = false
     // fixme: duplication
     const videoEl = document.getElementsByTagName('video')[0]
