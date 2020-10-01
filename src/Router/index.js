@@ -1016,18 +1016,31 @@ const handleHashChange = override => {
     // would be strange if this fails but we do check
     if (pages.has(route)) {
       let stored = pages.get(route)
-
       send(hash, 'route', route)
+
       if (!isArray(stored)) {
         stored = [stored]
       }
-      let n = stored.length
-      while (n--) {
-        const type = stored[n]
+
+      stored.forEach((type, idx, stored) => {
         if (isPage(type, stage)) {
           load({ route, hash }).then(() => {
             app._refocus()
           })
+        } else if (isPromise(type)) {
+          type()
+            .then(contents => {
+              return contents.default
+            })
+            .then(module => {
+              // flag dynamic as loaded
+              stored[idx] = module
+
+              return load({ route, hash })
+            })
+            .then(() => {
+              app._refocus()
+            })
         } else {
           const urlParams = getValuesFromHash(hash, route)
           const params = {}
@@ -1037,7 +1050,7 @@ const handleHashChange = override => {
           // invoke
           type.call(null, app, { ...params })
         }
-      }
+      })
     }
   } else {
     if (pages.has('*')) {
