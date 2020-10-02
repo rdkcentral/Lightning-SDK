@@ -1173,6 +1173,14 @@ export const step = (direction = 0) => {
 }
 
 const capture = ({ key }) => {
+  // in Loading state we want to stop propagation
+  // by returning undefined
+  if (app.state === 'Loading') {
+    return
+  }
+
+  // if not set we want to continue propagation
+  // by explicitly returning false
   if (!routerConfig.get('numberNavigation')) {
     return false
   }
