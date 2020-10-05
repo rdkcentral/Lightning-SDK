@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.0.0
+
+Router: 
+- Fixed async loading behaviour that could result in stacked pages
+- Router internally now uses unique Symbols (could break if Symbol.for("route") is used in app)
+- Page view statistics
+- Wildcard routes not ending up in history
+- Add reuseInstance flag global and per route
+- Support for Dynamic component import
+- Widgets always hidden on Router boot
+- Documented _handleAppClose()
+
+
 ## v2.6.0
 
 *11 sep 2020*
