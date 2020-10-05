@@ -52,6 +52,11 @@ shell.cp(
   path.join(nodeModulesFolder + '/@babel/polyfill/dist/polyfill.js'),
   path.join(supportPolyfillsFolder, '/babel-polyfill.js')
 )
+shell.cp(
+  '-R',
+  path.join(nodeModulesFolder + '/whatwg-fetch/dist/fetch.umd.js'),
+  path.join(supportPolyfillsFolder, '/fetch.js')
+)
 
 replaceInFile({
   files: process.env.INIT_CWD + '/src/**/*',

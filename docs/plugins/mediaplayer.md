@@ -90,22 +90,40 @@ this.tag('MediaPlayer').seek(seconds)
 
 You can use negative values to scrub backwards.
 
+### Resizing the video player
+
+You can resize (and reposition) the MediaPlayer by specifying the `videoPosition` in the `settings` argument when you open a new video:
+
+```js
+this.tag('MediaPlayer').open(url, {
+  videoPosition: [left, top, right, bottom]
+})
+```
+
+The `videoPositon` should be defined as an array with the _left, top, right and bottom_ coordinates for the MediaPlayer.
+When omitted in the settings object, the videoPosition will be set to `[0, 0, 1920, 1080]` (i.e. full screen).
+
+You can also define the video area on the fly (while a video is playing) by calling the `_setVideoArea` method directly, passing it an array with the coordinates as an argument.
+
+```js
+this.tag('MediaPlayer')._setVideoArea([left, top, right, bottom])
+```
 
 ## Events
 
-The MediaPlayer plugin emits the following events:
+The MediaPlayer plugin emits the following events to it's `consumer` (as specified in the `updateSettings` method)
 
-- Timeupdate
-- Error
-- Ended
-- Loadeddata
-- Canplay
-- Play
-- Playing
-- Pause
-- Loadstart
-- Seeking
-- Seeked
-- Encrypted
-
-You can listen to these events in the component that implements the MediaPlayer plugin by adding `$mediaplayer{Event}`-methods (i.e. `$mediaplayerPause()`).
+- $mediaplayerError
+- $mediaplayerLoadedData
+- $mediaplayerPlay
+- $mediaplayerPlaying
+- $mediaplayerStart (mapping of `canplay` Media event)
+- $mediaplayerLoad
+- $mediaplayerSeeked
+- $mediaplayerSeeking
+- $mediaplayerDurationChange
+- $mediaplayerEncrypted
+- $mediaplayerProgress (mapping of `timeupdate` Media event)
+- $mediaplayerEnded
+- $mediaplayerPause
+- $mediaplayerStop

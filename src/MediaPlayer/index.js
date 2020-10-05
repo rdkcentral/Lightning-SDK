@@ -105,7 +105,7 @@ export default class Mediaplayer extends Lightning.Component {
   _registerListeners() {
     events.forEach(event => {
       const handler = e => {
-        if (this._metrics[event] && typeof this._metrics[event] === 'function') {
+        if (this._metrics && this._metrics[event] && typeof this._metrics[event] === 'function') {
           this._metrics[event]({ currentTime: this.videoEl.currentTime })
         }
         this.fire(event, { videoElement: this.videoEl, event: e })
@@ -294,10 +294,21 @@ export default class Mediaplayer extends Lightning.Component {
       Log.info('noVideo option set, so ignoring: ' + url)
       return
     }
-    if (this.videoEl.getAttribute('src') === url) return this.reload()
+    // close the video when opening same url as current (effectively reloading)
+    if (this.videoEl.getAttribute('src') === url) {
+      this.close()
+    }
     this.videoEl.setAttribute('src', url)
 
-    this.videoEl.style.display = 'block'
+    // force hide, then force show (in next tick!)
+    // (fixes comcast playback rollover issue)
+    this.videoEl.style.visibility = 'hidden'
+    this.videoEl.style.display = 'none'
+
+    setTimeout(() => {
+      this.videoEl.style.display = 'block'
+      this.videoEl.style.visibility = 'visible'
+    })
 
     this._setHide(settings.hide)
     this._setVideoArea(settings.videoPosition || [0, 0, 1920, 1080])

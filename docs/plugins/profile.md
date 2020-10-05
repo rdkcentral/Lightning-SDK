@@ -35,6 +35,15 @@ Gets the city. `New York` by default during _local development_.
 Profile.city()
 ```
 
+
+### ZipCode
+
+Gets the zipCode. Returns `27505` by default during _local development_.
+
+```js
+Profile.zipCode()
+```
+
 ### CountryCode
 
 Gets the countryCode. Returns `US` by default during _local development_.
@@ -61,7 +70,7 @@ Profile.houseHold()
 
 ### Language
 
-Gets the language. Returns `en` by default during _local development_.
+Gets the language. During _local development_ will attempt to return the browser's language, with a default to `en`.
 
 ```js
 Profile.language()
@@ -69,7 +78,8 @@ Profile.language()
 
 ### LatLon
 
-Gets the LatLon. Returns `[40.7128, 74.006]` by default during _local development_.
+Gets the LatLon. During _local development_ will try to return your actual latitude and longitude from a remote API service. If unsuccessful, will default to `[40.7128, 74.006]`.
+If during _local development_ you want to force to use the browser's built in _geolocation_ for retrieving the latitude and longitude, add the key `forceBrowserGeolocation` with the value `true` as a _platform setting_ in `settings.json`.
 
 ```js
 Profile.latLon()
@@ -77,7 +87,7 @@ Profile.latLon()
 
 ### Locale
 
-Get the locale. Returns `en-US` by default during _local development_.
+Get the locale. During _local development_ will attempt to return the browser's locale, with a fallback to to `en-US`.
 
 ```js
 Profile.locale()
@@ -143,6 +153,7 @@ Add a `profile` key in `platformSettings` and only add the values you wish to ch
       "profile": {
          "ageRating": "adult",
          "city": "New York",
+         "zipCode": "27505",
          "countryCode": "US",
          "ip": "127.0.0.1",
          "household": "b2244e9d4c04826ccd5a7b2c2a50e7d4",

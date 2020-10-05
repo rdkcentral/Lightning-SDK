@@ -1,5 +1,65 @@
 # Changelog
 
+## v2.6.0
+
+*11 sep 2020*
+
+- Added Pin Plugin
+- Added zipCode to profile
+
+## v2.5.0
+
+*21 aug 2020*
+
+- Added fallback value to `Settings.get()`
+- Added access to AppData
+- Removed black body background during development
+- Added proper App-cleanup on close during development
+- Various Router updates
+  - support for querystring parameters
+  - support for function as a value for `root` in router config
+  - support for navigation without a hash update
+  - fixes:
+    - static routes take priority over dynamic matches (`settings/account` vs `settings/:type`)
+    - remain focus on an active widget after an `on()`-resolve
+- Added new TV plugin
+
+## v2.4.0
+
+*14 jul 2020*
+
+- Added `image.quality` platform setting to tune down the image quality on STB's with lower GPU memory
+- Added _Router_ plugin to SDK
+
+## v2.3.1
+
+*8 jul 2020*
+
+- Added fix to MediaPlayer plugin to solve issue of video rollover (black screen on certain STBs)
+- Added fix to MediaPlayer plugin to solve issue when opening same video asset twice (black screen)
+- Added fix to Profile plugin to solve issue with always requesting the browser location (also in production)
+
+## v2.3.0
+
+*24 jun 2020*
+
+- Added support for user defined Settings
+- Added fetch polyfill for older ES5 environments
+- Added SDK version to be displayed in Version-label (requires Lightning-CLI 1.6.1 and higher)
+- Added fix for setting texture mode in `settings.json`
+
+## v2.2.2
+
+*4 jun 2020*
+
+- Added fallback language (en) to Locale plugin when given language doesn't exist
+
+## v2.2.1
+
+*1 jun 2020*
+
+- Hotfix for Media Player metrics
+
 ## v2.2.0
 
 *6 may 2020*

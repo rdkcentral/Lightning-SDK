@@ -22,7 +22,7 @@ import { defaultProfile } from './defaults'
 
 let getInfo = key => {
   const profile = { ...defaultProfile, ...Settings.get('platform', 'profile') }
-  return Promise.resolve(profile[key])
+  return Promise.resolve(typeof profile[key] === 'function' ? profile[key]() : profile[key])
 }
 
 let setInfo = (key, params) => {
@@ -43,6 +43,9 @@ export default {
   },
   city(params) {
     return getOrSet('city', params)
+  },
+  zipCode(params) {
+    return getOrSet('zipCode', params)
   },
   countryCode(params) {
     return getOrSet('countryCode', params)

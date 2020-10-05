@@ -18,18 +18,55 @@
  */
 
 const settings = {}
+const subscribers = {}
 
 export const initSettings = (appSettings, platformSettings) => {
   settings['app'] = appSettings
   settings['platform'] = platformSettings
+  settings['user'] = {}
 }
 
-// todo: support key for nested settings with dot notation? e.g. stage.useImageworker from 'app' settings
+const publish = (key, value) => {
+  subscribers[key] && subscribers[key].forEach(subscriber => subscriber(value))
+}
+
+const dotGrab = (obj = {}, key) => {
+  const keys = key.split('.')
+  for (let i = 0; i < keys.length; i++) {
+    obj = obj[keys[i]] = obj[keys[i]] !== undefined ? obj[keys[i]] : {}
+  }
+  return typeof obj === 'object' ? (Object.keys(obj).length ? obj : undefined) : obj
+}
+
 export default {
-  get(type, key) {
-    return settings[type] && settings[type][key]
+  get(type, key, fallback = undefined) {
+    const val = dotGrab(settings[type], key)
+    return val !== undefined ? val : fallback
   },
   has(type, key) {
-    return settings[type] && key in settings[type]
+    return !!this.get(type, key)
+  },
+  set(key, value) {
+    settings['user'][key] = value
+    publish(key, value)
+  },
+  subscribe(key, callback) {
+    subscribers[key] = subscribers[key] || []
+    subscribers[key].push(callback)
+  },
+  unsubscribe(key, callback) {
+    if (callback) {
+      const index = subscribers[key] && subscribers[key].findIndex(cb => cb === callback)
+      index > -1 && subscribers[key].splice(index, 1)
+    } else {
+      if (key in subscribers) {
+        subscribers[key] = []
+      }
+    }
+  },
+  clearSubscribers() {
+    for (const key of Object.getOwnPropertyNames(subscribers)) {
+      delete subscribers[key]
+    }
   },
 }

@@ -52,7 +52,7 @@ export default (imageUrl, options) => {
 
   // merge options with default
   const setOptions = options => {
-    return {
+    options = {
       ...{
         type: 'contain',
         w: 0,
@@ -60,6 +60,14 @@ export default (imageUrl, options) => {
       },
       ...options,
     }
+    const imageQuality = Math.max(
+      0.1,
+      Math.min(1, (parseFloat(Settings.get('platform', 'image.quality')) || 100) / 100)
+    )
+
+    options.w = options.w * imageQuality
+    options.h = options.h * imageQuality
+    return options
   }
 
   // if options are passed, return scaled image right away

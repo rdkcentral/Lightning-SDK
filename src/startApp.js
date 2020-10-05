@@ -21,15 +21,16 @@ const style = document.createElement('style')
 
 document.head.appendChild(style)
 style.sheet.insertRule(
-  '@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { background: black; width: 100%; height: 100%;} }'
+  '@media all { html {height: 100%; width: 100%;} *,body {margin:0; padding:0;} canvas { position: absolute; z-index: 2; } body { width: 100%; height: 100%;} }'
 )
+
+let app
+let canvas
+let appMetadata
+let settings
 
 const startApp = () => {
   console.time('app')
-
-  let appMetadata
-  let settings
-
   sequence([
     () => getSettings().then(config => (settings = config)),
     () => getAppMetadata().then(metadata => (appMetadata = metadata)),
@@ -37,7 +38,10 @@ const startApp = () => {
     () => loadPolyfills(settings.platformSettings.esEnv),
     () => loadLightning(settings.platformSettings.esEnv),
     () => loadAppBundle(settings.platformSettings.esEnv),
-    () => hasTextureMode().then(enabled => (settings.platformSettings.textureMode = enabled)),
+    () =>
+      hasTextureMode(settings.platformSettings).then(
+        enabled => (settings.platformSettings.textureMode = enabled)
+      ),
     () =>
       settings.platformSettings.inspector === true
         ? loadLightningInspect(settings.platformSettings.esEnv).then(() =>
@@ -48,42 +52,88 @@ const startApp = () => {
       console.time('app2')
       settings.appSettings.version = appMetadata.version
       settings.appSettings.id = appMetadata.identifier
-      const app = window[appMetadata.id](
+      app = window[appMetadata.id](
         settings.appSettings,
         settings.platformSettings,
         settings.appData
       )
-      document.body.appendChild(app.stage.getCanvas())
+      canvas = app.stage.getCanvas()
+      document.body.appendChild(canvas)
     },
   ])
 }
 
 const getAppMetadata = () => {
-  return fetch('./metadata.json')
-    .then(response => {
-      return response.json()
-    })
-    .then(metadata => {
-      metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
-      return metadata
-    })
+  return fetchJson('./metadata.json').then(metadata => {
+    metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
+    return metadata
+  })
 }
 
 const getSettings = () => {
-  return fetch('./settings.json')
-    .then(response => {
-      return response.json()
-    })
-    .catch(error => {
-      console.warn('No settings.json found. Using defaults.')
-      return {
-        appSettings: {},
-        platformSettings: {
-          path: './static',
-          esEnv: 'es6',
-        },
-      }
-    })
+  return new Promise(resolve => {
+    let settings
+    fetchJson('./settings.json')
+      .then(json => (settings = json))
+      .catch(() => {
+        console.warn('No settings.json found. Using defaults.')
+        settings = {
+          appSettings: {},
+          platformSettings: {
+            path: './static',
+            esEnv: 'es6',
+          },
+        }
+      })
+      .finally(() => {
+        settings.platformSettings = settings.platformSettings || {}
+        settings.platformSettings.onClose = () => {
+          // clean up video
+          const videoElements = document.getElementsByTagName('video')
+          if (videoElements.length) {
+            videoElements[0].src = ''
+          }
+          // signal to close app
+          app.close && app.close()
+
+          // clear canvas
+          if (canvas) {
+            const stage = app.stage
+
+            // maybe move this to a plugin so we can customize it per platform
+            if (stage.gl) {
+              stage.gl.clearColor(0.0, 0.0, 0.0, 0.0)
+              stage.gl.clear(stage.gl.COLOR_BUFFER_BIT)
+            } else {
+              stage.c2d.clearRect(0, 0, canvas.width, canvas.height)
+            }
+          }
+
+          // cleanup
+          setTimeout(() => {
+            if (canvas) {
+              canvas.remove()
+            }
+            // detach app bundle from window scope
+            window[appMetadata.id] = null
+
+            // remove script tag
+            removeJS('appbundle')
+
+            // reset vars
+            app = null
+            canvas = null
+            appMetadata = null
+            settings = null
+
+            // show notice to refresh
+            console.log('👋 App closed!\nRefresh the page to restart the App')
+          })
+        }
+
+        resolve(settings)
+      })
+  })
 }
 
 // FIXME: these 3 functions could be refactored to a single one receiving 2 arguments (filename, esEnv)
@@ -94,7 +144,7 @@ const loadLightning = esEnv => {
 
 const loadAppBundle = esEnv => {
   const filename = !esEnv || esEnv === 'es6' ? './appBundle.js' : './appBundle.' + esEnv + '.js'
-  return loadJS(filename)
+  return loadJS(filename, 'appbundle')
 }
 
 const loadLightningInspect = esEnv => {
@@ -109,6 +159,7 @@ const loadPolyfills = esEnv => {
     return sequence([
       () => loadJS('./polyfills/babel-polyfill.js'),
       () => loadJS('./polyfills/url.js'),
+      () => loadJS('./polyfills/fetch.js'),
     ])
   }
   return Promise.resolve()
@@ -127,14 +178,36 @@ const loadJS = (url, id) => {
   })
 }
 
+const removeJS = id => {
+  const scriptEl = document.getElementById(id)
+  if (scriptEl) {
+    scriptEl.remove()
+  }
+}
+
+const fetchJson = file => {
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.status === 200) resolve(JSON.parse(xhr.responseText))
+        else reject(xhr.statusText)
+      }
+    }
+    xhr.open('GET', file)
+    xhr.send(null)
+  })
+}
+
 const sequence = steps => {
   return steps.reduce((promise, method) => {
     return promise.then(() => method())
   }, Promise.resolve(null))
 }
 
-const hasTextureMode = () => {
+const hasTextureMode = platformSettings => {
   return new Promise(resolve => {
+    if (platformSettings.textureMode === true) resolve(true)
     // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
     const url = new URL(document.location.href)
     resolve(url.searchParams.has('texture'))

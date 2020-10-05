@@ -25,7 +25,11 @@ Be aware that when your App is deployed to the App Store the settings are config
 
 ## Usage
 
-Most settings are automatically handled by the SDK. But sometimes you may want to access settings in your App code directly. In those cases you can import the _Settings plugin_ from the Lightning SDK.
+Most settings are automatically handled by the SDK.But sometimes you may want to access settings in your App code directly. In those cases you can import the _Settings plugin_ from the Lightning SDK.
+
+The SDK automatically creates the `app` or `platform` types from the Launch params.
+
+Optionally you might want to specify _user defined_ settings at runtime, that can be accessed anywhere in your App. For these cases the `user` type is used.
 
 ```js
 import { Settings } from '@lightningjs/sdk'
@@ -38,21 +42,56 @@ import { Settings } from '@lightningjs/sdk'
 Returns a settings value.
 
 ```js
-Settings.get(type, key)
+Settings.get(type, key, [fallback])
 ```
 
-Type can be either `app` or `platform`. Key can be any of the existing settings.
+Type can be either `app`, `platform` or `user`. Key can be any of the existing settings.
+Optionally you can specify a `fallback`-value for when the setting is not defined.
+
+### Set
+
+Sets a key, value on `user` type for _user defined settings_
+
+```js
+Settings.set(key, value)
+```
 
 ### Has
 
-Returns `true` or `false`, depending on wether a settings is defined or not.
+Returns `true` or `false`, depending on whether a setting is defined or not.
 
 ```js
 Settings.has(type, key)
 ```
 
-Type can be either `app` or `platform`. Key can be any of the existing settings.
+### Subscribe
 
+Adds a callback to be notified when the value of a `user` key is changed. Multiple callbacks can be added for the same key.
+
+```js
+Settings.subscribe(key, callback)
+```
+
+The callback receives the setting's `value` as an argument.
+
+### Unsubscribe
+
+Removes callback(s) from the notification stack for a specific `user` key.
+
+```js
+Settings.unsubscribe(key, [callback])
+```
+
+When a reference to a previously subscribed callback is passed it will remove only that callback.
+If the optional callback param is omitted it will pop all callbacks for the given key.
+
+### clearSubscribers
+
+Clears _all_ subscribers listening for `user` key changes. This method is automatically called when the App is closed for to prevent _memory leaks_.
+
+```js
+Settings.clearSubscribers()
+```
 
 ## Available configuration options
 
