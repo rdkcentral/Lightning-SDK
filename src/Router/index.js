@@ -35,7 +35,6 @@ import {
 
 import Transitions from './transitions'
 import Log from '../Log'
-import Settings from '../Settings'
 import { AppInstance } from '../Application'
 import { RoutedApp } from './base'
 import stats from './stats'
@@ -529,9 +528,7 @@ const emit = (page, events = [], params = {}) => {
 }
 
 const send = (hash, key, value) => {
-  if (Settings.get('platform', 'stats')) {
-    stats.send(hash, key, value)
-  }
+  stats.send(hash, key, value)
 }
 
 const handleError = args => {

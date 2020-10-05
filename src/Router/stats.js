@@ -1,4 +1,6 @@
 import Log from '../Log'
+import Settings from '../Settings'
+
 import { isObject } from './utils'
 
 const running = new Map()
@@ -8,6 +10,9 @@ const rejected = new Map()
 const active = new Map()
 
 const send = (hash, key, value) => {
+  if (!Settings.get('platform', 'stats')) {
+    return
+  }
   if (!key && !value) {
     if (!running.has(hash)) {
       running.set(hash, {
