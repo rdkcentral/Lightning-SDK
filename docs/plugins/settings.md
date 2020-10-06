@@ -32,7 +32,7 @@ The SDK automatically creates the `app` or `platform` types from the Launch para
 Optionally you might want to specify _user defined_ settings at runtime, that can be accessed anywhere in your App. For these cases the `user` type is used.
 
 ```js
-import { Settings } from 'wpe-lightning-sdk'
+import { Settings } from '@lightningjs/sdk'
 ```
 
 ## Available methods

@@ -15,7 +15,7 @@ See <a href="https://rdkcentral.github.io/Lightning/" target="_blank">Lightning 
 All components in your app (including the main App) are required to extend a Lightning component.
 
 ```js
-import { Lightning } from 'wpe-lightning-sdk'
+import { Lightning } from '@lightningjs/sdk'
 
 export default class MyComponent extends Lightning.Component {
   //
@@ -27,7 +27,7 @@ export default class MyComponent extends Lightning.Component {
 Lightning offers a set of tools that you can use in your App.
 
 ```js
-import { Lightning } from 'wpe-lightning-sdk'
+import { Lightning } from '@lightningjs/sdk'
 
 export default class MyComponent extends Lightning.Component {
   static _template() {
@@ -45,7 +45,7 @@ See <a href="https://rdkcentral.github.io/Lightning/docs/textures/toolbox" targe
 ### Using Textures from Lightning
 
 ```js
-import { Lightning } from 'wpe-lightning-sdk'
+import { Lightning } from '@lightningjs/sdk'
 
 export default class MyComponent extends Lightning.Component {
   static _template() {

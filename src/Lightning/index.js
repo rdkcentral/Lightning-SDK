@@ -17,5 +17,5 @@
  * limitations under the License.
  */
 
-import Lightning from 'wpe-lightning'
+import Lightning from '@lightningjs/core'
 export default Lightning
