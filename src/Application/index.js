@@ -25,6 +25,8 @@ import VersionLabel from '../VersionLabel'
 import FpsCounter from '../FpsCounter'
 import Log from '../Log'
 import Settings from '../Settings'
+import { initLanguage } from '../Language'
+import Utils from '../Utils'
 import Registry from '../Registry'
 
 import { version as sdkVersion } from '../../package.json'
@@ -79,7 +81,9 @@ export default function(App, appData, platformSettings) {
     _setup() {
       Promise.all([
         this.loadFonts((App.config && App.config.fonts) || (App.getFonts && App.getFonts()) || []),
+        // to be deprecated
         Locale.load((App.config && App.config.locale) || (App.getLocale && App.getLocale())),
+        App.language && this.loadLanguage(App.language()),
       ])
         .then(() => {
           Metrics.app.loaded()
@@ -162,6 +166,20 @@ export default function(App, appData, platformSettings) {
           .then(resolve)
           .catch(reject)
       })
+    }
+
+    loadLanguage(config) {
+      let file = Utils.asset('translations.json')
+      let language = null
+
+      if (typeof config === 'object' && ('file' in config || 'language' in config)) {
+        language = config.language || null
+        file = config.file && config.file
+      } else {
+        language = config
+      }
+
+      return initLanguage(file, language)
     }
 
     set focus(v) {
