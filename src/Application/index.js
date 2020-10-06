@@ -25,6 +25,7 @@ import VersionLabel from '../VersionLabel'
 import FpsCounter from '../FpsCounter'
 import Log from '../Log'
 import Settings from '../Settings'
+import Registry from '../Registry'
 
 import { version as sdkVersion } from '../../package.json'
 
@@ -129,6 +130,7 @@ export default function(App, appData, platformSettings) {
       Log.info('Closing App')
 
       Settings.clearSubscribers()
+      Registry.clear()
 
       if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
         platformSettings.onClose()
