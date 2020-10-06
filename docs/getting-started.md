@@ -13,7 +13,7 @@ The Lightning CLI provides a set of development tools, that enable you to:
 Install the Lightning-CLI (globally):
 
 ```
-npm install -g rdkcentral/Lightning-CLI
+npm install -g @lightningjs/cli
 ```
 
 Next the Lightning-CLI will be available as `lng <command> [options]`

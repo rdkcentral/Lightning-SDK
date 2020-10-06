@@ -27,6 +27,7 @@ import Log from '../Log'
 import Settings from '../Settings'
 import { initLanguage } from '../Language'
 import Utils from '../Utils'
+import Registry from '../Registry'
 
 import { version as sdkVersion } from '../../package.json'
 
@@ -133,6 +134,7 @@ export default function(App, appData, platformSettings) {
       Log.info('Closing App')
 
       Settings.clearSubscribers()
+      Registry.clear()
 
       if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
         platformSettings.onClose()

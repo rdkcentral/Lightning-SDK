@@ -11,7 +11,7 @@ The Profile plugin also offers the ability to update profile information.
 Whenever you need Profile information, import the Profile plugin from the Lightning SDK
 
 ```js
-import { Profile } from 'wpe-lightning-sdk'
+import { Profile } from '@lightningjs/sdk'
 ```
 
 ## Available methods

@@ -15,7 +15,7 @@ There are 4 categories for sending metrics. App, Page, User and Media.
 In componenents where you want to track and send events, import the Metrics plugin.
 
 ```js
-import { Metrics } from 'wpe-lightning-sdk'
+import { Metrics } from '@lightningjs/sdk'
 ```
 
 ## Available methods
