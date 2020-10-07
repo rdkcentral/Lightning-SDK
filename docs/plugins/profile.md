@@ -60,12 +60,12 @@ Gets the ip. Returns `127.0.0.1` by default during _local development_.
 Profile.ip()
 ```
 
-### HouseHold
+### Household
 
 Gets the houseHold-id. Returns `b2244e9d4c04826ccd5a7b2c2a50e7d4` by default during _local development_.
 
 ```js
-Profile.houseHold()
+Profile.household()
 ```
 
 ### Language
