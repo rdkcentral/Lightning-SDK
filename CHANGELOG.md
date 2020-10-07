@@ -1,17 +1,28 @@
 # Changelog
 
-## v3.0.0
+## v3.0.0.rc.0
 
-Router: 
-- Fixed async loading behaviour that could result in stacked pages
-- Router internally now uses unique Symbols (could break if Symbol.for("route") is used in app)
-- Page view statistics
-- Wildcard routes not ending up in history
-- Add reuseInstance flag global and per route
-- Support for Dynamic component import
-- Widgets always hidden on Router boot
-- Documented _handleAppClose()
+Breaking changes
+- Changed package name from `wpe-lightning-sdk` to `@lightningjs/sdk` (and published on NPM)
+- Updated minimum requirement to Node.js 10
 
+New features
+- Added Registry Plugin
+- Added VideoPlayer plugin
+- Added Language Plugin
+- Router
+  - Fixed async loading behaviour that could result in stacked pages
+  - Router internally now uses unique Symbols (could break if Symbol.for('route') is used in app)
+  - Added Page view statistics
+  - Wildcard routes not ending up in history
+  - Add reuseInstance flag global and per route
+  - Support for Dynamic component import
+  - Widgets always hidden on Router boot
+  - Documented _handleAppClose()
+
+Deprecations
+- Locale plugin is deprecated in favor of the Language plugin
+- MediaPlayer plugin is deprecated in favor of the VideoPlayer plugin
 
 ## v2.6.0
 
