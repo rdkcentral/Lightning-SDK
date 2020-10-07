@@ -42,8 +42,12 @@ When the new hash we navigate to shares the same route and the previous:  `setti
 share: `settings/hotspot/:id` the Router will by default re-use the current Page instance. If you want to prevent this
 you set `resuseInstance: false`. This can be overriden per [route](configuration.md) via de options. 
 
-##### Settings.json 
+### stats
 
+With stats enabled (default: disabled) the Router will track page view information and add them to a global 
+statistics report.
+
+##### Settings.json 
 
 ```json
 {
@@ -56,7 +60,8 @@ you set `resuseInstance: false`. This can be overriden per [route](configuration
           "gcOnUnload": true,
           "backtrack": true,
           "reuseInstance": false,
-          "destroyOnHistoryBack": false
+          "destroyOnHistoryBack": false,
+          "stats": false
         }
     }
 }

@@ -243,5 +243,7 @@ to display this route, whenever a page's [dataprovider](dataproviding.md) return
 }
 ```
 
+These special routes will not end up in history
+
 Next:
 [Navigation](navigation.md)
