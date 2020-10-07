@@ -20,7 +20,7 @@
 import {
   isFunction,
   isPage,
-  isLightningComponent,
+  isComponentConstructor,
   isArray,
   ucfirst,
   isObject,
@@ -218,7 +218,7 @@ export const route = (route, type, config) => {
         stack.push(type)
       } else {
         if (!routerConfig.get('lazyCreate')) {
-          type = isLightningComponent(type) ? create(type) : type
+          type = isComponentConstructor(type) ? create(type) : type
           pagesHost.a(type)
         }
         stack.push(type)
@@ -230,7 +230,7 @@ export const route = (route, type, config) => {
       // if flag lazy eq false we (test) and create
       // correct component and add it to the childList
       if (!routerConfig.get('lazyCreate')) {
-        type = isLightningComponent(type) ? create(type) : type
+        type = isComponentConstructor(type) ? create(type) : type
         pagesHost.a(type)
       }
     }
@@ -341,19 +341,23 @@ const load = async ({ route, hash }) => {
 
 const loader = async ({ route, hash, routeReg: register }) => {
   let type = getPageByRoute(route)
-  let isComponent = isLightningComponent(type)
+  let isConstruct = isComponentConstructor(type)
   let sharedInstance = false
   let provide = false
   let page = null
   let isCreated = false
 
-  if (!mustReuse(route) && !isComponent) {
-    type = type.constructor
-    isComponent = true
+  // if it's an instance bt we're not coming back from
+  // history we test if we can re-use this instance
+  if (!isConstruct && !register.get(symbols.backtrack)) {
+    if (!mustReuse(route)) {
+      type = type.constructor
+      isConstruct = true
+    }
   }
 
   // If type is not a constructor
-  if (!isComponent) {
+  if (!isConstruct) {
     page = type
     // if we have have a data route for current page
     if (providers.has(route)) {

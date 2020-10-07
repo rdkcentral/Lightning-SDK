@@ -33,13 +33,13 @@ export const isBoolean = v => {
 }
 
 export const isPage = v => {
-  if (v instanceof Lightning.Element || isLightningComponent(v)) {
+  if (v instanceof Lightning.Element || isComponentConstructor(v)) {
     return true
   }
   return false
 }
 
-export const isLightningComponent = type => {
+export const isComponentConstructor = type => {
   return type.prototype && 'isComponent' in type.prototype
 }
 
