@@ -21,7 +21,7 @@
     - [Deeplinking & History](/plugins/router/deeplinking.md)
 
   <!-- - [Keyboard](/plugins/keyboard.md) -->
-  - [Media Player](/plugins/mediaplayer.md)
+  - [Video Player](/plugins/videoplayer.md)
   <!-- - [Audio Player](/plugins/audioplayer.md) -->
   - [Image](/plugins/image.md)
   - [Pin](/plugins/pin.md)
