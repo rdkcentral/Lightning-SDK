@@ -412,15 +412,10 @@ const videoPlayerPlugin = {
 }
 
 export default autoSetupMixin(videoPlayerPlugin, () => {
-  // todo: enable this code when merging!
-
-  // precision =
-  //   ApplicationInstance &&
-  //   ApplicationInstance.stage &&
-  //   ApplicationInstance.stage.getRenderPrecision()
-
-  // temporary hack to enable 2 SDKs at the same time
-  precision = window.innerHeight === 720 ? 0.6666666667 : 1
+  precision =
+    ApplicationInstance &&
+    ApplicationInstance.stage &&
+    ApplicationInstance.stage.getRenderPrecision()
 
   videoEl = setupVideoTag()
 
