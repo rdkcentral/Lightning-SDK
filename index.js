@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+export { default as Ads } from './src/Ads'
 export { AppData } from './src/Application'
 export { default as Application } from './src/Application'
 export { default as AudioPlayer } from './src/AudioPlayer'
@@ -38,3 +39,4 @@ export { default as Settings } from './src/Settings'
 export { default as Storage } from './src/Storage'
 export { default as TV } from './src/TV'
 export { default as Utils } from './src/Utils'
+export { default as VideoPlayer } from './src/VideoPlayer'
