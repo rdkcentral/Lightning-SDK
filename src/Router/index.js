@@ -20,7 +20,7 @@
 import {
   isFunction,
   isPage,
-  isLightningComponent,
+  isComponentConstructor,
   isArray,
   ucfirst,
   isObject,
@@ -30,12 +30,14 @@ import {
   incorrectParams,
   isPromise,
   getQueryStringParams,
+  symbols,
 } from './utils'
 
 import Transitions from './transitions'
 import Log from '../Log'
 import { AppInstance } from '../Application'
 import { RoutedApp } from './base'
+import stats from './stats'
 
 let getHash = () => {
   return document.location.hash
@@ -86,10 +88,13 @@ let activeRoute
 let activeHash
 let updateHash = true
 let forcedHash
+let lastHash = true
+let previousState
 
 // page that has focus
 let activePage
 const hasRegex = /\{\/(.*?)\/([igm]{0,3})\}/g
+const isWildcard = /^[!*$]$/
 
 /**
  * Setup Page router
@@ -121,10 +126,15 @@ export const startRouter = (config, instance) => {
   // test if app uses widgets
   if (app.widgets && app.widgets.children) {
     widgetsHost = app.widgets.childList
+    // hide all widgets on boot
+    widgetsHost.forEach(w => (w.visible = false))
   }
 
   // register step back handler
-  app._handleBack = step.bind(null, -1)
+  app._handleBack = e => {
+    step(-1)
+    e.preventDefault()
+  }
 
   // register step back handler
   app._captureKey = capture.bind(null)
@@ -142,7 +152,7 @@ export const startRouter = (config, instance) => {
   }
 }
 
-const setupRoutes = routesConfig => {
+export const setupRoutes = routesConfig => {
   let bootPage = routesConfig.bootComponent
 
   if (!initialised) {
@@ -208,7 +218,7 @@ export const route = (route, type, config) => {
         stack.push(type)
       } else {
         if (!routerConfig.get('lazyCreate')) {
-          type = isLightningComponent(type) ? create(type) : type
+          type = isComponentConstructor(type) ? create(type) : type
           pagesHost.a(type)
         }
         stack.push(type)
@@ -220,7 +230,7 @@ export const route = (route, type, config) => {
       // if flag lazy eq false we (test) and create
       // correct component and add it to the childList
       if (!routerConfig.get('lazyCreate')) {
-        type = isLightningComponent(type) ? create(type) : type
+        type = isComponentConstructor(type) ? create(type) : type
         pagesHost.a(type)
       }
     }
@@ -280,177 +290,233 @@ const create = type => {
  * @param {String} hash - current hash we're routing to
  * */
 const load = async ({ route, hash }) => {
-  const type = getPageByRoute(route)
-  let routesShareInstance = false
+  let expired = false
+  // for now we maintain one instance of the
+  // navigation register and create a local copy
+  // that we hand over to the loader
+  const routeReg = new Map(register)
+  try {
+    const payload = await loader({ hash, route, routeReg })
+    if (payload && payload.hash === lastHash) {
+      // in case of on() providing we need to reset
+      // app state;
+      if (app.state === 'Loading') {
+        if (previousState === 'Widgets') {
+          app._setState('Widgets', [activeWidget])
+        } else {
+          app._setState('')
+        }
+      }
+      // if instance is share between routes
+      // we directly return the payload
+      if (payload.share) {
+        return payload
+      }
+      await doTransition(payload.page, activePage)
+    } else {
+      expired = true
+    }
+    // on expired we only cleanup
+    if (expired) {
+      Log.debug('[router]:', `Rejected ${payload.hash} because route to ${lastHash} started`)
+      if (payload.create && !payload.share) {
+        // remove from render-tree
+        pagesHost.remove(payload.page)
+      }
+    } else {
+      onRouteFulfilled(payload, routeReg)
+      // resolve promise
+      return payload.page
+    }
+  } catch (payload) {
+    if (!expired) {
+      if (payload.create && !payload.share) {
+        // remove from render-tree
+        pagesHost.remove(payload.page)
+      }
+      handleError(payload)
+    }
+  }
+}
+
+const loader = async ({ route, hash, routeReg: register }) => {
+  let type = getPageByRoute(route)
+  let isConstruct = isComponentConstructor(type)
+  let sharedInstance = false
   let provide = false
   let page = null
   let isCreated = false
 
-  // if page is instanceof Component
-  if (!isLightningComponent(type)) {
+  // if it's an instance bt we're not coming back from
+  // history we test if we can re-use this instance
+  if (!isConstruct && !register.get(symbols.backtrack)) {
+    if (!mustReuse(route)) {
+      type = type.constructor
+      isConstruct = true
+    }
+  }
+
+  // If type is not a constructor
+  if (!isConstruct) {
     page = type
     // if we have have a data route for current page
     if (providers.has(route)) {
-      // if page is expired or new hash is different
-      // from previous hash when page was loaded
-      // effectively means: page could be loaded
-      // with new url parameters
-      if (isPageExpired(type) || type[Symbol.for('hash')] !== hash) {
+      if (isPageExpired(type) || type[symbols.hash] !== hash) {
         provide = true
       }
     }
-
-    let currentRoute = activePage && activePage[Symbol.for('route')]
-
+    let currentRoute = activePage && activePage[symbols.route]
     // if the new route is equal to the current route it means that both
     // route share the Component instance and stack location / since this case
     // is conflicting with the way before() and after() loading works we flag it,
     // and check platform settings in we want to re-use instance
     if (route === currentRoute) {
-      routesShareInstance = true
+      sharedInstance = true
     }
   } else {
     page = create(type)
     pagesHost.a(page)
-
-    // update stack
-    const location = getPageStackLocation(route)
-    if (!isNaN(location)) {
-      let stack = pages.get(route)
-      stack[location] = page
-      pages.set(route, stack)
-    }
-
     // test if need to request data provider
     if (providers.has(route)) {
       provide = true
     }
-
     isCreated = true
   }
 
   // we store hash and route as properties on the page instance
   // that way we can easily calculate new behaviour on page reload
-  page[Symbol.for('hash')] = hash
-  page[Symbol.for('route')] = route
+  page[symbols.hash] = hash
+  page[symbols.route] = route
 
-  // if routes share instance we only update
-  // update the page data if needed
-  if (routesShareInstance) {
-    if (provide) {
-      try {
-        await updatePageData({ page, route, hash })
-        emit(page, ['dataProvided', 'changed'])
-      } catch (e) {
-        // show error page with route / hash
-        // and optional error code
-        handleError(e)
-      }
-    } else {
-      providePageData({ page, route, hash, provide: false })
-      emit(page, 'changed')
-    }
-  } else {
-    if (provide) {
-      const { type: loadType } = providers.get(route)
-      const properties = {
-        page,
-        old: activePage,
-        route,
-        hash,
-      }
-      try {
-        if (triggers[loadType]) {
-          await triggers[loadType](properties)
-          emit(page, ['dataProvided', isCreated ? 'mounted' : 'changed'])
-        } else {
-          throw new Error(`${loadType} is not supported`)
-        }
-      } catch (e) {
-        handleError(page, e)
-      }
-    } else {
-      const p = activePage
-      const r = p && p[Symbol.for('route')]
-
-      providePageData({ page, route, hash, provide: false })
-      doTransition(page, activePage).then(() => {
-        // manage cpu/gpu memory
-        if (p) {
-          cleanUp(p, r)
-        }
-
-        emit(page, isCreated ? 'mounted' : 'changed')
-
-        // force focus calculation
-        app._refocus()
-      })
-    }
+  const payload = {
+    page,
+    route,
+    hash,
+    register,
+    create: isCreated,
+    share: sharedInstance,
+    event: [isCreated ? 'mounted' : 'changed'],
   }
 
-  // store reference to active page, probably better to store the
-  // route in the future
+  try {
+    if (provide) {
+      const { type: loadType } = providers.get(route)
+      // update payload
+      payload.loadType = loadType
+
+      // update statistics
+      send(hash, `${loadType}-start`, Date.now())
+      await triggers[sharedInstance ? 'shared' : loadType](payload)
+      send(hash, `${loadType}-end`, Date.now())
+
+      if (hash !== lastHash) {
+        return false
+      } else {
+        emit(page, 'dataProvided')
+        // resolve promise
+        return payload
+      }
+    } else {
+      addPersistData(payload)
+      return payload
+    }
+  } catch (e) {
+    payload.error = e
+    return Promise.reject(payload)
+  }
+}
+
+/**
+ * Will be called when a new navigate() request has completed
+ * and has not been expired due to it's async nature
+ * @param page
+ * @param route
+ * @param event
+ * @param hash
+ * @param register
+ */
+const onRouteFulfilled = ({ page, route, event, hash, share }, register) => {
+  // clean up history if modifier is set
+  if (hashmod(hash, 'clearHistory')) {
+    history.length = 0
+  } else if (activeHash && !isWildcard.test(route)) {
+    updateHistory(activeHash)
+  }
+
+  // we only update the stackLocation if a route
+  // is not expired before it resolves
+  const location = getPageStackLocation(route)
+
+  if (!isNaN(location)) {
+    let stack = pages.get(route)
+    stack[location] = page
+    pages.set(route, stack)
+  }
+
+  if (event) {
+    emit(page, event)
+  }
+
+  // only update widgets if we have a host
+  if (widgetsHost) {
+    updateWidgets(page)
+  }
+
+  // force refocus of the app
+  app._refocus()
+
+  // we want to clean up if there is an
+  // active page that is not being shared
+  // between current and previous route
+  if (activePage && !share) {
+    cleanUp(activePage, activePage[symbols.route], register)
+  }
+
+  // flag this navigation cycle as ready
+  send(hash, 'ready')
+
   activePage = page
   activeRoute = route
   activeHash = hash
 
-  if (widgetsPerRoute.size && widgetsHost) {
-    updateWidgets(page)
-  }
-
   Log.info('[route]:', route)
   Log.info('[hash]:', hash)
-
-  return page
 }
 
-const triggerAfter = ({ page, old, route, hash }) => {
-  return doTransition(page, old).then(() => {
-    // if the current and previous route (blueprint) are equal
-    // we're loading the same page again but provide it with new data
-    // in that case we don't clean-up the old page (since we're re-using)
-    if (old) {
-      cleanUp(old, old[Symbol.for('route')])
-    }
-
-    // update provided page data
-    return updatePageData({ page, route, hash })
-  })
-}
-
-const triggerBefore = ({ page, old, route, hash }) => {
-  return updatePageData({ page, route, hash })
-    .then(() => {
-      return doTransition(page, old)
-    })
-    .then(() => {
-      if (old) {
-        cleanUp(old, old[Symbol.for('route')])
-      }
-    })
-}
-
-const triggerOn = ({ page, old, route, hash }) => {
-  const previousState = app.state || ''
-  app._setState('Loading')
-
-  if (old) {
-    cleanUp(old, old[Symbol.for('route')])
+const triggerAfter = args => {
+  // after() we execute the provider
+  // and resolve immediately
+  try {
+    execProvider(args)
+  } catch (e) {
+    // we fail silently
   }
+  return Promise.resolve()
+}
 
-  return updatePageData({ page, route, hash })
-    .then(() => {
-      // @todo: fix zIndex for transition
-      return doTransition(page)
-    })
-    .then(() => {
-      // @todo: make state configurable
-      if (previousState === 'Widgets') {
-        app._setState('Widgets', [activeWidget])
-      } else {
-        app._setState('')
-      }
-    })
+const triggerBefore = args => {
+  // before() we continue only when data resolved
+  return execProvider(args)
+}
+
+const triggerOn = args => {
+  // on() we need to place the app in
+  // a Loading state and recover from it
+  // on resolve
+  previousState = app.state || ''
+  app._setState('Loading')
+  return execProvider(args)
+}
+
+const triggerShared = args => {
+  return execProvider(args)
+}
+
+const triggers = {
+  on: triggerOn,
+  after: triggerAfter,
+  before: triggerBefore,
+  shared: triggerShared,
 }
 
 const emit = (page, events = [], params = {}) => {
@@ -465,43 +531,80 @@ const emit = (page, events = [], params = {}) => {
   })
 }
 
-const handleError = (page, error = 'error unkown') => {
-  // force expire
-  page[Symbol.for('expires')] = Date.now()
+const send = (hash, key, value) => {
+  stats.send(hash, key, value)
+}
 
-  if (pages.has('!')) {
-    load({ route: '!', hash: page[Symbol.for('hash')] }).then(errorPage => {
-      errorPage.error = { page, error }
-
-      // on() loading type will force the app to go
-      // in a loading state so on error we need to
-      // go back to root state
-      if (app.state === 'Loading') {
-        app._setState('')
-      }
-
-      // make sure we delegate focus to the error page
-      if (activePage !== errorPage) {
-        activePage = errorPage
-        app._refocus()
-      }
-    })
+const handleError = args => {
+  if (!args.page) {
+    console.error(args)
   } else {
-    Log.error(page, error)
+    const hash = args.page[symbols.hash]
+    // flag this navigation cycle as rejected
+    send(hash, 'e', args.error)
+    // force expire
+    args.page[symbols.expires] = Date.now()
+    if (pages.has('!')) {
+      load({ route: '!', hash }).then(errorPage => {
+        errorPage.error = { page: args.page, error: args.error }
+        // on() loading type will force the app to go
+        // in a loading state so on error we need to
+        // go back to root state
+        if (app.state === 'Loading') {
+          app._setState('')
+        }
+        // make sure we delegate focus to the error page
+        if (activePage !== errorPage) {
+          activePage = errorPage
+          app._refocus()
+        }
+      })
+    } else {
+      Log.error(args.page, args.error)
+    }
   }
 }
 
-const triggers = {
-  on: triggerOn,
-  after: triggerAfter,
-  before: triggerBefore,
+const updateHistory = hash => {
+  const storeHash = getMod(hash, 'store')
+  const regStore = register.get(symbols.store)
+  let configPrevent = hashmod(hash, 'preventStorage')
+  let configStore = true
+
+  if ((isBoolean(storeHash) && storeHash === false) || configPrevent) {
+    configStore = false
+  }
+
+  if (regStore && configStore) {
+    const toStore = hash.replace(/^\//, '')
+    const location = history.indexOf(toStore)
+    // store hash if it's not a part of history or flag for
+    // storage of same hash is true
+    if (location === -1 || routerConfig.get('storeSameHash')) {
+      history.push(toStore)
+    } else {
+      // if we visit the same route we want to sync history
+      history.push(history.splice(location, 1)[0])
+    }
+  }
+}
+
+export const mustReuse = route => {
+  const mod = routemod(route, 'reuseInstance')
+  const config = routerConfig.get('reuseInstance')
+
+  // route always has final decision
+  if (isBoolean(mod)) {
+    return mod
+  }
+  return !(isBoolean(config) && config === false)
 }
 
 export const boot = cb => {
   bootRequest = cb
 }
 
-const providePageData = ({ page, route, hash }) => {
+const addPersistData = ({ page, route, hash, register = new Map() }) => {
   const urlValues = getValuesFromHash(hash, route)
   const pageData = new Map([...urlValues, ...register])
   const params = {}
@@ -525,19 +628,14 @@ const providePageData = ({ page, route, hash }) => {
   // make url data and persist data available
   // via params property
   page.params = params
-
   emit(page, ['urlParams'], params)
 
   return params
 }
 
-const updatePageData = ({ page, route, hash, provide = true }) => {
-  const { cb, expires } = providers.get(route)
-  const params = providePageData({ page, route, hash })
-
-  if (!provide) {
-    return Promise.resolve()
-  }
+const execProvider = args => {
+  const { cb, expires } = providers.get(args.route)
+  const params = addPersistData(args)
   /**
    * In the first version of the Router, a reference to the page is made
    * available to the callback function as property of {params}.
@@ -546,14 +644,14 @@ const updatePageData = ({ page, route, hash, provide = true }) => {
    * -
    * We keep it backwards compatible for now but a warning is showed in the console.
    */
-  if (incorrectParams(cb, route)) {
+  if (incorrectParams(cb, args.route)) {
     // keep page as params property backwards compatible for now
-    return cb({ page, ...params }).then(() => {
-      page[Symbol.for('expires')] = Date.now() + expires
+    return cb({ page: args.page, ...params }).then(() => {
+      args.page[symbols.expires] = Date.now() + expires
     })
   } else {
-    return cb(page, { ...params }).then(() => {
-      page[Symbol.for('expires')] = Date.now() + expires
+    return cb(args.page, { ...params }).then(() => {
+      args.page[symbols.expires] = Date.now() + expires
     })
   }
 }
@@ -566,10 +664,14 @@ const updatePageData = ({ page, route, hash, provide = true }) => {
  * @param pageOut
  */
 const doTransition = (pageIn, pageOut = null) => {
-  const transition = pageIn.pageTransition || pageIn.easing
+  let transition = pageIn.pageTransition || pageIn.easing
+
   const hasCustomTransitions = !!(pageIn.smoothIn || pageIn.smoothInOut || transition)
   const transitionsDisabled = routerConfig.get('disableTransitions')
 
+  if (pageIn.easing) {
+    console.warn('easing() method is deprecated and will be removed. Use pageTransition()')
+  }
   // default behaviour is a visibility toggle
   if (!hasCustomTransitions || transitionsDisabled) {
     pageIn.visible = true
@@ -624,7 +726,7 @@ const doTransition = (pageIn, pageOut = null) => {
  * @param page
  */
 const updateWidgets = page => {
-  const route = page[Symbol.for('route')]
+  const route = page[symbols.route]
 
   // force lowercase lookup
   const configured = (widgetsPerRoute.get(route) || []).map(ref => ref.toLowerCase())
@@ -635,18 +737,17 @@ const updateWidgets = page => {
       emit(widget, ['activated'], page)
     }
   })
-
-  if (app.state === 'Widgets' && !activeWidget.visible) {
+  if (app.state === 'Widgets' && activeWidget && !activeWidget.visible) {
     app._setState('')
   }
 }
 
-const cleanUp = (page, route) => {
-  let doCleanup = false
+const cleanUp = (page, route, register) => {
   const lazyDestroy = routerConfig.get('lazyDestroy')
   const destroyOnBack = routerConfig.get('destroyOnHistoryBack')
-  const keepAlive = read('keepAlive')
-  const isFromHistory = read('@router:backtrack')
+  const keepAlive = read('keepAlive', register)
+  const isFromHistory = read(symbols.backtrack, register)
+  let doCleanup = false
 
   if (isFromHistory && (destroyOnBack || lazyDestroy)) {
     doCleanup = true
@@ -673,7 +774,18 @@ const cleanUp = (page, route) => {
     if (routerConfig.get('gcOnUnload')) {
       stage.gc()
     }
+  } else {
+    // If we're not removing the page we need to
+    // reset it's properties
+    page.patch({
+      x: 0,
+      y: 0,
+      scale: 1,
+      alpha: 1,
+      visible: false,
+    })
   }
+  send(page[symbols.hash], 'stop')
 }
 
 /**
@@ -682,11 +794,11 @@ const cleanUp = (page, route) => {
  * @returns {boolean}
  */
 const isPageExpired = page => {
-  if (!page[Symbol.for('expires')]) {
+  if (!page[symbols.expires]) {
     return false
   }
 
-  const expires = page[Symbol.for('expires')]
+  const expires = page[symbols.expires]
   const now = Date.now()
 
   return now >= expires
@@ -787,9 +899,6 @@ const getRouteByHash = hash => {
   const hasLookupId = /\/:\w+?@@([0-9]+?)@@/
   const isNamedGroup = /^\/:/
 
-  // we skip wildcard routes
-  const skipRoutes = ['!', '*', '$']
-
   // to simplify the route matching and prevent look around
   // in our getUrlParts regex we get the regex part from
   // route candidate and store them so that we can reference
@@ -799,7 +908,7 @@ const getRouteByHash = hash => {
   let matches = candidates.filter(route => {
     let isMatching = true
 
-    if (skipRoutes.indexOf(route) !== -1) {
+    if (isWildcard.test(route)) {
       return false
     }
 
@@ -896,20 +1005,43 @@ const handleHashChange = override => {
   const hash = override || getHash()
   const route = getRouteByHash(hash)
 
+  // add a new record for page statistics
+  send(hash)
+
+  // store last requested hash so we can
+  // prevent a route that resolved later
+  // from displaying itself
+  lastHash = hash
+
   if (route) {
     // would be strange if this fails but we do check
     if (pages.has(route)) {
       let stored = pages.get(route)
+      send(hash, 'route', route)
+
       if (!isArray(stored)) {
         stored = [stored]
       }
-      let n = stored.length
-      while (n--) {
-        const type = stored[n]
+
+      stored.forEach((type, idx, stored) => {
         if (isPage(type, stage)) {
           load({ route, hash }).then(() => {
             app._refocus()
           })
+        } else if (isPromise(type)) {
+          type()
+            .then(contents => {
+              return contents.default
+            })
+            .then(module => {
+              // flag dynamic as loaded
+              stored[idx] = module
+
+              return load({ route, hash })
+            })
+            .then(() => {
+              app._refocus()
+            })
         } else {
           const urlParams = getValuesFromHash(hash, route)
           const params = {}
@@ -919,7 +1051,7 @@ const handleHashChange = override => {
           // invoke
           type.call(null, app, { ...params })
         }
-      }
+      })
     }
   } else {
     if (pages.has('*')) {
@@ -944,14 +1076,11 @@ const hashmod = (hash, key) => {
 const routemod = (route, key) => {
   if (modifiers.has(route)) {
     const config = modifiers.get(route)
-    if (config[key] && config[key] === true) {
-      return true
-    }
+    return config[key]
   }
-  return false
 }
 
-const read = flag => {
+const read = (flag, register) => {
   if (register.has(flag)) {
     return register.get(flag)
   }
@@ -960,56 +1089,36 @@ const read = flag => {
 
 const createRegister = flags => {
   const reg = new Map()
-  Object.keys(flags).forEach(key => {
+  // store user defined and router
+  // defined flags in register
+  ;[...Object.keys(flags), ...Object.getOwnPropertySymbols(flags)].forEach(key => {
     reg.set(key, flags[key])
   })
   return reg
 }
 
 export const navigate = (url, args, store = true) => {
+  let hash = getHash()
+
+  // for now we use one register instance and create a local
+  // copy for the loader
   register.clear()
 
-  let hash = getHash()
   if (!mustUpdateHash() && forcedHash) {
     hash = forcedHash
   }
 
-  const storeHash = getMod(hash, 'store')
-  let configPrevent = hashmod(hash, 'preventStorage')
-  let configStore = true
-
-  if ((isBoolean(storeHash) && storeHash === false) || configPrevent) {
-    configStore = false
-  }
-
   if (isObject(args)) {
     register = createRegister(args)
-    if (isBoolean(store) && !store) {
-      store = false
-    }
   } else if (isBoolean(args) && !args) {
     // if explicit set to false we don't want
     // to store the route
-    store = false
+    store = args
   }
 
-  if (hash && store && configStore) {
-    const toStore = hash.replace(/^\//, '')
-    const location = history.indexOf(toStore)
-    // store hash if it's not a part of history or flag for
-    // storage of same hash is true
-    if (location === -1 || routerConfig.get('storeSameHash')) {
-      history.push(toStore)
-    } else {
-      // if we visit the same route we want to sync history
-      history.push(history.splice(location, 1)[0])
-    }
-  }
-
-  // clean up history if modifier is set
-  if (hashmod(url, 'clearHistory')) {
-    history.length = 0
-  }
+  // we only store complete routes, so we set
+  // a special register flag
+  register.set(symbols.store, store)
 
   if (hash.replace(/^#/, '') !== url) {
     if (!mustUpdateHash()) {
@@ -1018,7 +1127,7 @@ export const navigate = (url, args, store = true) => {
     } else {
       setHash(url)
     }
-  } else if (read('reload')) {
+  } else if (read('reload', register)) {
     handleHashChange(hash)
   }
 }
@@ -1037,7 +1146,7 @@ export const step = (direction = 0) => {
   if (history.length) {
     // for now we only support history back
     const route = history.splice(history.length - 1, 1)
-    return navigate(route[0], { backtrack: true }, false)
+    return navigate(route[0], { [symbols.backtrack]: true }, false)
   } else if (routerConfig.get('backtrack')) {
     const hashLastPart = /(\/:?[\w%\s-]+)$/
     let hash = stripRegex(getHash())
@@ -1051,7 +1160,7 @@ export const step = (direction = 0) => {
         // if we have a configured route
         // we navigate to it
         if (getRouteByHash(hash)) {
-          return navigate(hash, { '@router:backtrack': true }, false)
+          return navigate(hash, { [symbols.backtrack]: true }, false)
         }
       }
     }
@@ -1065,6 +1174,14 @@ export const step = (direction = 0) => {
 }
 
 const capture = ({ key }) => {
+  // in Loading state we want to stop propagation
+  // by returning undefined
+  if (app.state === 'Loading') {
+    return
+  }
+
+  // if not set we want to continue propagation
+  // by explicitly returning false
   if (!routerConfig.get('numberNavigation')) {
     return false
   }
@@ -1100,7 +1217,7 @@ export const start = () => {
   const ready = () => {
     if (hasBootPage) {
       navigate('@boot-page', {
-        resume: isDirectLoad ? rootHash : hash || rootHash,
+        [symbols.resume]: isDirectLoad ? rootHash : hash || rootHash,
         reload: true,
       })
     } else if (!hash && rootHash) {
@@ -1209,8 +1326,8 @@ export const handleRemote = (type, name) => {
  * the BootComponent became visible;
  */
 export const resume = () => {
-  if (register.has('resume')) {
-    const hash = register.get('resume').replace(/^#+/, '')
+  if (register.has(symbols.resume)) {
+    const hash = register.get(symbols.resume).replace(/^#+/, '')
     if (getRouteByHash(hash) && hash) {
       navigate(hash, false)
     } else if (rootHash) {

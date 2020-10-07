@@ -1,6 +1,6 @@
 # Router
 
-## Data providing
+## Page Events
 
 In addition to Lightning's default [life-cycle events](https://rdkcentral.github.io/Lightning/docs/components/overview#component-events) the Router plugin provides some extra events your app can listen to.
 
@@ -48,6 +48,27 @@ class Account extends Lightning.Component{
   }
 }
 ```
+
+### _handleAppClose()
+
+When the Router's history is empty the SDK will continue the handle the back key and close the app. 
+You can prevent this by adding `_handleAppClose()` to your Application class, for instance to show
+and exit dialog. 
+
+```js
+class MyApp extends Router.App{
+    
+  _handleAppClose(params){        
+      this.toggleExitDialog().then((confirmed)=>{          
+          // close the application
+          if(confirmed){
+             this.application.closeApp(); 
+          }          
+      });      
+  }
+}
+```
+## Widget Events ##
 
 ### _activated(page)
 
