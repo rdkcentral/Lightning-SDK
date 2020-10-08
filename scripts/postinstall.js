@@ -59,6 +59,7 @@ shell.cp(
 )
 
 replaceInFile({
+  allowEmptyPaths: true,
   files: process.env.INIT_CWD + '/src/**/*',
   // eslint-disable-next-line
   from: /(?:[^\/]*?)\s+from\s+(["'])(wpe-lightning-sdk)(["']);?/gi,
