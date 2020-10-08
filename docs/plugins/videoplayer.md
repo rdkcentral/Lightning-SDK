@@ -148,7 +148,7 @@ VideoPlayer.play(videoUrl)
 
 Toggles the playing state of the video player.
 
-If a video is currently playing, it will pause it. And visa versa, will play a video that is currently paused.
+If a video is currently playing, it will pause it. And vice versa, will play a video that is currently paused.
 
 ```js
 VideoPlayer.playPause()
