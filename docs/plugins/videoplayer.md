@@ -1,79 +1,101 @@
-# Video Player plugin
+# VideoPlayer plugin
 
-.....
+A common feature of TV apps is to play videos. The VideoPlayer plugin offers a convenient interface
+to interact with the video player of the STB. You can use it to open and play / pause videos.
+But it also offers APIs to control the size of the video player, for example.
+
+The VideoPlayer plugin has a built-in integration with the Metrics plugin. It automatically sends statistics for
+various media events (i.e. canplay, play, pause, seeking, seeked etc.).
+
+Although it's possible to implement a fully custom video playback solution, the use of the VideoPlayer plugin from
+the SDK is highly recommended.
 
 ## Usage
 
-Import the VideoPlayer plugin from the Lightning SDK
+In the Lightning components that require video playback capabilities (i.e. a Player component), you can can import the
+VideoPlayer plugin from the Lightning SDK
 
 ```js
 import { VideoPlayer } from '@lightningjs/sdk''
 ```
 
-The first time that you interact with the VideoPlayer, a video-tag will be created.
+The first time that you interact with the VideoPlayer plugin, a `<video>`-tag will automatically be created.
 
 ## Available methods
 
-### Consumer
+### consumer
 
-- defines the Lightning component will be consuming media events emitted by the VideoPlayer plugin (see Events)
+Defines which Lightning component is consuming media events that are emitted by the VideoPlayer plugin (see [Events](#events) for more information).
 
 ```js
+import { Lightning, VideoPlayer } from '@lightningjs/sdk''
+
 class Player extends Lightning.Component {
   _firstActive() {
-    VideoPlayer.consumer(this) /
+    VideoPlayer.consumer(this)
   }
 }
 ```
 
-Note that only 1 Lightning component can comsume the VideoPlayer at the same time
+In the `_firstActive` or `_init` lifecycle event you can pass the reference to the component that should be set as the _consumer_.
+
+Note that only one component at the same time can consume VideoPlayer events.
 
 ### position
 
-- sets x, y position of the video player
-- signature / defaults: position(top = 0, left = 0)
+Sets the x and y position of the video player.
+
+The `position`-method accepts 2 arguments (`top` and `left`). Both values should be absolute numbers (either positive or negative) and default to `0`.
 
 ```js
-// move video player 100 pixels down and 200 pixels to the right
+// move VideoPlayer 100 pixels down and 200 pixels to the right
 VideoPlayer.position(100, 200)
 ```
+Note that depending on the size of the video player, changing it's position, can move it (partially) out of view.
 
 ### size
 
-- sets the size of the video player
-- signature / defaults: size(width = 1920, height = 1080)
+Sets the size of the video player.
+
+The `size`-method acepts 2 arguments (`width` and `height`). Both values should be absolute numbers (positive).
+The default `width` is set to `1920` and the default `height` is set to `1080`.
 
 ```js
-// resize video player to half the normal size
+// resize VideoPlayer to half its normal size
 VideoPlayer.size(960, 540)
 ```
 
 ### area
 
-- sets the position and the size of the video player
-- signature / defaults: area(top = 0, right = 1920, bottom = 1080, left = 0)
+Sets the x and y position and the size of the video player at the same time.
+
+The `area`-methods accepts 4 arguments (`top`, `right`, `bottom` and `left`) and the value
+of each argument corresponds with the _margin_ calculated from the edge of the screen, to each side
+of the video player.
+
+By the default the VideoPlayer sits in the top left corner (i.e. `top = 0` and `left = 0`) and covers the full
+screen (i.e. `bottom = 1080` and `right = 1920`).
 
 ```js
 const top = 100
 const right = 200
-const botom = 100
+const bottom = 100
 const left = 200
 VideoPlayer.area(top, right, bottom, left)
 ```
 
 ### open
 
-- opens (and plays) a video
-- signature open(url)
+Opens a video specified as a url and starts playing it as soon as it the video player has buffered enough to begin.
 
 ```js
-const videoUlr = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
 VideoPlayer.open(videoUrl)
 ```
 
 ### reload
 
-- reloads the current playing video (close and open again)
+Stops the current playing video, and restarts it from the beginning.
 
 ```js
 VideoPlayer.open(videoUrl)
@@ -87,7 +109,7 @@ setTimeout(() => {
 
 ### close
 
-- clear and hide the video player
+Unsets the `source` of the video player and then hides the video player.
 
 ```js
 VideoPlayer.close()
@@ -95,16 +117,15 @@ VideoPlayer.close()
 
 ### clear
 
-- unsets the src of the video player (doesn't hide)
+Unsets the `source` of the video player (without hiding it).
 
 ```js
 VideoPlayer.clear()
 ```
 
-
 ### pause
 
-- pauses the video
+Pauses the video that is currently being played.
 
 ```js
 VideoPlayer.open(videoUrl)
@@ -117,7 +138,7 @@ setTimeout(() => {
 
 ### play
 
-- plays a paused video
+Plays the currently loaded video.
 
 ```js
 VideoPlayer.play(videoUrl)
@@ -125,17 +146,20 @@ VideoPlayer.play(videoUrl)
 
 ### playPause
 
-- plays when the video is currently paused
-- pauses when the video is currently playing
+Toggles the playing state of the video player.
+
+If a video is currently playing, it will pause it. And visa versa, will play a video that is currently paused.
 
 ```js
-VideoPlayer.play(videoUrl)
+VideoPlayer.playPause()
 ```
 
 ### mute
 
-- mutes / unmutes the video player
-- signature / defaults mute(muted = true)
+Mutes or unmutes the video player.
+
+The `mute`-method accepts a Boolean as a single argument. When passed `true` (or when omitted) it will mute the video player.
+When passed `false` it will set the video player to unmuted.
 
 ```js
 // mute a video
@@ -146,21 +170,26 @@ VideoPlayer.mute(false)
 
 ### loop
 
-- set the video player to loop (or unloop)
-- signature / defaults loop(looped = true)
+Sets the `loop` state of the video player.
+
+The `loop`-method accepts a Boolean as a single argument. When passed `true` (or when omitted) it
+will instruct the video player to loop (i.e. restart the current video when it reaches the end). When
+passed `false` it will instruct the video player to _not_ loop the video.
 
 ```js
 // loop a video
 VideoPlayer.loop()
-// loop a video
+// unloop a video
 VideoPlayer.loop(false)
 ```
 
 ### seek
 
-- set the video player to a time in seconds
-- signature: seek(time)
-- time between 0 and duration of video, automatically caps at total video duration and 0
+Sets the current time of the video player to the specified time in seconds.
+
+The `seek`-method accepts the time in seconds as it's only argument. Negative numbers
+will automatically be rounded up to `0`. When the value in seconds exceeds the duration
+of the video, it will round the value down and jump straight to the end of the video.
 
 ```js
 // seek to 20 seconds
@@ -173,9 +202,15 @@ VideoPlayer.seek(1000)
 
 ### skip
 
-- jumps x seconds (current time + x seconds)
-- signature: skip(seconds)
-- automatically caps at total video duration and 0
+Jumps a specified number of seconds forward or backwards from the video's current time.
+
+The `skip`-method accepts the number of seconds to jump as it's only argument. A positive value will jump forward,
+while a negative value will jump backwards.
+
+If a jump backwards would result in a value below `0` (i.e. jump `-20` seconds when the video is only at `10` seconds),
+the `skip` method automatically rounds up to `0`. Similarly if you skip further than the duration of the video,
+the value will be rounded down and go straight to the end of the video.
+
 
 ```js
 // skip forward 20 seconds
@@ -187,7 +222,7 @@ VideoPlayer.skip(-20)
 
 ### show
 
-- shows the video player
+Shows the VideoPlayer.
 
 ```js
 VideoPlayer.show()
@@ -195,19 +230,15 @@ VideoPlayer.show()
 
 ### hide
 
-- hides the video player
+Hides the VideoPlayer
 
 ```js
-VideoPlayer.show()
+VideoPlayer.hide()
 ```
-
-<!-- ### enableAds(enabled = true)
-
-- leaving this feature undocumented for now -->
 
 ### duration
 
-- getter for duration of the video
+Getter that retrieves the total duration of the current video in seconds.
 
 ```js
 VideoPlayer.duration // e.g. 160.44 (seconds)
@@ -215,7 +246,7 @@ VideoPlayer.duration // e.g. 160.44 (seconds)
 
 ### currentTime
 
-- getter for the current time of the video
+Getter that retrieves the video's current time in seconds
 
 ```js
 VideoPlayer.currentTime // e.g. 20.01 (seconds)
@@ -223,7 +254,7 @@ VideoPlayer.currentTime // e.g. 20.01 (seconds)
 
 ### muted
 
-- getter for muted state of the video player
+Getter that retrieves the mute state of the video player (`true` or `false`)
 
 ```js
 VideoPlayer.mute()
@@ -235,7 +266,7 @@ VideoPlayer.muted // false
 
 ### looped
 
-- getter for the looped status of the video
+Getter that retrieves the loop state of the video player (`true` or `false`)
 
 ```js
 VideoPlayer.loop()
@@ -247,10 +278,10 @@ VideoPlayer.looped // false
 
 ### src
 
-- getter for the current src of the video
+Getter that retrieves the video player's current source (`src`).
 
 ```js
-const videoUlr = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
 VideoPlayer.open(videoUrl)
 
 VideoPlayer.src // http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
@@ -258,7 +289,7 @@ VideoPlayer.src // http://commondatastorage.googleapis.com/gtv-videos-bucket/sam
 
 ### playing
 
-- getter for the current playing status of the video
+Getter that retrieves if the video player is currently in a `playing` state (`true`) or a `paused` state (`false`).
 
 ```js
 VideoPlayer.play()
@@ -274,9 +305,10 @@ leaving this undocumented for now -->
 <!-- ### get canInteract() {
 leaving this undocumented for now -->
 
+
 ### top
 
-- getter for the top y position of the video player
+Getter that retrieves the `top y` position of the video player.
 
 ```js
 VideoPlayer.position(100, 200)
@@ -285,7 +317,7 @@ VideoPlayer.top // 100
 
 ### left
 
-- getter for left x position of the video player
+Getter that retrieves the `left x` position of the video player.
 
 ```js
 VideoPlayer.position(100, 200)
@@ -294,7 +326,7 @@ VideoPlayer.left // 200
 
 ### bottom
 
-- getter for bottom y position of the video player (i.e. top + height)
+Getter that retrieves the `bottom y` position of the video player.
 
 ```js
 VideoPlayer.area(100, 200, 100, 200)
@@ -303,7 +335,7 @@ VideoPlayer.bottom // 100
 
 ### right
 
-- getter for right x position of the video player (i.e left + width)
+Getter that retrieves the `right x` position of the video player.
 
 ```js
 VideoPlayer.area(100, 200, 100, 200)
@@ -312,7 +344,7 @@ VideoPlayer.right // 200
 
 ### width
 
-- getter for the width of the video player
+Getter that retrieves the width of the video player.
 
 ```js
 VideoPlayer.size(960, 540)
@@ -321,7 +353,7 @@ VideoPlayer.width // 960
 
 ### height
 
-- getter for the height of the video player
+Getter that retrieves the height of the video player.
 
 ```js
 VideoPlayer.size(960, 540)
@@ -330,7 +362,7 @@ VideoPlayer.height // 540
 
 ### visible
 
-- getter for whether the video player is visible or not
+Getter that retrieves whether the video player is set to visible (`true`) or hidden (`false`).
 
 ```js
 VideoPlayer.show()
@@ -340,20 +372,17 @@ VideoPlayer.hide()
 VideoPlayer.visible // false
 ```
 
-<!-- ### adsEnabled
-
-- leaving this undocumented for now -->
-
-
 ## Events
 
-The VideoPlayer emits a number of Media events (as specified: https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events) to
-it's _consumer_ (as specified in `VideoPlayer.consumer()`)
+The VideoPlayer plugin emits a number of [media events](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events) to its
+consumer (as specified in [`VideoPlayer.consumer()`](#consumer)).
 
-In the consuming Component you can hook into these events by defining a method on the Class in the format `$videoPlayer{Eventname}` for each specific event.
-Or you can use `$videoPlayerEvent(eventName)` as a catch all.
+The _consuming_ component can hook into these events by specifying methods on the Class in the following format: `$videoPlayer{Eventname}`, where
+_Eventname_ refers to the media event to respond to.
 
-The available events:
+Alternatively `$videoPlayerEvent(eventName)` can be used as a _catch-all_, which receives the _eventName_ as an argument.
+
+The available events are:
 
 - $videoPlayerAbort
 - $videoPlayerCanPlay
@@ -368,7 +397,6 @@ The available events:
 - $videoPlayerLoadedData
 - $videoPlayerLoadedMetadata
 - $videoPlayerLoadStart
-- $videoPlayerPause
 - $videoPlayerPlay
 - $videoPlayerPlaying
 - $videoPlayerProgress
@@ -379,4 +407,3 @@ The available events:
 - $videoPlayerTimeUpdate
 - $videoPlayerVolumeChange
 - $videoPlayerWaiting
-
