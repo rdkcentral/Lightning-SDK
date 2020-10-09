@@ -30,7 +30,6 @@ const nodeModulesFolder = path.join(
 
 // create support lib (remove it first if it exists)
 const supportFolder = path.join(process.cwd(), '/support')
-shell.rm('-rf', supportFolder)
 shell.mkdir(supportFolder)
 
 // create support/lib and copy all required libraries from node_modules
