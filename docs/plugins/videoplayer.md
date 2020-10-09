@@ -5,21 +5,21 @@ to interact with the video player of the STB. You can use it to open and play / 
 But it also offers APIs to control the size of the video player, for example.
 
 The VideoPlayer plugin has a built-in integration with the Metrics plugin. It automatically sends statistics for
-various media events (i.e. canplay, play, pause, seeking, seeked etc.).
+various media events (for example: canplay, play, pause, seeking, seeked).
 
 Although it's possible to implement a fully custom video playback solution, the use of the VideoPlayer plugin from
 the SDK is highly recommended.
 
 ## Usage
 
-In the Lightning components that require video playback capabilities (i.e. a Player component), you can can import the
-VideoPlayer plugin from the Lightning SDK
+In the Lightning components that require video playback capabilities (i.e., a Player component), you can import the
+VideoPlayer plugin from the Lightning SDK.
 
 ```js
 import { VideoPlayer } from '@lightningjs/sdk''
 ```
 
-The first time that you interact with the VideoPlayer plugin, a `<video>`-tag will automatically be created.
+The first time that you interact with the VideoPlayer plugin, a `<video>`-tag is automatically created.
 
 ## Available methods
 
@@ -37,7 +37,7 @@ class Player extends Lightning.Component {
 }
 ```
 
-In the `_firstActive` or `_init` lifecycle event you can pass the reference to the component that should be set as the _consumer_.
+In the `_firstActive` (or `_init`) lifecycle event, you can pass the reference to the component that should be set as the _consumer_.
 
 Note that only one component at the same time can consume VideoPlayer events.
 
@@ -45,19 +45,21 @@ Note that only one component at the same time can consume VideoPlayer events.
 
 Sets the x and y position of the video player.
 
-The `position`-method accepts 2 arguments (`top` and `left`). Both values should be absolute numbers (either positive or negative) and default to `0`.
+The `position` method accepts 2 arguments (`top` and `left`). Both values should be absolute numbers (either positive or negative).
+The default values for `top` and `left` are `0`.
 
 ```js
 // move VideoPlayer 100 pixels down and 200 pixels to the right
 VideoPlayer.position(100, 200)
 ```
+
 Note that depending on the size of the video player, changing it's position, can move it (partially) out of view.
 
 ### size
 
 Sets the size of the video player.
 
-The `size`-method acepts 2 arguments (`width` and `height`). Both values should be absolute numbers (positive).
+The `size` method accepts 2 arguments (`width` and `height`). Both values should be absolute numbers (positive).
 The default `width` is set to `1920` and the default `height` is set to `1080`.
 
 ```js
@@ -69,12 +71,12 @@ VideoPlayer.size(960, 540)
 
 Sets the x and y position and the size of the video player at the same time.
 
-The `area`-methods accepts 4 arguments (`top`, `right`, `bottom` and `left`) and the value
-of each argument corresponds with the _margin_ calculated from the edge of the screen, to each side
+The `area` method accepts 4 arguments (`top`, `right`, `bottom` and `left`). The value
+of each argument corresponds with the _margin_ that is calculated from the edge of the screen to each side
 of the video player.
 
-By the default the VideoPlayer sits in the top left corner (i.e. `top = 0` and `left = 0`) and covers the full
-screen (i.e. `bottom = 1080` and `right = 1920`).
+By default, the video player is located in the top left corner (i.e., `top = 0` and `left = 0`) and covers the full
+screen (i.e., `bottom = 1080` and `right = 1920`).
 
 ```js
 const top = 100
@@ -86,7 +88,7 @@ VideoPlayer.area(top, right, bottom, left)
 
 ### open
 
-Opens a video specified as a url and starts playing it as soon as it the video player has buffered enough to begin.
+Opens a video (specified as a url) and starts playing it as soon as the video player has buffered enough to begin.
 
 ```js
 const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
@@ -95,7 +97,7 @@ VideoPlayer.open(videoUrl)
 
 ### reload
 
-Stops the current playing video, and restarts it from the beginning.
+Stops the current playing video and restarts it from the beginning.
 
 ```js
 VideoPlayer.open(videoUrl)
@@ -148,7 +150,7 @@ VideoPlayer.play(videoUrl)
 
 Toggles the playing state of the video player.
 
-If a video is currently playing, it will pause it. And vice versa, will play a video that is currently paused.
+If a video is currently playing, it pauses it. And, vice versa, it plays a video that is currently paused.
 
 ```js
 VideoPlayer.playPause()
@@ -158,8 +160,8 @@ VideoPlayer.playPause()
 
 Mutes or unmutes the video player.
 
-The `mute`-method accepts a Boolean as a single argument. When passed `true` (or when omitted) it will mute the video player.
-When passed `false` it will set the video player to unmuted.
+The `mute` method accepts a Boolean as its single argument. When passed `true` (or when omitted), it mutes the video player.
+When passed `false`, it sets the video player to unmuted.
 
 ```js
 // mute a video
@@ -172,9 +174,9 @@ VideoPlayer.mute(false)
 
 Sets the `loop` state of the video player.
 
-The `loop`-method accepts a Boolean as a single argument. When passed `true` (or when omitted) it
-will instruct the video player to loop (i.e. restart the current video when it reaches the end). When
-passed `false` it will instruct the video player to _not_ loop the video.
+The `loop` method accepts a Boolean as its single argument. When passed `true` (or when omitted), it
+instructs the video player to loop (i.e., to restart the current video when it reaches the end). When
+passed `false`, it instructs the video player _not_ to loop the video.
 
 ```js
 // loop a video
@@ -187,29 +189,29 @@ VideoPlayer.loop(false)
 
 Sets the current time of the video player to the specified time in seconds.
 
-The `seek`-method accepts the time in seconds as it's only argument. Negative numbers
-will automatically be rounded up to `0`. When the value in seconds exceeds the duration
-of the video, it will round the value down and jump straight to the end of the video.
+The `seek` method accepts the time in seconds as its single argument. Negative numbers
+are automatically rounded up to `0`. When the value in seconds exceeds the duration
+of the video, it rounds down the value and jumps straight to the end of the video.
 
 ```js
 // seek to 20 seconds
 VideoPlayer.seek(20)
-// seek to 150
+// seek to 150 seconds
 VideoPlayer.seek(150)
-// seek to end of video (assuming video is shorter than 1000 seconds)
+// seek to end of video (assuming the video is shorter than 1000 seconds)
 VideoPlayer.seek(1000)
 ```
 
 ### skip
 
-Jumps a specified number of seconds forward or backwards from the video's current time.
+Jumps a specified number of seconds forward or backward from the video's current time.
 
-The `skip`-method accepts the number of seconds to jump as it's only argument. A positive value will jump forward,
-while a negative value will jump backwards.
+The `skip` method accepts the number of seconds to jump as its single argument. A positive value will jump forwards,
+while a negative value will jump backward.
 
-If a jump backwards would result in a value below `0` (i.e. jump `-20` seconds when the video is only at `10` seconds),
+If a jump backward would result in a value below `0` (for example, jump `-20` seconds when the video is only at `10` seconds),
 the `skip` method automatically rounds up to `0`. Similarly if you skip further than the duration of the video,
-the value will be rounded down and go straight to the end of the video.
+the `skip` method rounds down the value and goes straight to the end of the video.
 
 
 ```js
@@ -222,7 +224,7 @@ VideoPlayer.skip(-20)
 
 ### show
 
-Shows the VideoPlayer.
+Shows the video player.
 
 ```js
 VideoPlayer.show()
@@ -230,7 +232,7 @@ VideoPlayer.show()
 
 ### hide
 
-Hides the VideoPlayer
+Hides the video player.
 
 ```js
 VideoPlayer.hide()
@@ -246,7 +248,7 @@ VideoPlayer.duration // e.g. 160.44 (seconds)
 
 ### currentTime
 
-Getter that retrieves the video's current time in seconds
+Getter that retrieves the video's current time in seconds.
 
 ```js
 VideoPlayer.currentTime // e.g. 20.01 (seconds)
@@ -254,7 +256,7 @@ VideoPlayer.currentTime // e.g. 20.01 (seconds)
 
 ### muted
 
-Getter that retrieves the mute state of the video player (`true` or `false`)
+Getter that retrieves the mute state of the video player (`true` or `false`).
 
 ```js
 VideoPlayer.mute()
@@ -266,7 +268,7 @@ VideoPlayer.muted // false
 
 ### looped
 
-Getter that retrieves the loop state of the video player (`true` or `false`)
+Getter that retrieves the loop state of the video player (`true` or `false`).
 
 ```js
 VideoPlayer.loop()
