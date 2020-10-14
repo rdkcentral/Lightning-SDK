@@ -1,6 +1,8 @@
 # Changelog
 
-## v3.0.0.rc.0
+## v3.0.0
+
+*14 oct 2020*
 
 Breaking changes
 - Changed package name from `wpe-lightning-sdk` to `@lightningjs/sdk` (and published on NPM)
