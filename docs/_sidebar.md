@@ -8,7 +8,7 @@
   - [Metrics](/plugins/metrics.md)
   - [Profile](/plugins/profile.md)
   <!-- - [Purchase](/plugins/purchase.md) -->
-  - [Locale](/plugins/locale.md)
+  - [Language](/plugins/language.md)
   - [Lightning](/plugins/lightning.md)
   - [Router](/plugins/router/index.md)
     - [Router configuration](/plugins/router/configuration.md)
@@ -21,10 +21,11 @@
     - [Deeplinking & History](/plugins/router/deeplinking.md)
 
   <!-- - [Keyboard](/plugins/keyboard.md) -->
-  - [Media Player](/plugins/mediaplayer.md)
+  - [VideoPlayer](/plugins/videoplayer.md)
   <!-- - [Audio Player](/plugins/audioplayer.md) -->
   - [Image](/plugins/image.md)
   - [Pin](/plugins/pin.md)
   - [TV](/plugins/tv.md)
   - [Version Label](/plugins/versionlabel.md)
   - [FPS Counter](/plugins/fpscounter.md)
+  - [Registry](/plugins/registry.md)

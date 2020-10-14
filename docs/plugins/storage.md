@@ -13,7 +13,7 @@ When an `appId` is configured in [Settings](/plugins/settings), the keys for sto
 Whenever you need to persist data inside your App, you can import the Storage plugin from the Lightning SDK
 
 ```js
-import { Storage } from 'wpe-lightning-sdk'
+import { Storage } from '@lightningjs/sdk'
 ```
 
 ## Available methods

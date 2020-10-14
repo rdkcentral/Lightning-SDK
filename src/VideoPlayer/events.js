@@ -17,5 +17,30 @@
  * limitations under the License.
  */
 
-import Lightning from '@lightningjs/core'
-export default Lightning
+export default {
+  abort: 'Abort',
+  canplay: 'CanPlay',
+  canplaythrough: 'CanPlayThrough',
+  durationchange: 'DurationChange',
+  emptied: 'Emptied',
+  encrypted: 'Encrypted',
+  ended: 'Ended',
+  error: 'Error',
+  interruptbegin: 'InterruptBegin',
+  interruptend: 'InterruptEnd',
+  loadeddata: 'LoadedData',
+  loadedmetadata: 'LoadedMetadata',
+  loadstart: 'LoadStart',
+  pause: 'Pause',
+  play: 'Play',
+  playing: 'Playing',
+  progress: 'Progress',
+  ratechange: 'Ratechange',
+  seeked: 'Seeked',
+  seeking: 'Seeking',
+  stalled: 'Stalled',
+  // suspend: 'Suspend', // this one is called a looooot for some videos
+  timeupdate: 'TimeUpdate',
+  volumechange: 'VolumeChange',
+  waiting: 'Waiting',
+}
