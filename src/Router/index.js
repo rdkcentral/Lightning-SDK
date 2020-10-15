@@ -307,12 +307,11 @@ const load = async ({ route, hash }) => {
           app._setState('')
         }
       }
-      // if instance is share between routes
-      // we directly return the payload
-      if (payload.share) {
-        return payload
+      // Do page transition if instance
+      // is not shared between the routes
+      if (!payload.share) {
+        await doTransition(payload.page, activePage)
       }
-      await doTransition(payload.page, activePage)
     } else {
       expired = true
     }
