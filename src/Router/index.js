@@ -74,6 +74,7 @@ const pages = new Map()
 const providers = new Map()
 const modifiers = new Map()
 const widgetsPerRoute = new Map()
+const routeHooks = new Map()
 
 let register = new Map()
 let routerConfig
@@ -177,7 +178,6 @@ export const setupRoutes = routesConfig => {
     if (r.widgets) {
       widget(r.path, r.widgets)
     }
-
     if (isFunction(r.on)) {
       on(r.path, r.on, r.cache || 0)
     }
@@ -186,6 +186,9 @@ export const setupRoutes = routesConfig => {
     }
     if (isFunction(r.after)) {
       after(r.path, r.after, r.cache || 0)
+    }
+    if (isFunction(r.beforeNavigate)) {
+      hook(r.path, r.beforeNavigate)
     }
   })
 }
@@ -519,6 +522,12 @@ const triggers = {
   after: triggerAfter,
   before: triggerBefore,
   shared: triggerShared,
+}
+
+const hook = (route, handler) => {
+  if (!routeHooks.has(route)) {
+    routeHooks.set(route, handler)
+  }
 }
 
 const emit = (page, events = [], params = {}) => {
@@ -1014,23 +1023,29 @@ let beforeEachRoute = async (from, to) => {
   return true
 }
 
-const handleHashChange = override => {
+const handleHashChange = async override => {
   const hash = override || getHash()
   const route = getRouteByHash(hash)
 
-  return beforeEachRoute(activeRoute, route).then((result = true) => {
-    if (isBoolean(result)) {
-      // only if resolve value is explicitly true
-      // we continue the current route request
-      if (result) {
-        return resolveHashChange(hash, route)
-      }
-    } else if (isString(result)) {
-      navigate(result)
-    } else if (isObject(result)) {
-      navigate(result.path, result.params)
+  let result = (await beforeEachRoute(activeRoute, route)) || true
+
+  // test if a local hook is configured for the route
+  if (routeHooks.has(route)) {
+    const handler = routeHooks.get(route)
+    result = (await handler()) || true
+  }
+
+  if (isBoolean(result)) {
+    // only if resolve value is explicitly true
+    // we continue the current route request
+    if (result) {
+      return resolveHashChange(hash, route)
     }
-  })
+  } else if (isString(result)) {
+    navigate(result)
+  } else if (isObject(result)) {
+    navigate(result.path, result.params)
+  }
 }
 
 const resolveHashChange = (hash, route) => {
