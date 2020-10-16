@@ -166,6 +166,9 @@ export const setupRoutes = routesConfig => {
     if (isBoolean(routesConfig.updateHash)) {
       updateHash = routesConfig.updateHash
     }
+    if (isFunction(routesConfig.beforeEachRoute)) {
+      beforeEachRoute = routesConfig.beforeEachRoute
+    }
     initialised = true
   }
 
@@ -1000,10 +1003,37 @@ const getValuesFromHash = (hash, route) => {
   }, new Map())
 }
 
+/**
+ * Will be called before a route starts, can be overridden
+ * via routes config
+ * @param from - route we came from
+ * @param to - route we navigate to
+ * @returns {Promise<*>}
+ */
+let beforeEachRoute = async (from, to) => {
+  return true
+}
+
 const handleHashChange = override => {
   const hash = override || getHash()
   const route = getRouteByHash(hash)
 
+  return beforeEachRoute(activeRoute, route).then((result = true) => {
+    if (isBoolean(result)) {
+      // only if resolve value is explicitly true
+      // we continue the current route request
+      if (result) {
+        return resolveHashChange(hash, route)
+      }
+    } else if (isString(result)) {
+      navigate(result)
+    } else if (isObject(result)) {
+      navigate(result.path, result.params)
+    }
+  })
+}
+
+const resolveHashChange = (hash, route) => {
   // add a new record for page statistics
   send(hash)
 
@@ -1047,6 +1077,7 @@ const handleHashChange = override => {
           for (const key of urlParams.keys()) {
             params[key] = urlParams.get(key)
           }
+
           // invoke
           type.call(null, app, { ...params })
         }
