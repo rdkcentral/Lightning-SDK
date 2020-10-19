@@ -85,7 +85,7 @@ const getSettings = () => {
           },
         }
       })
-      .finally(() => {
+      .then(() => {
         settings.platformSettings = settings.platformSettings || {}
         settings.platformSettings.onClose = () => {
           // clean up video
