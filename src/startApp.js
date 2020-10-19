@@ -52,13 +52,13 @@ const startApp = () => {
       console.time('app2')
       settings.appSettings.version = appMetadata.version
       settings.appSettings.id = appMetadata.identifier
-      app = window[appMetadata.id](
-        settings.appSettings,
-        settings.platformSettings,
-        settings.appData
-      )
-      canvas = app.stage.getCanvas()
-      document.body.appendChild(canvas)
+      return Promise.resolve(
+        window[appMetadata.id](settings.appSettings, settings.platformSettings, settings.appData)
+      ).then(_app => {
+        app = _app
+        canvas = app.stage.getCanvas()
+        document.body.appendChild(canvas)
+      })
     },
   ])
 }
