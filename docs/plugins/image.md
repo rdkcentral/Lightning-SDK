@@ -11,7 +11,7 @@ However when you don't have control over the images you're displaying in your Ap
 Whenever you need to resize image, import the Image plugin from the Lightning SDK
 
 ```js
-import { Img } from 'wpe-lightning-sdk'
+import { Img } from '@lightningjs/sdk'
 ```
 
 ## Available methods

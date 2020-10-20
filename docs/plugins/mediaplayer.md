@@ -11,7 +11,7 @@ Opionally you can also implement a fully custom Media Player. Just be aware that
 For Apps that require a Media Player, import the MediaPlayer plugin from the Lightning SDK inside a component used for displaying Media (i.e. Player). Then add the Media Plyer in the component's template. This will generate a new instance of the MediaPlayer upon render.
 
 ```js
-import { Lightning, MediaPlayer } from 'wpe-lightning-sdk'
+import { Lightning, MediaPlayer } from '@lightningjs/sdk'
 
 export default class Player extends Lightning.Component {
 

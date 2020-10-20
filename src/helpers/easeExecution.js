@@ -17,5 +17,11 @@
  * limitations under the License.
  */
 
-import Lightning from '@lightningjs/core'
-export default Lightning
+let timeout = null
+
+export default (cb, delay) => {
+  clearTimeout(timeout)
+  timeout = setTimeout(() => {
+    cb()
+  }, delay)
+}

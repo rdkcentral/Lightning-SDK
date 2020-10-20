@@ -38,7 +38,8 @@ const metrics = {
     'ended',
     'pause',
     'play',
-    'suspend',
+    // with some videos there occur almost constant suspend events ... should investigate
+    // 'suspend',
     'volumechange',
     'waiting',
     'seeking',
