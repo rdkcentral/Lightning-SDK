@@ -3,8 +3,8 @@
 ## Router configuration
 
 The Router plugin can be configured by passing in a _configuration_ object to the `Router.startRouter()` method
-(typically called in the `_setup` lifecycle event in `App.js`). The configuration object can contain 4 different
-keys: `root`, `boot`, `bootComponent`, and `routes`.
+(typically called in the `_setup` lifecycle event in `App.js`). The configuration object can contain 5 different
+keys: `root`, `boot`, `bootComponent`, `beforeEachRoute` and `routes`.
 
 It is recommended to specify this configuration in a separate file, i.e. `src/routes.js`.
 
@@ -116,6 +116,65 @@ Since your Boot component might show some kind of animation that takes some time
 the Boot component automatically. Instead you have to explicitely call `Router.resume()` in you Boot component, whenever it's
 ready to give back control to the Router plugin.
 
+### beforeEachRoute
+
+Is a global hook that will be invoked right after a `navigate` to a `route` starts. Based on the `from` and `to` parameters
+the Router provides to the `hook` you can decide to _continue_, _stop_ or _redirect_ the `navigate`. The function must resolve a `Promise`
+
+```js
+{   
+    ...
+    routes:[...],
+    beforeEachRoute: (from, to)=>{
+        return new Promise((resolve)=>{
+             if(to === "home/account" && auth){
+                 resolve(true)
+             } 
+        })
+    }   
+}
+```
+
+If you resolve `true` the Router will continue the process, return `false` to abort. You can also redirect it by 
+resolving a `string` and the Router will try to navigate to the provided `hash` 
+
+```js
+{   
+    ...
+    routes:[...],
+    beforeEachRoute:  async (from, to)=>{
+        if(to === "play/live/123" && !auth){
+            return "account/create";
+        }
+    }   
+}
+```
+
+Or return an `object` if you want to send parameters along.
+
+```js
+{   
+    ...
+    routes:[...],
+    beforeEachRoute:  async (from, to)=>{
+        if(to === "play/live/123" && !auth){
+            return {
+                path:"account/create",
+                params:{
+                    msg: "Not authenticated",
+                    pageFrom: from
+                }
+            }
+        }
+    }   
+}
+```
+
+The parameters will be
+
+
+
+
 ### Dynamic routes
 
 So far we have only specified static route paths (i.e. `home/browse/adventure`). But the Router plugin also supports _dynamic_ routes.
@@ -168,6 +227,33 @@ combinations of characters. You do this by adding `${PATTERN/MODIFIERS}` after t
 }
 ```
 
+### Component
+
+The `component` property can be a _Lightning Component_ (i.e. a class that extends `Lightning.Component`) or a function 
+that returns a [dynamic import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Dynamic_Imports)
+
+```js
+// component
+{
+    path: 'home/browse/adventure',
+    component: Browse
+}
+```
+
+```js
+// dynamic import
+{
+    path: 'home/browse/adventure',
+    component: ()=>{
+        return import("../pages/browse.js")
+    }
+}
+```
+
+The parameters will be made available to the page as described in [Navigation](navigation.md)
+
+
+
 ### Router hooks
 
 Besides specifying what `component` (i.e. page) to load for each route, you can also bind a _function callback_ to a route
@@ -216,6 +302,26 @@ Whether it's own history should be reset when visiting this route. Possible valu
 When the new hash we navigate to shares the same route and the previous:  `settings/hotspot/12` && `settings/hotspot/22` 
 share: `settings/hotspot/:id` the Router will by default re-use the current Page instance. If you want to prevent this
 you set `resuseInstance: false`. This [setting](navigation.md) is also globally available.
+
+### beforeNavigate
+
+is a local hook that you can specify per route and will be invoked right before the router navigates to that `route`. 
+I follows the same rules as the global `beforeEachRoute` hook: 
+
+```js
+{
+    path: 'player/:playlistId${/[0-9]{3,8}/i}',
+    component: Player,
+    beforeNavigate:(from)=>{
+        return new Promise((resolve)=>{
+             if(from === "home/browse/adventure"){
+                 resolve(true)
+             } 
+        })
+    } 
+}
+```
+
 
 ### Special routes
 
