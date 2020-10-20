@@ -147,7 +147,7 @@ var getSettings = function getSettings() {
           esEnv: 'es6'
         }
       };
-    }.bind(this)).finally(function () {
+    }.bind(this)).then(function () {
       var _this10 = this;
 
       _newArrowCheck(this, _this9);
