@@ -16,7 +16,7 @@ listeners and intervals, is a common cause for memory leaks.
 Whenever you need to register a _timeout_, _interval_ or _event listener_, import the Registry plugin from the Lightning SDK
 
 ```js
-import { Registry } from 'wpe-lightning-sdk'
+import { Registry } from '@lightningjs/sdk'
 ```
 
 ## Available methods

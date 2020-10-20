@@ -7,7 +7,7 @@ The Language plugin supports internationalisation features for your App.
 In order to use the Language plugin, import it from the Lightning SDK.
 
 ```js
-import { Language } from 'wpe-lightning-sdk'
+import { Language } from '@lightningjs/sdk'
 ```
 
 ### Loading on boot
@@ -179,7 +179,7 @@ Consider the following `translations.json`:
 ```json
 {
   "en": {
-    "introduction": "Hi, my name is {0}, my lastname is {1} and I am {2} years old",
+    "introduction1": "Hi, my name is {0}, my lastname is {1} and I am {2} years old",
     "introduction2": "Hi, my name is {firstname}, my lastname is {lastname} and I am {age} years old",
   }
 }
