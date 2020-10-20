@@ -11,7 +11,7 @@ With the Pin plugin you can lock certain content or screens in your App dependin
 In order to use the Pin plugin, import it from the Lightning SDK.
 
 ```js
-import { Pin } from 'wpe-lightning-sdk'
+import { Pin } from '@lightningjs/sdk'
 ```
 
 ## Available methods

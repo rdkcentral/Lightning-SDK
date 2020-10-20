@@ -10,7 +10,7 @@ With the TV plugin you can adapt your App _contextually_ to what the user is cur
 In order to use the TV plugin, import it from the Lightning SDK.
 
 ```js
-import { TV } from 'wpe-lightning-sdk'
+import { TV } from '@lightningjs/sdk'
 ```
 
 ## Available methods

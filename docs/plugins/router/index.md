@@ -20,7 +20,7 @@ In order to power your App with router capabilities you first need to import the
 in your `App.js`
 
 ```js
-import { Router } from 'wpe-lightning-sdk'
+import { Router } from '@lightningjs/sdk'
 ```
 
 ### Setup
@@ -29,7 +29,7 @@ Normally your App extends a standard Lightning Component. When you want to make 
 which comes with a default setup for the `template`, `states` and `getters`.
 
 ```js
-import { Router } from 'wpe-lightning-sdk'
+import { Router } from '@lightningjs/sdk'
 
 export default class App extends Router.App {
     _setup() {
