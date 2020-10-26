@@ -28,7 +28,7 @@ const nodeModulesFolder = path.join(
   process.cwd().indexOf('node_modules') > -1 ? '../..' : 'node_modules'
 )
 
-// create support lib (remove it first if it exists)
+// create support lib
 const supportFolder = path.join(process.cwd(), '/support')
 shell.mkdir(supportFolder)
 
@@ -57,6 +57,19 @@ shell.cp(
   path.join(nodeModulesFolder + '/whatwg-fetch/dist/fetch.umd.js'),
   path.join(supportPolyfillsFolder, '/fetch.js')
 )
+
+// npm 7.0.* doesn't contain INIT_CWD in process.env, causing the post install script to fail
+// added a (hopefully) temporary conditional for the existense of INIT_CWD
+// See: https://github.com/rdkcentral/Lightning-SDK/issues/134 and
+// https://github.com/npm/cli/issues/2033
+const init_cwd = 'INIT_CWD' in process.env
+if (init_cwd === false) {
+  console.log(
+    'Not able to run the entire postinstall script due to missing INIT_CWD in process.env'
+  )
+  console.log('See https://github.com/rdkcentral/Lightning-SDK/issues/134 for more details')
+  process.exit()
+}
 
 const packageJson = require(path.join(process.env.INIT_CWD, 'package.json'))
 
