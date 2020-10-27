@@ -134,28 +134,19 @@ Metrics.user.event(name, params)
 
 ### Media
 
-The Lightning SDK's [MediaPlayer plugin](/plugins/mediaplayer) automatically tracks and sends Media related metrics. Each metric receives the current video Url and the current video's progress.
+The Lightning SDK's [VideoPlayer plugin](/plugins/videoplayer) automatically tracks and sends Video related metrics. Each metric receives the current video Url and the current video's progress.
 
-#### Media Abort
+- Media Abort
+- Media CanPlay
+- Media Ended
+- Media Pause
+- Media Play
+- Media Suspend
+- Media VOlumeChange
+- Media  Waiting
+- Media Seeking
+- Media Seeked
 
-#### Media CanPlay
+<!-- ### Generic Error
 
-#### Media Ended
-
-#### Media Pause
-
-#### Media Play
-
-#### Media Suspend
-
-#### Media VOlumeChange
-
-#### Media  Waiting
-
-#### Media Seeking
-
-#### Media Seeked
-
-### Generic Error
-
-### Generic Event
+### Generic Event -->
