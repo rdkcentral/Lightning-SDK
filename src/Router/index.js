@@ -900,7 +900,8 @@ const getRoutesByFloor = floor => {
  * @returns {string|boolean} - route
  */
 const getRouteByHash = hash => {
-  const getUrlParts = /(\/?:?[@\w%\s-]+)/g
+  const getUrlParts = /(\/?:?[@\w%\s:-]+)/g
+  7
   // grab possible candidates from stored routes
   const candidates = getRoutesByFloor(getFloor(hash))
   // break hash down in chunks
@@ -998,7 +999,7 @@ const getValuesFromHash = (hash, route) => {
   // we already did the matching part
   route = stripRegex(route, '')
 
-  const getUrlParts = /(\/?:?[\w%\s-]+)/g
+  const getUrlParts = /(\/?:?[\w%\s:-]+)/g
   const hashParts = hash.match(getUrlParts) || []
   const routeParts = route.match(getUrlParts) || []
   const getNamedGroup = /^\/:([\w-]+)\/?/
