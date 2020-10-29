@@ -51,6 +51,9 @@ export default class Mediaplayer extends Lightning.Component {
     this._metrics = null
     this._textureMode = Settings.get('platform', 'textureMode') || false
     Log.info('Texture mode: ' + this._textureMode)
+    console.warn(
+      "The 'MediaPlayer'-plugin in the Lightning-SDK is deprecated and will be removed in future releases. \n\n Please consider using the new 'VideoPlayer'-plugin instead."
+    )
   }
 
   static _template() {
