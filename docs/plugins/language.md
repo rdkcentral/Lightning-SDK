@@ -163,17 +163,13 @@ Note, changing the language doesn't automatically trigger a template render upda
 
 ### Get
 
-Get's and returns the current Language you are using.
+Gets and returns the current selected language.
 
 ```js
-// The Language used is 'en'
+// The current language is 'en'
 const currentLanguage = Language.get()
 // currentLanguage = 'en'
 ```
-
-This will help you, on your application to test, check and do some particular changes by the language you are using in your application (or the one you are changing at).
-
-It's really useful in conjuntion with the set.
 
 #### Translate
 
