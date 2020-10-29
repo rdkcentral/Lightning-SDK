@@ -63,6 +63,10 @@ const setTranslations = obj => {
   translations = obj
 }
 
+const getLanguage = () => {
+  return language
+}
+
 const setLanguage = lng => {
   language = null
   dictionary = null
@@ -147,6 +151,10 @@ export default {
 
   set(language) {
     return setLanguage(language)
+  },
+
+  get() {
+    return getLanguage()
   },
 
   available() {
