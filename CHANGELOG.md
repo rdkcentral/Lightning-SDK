@@ -1,5 +1,20 @@
 # Changelog
 
+## v3.1.0
+
+*30 oct 2020*
+
+- Added option to pass arguments to platform `onClose`-method
+- Added temporary workaround in postinstall script for npm 7.0.*-bug
+- Added `get()` method to Language-plugin
+- Added deprecation warnings to Locale plugin and MediaPlayer plugin
+- Replaced `finally` with `then` in `startApp.js` (for better compatibility)
+- Router updates
+  - Added global `beforeEachRoute` hook
+  - Added support for local `beforeNavigate` hook
+  - Added support for URN
+  - Fixed properly resolve request on shared page instances
+
 ## v3.0.0
 
 *14 oct 2020*

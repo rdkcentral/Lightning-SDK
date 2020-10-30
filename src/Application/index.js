@@ -138,7 +138,7 @@ export default function(App, appData, platformSettings) {
       Registry.clear()
 
       if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
-        platformSettings.onClose()
+        platformSettings.onClose(...arguments)
       } else {
         this.close()
       }

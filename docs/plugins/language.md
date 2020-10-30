@@ -161,6 +161,16 @@ that as a fallback in case no matching language was found.
 
 Note, changing the language doesn't automatically trigger a template render update.
 
+### Get
+
+Gets and returns the current selected language.
+
+```js
+// The current language is 'en'
+const currentLanguage = Language.get()
+// currentLanguage = 'en'
+```
+
 #### Translate
 
 Translates a key to the matching value.

@@ -61,7 +61,11 @@ let warned = false
 const deprecated = (force = false) => {
   if (force === true || warned === false) {
     console.warn(
-      "The 'Locale'-plugin in the Lightning-SDK is deprecated and will be removed in future releases. \n\n Please consider using the new 'Language'-plugin instead."
+      [
+        "The 'Locale'-plugin in the Lightning-SDK is deprecated and will be removed in future releases.",
+        "Please consider using the new 'Language'-plugin instead.",
+        'https://rdkcentral.github.io/Lightning-SDK/#/plugins/language',
+      ].join('\n\n')
     )
   }
   warned = true
