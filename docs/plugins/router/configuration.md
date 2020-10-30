@@ -170,10 +170,7 @@ Or return an `object` if you want to send parameters along.
 }
 ```
 
-The parameters will be
-
-
-
+The parameters will be made available to the page as described in [Navigation](navigation.md)
 
 ### Dynamic routes
 
@@ -249,10 +246,6 @@ that returns a [dynamic import](https://developer.mozilla.org/en-US/docs/Web/Jav
     }
 }
 ```
-
-The parameters will be made available to the page as described in [Navigation](navigation.md)
-
-
 
 ### Router hooks
 
