@@ -23,10 +23,23 @@ const process = require('process')
 const replaceInFile = require('replace-in-file')
 const yesno = require('yesno')
 
-const nodeModulesFolder = path.join(
+let nodeModulesFolder
+
+const lighningjsNodeModulesFolder = path.join(
   process.cwd(),
   process.cwd().indexOf('node_modules') > -1 ? '../..' : 'node_modules'
 )
+
+const wpelightningNodeModulesFolder = path.join(
+  process.cwd(),
+  process.cwd().indexOf('node_modules') > -1 ? '..' : 'node_modules'
+)
+
+if (process.cwd().includes('@lightningjs')) {
+  nodeModulesFolder = lighningjsNodeModulesFolder
+} else {
+  nodeModulesFolder = wpelightningNodeModulesFolder
+}
 
 // create support lib (remove it first if it exists)
 const supportFolder = path.join(process.cwd(), '/support')
@@ -86,7 +99,7 @@ if (
           allowEmptyPaths: true,
           files: process.env.INIT_CWD + '/src/**/*',
           // eslint-disable-next-line
-      from: /(?:[^\/]*?)\s+from\s+(["'])(wpe-lightning-sdk)(["']);?/gi,
+          from: /(?:[^\/]*?)\s+from\s+(["'])(wpe-lightning-sdk)(["']);?/gi,
           to: match => {
             return match.replace('wpe-lightning-sdk', '@lightningjs/sdk')
           },
