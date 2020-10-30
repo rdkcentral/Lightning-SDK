@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.1.0
+
+- Router
+  - Added global `beforeEachRoute` hook
+  - Added support for local `beforeNavigate` hook
+  - Added support for URN
+  - Fixed properly resolve request on shared page instances 
+
 ## v3.0.0
 
 *14 oct 2020*
