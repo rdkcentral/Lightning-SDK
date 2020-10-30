@@ -74,6 +74,7 @@ const pages = new Map()
 const providers = new Map()
 const modifiers = new Map()
 const widgetsPerRoute = new Map()
+const routeHooks = new Map()
 
 let register = new Map()
 let routerConfig
@@ -166,6 +167,9 @@ export const setupRoutes = routesConfig => {
     if (isBoolean(routesConfig.updateHash)) {
       updateHash = routesConfig.updateHash
     }
+    if (isFunction(routesConfig.beforeEachRoute)) {
+      beforeEachRoute = routesConfig.beforeEachRoute
+    }
     initialised = true
   }
 
@@ -174,7 +178,6 @@ export const setupRoutes = routesConfig => {
     if (r.widgets) {
       widget(r.path, r.widgets)
     }
-
     if (isFunction(r.on)) {
       on(r.path, r.on, r.cache || 0)
     }
@@ -183,6 +186,9 @@ export const setupRoutes = routesConfig => {
     }
     if (isFunction(r.after)) {
       after(r.path, r.after, r.cache || 0)
+    }
+    if (isFunction(r.beforeNavigate)) {
+      hook(r.path, r.beforeNavigate)
     }
   })
 }
@@ -307,12 +313,11 @@ const load = async ({ route, hash }) => {
           app._setState('')
         }
       }
-      // if instance is share between routes
-      // we directly return the payload
-      if (payload.share) {
-        return payload
+      // Do page transition if instance
+      // is not shared between the routes
+      if (!payload.share) {
+        await doTransition(payload.page, activePage)
       }
-      await doTransition(payload.page, activePage)
     } else {
       expired = true
     }
@@ -517,6 +522,12 @@ const triggers = {
   after: triggerAfter,
   before: triggerBefore,
   shared: triggerShared,
+}
+
+const hook = (route, handler) => {
+  if (!routeHooks.has(route)) {
+    routeHooks.set(route, handler)
+  }
 }
 
 const emit = (page, events = [], params = {}) => {
@@ -889,7 +900,8 @@ const getRoutesByFloor = floor => {
  * @returns {string|boolean} - route
  */
 const getRouteByHash = hash => {
-  const getUrlParts = /(\/?:?[@\w%\s-]+)/g
+  const getUrlParts = /(\/?:?[@\w%\s:-]+)/g
+  7
   // grab possible candidates from stored routes
   const candidates = getRoutesByFloor(getFloor(hash))
   // break hash down in chunks
@@ -987,7 +999,7 @@ const getValuesFromHash = (hash, route) => {
   // we already did the matching part
   route = stripRegex(route, '')
 
-  const getUrlParts = /(\/?:?[\w%\s-]+)/g
+  const getUrlParts = /(\/?:?[\w%\s:-]+)/g
   const hashParts = hash.match(getUrlParts) || []
   const routeParts = route.match(getUrlParts) || []
   const getNamedGroup = /^\/:([\w-]+)\/?/
@@ -1001,10 +1013,43 @@ const getValuesFromHash = (hash, route) => {
   }, new Map())
 }
 
-const handleHashChange = override => {
+/**
+ * Will be called before a route starts, can be overridden
+ * via routes config
+ * @param from - route we came from
+ * @param to - route we navigate to
+ * @returns {Promise<*>}
+ */
+let beforeEachRoute = async (from, to) => {
+  return true
+}
+
+const handleHashChange = async override => {
   const hash = override || getHash()
   const route = getRouteByHash(hash)
 
+  let result = (await beforeEachRoute(activeRoute, route)) || true
+
+  // test if a local hook is configured for the route
+  if (routeHooks.has(route)) {
+    const handler = routeHooks.get(route)
+    result = (await handler()) || true
+  }
+
+  if (isBoolean(result)) {
+    // only if resolve value is explicitly true
+    // we continue the current route request
+    if (result) {
+      return resolveHashChange(hash, route)
+    }
+  } else if (isString(result)) {
+    navigate(result)
+  } else if (isObject(result)) {
+    navigate(result.path, result.params)
+  }
+}
+
+const resolveHashChange = (hash, route) => {
   // add a new record for page statistics
   send(hash)
 
@@ -1048,6 +1093,7 @@ const handleHashChange = override => {
           for (const key of urlParams.keys()) {
             params[key] = urlParams.get(key)
           }
+
           // invoke
           type.call(null, app, { ...params })
         }
