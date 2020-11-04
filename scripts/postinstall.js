@@ -30,18 +30,18 @@ const nodeModulesFolder = path.join(
 
 // create support lib
 const supportFolder = path.join(process.cwd(), '/support')
-shell.mkdir(supportFolder)
+!shell.test('-d', supportFolder) && shell.mkdir(supportFolder)
 
 // create support/lib and copy all required libraries from node_modules
 const supportLibFolder = path.join(supportFolder, '/lib')
-shell.mkdir(supportLibFolder)
+!shell.test('-d', supportLibFolder) && shell.mkdir(supportLibFolder)
 
 shell.cp('-R', path.join(nodeModulesFolder, '@lightningjs/core/devtools/*'), supportLibFolder)
 shell.cp('-R', path.join(nodeModulesFolder, '@lightningjs/core/dist/*'), supportLibFolder)
 
 // create support/polyfills and copy all required polyfills from node_modules
 const supportPolyfillsFolder = path.join(supportFolder, '/polyfills')
-shell.mkdir(supportPolyfillsFolder)
+!shell.test('-d', supportPolyfillsFolder) && shell.mkdir(supportPolyfillsFolder)
 shell.cp(
   '-R',
   path.join(nodeModulesFolder, '/url-polyfill/url-polyfill.js'),
