@@ -413,9 +413,10 @@ const videoPlayerPlugin = {
 
 export default autoSetupMixin(videoPlayerPlugin, () => {
   precision =
-    ApplicationInstance &&
-    ApplicationInstance.stage &&
-    ApplicationInstance.stage.getRenderPrecision()
+    (ApplicationInstance &&
+      ApplicationInstance.stage &&
+      ApplicationInstance.stage.getRenderPrecision()) ||
+    precision
 
   videoEl = setupVideoTag()
 
