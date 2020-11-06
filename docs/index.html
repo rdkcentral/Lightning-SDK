@@ -30,20 +30,23 @@
 <body>
   <div id="app"></div>
   <script>
-    window.$docsify = {
-      name: 'Lightning SDK',
-      repo: 'https://github.com/rdkcentral/Lightning-SDK',
-      loadSidebar: true,
-      relativePath: true,
-      auto2top: true,
-      search: {
-        maxAge: 24*60*60*1000, // one day
-        paths: 'auto',
-        placeholder: 'Type to search',
-        noData: 'No Results!',
-        depth: 6,
-     }
-    }
+    fetch('./package.json').then(response => response.json()).then(data => {
+      window.$docsify = {
+        name: 'Lightning SDK <small><a href="#/changelog" style="color: inherit">' + data.version + '</a></small>',
+        repo: 'https://github.com/rdkcentral/Lightning-SDK',
+        loadSidebar: true,
+        relativePath: true,
+        auto2top: true,
+        search: {
+          maxAge: 24*60*60*1000, // one day
+          paths: 'auto',
+          placeholder: 'Type to search',
+          noData: 'No Results!',
+          depth: 6,
+      }
+      }
+    })
+
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0"></script>
