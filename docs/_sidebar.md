@@ -1,4 +1,4 @@
-[Getting started](/getting-started.md)
+- [Getting started](/getting-started.md)
 
 - Plugins
   - [Utils](/plugins/utils.md)
@@ -29,3 +29,5 @@
   - [Version Label](/plugins/versionlabel.md)
   - [FPS Counter](/plugins/fpscounter.md)
   - [Registry](/plugins/registry.md)
+
+- [Changelog](/changelog.md)

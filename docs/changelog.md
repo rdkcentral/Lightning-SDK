@@ -1,0 +1,128 @@
+# Changelog
+
+## v3.1.0
+
+*30 oct 2020*
+
+- Added option to pass arguments to platform `onClose`-method
+- Added temporary workaround in postinstall script for npm 7.0.*-bug
+- Added `get()` method to Language-plugin
+- Added deprecation warnings to Locale plugin and MediaPlayer plugin
+- Replaced `finally` with `then` in `startApp.js` (for better compatibility)
+- Router updates
+  - Added global `beforeEachRoute` hook
+  - Added support for local `beforeNavigate` hook
+  - Added support for URN
+  - Fixed properly resolve request on shared page instances
+
+## v3.0.0
+
+*14 oct 2020*
+
+Breaking changes
+- Changed package name from `wpe-lightning-sdk` to `@lightningjs/sdk` (and published on NPM)
+- Updated minimum requirement to Node.js 10
+
+New features
+- Added Registry Plugin
+- Added VideoPlayer plugin
+- Added Language Plugin
+- Router
+  - Fixed async loading behaviour that could result in stacked pages
+  - Router internally now uses unique Symbols (could break if Symbol.for('route') is used in app)
+  - Added Page view statistics
+  - Wildcard routes not ending up in history
+  - Add reuseInstance flag global and per route
+  - Support for Dynamic component import
+  - Widgets always hidden on Router boot
+  - Documented _handleAppClose()
+
+Deprecations
+- Locale plugin is deprecated in favor of the Language plugin
+- MediaPlayer plugin is deprecated in favor of the VideoPlayer plugin
+
+## v2.6.0
+
+*11 sep 2020*
+
+- Added Pin Plugin
+- Added zipCode to profile
+
+## v2.5.0
+
+*21 aug 2020*
+
+- Added fallback value to `Settings.get()`
+- Added access to AppData
+- Removed black body background during development
+- Added proper App-cleanup on close during development
+- Various Router updates
+  - support for querystring parameters
+  - support for function as a value for `root` in router config
+  - support for navigation without a hash update
+  - fixes:
+    - static routes take priority over dynamic matches (`settings/account` vs `settings/:type`)
+    - remain focus on an active widget after an `on()`-resolve
+- Added new TV plugin
+
+## v2.4.0
+
+*14 jul 2020*
+
+- Added `image.quality` platform setting to tune down the image quality on STB's with lower GPU memory
+- Added _Router_ plugin to SDK
+
+## v2.3.1
+
+*8 jul 2020*
+
+- Added fix to MediaPlayer plugin to solve issue of video rollover (black screen on certain STBs)
+- Added fix to MediaPlayer plugin to solve issue when opening same video asset twice (black screen)
+- Added fix to Profile plugin to solve issue with always requesting the browser location (also in production)
+
+## v2.3.0
+
+*24 jun 2020*
+
+- Added support for user defined Settings
+- Added fetch polyfill for older ES5 environments
+- Added SDK version to be displayed in Version-label (requires Lightning-CLI 1.6.1 and higher)
+- Added fix for setting texture mode in `settings.json`
+
+## v2.2.2
+
+*4 jun 2020*
+
+- Added fallback language (en) to Locale plugin when given language doesn't exist
+
+## v2.2.1
+
+*1 jun 2020*
+
+- Hotfix for Media Player metrics
+
+## v2.2.0
+
+*6 may 2020*
+
+- Removed close metric from App (is now handled by the Metrological App Store)
+- Added default values for Profile plugin during local development, including the option to customize values via `settings.json`
+- Added Frame per second (FPS) counter
+- Fixed bug in the asset path of the Utils plugin when running the lightning App from a nested URL
+- Improved documentation
+- Cleaned up NPM dependencies and separated dev dependencies
+- Removed legacy npm scripts
+- Moved ES5-polyfills to external dependencies
+
+## v2.1.0
+
+*19 mar 2020*
+
+- Fixed small issues in documentation
+- Changed import of Lightning to enable IDE autocompletion (requires Lightning-CLI 1.4.0)
+
+## v2.0.3
+
+*17 feb 2020*
+
+- Fixed issue with `Img.portrait()` method not returning a texture
