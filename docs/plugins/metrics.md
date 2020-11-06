@@ -57,7 +57,7 @@ Metrics.app.close()
 Send a metric that an error has occured in the App.
 
 ```js
-Metrics.app.close(message, code, params)
+Metrics.app.error(message, code, params)
 ```
 
 ### App Event
