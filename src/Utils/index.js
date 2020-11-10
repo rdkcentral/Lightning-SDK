@@ -44,15 +44,6 @@ export default {
   ensureUrlWithProtocol() {
     return ensureUrlWithProtocol(...arguments)
   },
-  isFunction(v) {
-    return typeof v === 'function'
-  },
-  isObject(v) {
-    return typeof v === 'object' && v !== null
-  },
-  isBoolean(v) {
-    return typeof v === 'boolean'
-  },
   isPage(v) {
     if (v instanceof Lightning.Element || this.isComponentConstructor(v)) {
       return true
@@ -61,31 +52,6 @@ export default {
   },
   isComponentConstructor(type) {
     return type.prototype && 'isComponent' in type.prototype
-  },
-  isArray(v) {
-    return Array.isArray(v)
-  },
-  isString(v) {
-    return typeof v === 'string'
-  },
-  isPromise(method) {
-    let result
-    if (this.isFunction(method)) {
-      try {
-        result = method.apply(null)
-      } catch (e) {
-        result = e
-      }
-    } else {
-      result = method
-    }
-    return this.isObject(result) && this.isFunction(result.then)
-  },
-  ucfirst(v) {
-    return `${v.charAt(0).toUpperCase()}${v.slice(1)}`
-  },
-  limitWithinRange(num, min = 0, max = 1) {
-    return Math.min(Math.max(num, min), max)
   },
 }
 
