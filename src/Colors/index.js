@@ -94,6 +94,9 @@ export default {
   },
 
   add(colors, value) {
+    if (colors === undefined) {
+      return
+    }
     if (isObject(colors)) {
       // clean up normalizedColors if they exist in the to be added colors
       Object.keys(colors).forEach(color => cleanUpNormalizedColor(color))
