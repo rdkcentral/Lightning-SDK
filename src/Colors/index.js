@@ -1,3 +1,4 @@
+import Log from '../Log'
 import { mergeColors, calculateAlpha, limitWithinRange, isObject, isString } from './utils.js'
 
 let colors = {
@@ -110,5 +111,23 @@ export default {
     color1 = this.get(color1)
     color2 = this.get(color2)
     return mergeColors(color1, color2, p)
+  },
+  initColors(file) {
+    return new Promise((resolve, reject) => {
+      if (typeof file === 'object') {
+        this.add(file)
+        resolve()
+      }
+      fetch(file)
+        .then(response => response.json())
+        .then(json => {
+          this.add(json)
+          resolve()
+        })
+        .catch(e => {
+          Log.error(e)
+          reject(e)
+        })
+    })
   },
 }
