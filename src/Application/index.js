@@ -28,7 +28,7 @@ import Settings from '../Settings'
 import { initLanguage } from '../Language'
 import Utils from '../Utils'
 import Registry from '../Registry'
-import { initColors } from '../Colors'
+import Colors from '../Colors'
 
 import { version as sdkVersion } from '../../package.json'
 
@@ -192,7 +192,7 @@ export default function(App, appData, platformSettings) {
       } else if (typeof config === 'object') {
         file = config
       }
-      return initColors(file)
+      return Colors.initColors(file)
     }
 
     set focus(v) {
