@@ -1,4 +1,3 @@
-import Log from '../Log'
 import { mergeColors, calculateAlpha, limitWithinRange, isObject, isString } from './utils.js'
 
 let colors = {
@@ -10,6 +9,24 @@ let colors = {
   yellow: '#feff00',
   cyan: '#00feff',
   magenta: '#ff00ff',
+}
+
+export const initColors = colors => {
+  return new Promise((resolve, reject) => {
+    if (typeof colors === 'object') {
+      this.add(colors)
+      resolve()
+    }
+    fetch(colors)
+      .then(response => response.json())
+      .then(json => {
+        add(json)
+        resolve()
+      })
+      .catch(e => {
+        reject(e)
+      })
+  })
 }
 
 const normalizedColors = {
@@ -74,6 +91,17 @@ const cleanUpNormalizedColor = color => {
   }
 }
 
+const add = (colorsToAdd, value) => {
+  if (isObject(colorsToAdd)) {
+    // clean up normalizedColors if they exist in the to be added colors
+    Object.keys(colorsToAdd).forEach(color => cleanUpNormalizedColor(color))
+    colors = Object.assign({}, colors, colorsToAdd)
+  } else if (isString(colorsToAdd) && value) {
+    cleanUpNormalizedColor(colorsToAdd)
+    colors[colorsToAdd] = value
+  }
+}
+
 export default {
   get(value, options) {
     // create color tag for storage
@@ -93,41 +121,10 @@ export default {
     }
     return targetColor || 0
   },
-
-  add(colors, value) {
-    if (colors === undefined) {
-      return
-    }
-    if (isObject(colors)) {
-      // clean up normalizedColors if they exist in the to be added colors
-      Object.keys(colors).forEach(color => cleanUpNormalizedColor(color))
-      colors = Object.assign({}, colors, colors)
-    } else if (isString(colors) && value) {
-      cleanUpNormalizedColor(colors)
-      colors[colors] = value
-    }
-  },
+  add,
   mix(color1, color2, p) {
     color1 = this.get(color1)
     color2 = this.get(color2)
     return mergeColors(color1, color2, p)
-  },
-  initColors(file) {
-    return new Promise((resolve, reject) => {
-      if (typeof file === 'object') {
-        this.add(file)
-        resolve()
-      }
-      fetch(file)
-        .then(response => response.json())
-        .then(json => {
-          this.add(json)
-          resolve()
-        })
-        .catch(e => {
-          Log.error(e)
-          reject(e)
-        })
-    })
   },
 }

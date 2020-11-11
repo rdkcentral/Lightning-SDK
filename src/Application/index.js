@@ -28,7 +28,7 @@ import Settings from '../Settings'
 import { initLanguage } from '../Language'
 import Utils from '../Utils'
 import Registry from '../Registry'
-import Colors from '../Colors'
+import { initColors } from '../Colors'
 
 import { version as sdkVersion } from '../../package.json'
 
@@ -186,13 +186,11 @@ export default function(App, appData, platformSettings) {
     }
 
     loadColors(config) {
-      let file = Utils.asset('colors.json')
-      if (typeof config === 'object' && 'file' in config) {
-        file = config.file
-      } else if (typeof config === 'object') {
-        file = config
+      let colors = Utils.asset('colors.json')
+      if (config && (typeof config === 'string' || typeof config === 'object')) {
+        colors = config
       }
-      return Colors.initColors(file)
+      return initColors(colors)
     }
 
     set focus(v) {
