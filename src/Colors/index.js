@@ -14,7 +14,7 @@ let colors = {
 export const initColors = colors => {
   return new Promise((resolve, reject) => {
     if (typeof colors === 'object') {
-      this.add(colors)
+      add(colors)
       resolve()
     }
     fetch(colors)
