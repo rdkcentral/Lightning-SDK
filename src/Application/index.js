@@ -83,7 +83,7 @@ export default function(App, appData, platformSettings) {
         // to be deprecated
         Locale.load((App.config && App.config.locale) || (App.getLocale && App.getLocale())),
         App.language && this.loadLanguage(App.language()),
-        App.colors && this.loadColors(App.colors()),
+        this.loadColors(App.colors && App.colors()),
       ])
         .then(() => {
           Metrics.app.loaded()
