@@ -1,4 +1,4 @@
-import { mergeColors, calculateAlpha, limitWithinRange, isObject, isString } from './utils.js'
+import { mergeColors, calculateAlpha, isObject, isString, argbToHsva, hsvaToArgb } from './utils.js'
 
 let colors = {
   white: '#ffffff',
@@ -11,16 +11,39 @@ let colors = {
   magenta: '#ff00ff',
 }
 
-export const initColors = colors => {
+const normalizedColors = {
+  //store for normalized colors
+}
+
+const addColors = (colorsToAdd, value) => {
+  if (isObject(colorsToAdd)) {
+    // clean up normalizedColors if they exist in the to be added colors
+    Object.keys(colorsToAdd).forEach(color => cleanUpNormalizedColors(color))
+    colors = Object.assign({}, colors, colorsToAdd)
+  } else if (isString(colorsToAdd) && value) {
+    cleanUpNormalizedColors(colorsToAdd)
+    colors[colorsToAdd] = value
+  }
+}
+
+const cleanUpNormalizedColors = color => {
+  for (let c in normalizedColors) {
+    if (c.indexOf(color) > -1) {
+      delete normalizedColors[c]
+    }
+  }
+}
+
+export const initColors = file => {
   return new Promise((resolve, reject) => {
-    if (typeof colors === 'object') {
-      add(colors)
+    if (typeof file === 'object') {
+      addColors(file)
       resolve()
     }
-    fetch(colors)
+    fetch(file)
       .then(response => response.json())
       .then(json => {
-        add(json)
+        addColors(json)
         resolve()
       })
       .catch(e => {
@@ -29,40 +52,7 @@ export const initColors = colors => {
   })
 }
 
-const normalizedColors = {
-  //store for normalized colors
-}
-
-const calculateColor = (value, options) => {
-  let targetColor = normalizeHexToARGB(value)
-  if (!isNaN(options)) {
-    options = { alpha: options }
-  }
-  if (options && isObject(options)) {
-    if (!isNaN(options.darken)) {
-      targetColor = mergeColors(targetColor, 0xff000000, 1 - limitWithinRange(options.darken, 0, 1))
-    }
-
-    if (!isNaN(options.lighten)) {
-      targetColor = mergeColors(
-        targetColor,
-        0xffffffff,
-        1 - limitWithinRange(options.lighten, 0, 1)
-      )
-    }
-
-    if (!isNaN(options.opacity)) {
-      options.alpha = options.opacity / 100
-    }
-
-    if (!isNaN(options.alpha)) {
-      targetColor = calculateAlpha(targetColor, options.alpha)
-    }
-  }
-  return targetColor || 0
-}
-
-const normalizeHexToARGB = color => {
+const normalizeColorToARGB = color => {
   let targetColor = colors[color]
   if (!targetColor) {
     targetColor = color
@@ -83,48 +73,57 @@ const normalizeHexToARGB = color => {
   return targetColor || 0xffffffff
 }
 
-const cleanUpNormalizedColor = color => {
-  for (let c in normalizedColors) {
-    if (c.indexOf(color) > -1) {
-      delete normalizedColors[c]
+export default color => {
+  let thisColor = null
+
+  const generate = value => {
+    if (thisColor) {
+      return thisColor
     }
+    //check if value has been normalized
+    if (normalizedColors[value]) {
+      thisColor = normalizedColors[value]
+    } else {
+      //calculate color
+      thisColor = normalizeColorToARGB(value)
+    }
+    return thisColor
   }
-}
 
-const add = (colorsToAdd, value) => {
-  if (isObject(colorsToAdd)) {
-    // clean up normalizedColors if they exist in the to be added colors
-    Object.keys(colorsToAdd).forEach(color => cleanUpNormalizedColor(color))
-    colors = Object.assign({}, colors, colorsToAdd)
-  } else if (isString(colorsToAdd) && value) {
-    cleanUpNormalizedColor(colorsToAdd)
-    colors[colorsToAdd] = value
+  return {
+    get: () => {
+      return generate(color)
+    },
+    alpha: percentage => {
+      return calculateAlpha(generate(color), Math.abs(percentage))
+    },
+    darker: percentage => {
+      const hsv = argbToHsva(generate(color))
+      hsv.v = hsv.v - (hsv.v / 100) * percentage
+      return hsvaToArgb(hsv)
+    },
+    lighter: percentage => {
+      const hsv = argbToHsva(generate(color))
+      hsv.s = hsv.s - (hsv.s / 100) * percentage
+      return hsvaToArgb(hsv)
+    },
+    saturation: percentage => {
+      const hsv = argbToHsva(generate(color))
+      hsv.s = percentage / 100
+      return hsvaToArgb(hsv)
+    },
+    brightness: percentage => {
+      const hsv = argbToHsva(generate(color))
+      hsv.v = percentage / 100
+      return hsvaToArgb(hsv)
+    },
+    hue: degrees => {
+      const hsv = argbToHsva(generate(color))
+      hsv.h = degrees
+      return hsvaToArgb(hsv)
+    },
+    mix: (argb, p) => {
+      return mergeColors(color, argb, p)
+    },
   }
-}
-
-export default {
-  get(value, options) {
-    // create color tag for storage
-    let tag = `${value}${options !== undefined ? JSON.stringify(options) : ''}`
-    // check if tag is stored in colors;
-    if (normalizedColors[tag]) {
-      // return stored color
-      return normalizedColors[tag]
-    }
-
-    // calculate a new color
-    const targetColor = calculateColor(value, options)
-
-    // store calculated color if its not stored
-    if (!normalizedColors[tag]) {
-      normalizedColors[tag] = targetColor
-    }
-    return targetColor || 0
-  },
-  add,
-  mix(color1, color2, p) {
-    color1 = this.get(color1)
-    color2 = this.get(color2)
-    return mergeColors(color1, color2, p)
-  },
 }
