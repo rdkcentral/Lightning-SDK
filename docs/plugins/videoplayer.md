@@ -382,7 +382,11 @@ consumer (as specified in [`VideoPlayer.consumer()`](#consumer)).
 The _consuming_ component can hook into these events by specifying methods on the Class in the following format: `$videoPlayer{Eventname}`, where
 _Eventname_ refers to the media event to respond to.
 
-Alternatively `$videoPlayerEvent(eventName)` can be used as a _catch-all_, which receives the _eventName_ as an argument.
+The event hook methods will receive an `Object` with a reference to the _video-element_ and the _html5 event_ (if available) as their first argument. The `currentTime` of the video will be passed as a second argument.
+
+Alternatively `$videoPlayerEvent(eventName)` can be used as a _catch-all_, which receives the _eventName_ as it's first argument.
+For the catch-all hook, the second argument is be the beforementioned `Object` with _video-element_ reference and _html5 event_. The third argument is
+the `currentTime` of the video.
 
 The available events are:
 
@@ -409,3 +413,4 @@ The available events are:
 - $videoPlayerTimeUpdate
 - $videoPlayerVolumeChange
 - $videoPlayerWaiting
+- $videoPlayerClear

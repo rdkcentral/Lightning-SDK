@@ -83,8 +83,8 @@ const withPrecision = val => Math.round(precision * val) + 'px'
 
 const fireOnConsumer = (event, args) => {
   if (consumer) {
-    consumer.fire('$videoPlayer' + event, args)
-    consumer.fire('$videoPlayerEvent', event, args)
+    consumer.fire('$videoPlayer' + event, args, videoEl.currentTime)
+    consumer.fire('$videoPlayerEvent', event, args, videoEl.currentTime)
   }
 }
 
@@ -257,6 +257,7 @@ const videoPlayerPlugin = {
     // pause the video first to disable sound
     this.pause()
     if (textureMode === true) videoTexture.stop()
+    fireOnConsumer('Clear', { videoElement: videoEl })
     videoEl.removeAttribute('src')
     videoEl.load()
   },
@@ -413,9 +414,10 @@ const videoPlayerPlugin = {
 
 export default autoSetupMixin(videoPlayerPlugin, () => {
   precision =
-    ApplicationInstance &&
-    ApplicationInstance.stage &&
-    ApplicationInstance.stage.getRenderPrecision()
+    (ApplicationInstance &&
+      ApplicationInstance.stage &&
+      ApplicationInstance.stage.getRenderPrecision()) ||
+    precision
 
   videoEl = setupVideoTag()
 
