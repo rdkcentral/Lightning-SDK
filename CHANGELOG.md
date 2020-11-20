@@ -1,5 +1,22 @@
 # Changelog
 
+## v3.2.0
+
+*20 nov 2020*
+
+- Added _clear_ event to VideoPlayer plugin (`$videoPlayerClear`)
+- Added _timestamp_ as parameter to VideoPlayer plugin events
+- Fixed calculation of precision in VideoPlayer plugin, when no AppInstance is defined
+- Fixed loading of language files for Language Plugin
+- Fixed namespacing in Storage Plugin
+
+## v3.1.1
+
+*6 nov 2020*
+
+- Added warning to postinstall script do manual upgrade of the Lightning-SDK when a mismatch in package names is detected
+- Added _changelog_ and _current package version_ to the documentation
+
 ## v3.1.1
 
 *6 nov 2020*
