@@ -24,7 +24,7 @@ let namespace
 let lc
 
 export const initStorage = () => {
-  namespace = Settings.get('platform', 'appId')
+  namespace = Settings.get('platform', 'id')
   // todo: pass options (for example to force the use of cookies)
   lc = new localCookie()
 }
