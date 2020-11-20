@@ -1,5 +1,7 @@
 import { mergeColors, calculateAlpha, isObject, isString, argbToHsva, hsvaToArgb } from './utils.js'
 
+import { Log } from '../../index.js'
+
 let colors = {
   white: '#ffffff',
   black: '#000000',
@@ -47,6 +49,7 @@ export const initColors = file => {
         resolve()
       })
       .catch(e => {
+        Log.error(e)
         reject(e)
       })
   })
@@ -74,56 +77,58 @@ const normalizeColorToARGB = color => {
 }
 
 export default color => {
-  let thisColor = null
+  return Color.generate(color)
+}
 
-  const generate = value => {
-    if (thisColor) {
-      return thisColor
-    }
-    //check if value has been normalized
+const Color = {
+  color: null,
+  generate: function(value = this.color) {
     if (normalizedColors[value]) {
-      thisColor = normalizedColors[value]
+      this.color = normalizedColors[value]
     } else {
-      //calculate color
-      thisColor = normalizeColorToARGB(value)
+      this.color = normalizeColorToARGB(value)
     }
-    return thisColor
-  }
-
-  return {
-    get: () => {
-      return generate(color)
-    },
-    alpha: percentage => {
-      return calculateAlpha(generate(color), Math.abs(percentage))
-    },
-    darker: percentage => {
-      const hsv = argbToHsva(generate(color))
-      hsv.v = hsv.v - (hsv.v / 100) * percentage
-      return hsvaToArgb(hsv)
-    },
-    lighter: percentage => {
-      const hsv = argbToHsva(generate(color))
-      hsv.s = hsv.s - (hsv.s / 100) * percentage
-      return hsvaToArgb(hsv)
-    },
-    saturation: percentage => {
-      const hsv = argbToHsva(generate(color))
-      hsv.s = percentage / 100
-      return hsvaToArgb(hsv)
-    },
-    brightness: percentage => {
-      const hsv = argbToHsva(generate(color))
-      hsv.v = percentage / 100
-      return hsvaToArgb(hsv)
-    },
-    hue: degrees => {
-      const hsv = argbToHsva(generate(color))
-      hsv.h = degrees
-      return hsvaToArgb(hsv)
-    },
-    mix: (argb, p) => {
-      return mergeColors(color, argb, p)
-    },
-  }
+    return this
+  },
+  get() {
+    return this.color
+  },
+  alpha: function(percentage) {
+    this.color = calculateAlpha(this.color, Math.abs(percentage))
+    return this
+  },
+  darker(percentage) {
+    const hsv = argbToHsva(this.color)
+    hsv.v = hsv.v - (hsv.v / 100) * percentage
+    this.color = hsvaToArgb(hsv)
+    return this
+  },
+  lighter(percentage) {
+    const hsv = argbToHsva(this.color)
+    hsv.s = hsv.s - (hsv.s / 100) * percentage
+    this.color = hsvaToArgb(hsv)
+    return this
+  },
+  saturation(percentage) {
+    const hsv = argbToHsva(this.color)
+    hsv.s = percentage / 100
+    this.color = hsvaToArgb(hsv)
+    return this
+  },
+  brightness(percentage) {
+    const hsv = argbToHsva(this.color)
+    hsv.v = percentage
+    this.color = hsvaToArgb(hsv)
+    return this
+  },
+  hue(degrees) {
+    const hsv = argbToHsva(this.color)
+    hsv.h = degrees
+    this.color = hsvaToArgb(hsv)
+    return this
+  },
+  mix(argb, p) {
+    this.color = mergeColors(this.color, argb, p)
+    return this
+  },
 }

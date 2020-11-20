@@ -186,11 +186,11 @@ export default function(App, appData, platformSettings) {
     }
 
     loadColors(config) {
-      let colors = Utils.asset('colors.json')
+      let file = Utils.asset('colors.json')
       if (config && (typeof config === 'string' || typeof config === 'object')) {
-        colors = config
+        file = config
       }
-      return initColors(colors)
+      return initColors(file)
     }
 
     set focus(v) {
