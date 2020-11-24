@@ -7,11 +7,12 @@ export const isString = v => {
 }
 
 export const getRgbaComponents = argb => {
-  let r = ((argb / 65536) | 0) % 256
-  let g = ((argb / 256) | 0) % 256
-  let b = argb % 256
-  let a = (argb / 16777216) | 0
-  return { r, g, b, a }
+  return {
+    r: ((argb / 65536) | 0) % 256,
+    g: ((argb / 256) | 0) % 256,
+    b: (argb * 1) % 256,
+    a: (argb / 16777216) | 0,
+  }
 }
 
 export const limitWithinRange = (num, min, max) => {
@@ -73,15 +74,17 @@ export const argbToHsva = argb => {
   let r = color.r / 255
   let g = color.g / 255
   let b = color.b / 255
-
   let h = 0
   let s = 0
+
   const cMax = Math.max(r, g, b)
   const cMin = Math.min(r, g, b)
   const delta = cMax - cMin
 
-  //calculate hue if cMax AND cMin are not both 0
-  if (cMax !== 0 || cMin !== 0) {
+  //calculate hue
+  if (delta < 0.00001) {
+    h = 0
+  } else if (cMax !== 0 || cMin !== 0) {
     if (r === cMax) {
       h = (60 * ((g - b) / delta) + 360) % 360
     } else if (g === cMax) {
@@ -91,6 +94,7 @@ export const argbToHsva = argb => {
     }
   }
 
+  //calc saturation
   if (cMax > 0) {
     s = delta / cMax
   }
@@ -135,4 +139,110 @@ export const hsvaToArgb = color => {
   g = Math.round((g + m) * 255.0)
   b = Math.round((b + m) * 255.0)
   return getArgbNumber([r, g, b, color.a * 255])
+}
+
+export const argbToHSLA = argb => {
+  const col = getRgbaComponents(argb)
+  const r = col.r / 255
+  const g = col.g / 255
+  const b = col.b / 255
+
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+
+  let h = 0
+  let s = 0
+  const l = (min + max) * 0.5
+  if (l > 0) {
+    const maxMin = max - min
+    if (maxMin > 0) {
+      const r2 = (max - r) / maxMin
+      const g2 = (max - g) / maxMin
+      const b2 = (max - b) / maxMin
+      if (l < 0.5) {
+        s = max + min
+      } else {
+        s = 2 - max - min
+      }
+
+      if (r === max && g === min) {
+        h = 5.0 + b2
+      } else if (r === max) {
+        h = 1.0 - g2
+      } else if (g === max && b === min) {
+        h = 1.0 + r2
+      } else if (g === max) {
+        h = 3.0 - b2
+      } else if (b === max) {
+        h = 3.0 + g2
+      } else {
+        h = 5.0 - r2
+      }
+      h = h / 6
+    }
+  }
+  return { h: h % 1, s, l, a: col.a }
+}
+
+export const hslaToARGB = hsla => {
+  let r = 1
+  let g = 1
+  let b = 1
+
+  let h = hsla.h
+  let s = hsla.s
+  let l = hsla.l
+
+  if (h < 0) {
+    h += 1
+  }
+  let max = 0
+  if (l <= 0.5) {
+    max = l * (1.0 + s)
+  } else {
+    max = l + s - l * s
+  }
+
+  if (max > 0) {
+    h *= 6.0
+    const min = l + l - max
+    const minMax = (max - min) / max
+    const sextant = Math.floor(h)
+    const fract = h - sextant
+    const minMaxFract = max * minMax * fract
+    const mid1 = min + minMaxFract
+    const mid2 = max - minMaxFract
+
+    if (sextant === 0) {
+      r = max
+      g = mid1
+      b = min
+    }
+    if (sextant === 1) {
+      r = mid2
+      g = max
+      b = min
+    }
+    if (sextant === 2) {
+      r = min
+      g = max
+      b = mid1
+    }
+    if (sextant === 3) {
+      r = min
+      g = mid2
+      b = max
+    }
+    if (sextant === 4) {
+      r = mid1
+      g = min
+      b = max
+    }
+    if (sextant === 5) {
+      r = max
+      g = min
+      b = mid2
+    }
+  }
+  return getArgbNumber([Math.floor(r * 255), Math.floor(g * 255), Math.floor(b * 255), hsla.a])
 }

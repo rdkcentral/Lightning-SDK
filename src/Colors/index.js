@@ -1,6 +1,4 @@
-import { mergeColors, calculateAlpha, isObject, isString, argbToHsva, hsvaToArgb } from './utils.js'
-
-import { Log } from '../../index.js'
+import { mergeColors, calculateAlpha, isObject, isString, argbToHSLA, hslaToARGB } from './utils.js'
 
 let colors = {
   white: '#ffffff',
@@ -49,14 +47,13 @@ export const initColors = file => {
         resolve()
       })
       .catch(e => {
-        Log.error(e)
         reject(e)
       })
   })
 }
 
 const normalizeColorToARGB = color => {
-  let targetColor = colors[color]
+  let targetColor = normalizedColors[color] || colors[color] || color
   if (!targetColor) {
     targetColor = color
   }
@@ -72,6 +69,9 @@ const normalizeColorToARGB = color => {
         .join('')
     }
     targetColor = `0xff${hex}` * 1
+  }
+  if (!normalizedColors[color]) {
+    normalizedColors[color] = targetColor
   }
   return targetColor || 0xffffffff
 }
@@ -98,33 +98,33 @@ const Color = {
     return this
   },
   darker(percentage) {
-    const hsv = argbToHsva(this.color)
-    hsv.v = hsv.v - (hsv.v / 100) * percentage
-    this.color = hsvaToArgb(hsv)
+    const hsl = argbToHSLA(this.color)
+    hsl.l = hsl.l * (1 - percentage)
+    this.color = hslaToARGB(hsl)
     return this
   },
   lighter(percentage) {
-    const hsv = argbToHsva(this.color)
-    hsv.s = hsv.s - (hsv.s / 100) * percentage
-    this.color = hsvaToArgb(hsv)
+    const hsl = argbToHSLA(this.color)
+    hsl.l = hsl.l + (1 - hsl.l) * percentage
+    this.color = hslaToARGB(hsl)
     return this
   },
   saturation(percentage) {
-    const hsv = argbToHsva(this.color)
-    hsv.s = percentage / 100
-    this.color = hsvaToArgb(hsv)
+    const hsl = argbToHSLA(this.color)
+    hsl.s = percentage
+    this.color = hslaToARGB(hsl)
     return this
   },
-  brightness(percentage) {
-    const hsv = argbToHsva(this.color)
-    hsv.v = percentage
-    this.color = hsvaToArgb(hsv)
+  lightness(percentage) {
+    const hsl = argbToHSLA(this.color)
+    hsl.l = percentage
+    this.color = hslaToARGB(hsl)
     return this
   },
   hue(degrees) {
-    const hsv = argbToHsva(this.color)
-    hsv.h = degrees
-    this.color = hsvaToArgb(hsv)
+    const hsl = argbToHSLA(this.color)
+    hsl.h = degrees
+    this.color = hslaToARGB(hsl)
     return this
   },
   mix(argb, p) {
