@@ -30,9 +30,11 @@
 <body>
   <div id="app"></div>
   <script>
-    fetch('./package.json').then(response => response.json()).then(data => {
+    fetch('./package.json').then(response => response.json()).then(data => make(data)).catch(make)
+
+    function make(data) {
       window.$docsify = {
-        name: 'Lightning SDK <small><a href="#/changelog" style="color: inherit">' + data.version + '</a></small>',
+        name: 'Lightning SDK <small><a href="#/changelog" style="color: inherit">' + (data && data.version ? data.version : '') + '</a></small>',
         repo: 'https://github.com/rdkcentral/Lightning-SDK',
         loadSidebar: true,
         relativePath: true,
@@ -43,9 +45,9 @@
           placeholder: 'Type to search',
           noData: 'No Results!',
           depth: 6,
+        }
       }
-      }
-    })
+    }
 
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
