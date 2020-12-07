@@ -30,23 +30,28 @@
 <body>
   <div id="app"></div>
   <script>
-    fetch('./package.json').then(response => response.json()).then(data => make(data)).catch(make)
-
-    function make(data) {
-      window.$docsify = {
-        name: 'Lightning SDK <small><a href="#/changelog" style="color: inherit">' + (data && data.version ? data.version : '') + '</a></small>',
-        repo: 'https://github.com/rdkcentral/Lightning-SDK',
-        loadSidebar: true,
-        relativePath: true,
-        auto2top: true,
-        search: {
-          maxAge: 24*60*60*1000, // one day
-          paths: 'auto',
-          placeholder: 'Type to search',
-          noData: 'No Results!',
-          depth: 6,
+    window.$docsify = {
+      name: 'Lightning SDK',
+      repo: 'https://github.com/rdkcentral/Lightning-SDK',
+      loadSidebar: true,
+      relativePath: true,
+      auto2top: true,
+      search: {
+        maxAge: 24*60*60*1000, // one day
+        paths: 'auto',
+        placeholder: 'Type to search',
+        noData: 'No Results!',
+        depth: 6,
+      },
+      plugins: [
+        function(hook, vm) {
+          hook.ready(function() {
+            fetch('./package.json')
+              .then(response => response.json())
+              .then(data => document.querySelector('.app-name-link').innerHTML += ' <small><a href="#/changelog" style="color: inherit"> ' + data.version + '</a></small>')
+          })
         }
-      }
+      ]
     }
 
   </script>
