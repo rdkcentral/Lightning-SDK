@@ -311,6 +311,23 @@ const resume = () => {
 }
 
 /**
+ * Query if the Router is still processing a Request
+ * @returns {boolean}
+ */
+const isNavigating = () => {
+  if (navigateQueue.size) {
+    let isProcessing = false
+    for (let request of navigateQueue.values()) {
+      if (!request.isCancelled) {
+        isProcessing = true
+      }
+    }
+    return isProcessing
+  }
+  return false
+}
+
+/**
  * By default we return the location hash
  * @returns {string}
  */
@@ -353,13 +370,17 @@ export default {
   navigate,
   resume,
   step,
-  start,
-  getActivePage,
+  activePage: getActivePage,
+  getActivePage() {
+    // warning
+    return getActivePage()
+  },
   getActiveRoute,
   getActiveHash,
   focusWidget,
   getActiveWidget,
   restoreFocus,
+  isNavigating,
   App: RoutedApp,
   // keep backwards compatible
   focusPage: restoreFocus,
