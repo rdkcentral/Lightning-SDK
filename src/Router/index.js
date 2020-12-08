@@ -272,7 +272,14 @@ export const step = (direction = 0) => {
     const route = history.splice(history.length - 1, 1)[0]
     // store changed history
     setHistory(history)
-    return navigate(route, { [symbols.backtrack]: true }, false)
+    return navigate(
+      route.hash,
+      {
+        [symbols.backtrack]: true,
+        [symbols.historyState]: route.state,
+      },
+      false
+    )
   } else if (routerConfig.get('backtrack')) {
     const hashLastPart = /(\/:?[\w%\s-]+)$/
     let hash = stripRegex(getHash())

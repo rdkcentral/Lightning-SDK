@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-import { getActiveHash } from './router'
+import { getActiveHash, getActivePage } from './router'
 import { getOption } from './route'
 import { isBoolean, symbols } from './helpers'
 import { getRouterConfig } from './router'
@@ -52,15 +52,23 @@ export const updateHistory = request => {
   if (regStore && configStore) {
     const toStore = hash.replace(/^\//, '')
     const location = history.indexOf(toStore)
+    const stateObject = getStateObject(getActivePage())
 
     // store hash if it's not a part of history or flag for
     // storage of same hash is true
     if (location === -1 || routerConfig.get('storeSameHash')) {
-      history.push(toStore)
+      history.push({ hash: toStore, state: stateObject })
     } else {
       // if we visit the same route we want to sync history
-      history.push(history.splice(location, 1)[0])
+      const prev = history.splice(location, 1)[0]
+      history.push({ hash: prev.hash, state: stateObject })
     }
+  }
+}
+
+const getStateObject = page => {
+  if (page) {
+    return page.historyState
   }
 }
 
