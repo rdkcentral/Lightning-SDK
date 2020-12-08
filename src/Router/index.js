@@ -133,8 +133,10 @@ export const navigate = (url, args, store = true) => {
     } else {
       setHash(url)
     }
-  } else {
-    // @todo: reload url if in register
+  } else if (args.reload) {
+    handleHashChange(url).then(() => {
+      app._refocus()
+    })
   }
 }
 

@@ -51,7 +51,7 @@ export const updateHistory = request => {
 
   if (regStore && configStore) {
     const toStore = hash.replace(/^\//, '')
-    const location = history.indexOf(toStore)
+    const location = locationInHistory(toStore)
     const stateObject = getStateObject(getActivePage())
 
     // store hash if it's not a part of history or flag for
@@ -64,6 +64,15 @@ export const updateHistory = request => {
       history.push({ hash: prev.hash, state: stateObject })
     }
   }
+}
+
+const locationInHistory = hash => {
+  for (let i = 0; i < history.length; i++) {
+    if (history[i].hash === hash) {
+      return i
+    }
+  }
+  return -1
 }
 
 const getStateObject = page => {
