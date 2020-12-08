@@ -18,7 +18,7 @@
  */
 
 import Lightning from '../Lightning'
-import { getActivePage, restore } from './index'
+import { default as Router } from './index'
 
 export class RoutedApp extends Lightning.Component {
   static _template() {
@@ -84,7 +84,7 @@ export class RoutedApp extends Lightning.Component {
         }
 
         _handleKey() {
-          restore()
+          Router.focusPage()
         }
       },
     ]
@@ -122,6 +122,6 @@ export class RoutedApp extends Lightning.Component {
    * can listen to the remote-control.
    */
   _getFocused() {
-    return getActivePage()
+    return Router.getActivePage()
   }
 }
