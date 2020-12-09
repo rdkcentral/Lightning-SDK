@@ -119,6 +119,20 @@ export const getQueryStringParams = hash => {
   return false
 }
 
+export const objectToQueryString = obj => {
+  if (!isObject(obj)) {
+    return ''
+  }
+  return (
+    '?' +
+    Object.keys(obj)
+      .map(key => {
+        return `${key}=${obj[key]}`
+      })
+      .join('&')
+  )
+}
+
 export const symbols = {
   route: Symbol('route'),
   hash: Symbol('hash'),

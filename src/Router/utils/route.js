@@ -21,6 +21,7 @@ import { hasRegex, hasLookupId, isNamedGroup, stripRegex } from './regex'
 import { routes } from './router'
 import Request from '../model/Request'
 import Route from '../model/Route'
+import { objectToQueryString } from './helpers'
 
 /**
  * Simple route length calculation
@@ -203,15 +204,12 @@ export const getHashByName = obj => {
   if (hasDynamicGroup.test(route)) {
     if (obj.params) {
       const keys = Object.keys(obj.params)
-      const hash = keys.reduce((acc, key) => {
+      hash = keys.reduce((acc, key) => {
         return acc.replace(`:${key}`, obj.params[key])
       }, route)
-      if (!hasDynamicGroup.test(hash)) {
-        return hash
-      }
     }
     if (obj.query) {
-      // @todo
+      return `${hash}${objectToQueryString(obj.query)}`
     }
   }
   return hash
