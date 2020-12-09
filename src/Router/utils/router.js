@@ -309,8 +309,8 @@ export const onRequestResolved = request => {
     cleanUp(activePage, request)
   }
 
-  if (register.get(symbols.historyState)) {
-    page.historyState = register.get(symbols.historyState)
+  if (register.get(symbols.historyState) && isFunction(page.historyState)) {
+    page.historyState(register.get(symbols.historyState))
   }
 
   setActivePage(page)

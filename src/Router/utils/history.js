@@ -19,7 +19,7 @@
 
 import { getActiveHash, getActivePage } from './router'
 import { getOption } from './route'
-import { isBoolean, symbols } from './helpers'
+import { isBoolean, isFunction, symbols } from './helpers'
 import { getRouterConfig } from './router'
 
 /**
@@ -76,8 +76,8 @@ const locationInHistory = hash => {
 }
 
 const getStateObject = page => {
-  if (page) {
-    return page.historyState
+  if (page && isFunction(page.historyState)) {
+    return page.historyState()
   }
 }
 
