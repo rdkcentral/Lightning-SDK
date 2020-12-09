@@ -189,3 +189,39 @@ export const createRoute = config => {
 export const createRequest = (url, args, store) => {
   return new Request(url, args, store)
 }
+
+export const getHashByName = obj => {
+  if (!obj.name) {
+    return false
+  }
+  const route = getRouteByName(obj.name)
+  const hasDynamicGroup = /\/:([\w-]+)\/?/
+  let hash = route
+
+  // if route contains dynamic group
+  // we replace them with the provided params
+  if (hasDynamicGroup.test(route)) {
+    if (obj.params) {
+      const keys = Object.keys(obj.params)
+      const hash = keys.reduce((acc, key) => {
+        return acc.replace(`:${key}`, obj.params[key])
+      }, route)
+      if (!hasDynamicGroup.test(hash)) {
+        return hash
+      }
+    }
+    if (obj.query) {
+      // @todo
+    }
+  }
+  return hash
+}
+
+const getRouteByName = name => {
+  for (let [path, route] of routes.entries()) {
+    if (route.name === name) {
+      return path
+    }
+  }
+  return false
+}

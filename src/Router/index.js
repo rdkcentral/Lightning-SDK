@@ -48,7 +48,13 @@ import {
 
 import { focusWidget, getActiveWidget, restoreFocus } from './utils/widgets'
 import { getHistory, setHistory } from './utils/history'
-import { createRequest, getRouteByHash, getValuesFromHash, getFloor } from './utils/route'
+import {
+  createRequest,
+  getRouteByHash,
+  getValuesFromHash,
+  getFloor,
+  getHashByName,
+} from './utils/route'
 import { load } from './utils/loader'
 import { stripRegex } from './utils/regex'
 import { RoutedApp } from './base'
@@ -117,6 +123,12 @@ const start = () => {
  * @param store
  */
 export const navigate = (url, args, store = true) => {
+  if (isObject(url)) {
+    url = getHashByName(url)
+    if (!url) {
+      return
+    }
+  }
   // push request in the queue
   queue(url, args, store)
 
