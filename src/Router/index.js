@@ -46,7 +46,7 @@ import {
 } from './utils/router'
 
 import { focusWidget, getActiveWidget, restoreFocus } from './utils/widgets'
-import { getHistory, setHistory } from './utils/history'
+import { getHistory, setHistory, getHistoryState, replaceHistoryState } from './utils/history'
 import {
   createRequest,
   getRouteByHash,
@@ -409,6 +409,9 @@ export default {
   getActiveWidget,
   restoreFocus,
   isNavigating,
+  getHistory,
+  getHistoryState,
+  replaceHistoryState,
   App: RoutedApp,
   // keep backwards compatible
   focusPage: restoreFocus,

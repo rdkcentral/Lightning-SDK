@@ -19,7 +19,7 @@
 
 import { getActiveHash, getActivePage } from './router'
 import { getOption } from './route'
-import { isBoolean, isFunction, symbols } from './helpers'
+import { isBoolean, isFunction, isObject, symbols } from './helpers'
 import { getRouterConfig } from './router'
 
 /**
@@ -75,10 +75,40 @@ const locationInHistory = hash => {
   return -1
 }
 
+export const getHistoryState = hash => {
+  let state = null
+  if (history.length) {
+    // if no hash is provided we get the last
+    // pushed history record
+    if (!hash) {
+      const record = history[history.length - 1]
+      // could be null
+      state = record.state
+    } else {
+      if (locationInHistory(hash) !== -1) {
+        const record = history[locationInHistory(hash)]
+        state = record.state
+      }
+    }
+  }
+  return state
+}
+
+export const replaceHistoryState = (state = null, hash) => {
+  if (!history.length) {
+    return
+  }
+  const location = hash ? locationInHistory(hash) : history.length - 1
+  if (location !== -1 && isObject(state)) {
+    history[location].state = state
+  }
+}
+
 const getStateObject = page => {
   if (page && isFunction(page.historyState)) {
     return page.historyState()
   }
+  return null
 }
 
 export const getHistory = () => {
