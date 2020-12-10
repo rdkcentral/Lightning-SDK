@@ -18,7 +18,7 @@
  */
 
 import { symbols } from './helpers'
-import { app, routes } from './router'
+import { app, routes, routeExists } from './router'
 import { getValuesFromHash } from './route'
 import emit from './emit'
 
@@ -104,7 +104,7 @@ export const isPageExpired = page => {
 }
 
 export const hasProvider = path => {
-  if (routes.has(path)) {
+  if (routeExists(path)) {
     const record = routes.get(path)
     return !!record.provider
   }
@@ -113,7 +113,7 @@ export const hasProvider = path => {
 
 export const getProvider = route => {
   // @todo: fix, route already is passed in
-  if (routes.has(route.path)) {
+  if (routeExists(route.path)) {
     const { provider } = routes.get(route.path)
     return {
       type: provider.type,

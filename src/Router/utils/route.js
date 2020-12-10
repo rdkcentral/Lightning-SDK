@@ -18,7 +18,7 @@
  */
 
 import { hasRegex, hasLookupId, isNamedGroup, stripRegex } from './regex'
-import { routes } from './router'
+import { routes, routeExists } from './router'
 import Request from '../model/Request'
 import Route from '../model/Route'
 import { objectToQueryString } from './helpers'
@@ -137,7 +137,7 @@ export const getRouteByHash = hash => {
       })
       // would be strange if this fails
       // but still we test
-      if (routes.has(matches[0])) {
+      if (routeExists(matches[0])) {
         return routes.get(matches[0])
       }
     }

@@ -200,7 +200,7 @@ const setup = config => {
   config.routes.forEach(r => {
     // strip leading slash
     const path = r.path.replace(/\/+$/, '')
-    if (!routes.has(path)) {
+    if (!routeExists(path)) {
       const route = createRoute(r)
       routes.set(path, route)
       // if route has a configured component property
@@ -436,7 +436,7 @@ export const getPreviousState = () => {
   return previousState
 }
 
-export const hasRoute = key => {
+export const routeExists = key => {
   return routes.has(key)
 }
 

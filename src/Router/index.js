@@ -29,7 +29,7 @@ import {
 
 import {
   bootRouter,
-  hasRoute,
+  routeExists,
   getRootHash,
   getBootRequest,
   mustUpdateLocationHash,
@@ -40,7 +40,6 @@ import {
   routerConfig,
   setLastHash,
   getActivePage,
-  routes,
   beforeEachRoute,
   getActiveHash,
   getActiveRoute,
@@ -89,7 +88,7 @@ const start = () => {
   const ready = () => {
     const rootHash = getRootHash()
 
-    if (hasRoute(bootKey)) {
+    if (routeExists(bootKey)) {
       resumeHash = isDirectLoad ? rootHash : hash || rootHash
       navigate(bootKey)
     } else if (!hash && rootHash) {
@@ -176,7 +175,7 @@ const handleHashChange = async override => {
   const route = getRouteByHash(hash)
 
   if (!request) {
-    if (routes.has('*')) {
+    if (routeExists('*')) {
       navigate('*')
     } else {
       console.error(`Unable to navigate to: ${hash}`)
