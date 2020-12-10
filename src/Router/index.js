@@ -107,9 +107,17 @@ const start = () => {
     }
   }
   if (isFunction(bootRequest)) {
-    bootRequest(params).then(() => {
-      ready()
-    })
+    bootRequest(params)
+      .then(() => {
+        ready()
+      })
+      .catch(e => {
+        if (routeExists('!')) {
+          navigate('!', { request: { error: e } })
+        } else {
+          console.error(e)
+        }
+      })
   } else {
     ready()
   }
