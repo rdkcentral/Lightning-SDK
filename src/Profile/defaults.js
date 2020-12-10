@@ -30,9 +30,9 @@ export const defaultProfile = {
   latlon: () => getLatLon([40.7128, 74.006]),
   locale: () => getLocale('en-US'),
   mac: '00:00:00:00:00:00',
-  operator: 'Metrological',
-  platform: 'Metrological',
+  operator: 'metrological',
+  platform: 'metrological',
   packages: [],
   uid: 'ee6723b8-7ab3-462c-8d93-dbf61227998e',
-  stbType: 'Metrological',
+  stbType: 'metrological',
 }
