@@ -1,5 +1,26 @@
 # Changelog
 
+## vX.X.X
+
+- Router update
+    - Plugin refactor
+    - Added test Router.isNavigating()
+    - Added Router history interaction
+    - Added Router.getHistory()
+    - Added Router.replaceHistoryState()
+    - Added Router.getHistoryState()
+    - Added hash reload support
+    - Added named navigation support
+    - Added error handling in bootRequest
+    - Fixed Page overlap when on navigate starts before transition finish
+    - Fixed _onActivated() widget event documentation
+    - Fixed navigating to same hash when navigating
+    - Deprecated Router.setupRoutes() - method
+    - Deprecated Router.on() / - data providing must be defined in route object
+    - Deprecated Router.before()
+    - Deprecated Router.after()
+    - Deprecated duplicate route definitions
+
 ## v3.2.0
 
 *20 nov 2020*
