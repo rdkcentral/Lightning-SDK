@@ -1,4 +1,4 @@
-#Router
+# Router
 
 ## History
 
@@ -84,7 +84,7 @@ You can get a copy of the Router's current history by calling:
 const history = Router.getHistory()
 ```
 
-this will return an error of `history objects`
+this will return an `array` of `history objects`
 
 
 ### replaceHistoryState()
