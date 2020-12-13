@@ -280,17 +280,24 @@ const resolveHashChange = request => {
  * Directional step in history
  * @param direction
  */
-export const step = (direction = 0) => {
-  if (!direction) {
+export const step = (level = 0) => {
+  if (!level || isNaN(level)) {
     return false
   }
-
   const history = getHistory()
-  // is we still have routes in our history
-  // we splice the last of and navigate to that route
-  if (history.length) {
+  // for now we only support negative numbers
+  level = Math.abs(level)
+
+  // we can't step back past the amount
+  // of history entries
+  if (level > history.length) {
+    if (isFunction(app._handleAppClose)) {
+      return app._handleAppClose()
+    }
+    return false
+  } else if (history.length) {
     // for now we only support history back
-    const route = history.splice(history.length - 1, 1)[0]
+    const route = history.splice(history.length - level, level)[0]
     // store changed history
     setHistory(history)
     return navigate(
@@ -318,10 +325,6 @@ export const step = (direction = 0) => {
         }
       }
     }
-  }
-
-  if (isFunction(app._handleAppClose)) {
-    return app._handleAppClose()
   }
   return false
 }
@@ -398,6 +401,8 @@ export default {
   navigate,
   resume,
   step,
+  go: step,
+  back: step.bind(null, -1),
   activePage: getActivePage,
   getActivePage() {
     // warning
