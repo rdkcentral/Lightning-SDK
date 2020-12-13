@@ -8,11 +8,25 @@ The router maintains it’s own history and does not rely on a browser web API. 
 
 By default the Router will take ownership in navigating back in history, when you press `back` on your remote control the router will call:
 
+##### back()
+
 ```js
-Router.step(-1)
+Router.back()
 ```
 
-And do one step back in history, leading to a navigate of the last stored history object.
+And do a step back in history.
+
+##### go()
+
+If you want to override the default `Router.back()` invocation you can add the following to your `Page` class:
+
+```js
+_handleback(){
+    Router.go(-3);
+}
+```
+
+This will try to navigate to the third last `history` entry
 
 ### history object {}
 
