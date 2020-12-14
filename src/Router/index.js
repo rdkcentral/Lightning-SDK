@@ -415,6 +415,7 @@ export default {
   restoreFocus,
   isNavigating,
   getHistory,
+  setHistory,
   getHistoryState,
   replaceHistoryState,
   App: RoutedApp,

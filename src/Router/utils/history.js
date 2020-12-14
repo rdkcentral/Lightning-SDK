@@ -19,7 +19,7 @@
 
 import { getActiveHash, getActivePage } from './router'
 import { getOption } from './route'
-import { isBoolean, isFunction, isObject, symbols } from './helpers'
+import { isBoolean, isFunction, isObject, isArray, symbols } from './helpers'
 import { getRouterConfig } from './router'
 
 /**
@@ -115,6 +115,8 @@ export const getHistory = () => {
   return history.slice(0)
 }
 
-export const setHistory = arr => {
-  history = arr
+export const setHistory = (arr = []) => {
+  if (isArray(arr)) {
+    history = arr
+  }
 }
