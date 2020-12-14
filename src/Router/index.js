@@ -334,8 +334,12 @@ export const step = (level = 0) => {
  * the BootComponent became visible;
  */
 const resume = () => {
-  if (resumeHash) {
+  if (isString(resumeHash)) {
     navigate(resumeHash, false)
+  } else if (isFunction(resumeHash)) {
+    resumeHash().then(url => {
+      navigate(url, false)
+    })
   } else {
     console.warn('[Router]: resume() called but no hash found')
   }
