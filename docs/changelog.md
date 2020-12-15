@@ -1,5 +1,21 @@
 # Changelog
 
+## v3.2.1
+
+*14 dec 2020*
+
+- Updated LocalCookie dependency to v1.1.1 (fixes persistance of cookies beyond browser session)
+
+## v3.2.0
+
+*20 nov 2020*
+
+- Added _clear_ event to VideoPlayer plugin (`$videoPlayerClear`)
+- Added _timestamp_ as param eter to VideoPlayer plugin events
+- Fixed calculation of precision in VideoPlayer plugin, when no AppInstance is defined
+- Fixed loading of language files for Language Plugin
+- Fixed namespacing in Storage Plugin
+
 ## v3.1.1
 
 *6 nov 2020*
