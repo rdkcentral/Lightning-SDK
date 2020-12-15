@@ -11,7 +11,7 @@
 *20 nov 2020*
 
 - Added _clear_ event to VideoPlayer plugin (`$videoPlayerClear`)
-- Added _timestamp_ as param eter to VideoPlayer plugin events
+- Added _timestamp_ as parameter to VideoPlayer plugin events
 - Fixed calculation of precision in VideoPlayer plugin, when no AppInstance is defined
 - Fixed loading of language files for Language Plugin
 - Fixed namespacing in Storage Plugin
