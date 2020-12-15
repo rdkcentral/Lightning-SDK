@@ -78,7 +78,7 @@ const startRouter = (config, instance) => {
 // start translating url
 const start = () => {
   const bootKey = '@router-boot-page'
-  const hash = getHash()
+  const hash = (getHash() || '').replace(/^#/, '')
   const params = getQueryStringParams(hash)
   const bootRequest = getBootRequest()
 
