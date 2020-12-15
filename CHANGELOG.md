@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.2.1
+
+*14 dec 2020*
+
+- Updated LocalCookie dependency to v1.1.1 (fixes persistance of cookies beyond browser session)
+
 ## v3.2.0
 
 *20 nov 2020*
