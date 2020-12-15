@@ -23,13 +23,6 @@
 - Added warning to postinstall script do manual upgrade of the Lightning-SDK when a mismatch in package names is detected
 - Added _changelog_ and _current package version_ to the documentation
 
-## v3.1.1
-
-*6 nov 2020*
-
-- Added warning to postinstall script do manual upgrade of the Lightning-SDK when a mismatch in package names is detected
-- Added _changelog_ and _current package version_ to the documentation
-
 ## v3.1.0
 
 *30 oct 2020*
