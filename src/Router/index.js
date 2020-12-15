@@ -165,10 +165,11 @@ const queue = (hash, args = {}, store = true) => {
     for (let request of navigateQueue.values()) {
       request.cancel()
     }
-    navigateQueue.set(hash, createRequest(hash, args, store))
-    return true
-  }
+    const request = createRequest(hash, args, store)
+    navigateQueue.set(hash, request)
 
+    return request
+  }
   return false
 }
 
@@ -179,10 +180,16 @@ const queue = (hash, args = {}, store = true) => {
  */
 const handleHashChange = async override => {
   const hash = (override || getHash()).replace(/^#/, '')
-  const request = navigateQueue.get(hash)
+  let request = navigateQueue.get(hash)
+
+  // handle hash updated manually
+  if (!request && !navigateQueue.size) {
+    request = queue(hash)
+  }
+
   const route = getRouteByHash(hash)
 
-  if (!request) {
+  if (!route) {
     if (routeExists('*')) {
       navigate('*')
     } else {
