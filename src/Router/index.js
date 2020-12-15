@@ -129,7 +129,7 @@ const start = () => {
  * @param args
  * @param store
  */
-export const navigate = (url, args, store = true) => {
+export const navigate = (url, args = {}, store = true) => {
   if (isObject(url)) {
     url = getHashByName(url)
     if (!url) {
