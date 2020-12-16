@@ -22,7 +22,7 @@ import Settings from '../Settings'
 import sequence from '../helpers/sequence'
 
 let cspUrl = 'http://payment-csp-example.metrological.com:8080/'
-let billingUrl = 'https://payment-sdk.metrological.com'
+let billingUrl = 'https://payment-sdk.metrological.com/'
 
 let cspEndpoints = {
   assets: {
@@ -38,14 +38,12 @@ let cspEndpoints = {
     method: 'POST',
   },
   subscribe: {
-    uri: '/assets/:id',
-    method: 'PUT',
-    data: { subscribe: true },
+    uri: '/assets/:id/subscribe',
+    method: 'POST',
   },
   unsubscribe: {
-    uri: '/assets/:id',
-    method: 'PUT',
-    data: { subscribe: true },
+    uri: '/assets/:id/subscribe',
+    method: 'POST',
   },
 }
 
@@ -69,6 +67,7 @@ const request = (url, method = 'GET', data) => {
   if (method === 'GET' && data) {
     url.search = new URLSearchParams(data)
   }
+
   return new Promise((resolve, reject) => {
     fetch(url, {
       headers: {
@@ -100,9 +99,9 @@ const cspRequest = (type, data = null, params = {}) => {
   })
 }
 
-const billingRequest = (uri, data) => {
+const billingRequest = (uri, data, method = 'POST') => {
   return new Promise((resolve, reject) => {
-    request(createUrl(uri, billingUrl), 'POST', data)
+    request(createUrl(uri, billingUrl), method, data)
       .then(resolve)
       .catch(reject)
   })
@@ -122,27 +121,27 @@ export default {
   },
   asset(id) {
     return new Promise((resolve, reject) => {
-      cspRequest('asset', null, { id })
-        .then(resolve)
-        .catch(reject)
+      Profile.household().then(household => {
+        cspRequest('asset', { household }, { id })
+          .then(resolve)
+          .catch(reject)
+      })
     })
   },
   signature(id) {
     return new Promise((resolve, reject) => {
-      Profile.household().then(household => {
+      Promise.all([Profile.household()]).then(([household]) => {
         cspRequest('signature', { household }, { id })
           .then(resolve)
           .catch(reject)
       })
     })
   },
-  subscribe(id) {
+  subscribe(id, transaction) {
     return new Promise((resolve, reject) => {
-      Profile.household().then(household => {
-        cspRequest('subscribe', { household }, { id })
-          .then(resolve)
-          .catch(reject)
-      })
+      cspRequest('subscribe', { ...transaction }, { id })
+        .then(resolve)
+        .catch(reject)
     })
   },
   unsubscribe(id) {
@@ -185,11 +184,15 @@ export default {
   },
   buy(assetId, type) {
     return new Promise((resolve, reject) => {
+      let transactionId
       sequence([
         () => this.signature(assetId),
         signature => this.payment(signature, type),
-        () => this.subscribe(assetId),
-        transactionId => this.confirm(transactionId),
+        transaction => {
+          transactionId = transaction.transactionId
+          return this.subscribe(assetId, transaction)
+        },
+        () => this.confirm(transactionId),
       ])
         .then(resolve)
         .catch(reject)
