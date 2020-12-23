@@ -180,7 +180,7 @@ const queue = (hash, args = {}, store = true) => {
  */
 const handleHashChange = async override => {
   const hash = (override || getHash()).replace(/^#/, '')
-  let request = navigateQueue.get(hash)
+  let request = navigateQueue.get(decodeURIComponent(hash))
 
   // handle hash updated manually
   if (!request && !navigateQueue.size) {
