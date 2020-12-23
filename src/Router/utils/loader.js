@@ -180,9 +180,13 @@ const loader = async request => {
 }
 
 const handleError = request => {
-  if (!request.page) {
-    console.error((request && request.error) || request)
-  } else {
+  if (request && request.error) {
+    Log.error(request.error)
+  } else if (request) {
+    Log.error(request)
+  }
+
+  if (request.page) {
     navigate('!', { request }, false)
   }
 }
