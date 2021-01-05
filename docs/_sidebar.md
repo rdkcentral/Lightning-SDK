@@ -20,7 +20,7 @@
     - [Widgets](/plugins/router/widgets.md)
     - [Settings](/plugins/router/settings.md)
     - [Deeplinking](/plugins/router/deeplinking.md)
-    - [Public methods](/plugins/router/methods)
+    - [Public methods](/plugins/router/methods.md)
 
   <!-- - [Keyboard](/plugins/keyboard.md) -->
   - [VideoPlayer](/plugins/videoplayer.md)
