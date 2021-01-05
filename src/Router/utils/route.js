@@ -59,7 +59,7 @@ export const getRouteByHash = hash => {
   // @todo: clean up on handleHash
   hash = hash.replace(/^#/, '')
 
-  const getUrlParts = /(\/?:?[@!\w%\s:-]+)/g
+  const getUrlParts = /(\/?:?[@!*\w%\s:-]+)/g
   // grab possible candidates from stored routes
   const candidates = getRoutesByFloor(getFloor(hash))
   // break hash down in chunks
