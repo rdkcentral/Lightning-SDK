@@ -192,7 +192,7 @@ const handleHashChange = async override => {
 
   if (!route) {
     if (routeExists('*')) {
-      navigate('*')
+      navigate('*', { failedHash: hash })
     } else {
       console.error(`Unable to navigate to: ${hash}`)
     }
