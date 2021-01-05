@@ -166,7 +166,7 @@ const queue = (hash, args = {}, store = true) => {
       request.cancel()
     }
     const request = createRequest(hash, args, store)
-    navigateQueue.set(hash, request)
+    navigateQueue.set(decodeURIComponent(hash), request)
 
     return request
   }
@@ -180,7 +180,8 @@ const queue = (hash, args = {}, store = true) => {
  */
 const handleHashChange = async override => {
   const hash = (override || getHash()).replace(/^#/, '')
-  let request = navigateQueue.get(decodeURIComponent(hash))
+  const queueId = decodeURIComponent(hash)
+  let request = navigateQueue.get(queueId)
 
   // handle hash updated manually
   if (!request && !navigateQueue.size) {
@@ -219,7 +220,7 @@ const handleHashChange = async override => {
     // if navigation guard didn't return true
     // we cancel the current request
     request.cancel()
-    navigateQueue.delete(request.hash)
+    navigateQueue.delete(queueId)
 
     if (isString(result)) {
       navigate(result)
@@ -237,6 +238,7 @@ const handleHashChange = async override => {
 const resolveHashChange = request => {
   const hash = request.hash
   const route = request.route
+  const queueId = decodeURIComponent(hash)
   // store last requested hash so we can
   // prevent a route that resolved later
   // from displaying itself
@@ -258,7 +260,7 @@ const resolveHashChange = request => {
       if (isPage(component, stage)) {
         load(request).then(() => {
           app._refocus()
-          navigateQueue.delete(hash)
+          navigateQueue.delete(queueId)
         })
       } else {
         // of the component is not a constructor
@@ -274,11 +276,11 @@ const resolveHashChange = request => {
           })
           .then(() => {
             app._refocus()
-            navigateQueue.delete(hash)
+            navigateQueue.delete(queueId)
           })
       }
     } else {
-      navigateQueue.delete(hash)
+      navigateQueue.delete(queueId)
     }
   }
 }
