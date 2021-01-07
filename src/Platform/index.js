@@ -41,10 +41,10 @@ export const initPlatform = config => {
 
 const getOrSet = (key, params) => (params ? setInfo(key, params) : getInfo(key))
 
-const adSkipTiersEnum = {
+const adSkipTiersEnum = Object.freeze({
   noSkipNormalSpeed: 'NOSKIP_NORMAL_SPEED',
   allowSkipHighSpeed: 'ALLOW_SKIP_HIGH_SPEED'
-}
+})
 
 // public API
 export default {
