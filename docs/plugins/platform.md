@@ -207,9 +207,9 @@ Platform.Accesibility.voiceGuidance()
 
 ## Overwriting default values
 
-During development you might want to test your App with different profile values (i.e. a different language or age rating).
+During development you might want to test your App with different platform values (i.e. a different language, age rating or device IP).
 When you want to overwrite the default values, you can do so by editing the `settings.json` file.
-Add a `profile` key in `platformSettings` and only add the values you wish to change here.
+Add a `platform` key in `platformSettings` and only add the values you wish to change here.
 
 ```json
 {
