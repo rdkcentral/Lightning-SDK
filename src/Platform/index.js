@@ -16,12 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import Deepmerge from 'deepmerge'
 
 import Settings from '../Settings'
 import { defaultPlatform } from './defaults'
 
 let getInfo = (namespace, key) => {
-  const platform = { ...defaultPlatform, ...Settings.get('platform', 'platform') }
+  const platform = Deepmerge(defaultPlatform, Settings.get('platform', 'platform'))
   return Promise.resolve(
     typeof platform[namespace][key] === 'function'
       ? platform[namespace][key]()
