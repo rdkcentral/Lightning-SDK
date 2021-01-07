@@ -6,7 +6,7 @@
   - [Settings](/plugins/settings.md)
   - [Log](/plugins/log.md)
   - [Metrics](/plugins/metrics.md)
-  - [Profile](/plugins/profile.md)
+  - [Platform](/plugins/platform.md)
   <!-- - [Purchase](/plugins/purchase.md) -->
   - [Language](/plugins/language.md)
   - [Lightning](/plugins/lightning.md)

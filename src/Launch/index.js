@@ -19,6 +19,7 @@
 
 import { initUtils } from '../Utils'
 import { initProfile } from '../Profile'
+import { initPlatform } from '../Platform'
 import { initMetrics } from '../Metrics'
 import { initSettings } from '../Settings'
 import { initMediaPlayer } from '../MediaPlayer'
@@ -40,6 +41,7 @@ export default (App, appSettings, platformSettings, appData) => {
   // Initialize plugins
   if (platformSettings.plugins) {
     platformSettings.plugins.profile && initProfile(platformSettings.plugins.profile)
+    platformSettings.plugins.platform && initPlatform(platformSettings.plugins.platform)
     platformSettings.plugins.metrics && initMetrics(platformSettings.plugins.metrics)
     platformSettings.plugins.mediaPlayer && initMediaPlayer(platformSettings.plugins.mediaPlayer)
     platformSettings.plugins.mediaPlayer && initVideoPlayer(platformSettings.plugins.mediaPlayer)

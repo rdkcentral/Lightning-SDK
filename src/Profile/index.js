@@ -36,6 +36,8 @@ export const initProfile = config => {
 
 const getOrSet = (key, params) => (params ? setInfo(key, params) : getInfo(key))
 
+// Todo: make profile plugin deprecated (in favor of Platform plugin)
+
 // public API
 export default {
   ageRating(params) {
