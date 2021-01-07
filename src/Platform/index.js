@@ -117,4 +117,12 @@ export default {
       return getOrSet('voiceGuidance', params)
     },
   },
+  Personalization: {
+    setEntitlements(entitlements) {
+      return getOrSet('entitlements', entitlements)
+    },
+    addToWatchHistory(history) {
+      return getOrSet('watchHistory', history)
+    }
+  }
 }
