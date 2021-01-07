@@ -25,7 +25,6 @@ Whenever parameters are passed to the method, it will _send_ those on to the low
 
 ## Available methods
 
-
 ### Localization
 
 #### City
@@ -146,12 +145,20 @@ Gets the uid. Returns `ee6723b8-7ab3-462c-8d93-dbf61227998e` by default during _
 Platform.Device.uid()
 ```
 
-#### StbType
+#### Type
 
-Gets the stbType. Returns `Metrological` by default during _local development_.
+Gets the type of device (STB or TV) running the App. Returns `STB` by default during _local development_.
 
 ```js
-Platform.Device.stbType()
+Platform.Device.type()
+```
+
+#### Model
+
+Gets the model of the device running the App. Returns `Metrological` by default during _local development_.
+
+```js
+Platform.Device.type()
 ```
 
 #### Hdcp

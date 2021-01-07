@@ -90,8 +90,11 @@ export default {
     uid(params) {
       return getOrSet('uid', params)
     },
-    stbType(params) {
-      return getOrSet('stbType', params)
+    type(params) {
+      return getOrSet('type', params)
+    },
+    model(params) {
+      return getOrSet('model', params)
     },
     hdcp(params) {
       return getOrSet('hdcp', params)

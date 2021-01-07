@@ -39,7 +39,8 @@ export const defaultProfile = {
     platform: 'Metrological',
     packages: [],
     uid: 'ee6723b8-7ab3-462c-8d93-dbf61227998e',
-    stbType: 'Metrological',
+    type: 'STB',
+    model: 'Metrological',
     hdcp: 'HDR10',
     resolution: [1920, 1080], // maybe make this dynamically from the browser window?
     name: 'Living Room',
