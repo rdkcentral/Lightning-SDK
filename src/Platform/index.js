@@ -41,6 +41,11 @@ export const initPlatform = config => {
 
 const getOrSet = (key, params) => (params ? setInfo(key, params) : getInfo(key))
 
+const adSkipTiersEnum = {
+  noSkipNormalSpeed: 'NOSKIP_NORMAL_SPEED',
+  allowSkipHighSpeed: 'ALLOW_SKIP_HIGH_SPEED'
+}
+
 // public API
 export default {
   Localization: {
@@ -109,7 +114,7 @@ export default {
       return getOrSet('network', params)
     },
   },
-  Accesibility: {
+  Accessibility: {
     closedCaptions(params) {
       return getOrSet('closedCaptions', params)
     },
@@ -123,6 +128,18 @@ export default {
     },
     addToWatchHistory(history) {
       return getOrSet('watchHistory', history)
+    }
+  },
+  Advertising: {
+    AdSkipTiers: adSkipTiersEnum,
+    adSkipTier() {
+      return getOrSet('adSkipTier')
+    },
+    limitAdTracking() {
+      return getOrSet('limitAdTracking')
+    },
+    advertisingId() {
+      return getOrSet('advertisingId')
     }
   }
 }
