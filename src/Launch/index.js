@@ -29,6 +29,7 @@ import { initAds } from '../Ads'
 import { initRouter } from '../Router'
 import { initTV } from '../TV'
 import Application from '../Application'
+import isProbablyLightningComponent from '../helpers/isProbablyLightningComponent'
 
 export let ApplicationInstance
 
@@ -50,7 +51,15 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.tv && initTV(platformSettings.plugins.tv)
   }
 
-  const app = Application(App, appData, platformSettings)
-  ApplicationInstance = new app(appSettings)
-  return ApplicationInstance
+  if (isProbablyLightningComponent(App)) {
+    const app = Application(App, appData, platformSettings)
+    ApplicationInstance = new app(appSettings)
+    return ApplicationInstance
+  } else {
+    if (typeof App === 'function') {
+      return App()
+    } else {
+      console.error('Expecting `App` to be a callback function or a Lightning Component')
+    }
+  }
 }
