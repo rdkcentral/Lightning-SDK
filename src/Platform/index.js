@@ -109,7 +109,7 @@ export default {
       return getOrSet('network', params)
     },
   },
-  Accesibility: {
+  Accessibility: {
     closedCaptions(params) {
       return getOrSet('closedCaptions', params)
     },
