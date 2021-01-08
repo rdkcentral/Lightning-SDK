@@ -19,7 +19,7 @@
 
 import { getLocale, getLanguage, getCountryCode, getLatLon } from './helpers'
 
-export const defaultProfile = {
+export const defaultPlatform = {
   localization: {
     city: 'New York',
     zipCode: '27505',
