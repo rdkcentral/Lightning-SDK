@@ -1,6 +1,6 @@
 # Platform
 
-Sometimes your App might need to interact with the Platform it's running on. For example to retrieve information about the user profile, localization, the capabilities of the device or global accesibility settings.
+Sometimes your App might need to interact with the Platform it's running on. For example to retrieve information about the user profile, localization, the capabilities of the device or global accessibility settings.
 
 Getting access to this information requires to connect to lower level APIs made available by the platform. Since implementations differ between operators and platforms, the Lightning-SDK offers a Platform plugin, that exposes a generic, agnostic interface to the developer.
 
@@ -8,7 +8,7 @@ Under the hood, an underlaying transport layer will then take care of calling th
 
 The Platform plugin is most often used to _retrieve_ information from the Platform. In some cases it can also be used to _pass_ information back to the Platform. This might differ per platform.
 
-The Platform plugin is divided into 4 different sections: Localization, User, Device, Accesibility.
+The Platform plugin is divided into 4 different sections: Localization, User, Device, Accessibility.
 
 ## Usage
 
@@ -194,14 +194,14 @@ Gets the network information as an `Object`. Returns `{state: 'Connected', type:
 Platform.Device.network()
 ```
 
-### Accesibility
+### Accessibility
 
 #### Closed Captions
 
 Gets the closed captions configuration as an `Object`. Returns `{enabled: true, styles: '?'}` by default during _local development_.
 
 ```js
-Platform.Accesibility.closedCaptions()
+Platform.Accessibility.closedCaptions()
 ```
 
 #### Voice Guidance
@@ -209,7 +209,7 @@ Platform.Accesibility.closedCaptions()
 Gets the voice guidance configuration as an `Object`. Returns `{enabled: true, speed: 5}` by default during _local development_.
 
 ```js
-Platform.Accesibility.voiceGuidance()
+Platform.Accessibility.voiceGuidance()
 ```
 
 ## Overwriting default values
@@ -250,7 +250,7 @@ Add a `platform` key in `platformSettings` and only add the values you wish to c
               "type": "WIFI"
             }
           },
-          "accesibility": {
+          "accessibility": {
             "closedCaptions": {"enabled": false},
             "voiceGuidance": {"enabled": true, "speed": 5}
           }
