@@ -19,7 +19,7 @@
 
 import { getLocale, getLanguage, getCountryCode, getLatLon } from './helpers'
 
-export const defaultProfile = {
+export const defaultPlatform = {
   localization: {
     city: 'New York',
     zipCode: '27505',
@@ -28,7 +28,7 @@ export const defaultProfile = {
     latlon: () => getLatLon([40.7128, 74.006]),
     locale: () => getLocale('en-US'),
   },
-  user: {
+  profile: {
     ageRating: 'adult',
   },
   device: {
@@ -49,7 +49,7 @@ export const defaultProfile = {
       type: 'WIFI',
     },
   },
-  accesibility: {
+  accessibility: {
     closedCaptions: {
       enabled: true,
       styles: '?', // what kind of values could we have here?
