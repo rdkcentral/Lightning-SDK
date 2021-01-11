@@ -21,11 +21,14 @@ import Deepmerge from 'deepmerge'
 import Settings from '../Settings'
 import { defaultPlatform } from './defaults'
 
+let platform = {}
+
 let getInfo = (namespace, key) => {
-  const platform = Deepmerge(defaultPlatform, Settings.get('platform', 'platform', {}))
+  namespace = namespace.toLowerCase()
+  platform = Deepmerge(defaultPlatform, Settings.get('platform', 'platform', {}), platform)
 
   return new Promise((resolve, reject) => {
-    if (defaultPlatform[namespace] && key in defaultPlatform[namespace]) {
+    if (platform[namespace] && key in platform[namespace]) {
       resolve(
         typeof platform[namespace][key] === 'function'
           ? platform[namespace][key]()
@@ -38,9 +41,12 @@ let getInfo = (namespace, key) => {
 }
 
 let setInfo = (namespace, key, params) => {
+  namespace = namespace.toLowerCase()
+
+  platform = Deepmerge(defaultPlatform, Settings.get('platform', 'platform', {}), platform)
   return new Promise((resolve, reject) => {
-    if (defaultPlatform[namespace] && key in defaultPlatform[namespace]) {
-      defaultPlatform[namespace][key] = params
+    if (platform[namespace] && key in platform[namespace]) {
+      platform[namespace][key] = params
       resolve(params)
     } else {
       reject(namespace + '.' + key + ' not found')
@@ -54,7 +60,7 @@ export const initPlatform = config => {
 }
 
 const getOrSet = (namespace, key, params) =>
-  params ? setInfo(namespace, key, params) : getInfo(namespace, key)
+  typeof params !== 'undefined' ? setInfo(namespace, key, params) : getInfo(namespace, key)
 
 // public API
 export default {
@@ -131,5 +137,22 @@ export default {
     voiceGuidance(params) {
       return getOrSet('acessibility', 'voiceGuidance', params)
     },
+  },
+  get(namespacedKeyOrKeys = []) {
+    return Array.isArray(namespacedKeyOrKeys)
+      ? Promise.all(
+          namespacedKeyOrKeys.map(key => {
+            return getInfo.apply(this, key.split('.'))
+          })
+        ).then(values =>
+          namespacedKeyOrKeys.reduce((result, key, index) => {
+            result[key] = values[index]
+            return result
+          }, {})
+        )
+      : getInfo.apply(this, namespacedKeyOrKeys.split('.'))
+  },
+  set(namespacedKey, value) {
+    return setInfo.apply(this, namespacedKey.split('.'), value)
   },
 }

@@ -49,7 +49,7 @@ export const defaultPlatform = {
       type: 'WIFI',
     },
   },
-  accesibility: {
+  accessibility: {
     closedCaptions: {
       enabled: true,
       styles: '?', // what kind of values could we have here?
