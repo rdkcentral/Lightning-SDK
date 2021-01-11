@@ -181,7 +181,7 @@ const loader = async request => {
 
 const handleError = request => {
   if (request && request.error) {
-    Log.error(request.error)
+    console.error(request.error)
   } else if (request) {
     Log.error(request)
   }
