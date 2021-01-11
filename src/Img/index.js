@@ -95,43 +95,5 @@ export default (imageUrl, options) => {
     original: () => make(setOptions({ type: 'contain' })),
 
     // todo: add positioning - i.e. top, bottom, center, left etc.
-
-    // FIXME: remove deprecated api (summer of 2020)
-    crop: (w, h) => {
-      console.warn(
-        "The 'crop()'-method is deprecated and will be removed. Please use 'cover()' instead"
-      )
-      return make(setOptions({ type: 'cover', w, h }))
-    },
-    fit: (w, h) => {
-      console.warn(
-        "The 'fit()'-method is deprecated and will be removed. Please use 'exact()' instead"
-      )
-      return make(setOptions({ type: 'exact', w, h }))
-    },
-    parent: (w, h) => {
-      console.warn(
-        "The 'parent()'-method is deprecated and will be removed. Please use 'exact()' instead"
-      )
-      return make(setOptions({ type: 'exact', w, h }))
-    },
-    height: (w, h) => {
-      console.warn(
-        "The 'height()'-method is deprecated and will be removed. Please use 'portrait()' instead"
-      )
-      return make(setOptions({ type: 'portrait', w, h }))
-    },
-    width: (w, h) => {
-      console.warn(
-        "The 'width()'-method is deprecated and will be removed. Please use 'landscape()' instead"
-      )
-      return make(setOptions({ type: 'landscape', w, h }))
-    },
-    auto: (w, h) => {
-      console.warn(
-        "The 'auto()'-method is deprecated and will be removed. Please use 'cover()' instead"
-      )
-      return make(setOptions({ type: 'contain', w, h }))
-    },
   }
 }
