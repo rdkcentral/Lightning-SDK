@@ -91,9 +91,6 @@ export default {
     },
   },
   Profile: {
-    authenticationToken(params) {
-      return getOrSet('authenticationToken', params)
-    },
     ageRating(params) {
       return getOrSet('profile', 'ageRating', params)
     },
@@ -146,6 +143,9 @@ export default {
     voiceGuidance(params) {
       return getOrSet('acessibility', 'voiceGuidance', params)
     },
+  },
+  authentication(params) {
+      return getOrSet('authentication', params)
   },
   get(namespacedKeyOrKeys = []) {
     return Array.isArray(namespacedKeyOrKeys)

@@ -79,10 +79,6 @@ Platform.Localization.language()
 
 ### Profile
 
-#### authenticationToken
-
-Return a signed token asserting a app-specific account identity.
-
 #### ageRating
 
 Gets the ageRating for the current Profile. Returns `adult` by default during _local development_.
@@ -215,6 +211,10 @@ Gets the voice guidance configuration as an `Object`. Returns `{enabled: true, s
 ```js
 Platform.Accessibility.voiceGuidance()
 ```
+
+### Authentication
+
+Gets authentication details for this device. Returns `{token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'}` by default during _local development_
 
 ### Get
 
