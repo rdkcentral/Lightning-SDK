@@ -23,7 +23,7 @@ import { defaultPlatform } from './defaults'
 
 let platform = {}
 
-let getInfo = (namespace, key) => {
+let getProperty = (namespace, key) => {
   namespace = namespace.toLowerCase()
   platform = Deepmerge(defaultPlatform, Settings.get('platform', 'platform', {}), platform)
 
@@ -40,7 +40,7 @@ let getInfo = (namespace, key) => {
   })
 }
 
-let setInfo = (namespace, key, params) => {
+let setProperty = (namespace, key, params) => {
   namespace = namespace.toLowerCase()
 
   platform = Deepmerge(defaultPlatform, Settings.get('platform', 'platform', {}), platform)
@@ -54,13 +54,19 @@ let setInfo = (namespace, key, params) => {
   })
 }
 
+let hasProperty = (namespace, key) => {
+  platform = Deepmerge(defaultPlatform, Settings.get('platform', 'platform', {}), platform)
+  return Promise.resolve(platform[namespace] && key in platform[namespace])
+}
+
 export const initPlatform = config => {
-  getInfo = config.getInfo
-  setInfo = config.setInfo
+  getProperty = config.getProperty
+  setProperty = config.setProperty
+  hasProperty = config.hasProperty
 }
 
 const getOrSet = (namespace, key, params) =>
-  typeof params !== 'undefined' ? setInfo(namespace, key, params) : getInfo(namespace, key)
+  typeof params !== 'undefined' ? setProperty(namespace, key, params) : getProperty(namespace, key)
 
 // public API
 export default {
@@ -142,7 +148,7 @@ export default {
     return Array.isArray(namespacedKeyOrKeys)
       ? Promise.all(
           namespacedKeyOrKeys.map(key => {
-            return getInfo.apply(this, key.split('.'))
+            return getProperty.apply(this, key.split('.'))
           })
         ).then(values =>
           namespacedKeyOrKeys.reduce((result, key, index) => {
@@ -150,9 +156,12 @@ export default {
             return result
           }, {})
         )
-      : getInfo.apply(this, namespacedKeyOrKeys.split('.'))
+      : getProperty.apply(this, namespacedKeyOrKeys.split('.'))
   },
   set(namespacedKey, value) {
-    return setInfo.apply(this, namespacedKey.split('.'), value)
+    return setProperty.apply(this, [...namespacedKey.split('.'), ...value])
+  },
+  has(namespacedKey) {
+    return hasProperty.apply(this, namespacedKey.split('.'))
   },
 }

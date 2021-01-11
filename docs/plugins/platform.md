@@ -254,6 +254,22 @@ Platform.set('Accessibility.voiceGuidance', {
 
 ```
 
+### Has
+
+In order to find out if a certain property _exists at all_ on the Platform that the App is running on, the `has`-method can be used.
+
+This method accepts the _namespaced key_ (using _dot-notation_) as its single argument. It returns a `Promise` that resolves with `true`
+if the property exists and `false` if the property is not available.
+
+```js
+Platform.has('Device.name') // resolves true
+Platform.has('Device.bla') // resolves false
+```
+
+Note that the resolved value only indicates if the property is "known" and can be "consulted" on the platform. It doesn't
+give any information about the actual value, and for example whether a certain _capability_ is enabled.
+For that the property has to be retrieved explicitely.
+
 ## Overwriting default values
 
 During development you might want to test your App with different platform values (i.e. a different language, age rating or device IP).
