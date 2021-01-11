@@ -28,7 +28,7 @@ export const defaultPlatform = {
     latlon: () => getLatLon([40.7128, 74.006]),
     locale: () => getLocale('en-US'),
   },
-  user: {
+  profile: {
     ageRating: 'adult',
   },
   device: {

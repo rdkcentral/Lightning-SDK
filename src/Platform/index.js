@@ -22,16 +22,30 @@ import Settings from '../Settings'
 import { defaultPlatform } from './defaults'
 
 let getInfo = (namespace, key) => {
-  const platform = Deepmerge(defaultPlatform, Settings.get('platform', 'platform'))
-  return Promise.resolve(
-    typeof platform[namespace][key] === 'function'
-      ? platform[namespace][key]()
-      : platform[namespace][key]
-  )
+  const platform = Deepmerge(defaultPlatform, Settings.get('platform', 'platform', {}))
+
+  return new Promise((resolve, reject) => {
+    if (defaultPlatform[namespace] && key in defaultPlatform[namespace]) {
+      resolve(
+        typeof platform[namespace][key] === 'function'
+          ? platform[namespace][key]()
+          : platform[namespace][key]
+      )
+    } else {
+      reject(namespace + '.' + key + ' not found')
+    }
+  })
 }
 
-let setInfo = (key, params) => {
-  if (key in defaultPlatform) defaultPlatform[key] = params
+let setInfo = (namespace, key, params) => {
+  return new Promise((resolve, reject) => {
+    if (defaultPlatform[namespace] && key in defaultPlatform[namespace]) {
+      defaultPlatform[namespace][key] = params
+      resolve(params)
+    } else {
+      reject(namespace + '.' + key + ' not found')
+    }
+  })
 }
 
 export const initPlatform = config => {
@@ -39,82 +53,83 @@ export const initPlatform = config => {
   setInfo = config.setInfo
 }
 
-const getOrSet = (key, params) => (params ? setInfo(key, params) : getInfo(key))
+const getOrSet = (namespace, key, params) =>
+  params ? setInfo(namespace, key, params) : getInfo(namespace, key)
 
 // public API
 export default {
   Localization: {
     city(params) {
-      return getOrSet('city', params)
+      return getOrSet('localization', 'city', params)
     },
     zipCode(params) {
-      return getOrSet('zipCode', params)
+      return getOrSet('localization', 'zipCode', params)
     },
     countryCode(params) {
-      return getOrSet('countryCode', params)
+      return getOrSet('localization', 'countryCode', params)
     },
     language(params) {
-      return getOrSet('language', params)
+      return getOrSet('localization', 'language', params)
     },
     latlon(params) {
-      return getOrSet('latlon', params)
+      return getOrSet('localization', 'latlon', params)
     },
     locale(params) {
-      return getOrSet('locale', params)
+      return getOrSet('localization', 'locale', params)
     },
   },
   Profile: {
     ageRating(params) {
-      return getOrSet('ageRating', params)
+      return getOrSet('profile', 'ageRating', params)
     },
   },
   Device: {
     ip(params) {
-      return getOrSet('ip', params)
+      return getOrSet('device', 'ip', params)
     },
     household(params) {
-      return getOrSet('household', params)
+      return getOrSet('device', 'household', params)
     },
     mac(params) {
-      return getOrSet('mac', params)
+      return getOrSet('device', 'mac', params)
     },
     operator(params) {
-      return getOrSet('operator', params)
+      return getOrSet('device', 'operator', params)
     },
     platform(params) {
-      return getOrSet('platform', params)
+      return getOrSet('device', 'platform', params)
     },
     packages(params) {
-      return getOrSet('packages', params)
+      return getOrSet('device', 'packages', params)
     },
     uid(params) {
-      return getOrSet('uid', params)
+      return getOrSet('device', 'uid', params)
     },
     type(params) {
-      return getOrSet('type', params)
+      return getOrSet('device', 'type', params)
     },
     model(params) {
-      return getOrSet('model', params)
+      return getOrSet('device', 'model', params)
     },
     hdcp(params) {
-      return getOrSet('hdcp', params)
+      return getOrSet('device', 'hdcp', params)
     },
     resolution(params) {
-      return getOrSet('resolution', params)
+      return getOrSet('device', 'resolution', params)
     },
     name(params) {
-      return getOrSet('name', params)
+      return getOrSet('device', 'name', params)
     },
     network(params) {
-      return getOrSet('network', params)
+      return getOrSet('device', 'network', params)
     },
   },
   Accessibility: {
     closedCaptions(params) {
-      return getOrSet('closedCaptions', params)
+      return getOrSet('accessibility', 'closedCaptions', params)
     },
     voiceGuidance(params) {
-      return getOrSet('voiceGuidance', params)
+      return getOrSet('acessibility', 'voiceGuidance', params)
     },
   },
 }
