@@ -59,38 +59,5 @@ export const defaultPlatform = {
       enabled: true,
       speed: 5,
     },
-  },
-  profile: {
-    advertising: {
-      config: {
-        advertisingId: '26ccd5a7b2c2a50e7d4b2244e9d4c048',
-        siteSection: '123',
-        profile: '123'
-      },
-      policy: {
-        adSkipTier: 'NOSKIP_NORMAL_SPEED',
-        adSkipGracePeriodSeconds: 60
-      },
-      privacy: {
-        limitTracking: false,
-      },
-      clearAdvertisingId: function() {}
-    },
-    personalization: {
-      entitlements: [
-        {
-          entitlementId: 'http://entitlements/some/canonical/id',
-          startTime: '2021-01-01T18:25:43.511Z',
-          endTime: '2021-12-31T12:59:59.911Z'
-        },
-        {
-          entitlementId: 'http://entitlements/some/canonical/id2',
-          startTime: '2021-04-23T18:25:43.511Z',
-          endTime: '2022-04-23T18:25:43.511Z'
-        }
-      ],
-      watched: true, // success
-      launchPadTile: true // success
-    }
   }
 }
