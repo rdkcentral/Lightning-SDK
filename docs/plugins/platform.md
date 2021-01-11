@@ -212,6 +212,64 @@ Gets the voice guidance configuration as an `Object`. Returns `{enabled: true, s
 Platform.Accesibility.voiceGuidance()
 ```
 
+### Profile
+
+#### Advertising
+
+##### Config
+
+Gets configuration settings for integrating with the platform's advertising eco-system. Returns `{advertisingId: '26ccd5a7b2c2a50e7d4b2244e9d4c048', siteSection: '123', profile: '123'}` by default during _local development_.
+
+##### policy
+
+Gets ad playback policies for this device, e.g. skippability. Returns `{adSkipTier: 'NOSKIP_NORMAL_SPEED', adSkipGracePeriodSeconds: 60}` by default during _local developement_.
+
+##### privacy
+
+Gets ad privacy settings for this device, e.g. user tracking opt outs. Returns `{limitTracking: false}` by default during _local development_
+
+##### ClearAdvertisingId
+
+Resets the anonymous advertising Id on this device.
+
+#### Personalization
+
+##### Entitlements
+
+Gets or sets the users entitlements for this app to enable platform home screen awareness. Takes/returns an Array of entitlements, by default, during _local develompent_:
+
+```json
+[
+  {
+    "entitlementId": "http://entitlements/some/canonical/id",
+    "startTime": "2021-01-01T18:25:43.511Z",
+    "endTime": "2021-12-31T12:59:59.911Z"
+  },
+  {
+    "entitlementId": "http://entitlements/some/canonical/id2",
+    "startTime": "2021-04-23T18:25:43.511Z",
+    "endTime": "2022-04-23T18:25:43.511Z"
+  }
+]
+```
+
+##### Watched
+Adds a content the user's watch history to enable platform home screen awareness. Takes an array of watched items:
+
+```json
+[
+  {
+    "contentId": "http://content/some/canonical/id",
+    "watchedOn": "2022-04-23T18:25:43.511Z"
+  }
+]
+```
+
+Returns a boolean, indicating success/failure to persist items.
+
+##### LaunchPadTile
+Adds a potential tile the user's launch pad enabling closer platform home screen integration. Takes a `name` (string), `imageUrl` (string) , and `linkUrl` (string) of the tile, and returns a boolean indicating success/failure to persist item.
+
 ## Overwriting default values
 
 During development you might want to test your App with different platform values (i.e. a different language, age rating or device IP).
