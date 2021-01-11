@@ -77,14 +77,14 @@ Gets the language. During _local development_ will attempt to return the browser
 Platform.Localization.language()
 ```
 
-### User
+### Profile
 
 #### ageRating
 
-Gets the ageRating. Returns `adult` by default during _local development_.
+Gets the ageRating for the current Profile. Returns `adult` by default during _local development_.
 
 ```js
-Platform.User.ageRating()
+Platform.Profile.ageRating()
 ```
 
 ### Device
@@ -230,7 +230,7 @@ Add a `platform` key in `platformSettings` and only add the values you wish to c
             "latlon": [40.7128, 74.006],
             "locale": "en-US"
           },
-          "user": {
+          "profile": {
             "ageRating": "adult"
           },
           "device": {

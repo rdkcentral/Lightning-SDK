@@ -63,7 +63,7 @@ export default {
       return getOrSet('locale', params)
     },
   },
-  User: {
+  Profile: {
     ageRating(params) {
       return getOrSet('ageRating', params)
     },
