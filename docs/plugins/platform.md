@@ -1,6 +1,6 @@
 # Platform
 
-Sometimes your App might need to interact with the Platform it's running on. For example to retrieve information about the user profile, localization, the capabilities of the device or global accesibility settings.
+Sometimes your App might need to interact with the Platform it's running on. For example to retrieve information about the user profile, localization, the capabilities of the device or global accessibility settings.
 
 Getting access to this information requires to connect to lower level APIs made available by the platform. Since implementations differ between operators and platforms, the Lightning-SDK offers a Platform plugin, that exposes a generic, agnostic interface to the developer.
 
@@ -8,7 +8,7 @@ Under the hood, an underlaying transport layer will then take care of calling th
 
 The Platform plugin is most often used to _retrieve_ information from the Platform. In some cases it can also be used to _pass_ information back to the Platform. This might differ per platform.
 
-The Platform plugin is divided into 4 different sections: Localization, User, Device, Accesibility.
+The Platform plugin is divided into 4 different sections: Localization, User, Device, Accessibility.
 
 ## Usage
 
@@ -77,7 +77,7 @@ Gets the language. During _local development_ will attempt to return the browser
 Platform.Localization.language()
 ```
 
-### User
+### Profile
 
 #### authenticationToken
 
@@ -85,10 +85,10 @@ Return a signed token asserting a app-specific account identity.
 
 #### ageRating
 
-Gets the ageRating. Returns `adult` by default during _local development_.
+Gets the ageRating for the current Profile. Returns `adult` by default during _local development_.
 
 ```js
-Platform.User.ageRating()
+Platform.Profile.ageRating()
 ```
 
 ### Device
@@ -198,14 +198,14 @@ Gets the network information as an `Object`. Returns `{state: 'Connected', type:
 Platform.Device.network()
 ```
 
-### Accesibility
+### Accessibility
 
 #### Closed Captions
 
 Gets the closed captions configuration as an `Object`. Returns `{enabled: true, styles: '?'}` by default during _local development_.
 
 ```js
-Platform.Accesibility.closedCaptions()
+Platform.Accessibility.closedCaptions()
 ```
 
 #### Voice Guidance
@@ -213,8 +213,66 @@ Platform.Accesibility.closedCaptions()
 Gets the voice guidance configuration as an `Object`. Returns `{enabled: true, speed: 5}` by default during _local development_.
 
 ```js
-Platform.Accesibility.voiceGuidance()
+Platform.Accessibility.voiceGuidance()
 ```
+
+### Get
+
+First class citizen properties have their own namespaced methods. But all platform values can also be retrieved via a
+generic `Platform.get()` methdod. This method accepts a `string` consisting of the _namespace_ and the _key_ of the
+value to be retrieved, using so called _dot-notation_.
+
+
+```js
+Platform.get('Device.name')
+```
+
+The generic getter may also come in handy when you want to retrieve _multiple_ platform values. Instead of calling each method separately,
+you can pass an _Array_ with `strings` of _namespace_ and _key_ (using _dot-notation_), which will return an object with the retrieved
+values all at once.
+
+```js
+Platform.get(['Device.name', 'Device.resolution'])
+// { 'Device.name': 'Living Room', 'Device.resolution': [1920, 1080] }
+```
+
+The generic `get`-method can also be used for retrieving _non-standard_, platform specific properties.
+### Set
+
+When params are passed to any of the standard platform methods, instead of retrieving a value, an attempt wil be made to
+_update_ or _set_ the value. Whether specific properties can be _set_ depends on the platform the App is running on. Whenever
+the set function is not permitted the `Promise` will be rejected.
+
+Additionally the Platform plugin has a generic `set`-method, that can be used to update _any_  platform property. Either standard
+first citizen properties, or platform specific, custom properties.
+
+The method accepts the _namespaced key_ (using _dot-notation_) as a first argument and the _value_ to update to as a second argument.
+
+```js
+Platform.set('Device.name', 'Bedroom')
+
+Platform.set('Accessibility.voiceGuidance', {
+  enabled: true,
+  speed: 5,
+})
+
+```
+
+### Has
+
+In order to find out if a certain property _exists at all_ on the Platform that the App is running on, the `has`-method can be used.
+
+This method accepts the _namespaced key_ (using _dot-notation_) as its single argument. It returns a `Promise` that resolves with `true`
+if the property exists and `false` if the property is not available.
+
+```js
+Platform.has('Device.name') // resolves true
+Platform.has('Device.bla') // resolves false
+```
+
+Note that the resolved value only indicates if the property is "known" and can be "consulted" on the platform. It doesn't
+give any information about the actual value, and for example whether a certain _capability_ is enabled.
+For that the property has to be retrieved explicitely.
 
 ## Overwriting default values
 
@@ -234,7 +292,7 @@ Add a `platform` key in `platformSettings` and only add the values you wish to c
             "latlon": [40.7128, 74.006],
             "locale": "en-US"
           },
-          "user": {
+          "profile": {
             "ageRating": "adult"
           },
           "device": {
@@ -254,7 +312,7 @@ Add a `platform` key in `platformSettings` and only add the values you wish to c
               "type": "WIFI"
             }
           },
-          "accesibility": {
+          "accessibility": {
             "closedCaptions": {"enabled": false},
             "voiceGuidance": {"enabled": true, "speed": 5}
           }
