@@ -41,7 +41,23 @@ export const defaultPlatform = {
     uid: 'ee6723b8-7ab3-462c-8d93-dbf61227998e',
     type: 'STB',
     model: 'Metrological',
-    hdcp: 'HDR10',
+    hdcp: {
+      enabled: true,
+      negotiatedVersion: 'HDCP2.2',
+      maxVersion: 'HDCP2.3'
+    },
+    hdr: {
+      hdr10: true,
+      hdr10plus: false,
+      dolbyVision: true,
+      hlg: true
+    },
+    audio: {
+      stereo: true,
+      dolbyDigital: true,
+      dolbyDigitalPlus: true,
+      dolbyAtmos: true
+    },
     resolution: [1920, 1080], // maybe make this dynamically from the browser window?
     name: 'Living Room',
     network: {

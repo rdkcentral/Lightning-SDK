@@ -163,11 +163,38 @@ Platform.Device.type()
 
 #### Hdcp
 
-Gets the hdcp. Returns `{enabled: true, version: 'HDR10` }` by default during _local development_.
+Gets the supported HDCP profiles. Returns `{enabled: true, negotiatedVersion: 'HDCP2.2', maxVersion: 'HDCP2.3` }` by default during _local development_.
 
 ```js
 Platform.Device.hdcp()
 ```
+
+#### Hdr
+
+Gets the supported HDR profiles. Returns:
+```json
+{
+  hdr10: true,
+  hdr10plus: false,
+  dolbyVision: true,
+  hlg: true
+}
+```
+by default during _local development_.
+
+#### Audio
+
+Gets the supported audio profiles. Returns:
+```json
+{
+  stereo: true,
+  dolbyDigital: true,
+  dolbyDigitalPlus: true,
+  dolbyAtmos: true
+}
+```
+by default during _local development_.
+
 
 #### Resolution
 

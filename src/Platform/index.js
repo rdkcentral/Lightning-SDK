@@ -99,6 +99,12 @@ export default {
     hdcp(params) {
       return getOrSet('hdcp', params)
     },
+    hdr(params) {
+      return getOrSet('hdr', params)
+    },
+    audio(params) {
+      return getOrSet('audio', params)
+    },
     resolution(params) {
       return getOrSet('resolution', params)
     },
