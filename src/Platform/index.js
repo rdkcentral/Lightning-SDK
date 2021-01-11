@@ -64,6 +64,9 @@ export default {
     },
   },
   User: {
+    authenticationToken(params) {
+      return getOrSet('authenticationToken', params)
+    },
     ageRating(params) {
       return getOrSet('ageRating', params)
     },

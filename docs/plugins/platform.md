@@ -79,6 +79,10 @@ Platform.Localization.language()
 
 ### User
 
+#### authenticationToken
+
+Return a signed token asserting a app-specific account identity.
+
 #### ageRating
 
 Gets the ageRating. Returns `adult` by default during _local development_.
