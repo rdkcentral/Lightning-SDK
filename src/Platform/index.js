@@ -150,9 +150,6 @@ export default {
       return getOrSet('acessibility', 'voiceGuidance', params)
     },
   },
-  authentication(params) {
-      return getOrSet('authentication', params)
-  },
   get(namespacedKeyOrKeys = []) {
     return Array.isArray(namespacedKeyOrKeys)
       ? Promise.all(

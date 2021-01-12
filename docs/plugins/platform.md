@@ -328,23 +328,6 @@ Returns a boolean, indicating success/failure to persist items.
 ##### LaunchPadTile
 Adds a potential tile the user's launch pad enabling closer platform home screen integration. Takes a `name` (string), `imageUrl` (string) , and `linkUrl` (string) of the tile, and returns a boolean indicating success/failure to persist item.
 
-### Authentication
-
-Gets authentication details for this device.
-
-```js
-Platform.authentication()
-```
-
-Returns
-
-```js
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-}
-```
-by default during _local development_
-
 ### Get
 
 First class citizen properties have their own namespaced methods. But all platform values can also be retrieved via a
