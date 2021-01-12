@@ -80,16 +80,7 @@ export default (imageUrl, options) => {
     // official api
     exact: (w, h) => make(setOptions({ type: 'exact', w, h })),
     landscape: w => make(setOptions({ type: 'landscape', w })),
-    // fixme: remove deprecated stuff in future release of SDK
-    portrait: (w_but_actually_h, deprecated_h) => {
-      if (typeof deprecated_h !== 'undefined' && deprecated_h !== null) {
-        console.warn(
-          "The signature of the 'portrait()'-method has changed, soon it will only accept the height as a single argument (instead of 'portrait(width, height)')"
-        )
-        w_but_actually_h = deprecated_h
-      }
-      return make(setOptions({ type: 'portrait', h: w_but_actually_h }))
-    },
+    portrait: h => make(setOptions({ type: 'portrait', h })),
     cover: (w, h) => make(setOptions({ type: 'cover', w, h })),
     contain: (w, h) => make(setOptions({ type: 'contain', w, h })),
     original: () => make(setOptions({ type: 'contain' })),
