@@ -311,7 +311,20 @@ Adds a potential tile the user's launch pad enabling closer platform home screen
 
 ### Authentication
 
-Gets authentication details for this device. Returns `{token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'}` by default during _local development_
+Gets authentication details for this device.
+
+```js
+Platform.authentication()
+```
+
+Returns
+
+```js
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+}
+```
+by default during _local development_
 
 ### Get
 
