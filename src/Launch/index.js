@@ -17,25 +17,27 @@
  * limitations under the License.
  */
 
-import { initUtils } from '../Utils'
+import { initAds } from '../Ads'
+import { initLifecycle } from '../Lifecycle'
+import { initMetrics } from '../Metrics'
+import { initMediaPlayer } from '../MediaPlayer'
 import { initProfile } from '../Profile'
 import { initPlatform } from '../Platform'
-import { initMetrics } from '../Metrics'
-import { initSettings } from '../Settings'
-import { initMediaPlayer } from '../MediaPlayer'
-import { initVideoPlayer } from '../VideoPlayer'
-import { initStorage } from '../Storage'
-import { initAds } from '../Ads'
 import { initRouter } from '../Router'
+import { initSettings } from '../Settings'
+import { initStorage } from '../Storage'
 import { initTV } from '../TV'
+import { initUtils } from '../Utils'
+import { initVideoPlayer } from '../VideoPlayer'
+
 import Application from '../Application'
 import isProbablyLightningComponent from '../helpers/isProbablyLightningComponent'
 
 export let ApplicationInstance
 
 export default (App, appSettings, platformSettings, appData) => {
+  initLifecycle(App, platformSettings)
   initSettings(appSettings, platformSettings)
-
   initUtils(platformSettings)
   initStorage()
 
