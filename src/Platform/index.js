@@ -150,6 +150,37 @@ export default {
       return getOrSet('acessibility', 'voiceGuidance', params)
     },
   },
+  Profile: {		
+    Advertising: {		
+      config() {		
+        return getInfo('Advertising.config')		
+      },		
+      policy() {		
+        return getInfo('Advertising.policy') // ad skip tier stuff		
+      },		
+      privacy() {		
+        return getOrSet('Advertising.privacy') // limitTracking, opt in/out methods for XIFA		
+      },		
+      clearAdvertisingId() {		
+        return setInfo('Advertising.advertisingId', "")		
+      }		
+    },		
+    Personalization: {		
+      entitlements(params) {		
+        return getOrSet('Personalization.entitlements', params)		
+      },		
+      watched(params) {		
+        let history = getInfo('Personalization.watched')		
+        history.push(params)		
+        return setInfo('Personalization.watched', history)		
+      },		
+      launchPadTile(params) {		
+        let tiles = getInfo('Personalization.launchPadTiles')		
+        tiles.push(params)		
+        return setInfo('Personalization.launchPadTiles', tiles)		
+      }		
+    }
+  },
   get(namespacedKeyOrKeys = []) {
     return Array.isArray(namespacedKeyOrKeys)
       ? Promise.all(
