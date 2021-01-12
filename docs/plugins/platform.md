@@ -162,15 +162,26 @@ Gets the model of the device running the App. Returns `Metrological` by default 
 Platform.Device.type()
 ```
 
-#### Hdcp
+#### HDCP
 
-Gets the supported HDCP profiles. Returns `{enabled: true, negotiatedVersion: 'HDCP2.2', maxVersion: 'HDCP2.3` }` by default during _local development_.
+Gets the supported HDCP profiles.
 
 ```js
 Platform.Device.hdcp()
 ```
 
-#### Hdr
+Returns:
+
+```js
+{
+  enabled: true,
+  negotiatedVersion: 'HDCP2.2',
+  maxVersion: 'HDCP2.3'
+}
+```
+by default during _local development_.
+
+#### HDR
 
 Gets the supported HDR profiles.
 
@@ -179,12 +190,12 @@ Platform.Device.hdr()
 ```
 
 Returns:
-```json
+```js
 {
-  "hdr10": true,
-  "hdr10plus": false,
-  "dolbyVision": true,
-  "hlg": true
+  hdr10: true,
+  hdr10plus: false,
+  dolbyVision: true,
+  hlg: true
 }
 ```
 by default during _local development_.
@@ -198,16 +209,15 @@ Platform.Device.audio()
 ```
 
 Returns:
-```json
+```js
 {
-  "stereo": true,
-  "dolbyDigital": true,
-  "dolbyDigitalPlus": true,
-  "dolbyAtmos": true
+  stereo: true,
+  dolbyDigital: true,
+  dolbyDigitalPlus: true,
+  dolbyAtmos: true
 }
 ```
 by default during _local development_.
-
 
 #### Resolution
 
@@ -238,7 +248,13 @@ Platform.Device.network()
 
 #### Closed Captions
 
-Gets the closed captions configuration as an `Object`. Returns the following object by default during _local development_.
+Gets the closed captions configuration as an `Object`.
+
+```js
+Platform.Accessibility.closedCaptions()
+```
+
+Returns the following object by default during _local development_.
 
 ```js
 `{
@@ -258,17 +274,24 @@ Gets the closed captions configuration as an `Object`. Returns the following obj
 }`
 ```
 
-```js
-Platform.Accessibility.closedCaptions()
-```
-
 #### Voice Guidance
 
-Gets the voice guidance configuration as an `Object`. Returns `{enabled: true, speed: 5}` by default during _local development_.
+Gets the voice guidance configuration as an `Object`.
 
 ```js
 Platform.Accessibility.voiceGuidance()
 ```
+
+Returns
+
+```js
+{
+  enabled: true,
+  speed: 5
+}
+```
+
+by default during _local development_.
 
 ### Profile
 
@@ -276,25 +299,75 @@ Platform.Accessibility.voiceGuidance()
 
 ##### Config
 
-Gets configuration settings for integrating with the platform's advertising eco-system. Returns `{advertisingId: '26ccd5a7b2c2a50e7d4b2244e9d4c048', siteSection: '123', profile: '123'}` by default during _local development_.
+Gets configuration settings for integrating with the platform's advertising eco-system.
+
+```js
+Platform.Profile.Advertising.config()
+```
+
+Returns
+```js
+{
+  advertisingId: '26ccd5a7b2c2a50e7d4b2244e9d4c048',
+  siteSection: '123',
+  profile: '123'
+}
+```
+by default during _local development_.
 
 ##### policy
 
-Gets ad playback policies for this device, e.g. skippability. Returns `{adSkipTier: 'NOSKIP_NORMAL_SPEED', adSkipGracePeriodSeconds: 60}` by default during _local developement_.
+Gets ad playback policies for this device, e.g. skippability.
+
+```js
+Platform.Profile.Advertising.policy()
+```
+
+Returns
+```js
+{
+  adSkipTier: 'NOSKIP_NORMAL_SPEED',
+  adSkipGracePeriodSeconds: 60
+}
+```
+
+by default during _local developement_.
 
 ##### privacy
 
-Gets ad privacy settings for this device, e.g. user tracking opt outs. Returns `{limitTracking: false}` by default during _local development_
+Gets ad privacy settings for this device, e.g. user tracking opt outs.
+
+```js
+Platform.Profile.Advertising.policy()
+```
+
+Returns
+```js
+{
+  limitTracking: false
+}
+```
+by default during _local development_
 
 ##### ClearAdvertisingId
 
 Resets the anonymous advertising Id on this device.
 
+```js
+Platform.Profile.Advertising.clearAdvertisingId()
+```
+
 #### Personalization
 
 ##### Entitlements
 
-Gets or sets the users entitlements for this app to enable platform home screen awareness. Takes/returns an Array of entitlements, by default, during _local develompent_:
+Gets or sets the users entitlements for this app to enable platform home screen awareness.
+
+```js
+Platform.Profile.Personalization.entitlements([{},{}])
+```
+
+Takes/returns an Array of entitlements, by default, during _local develompent_:
 
 ```json
 [
@@ -312,7 +385,13 @@ Gets or sets the users entitlements for this app to enable platform home screen 
 ```
 
 ##### Watched
-Adds a content the user's watch history to enable platform home screen awareness. Takes an array of watched items:
+Adds a content the user's watch history to enable platform home screen awareness.
+
+```js
+Platform.Profile.Personalization.watched([{},{}])
+```
+
+Takes an array of watched items:
 
 ```json
 [
@@ -328,12 +407,15 @@ Returns a boolean, indicating success/failure to persist items.
 ##### LaunchPadTile
 Adds a potential tile the user's launch pad enabling closer platform home screen integration. Takes a `name` (string), `imageUrl` (string) , and `linkUrl` (string) of the tile, and returns a boolean indicating success/failure to persist item.
 
+```js
+Platform.Profile.Personalization.launchPadTile([{},{}])
+```
+
 ### Get
 
 First class citizen properties have their own namespaced methods. But all platform values can also be retrieved via a
 generic `Platform.get()` methdod. This method accepts a `string` consisting of the _namespace_ and the _key_ of the
 value to be retrieved, using so called _dot-notation_.
-
 
 ```js
 Platform.get('Device.name')
