@@ -1,6 +1,6 @@
 # Platform
 
-Sometimes your App might need to interact with the Platform it's running on. For example to retrieve information about the user profile, localization, the capabilities of the device or global accessibility settings.
+Sometimes your App might need to interact with the Platform it's running on. For example to retrieve information about the current profile, localization, the capabilities of the device or global accessibility settings.
 
 Getting access to this information requires to connect to lower level APIs made available by the platform. Since implementations differ between operators and platforms, the Lightning-SDK offers a Platform plugin, that exposes a generic, agnostic interface to the developer.
 
@@ -8,7 +8,7 @@ Under the hood, an underlaying transport layer will then take care of calling th
 
 The Platform plugin is most often used to _retrieve_ information from the Platform. In some cases it can also be used to _pass_ information back to the Platform. This might differ per platform.
 
-The Platform plugin is divided into 4 different sections: Localization, User, Device, Accessibility.
+The Platform plugin is divided into 4 different sections: Localization, Profile, Device, Accessibility.
 
 ## Usage
 
@@ -19,9 +19,10 @@ import { Platform } from '@lightningjs/sdk'
 ```
 
 All methods on the Platform plugin can act as a getter and a setter (when permitted by the platform).
-Whenever a method is called without params it will _return_ data (in the form of a Promise).
-Whenever parameters are passed to the method, it will _send_ those on to the lower level platform APIs
-(attempting to update a value).
+Whenever a method is called without params it will _return_ data (in the form of a `Promise`).
+When parameters are passed to the method, it will _send_ those on to the lower level platform APIs
+(attempting to update a value). When the platform does not allow a certain property to be set,
+it will `reject` the promise.
 
 ## Available methods
 
@@ -237,7 +238,25 @@ Platform.Device.network()
 
 #### Closed Captions
 
-Gets the closed captions configuration as an `Object`. Returns `{enabled: true, styles: '?'}` by default during _local development_.
+Gets the closed captions configuration as an `Object`. Returns the following object by default during _local development_.
+
+```js
+`{
+  enabled: true,
+  styles: {
+    fontFamily: 'Monospace sans-serif',
+    fontSize: 1,
+    fontColor: '#ffffff',
+    fontEdge: 'none',
+    fontEdgeColor: '#7F7F7F',
+    fontOpacity: 100,
+    backgroundColor: '#000000',
+    backgroundOpacity: 100,
+    textAlign: 'center',
+    textAlignVertical: 'middle',
+  }
+}`
+```
 
 ```js
 Platform.Accessibility.closedCaptions()
