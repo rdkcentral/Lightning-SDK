@@ -52,7 +52,18 @@ export const defaultPlatform = {
   accessibility: {
     closedCaptions: {
       enabled: true,
-      styles: '?', // what kind of values could we have here?
+      styles: {
+        fontFamily: 'Monospace sans-serif',
+        fontSize: 1,
+        fontColor: '#ffffff',
+        fontEdge: 'none',
+        fontEdgeColor: '#7F7F7F',
+        fontOpacity: 100,
+        backgroundColor: '#000000',
+        backgroundOpacity: 100,
+        textAlign: 'center',
+        textAlignVertical: 'middle',
+      },
     },
     voiceGuidance: {
       enabled: true,
