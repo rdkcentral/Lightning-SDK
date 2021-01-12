@@ -41,7 +41,23 @@ export const defaultPlatform = {
     uid: 'ee6723b8-7ab3-462c-8d93-dbf61227998e',
     type: 'STB',
     model: 'Metrological',
-    hdcp: 'HDR10',
+    hdcp: {
+      enabled: true,
+      negotiatedVersion: 'HDCP2.2',
+      maxVersion: 'HDCP2.3'
+    },
+    hdr: {
+      hdr10: true,
+      hdr10plus: false,
+      dolbyVision: true,
+      hlg: true
+    },
+    audio: {
+      stereo: true,
+      dolbyDigital: true,
+      dolbyDigitalPlus: true,
+      dolbyAtmos: true
+    },
     resolution: [1920, 1080], // maybe make this dynamically from the browser window?
     name: 'Living Room',
     network: {
@@ -58,38 +74,5 @@ export const defaultPlatform = {
       enabled: true,
       speed: 5,
     },
-  },
-  profile: {
-    advertising: {
-      config: {
-        advertisingId: '26ccd5a7b2c2a50e7d4b2244e9d4c048',
-        siteSection: '123',
-        profile: '123'
-      },
-      policy: {
-        adSkipTier: 'NOSKIP_NORMAL_SPEED',
-        adSkipGracePeriodSeconds: 60
-      },
-      privacy: {
-        limitTracking: false,
-      },
-      clearAdvertisingId: function() {}
-    },
-    personalization: {
-      entitlements: [
-        {
-          entitlementId: 'http://entitlements/some/canonical/id',
-          startTime: '2021-01-01T18:25:43.511Z',
-          endTime: '2021-12-31T12:59:59.911Z'
-        },
-        {
-          entitlementId: 'http://entitlements/some/canonical/id2',
-          startTime: '2021-04-23T18:25:43.511Z',
-          endTime: '2022-04-23T18:25:43.511Z'
-        }
-      ],
-      watched: true, // success
-      launchPadTile: true // success
-    }
   }
 }
