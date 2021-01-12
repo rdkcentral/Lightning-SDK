@@ -114,9 +114,11 @@ export default {
   },
   assets() {
     return new Promise((resolve, reject) => {
-      cspRequest('assets')
-        .then(resolve)
-        .catch(reject)
+      Profile.household().then(household => {
+        cspRequest('assets', { household })
+          .then(resolve)
+          .catch(reject)
+      })
     })
   },
   asset(id) {
