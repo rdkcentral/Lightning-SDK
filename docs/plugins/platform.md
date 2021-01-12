@@ -257,7 +257,7 @@ Platform.Accessibility.closedCaptions()
 Returns the following object by default during _local development_.
 
 ```js
-`{
+{
   enabled: true,
   styles: {
     fontFamily: 'Monospace sans-serif',
@@ -271,7 +271,7 @@ Returns the following object by default during _local development_.
     textAlign: 'center',
     textAlignVertical: 'middle',
   }
-}`
+}
 ```
 
 #### Voice Guidance
