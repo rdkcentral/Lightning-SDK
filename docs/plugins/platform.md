@@ -171,26 +171,38 @@ Platform.Device.hdcp()
 
 #### Hdr
 
-Gets the supported HDR profiles. Returns:
+Gets the supported HDR profiles.
+
+```js
+Platform.Device.hdr()
+```
+
+Returns:
 ```json
 {
-  hdr10: true,
-  hdr10plus: false,
-  dolbyVision: true,
-  hlg: true
+  "hdr10": true,
+  "hdr10plus": false,
+  "dolbyVision": true,
+  "hlg": true
 }
 ```
 by default during _local development_.
 
 #### Audio
 
-Gets the supported audio profiles. Returns:
+Gets the supported audio profiles.
+
+```js
+Platform.Device.audio()
+```
+
+Returns:
 ```json
 {
-  stereo: true,
-  dolbyDigital: true,
-  dolbyDigitalPlus: true,
-  dolbyAtmos: true
+  "stereo": true,
+  "dolbyDigital": true,
+  "dolbyDigitalPlus": true,
+  "dolbyAtmos": true
 }
 ```
 by default during _local development_.
