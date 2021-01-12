@@ -28,7 +28,7 @@ export const defaultPlatform = {
     latlon: () => getLatLon([40.7128, 74.006]),
     locale: () => getLocale('en-US'),
   },
-  user: {
+  profile: {
     ageRating: 'adult',
   },
   device: {
@@ -65,7 +65,7 @@ export const defaultPlatform = {
       type: 'WIFI',
     },
   },
-  accesibility: {
+  accessibility: {
     closedCaptions: {
       enabled: true,
       styles: '?', // what kind of values could we have here?
@@ -74,5 +74,8 @@ export const defaultPlatform = {
       enabled: true,
       speed: 5,
     },
+  },
+  authentication: {
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
   }
 }
