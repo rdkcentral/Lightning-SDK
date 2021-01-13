@@ -35,6 +35,7 @@ let metrics
 let consumer
 let precision = 1
 let textureMode = false
+let hlsJs
 
 export const initVideoPlayer = config => {
   if (config.mediaUrl) {
@@ -187,46 +188,70 @@ const videoPlayerPlugin = {
   open(url, details = {}) {
     if (!this.canInteract) return
     metrics = Metrics.media(url)
-    // prep the media url to play depending on platform
-    url = mediaUrl(url)
 
-    // if url is same as current clear (which is effectively a reload)
-    if (this.src == url) {
-      this.clear()
+    // destroy any previous instance of HLS.js that might exist
+    if (hlsJs && hlsJs.destroy && typeof hlsJs.destroy === 'function') {
+      hlsJs.destroy()
     }
+    if (details.hlsJs && details.hlsJs.lib) {
+      // (re)instantiate HLS.js library passed down
+      hlsJs = new details.hlsJs.lib(details.hlsJs.config || {})
 
-    this.hide()
-    deregisterEventListeners()
+      this.hide()
+      deregisterEventListeners()
 
-    // preload the video to get duration (for ads)
-    //.. currently actually not working because loadedmetadata didn't work reliably on Sky boxes
-    videoEl.setAttribute('src', url)
-    videoEl.load()
+      if (details.hlsJs.lib.isSupported()) {
+        hlsJs.loadSource(url)
+        hlsJs.attachMedia(videoEl)
+        // maybe make event to 'start' playing on configurable ?
+        hlsJs.on(details.hlsJs.lib.Events.MANIFEST_PARSED, () => {
+          registerEventListeners()
+          this.show()
+          setTimeout(() => {
+            this.play()
+          })
+        })
 
-    // const onLoadedMetadata = () => {
-    // videoEl.removeEventListener('loadedmetadata', onLoadedMetadata)
-    const config = { enabled: state.adsEnabled, duration: 300 } // this.duration ||
-    if (details.videoId) {
-      config.caid = details.videoId
-    }
-    Ads.get(config, consumer).then(ads => {
-      state.playingAds = true
-      ads.prerolls().then(() => {
-        state.playingAds = false
-        registerEventListeners()
-        if (this.src !== url) {
-          videoEl.setAttribute('src', url)
-          videoEl.load()
-        }
-        this.show()
-        setTimeout(() => {
-          this.play()
+        // return the hlsJs _instance_
+        return hlsJs
+      } else {
+        Log.info('VideoPlayer', 'HLS.js is not supported')
+      }
+    } else {
+      // prep the media url to play depending on platform
+      url = mediaUrl(url)
+
+      // if url is same as current clear (which is effectively a reload)
+      if (this.src == url) {
+        this.clear()
+      }
+
+      this.hide()
+      deregisterEventListeners()
+
+      videoEl.setAttribute('src', url)
+      videoEl.load()
+
+      const config = { enabled: state.adsEnabled, duration: 300 } // this.duration ||
+      if (details.videoId) {
+        config.caid = details.videoId
+      }
+      Ads.get(config, consumer).then(ads => {
+        state.playingAds = true
+        ads.prerolls().then(() => {
+          state.playingAds = false
+          registerEventListeners()
+          if (this.src !== url) {
+            videoEl.setAttribute('src', url)
+            videoEl.load()
+          }
+          this.show()
+          setTimeout(() => {
+            this.play()
+          })
         })
       })
-    })
-    // }
-
-    // videoEl.addEventListener('loadedmetadata', onLoadedMetadata)
+    }
   },
 
   reload() {
