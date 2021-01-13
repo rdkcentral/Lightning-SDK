@@ -41,7 +41,7 @@ In case the CSP back-end does _not_ completely follow the expected blueprint or 
 
 ### Setup
 
-The `setup`-method is used to configure the Purchase plugin to match with a pecific CSP backend setup used for providing available assets and storing purchased asset records.
+The `setup`-method is used to configure the Purchase plugin to match with a specific CSP backend setup used for providing available assets and storing purchased asset records.
 
 The `setup`-method should be called once, before any other method on the Purchase plugin is called.
 
@@ -70,7 +70,7 @@ The method accepts a config `object` as its only argument. This object can have 
     method: 'POST',
   },
   unsubscribe: {
-    uri: '/assets/:id/subscribe',
+    uri: '/assets/:id/unsubscribe',
     method: 'POST',
   },
 }

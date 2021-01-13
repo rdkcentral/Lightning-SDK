@@ -42,7 +42,7 @@ let cspEndpoints = {
     method: 'POST',
   },
   unsubscribe: {
-    uri: '/assets/:id/subscribe',
+    uri: '/assets/:id/unsubscribe',
     method: 'POST',
   },
 }
