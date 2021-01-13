@@ -16,28 +16,77 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import Ads from '../VideoPlayer/AdsPlayer'
-import { initAdvertising } from '../Advertising'
+import AdsPlayer from './player'
+import { initAds as initAdsPlayer } from './player'
 
 export const initAds = config => {
   if (config.getAds) {
-    initAdvertising(config)
+    initAdsPlayer(config)
   }
 }
 
-console.warn(
-  [
-    "The 'Ads'-plugin in the Lightning-SDK is deprecated and will be removed in future releases.",
-    "Please consider using the new 'VideoPlayer'-plugin which can play ads directly, instead.",
-    'https://rdkcentral.github.io/Lightning-SDK/#/plugins/videoplayer',
-    "",
-    "If ad playback is not needed, consider using the new 'Advertising' plugin which can fetch and parse ads.",
-    'https://rdkcentral.github.io/Lightning-SDK/#/plugins/advertising'
-  ].join('\n\n'))
+let getAdvertisingId = function() {
+  return '26ccd5a7b2c2a50e7d4b2244e9d4c048'
+}
+
+let clearAdvertisingId = function() {
+  return true;
+}
+
+let getConfig = function() {
+  return {		
+    siteSection: '123',		
+    profile: '123'		
+  }
+}
+
+let getPolicy = function() {
+  return {		
+    adSkipTier: 'NOSKIP_NORMAL_SPEED',		
+    adSkipGracePeriodSeconds: 60		
+  }
+}
+
+let getPrivacy = function() {
+  return {		
+    limitTracking: false,		
+  }
+}
+
+let getAds = function() {
+  return Promise.resolve({
+    prerolls: [],
+    midrolls: [],
+    postrolls: []
+  })
+}
+
+export const initAdvertising = config => {
+  getAdvertisingId = config.getAdvertisingId || getAdvertisingId
+  clearAdvertisingId = config.clearAdvertisingId || clearAdvertisingId
+  getConfig = config.getConfig || getConfig
+  getPolicy = config.getPolicy || getPolicy
+  getPrivacy = config.getPrivacy || getPrivacy
+  getAds = config.getAds || getAds
+}
 
 export default {
-  get: Ads.get,
-  cancel: Ads.cancel,
-  stop: Ads.stop
+  advertisingId() {
+    return getAdvertisingId()
+  },
+  clearAdvertisingId() {		
+    return clearAdvertisingId()
+  },
+  config() {		
+    return getConfig()
+  },		
+  policy() {		
+    return getPolicy()
+  },		
+  privacy() {		
+    return getPrivacy()
+  },
+  get: AdsPlayer.get,
+  cancel: AdsPlayer.cancel,
+  stop: AdsPlayer.stop
 }
