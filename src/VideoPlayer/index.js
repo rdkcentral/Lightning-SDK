@@ -19,7 +19,7 @@
 
 import Metrics from '../Metrics'
 import Log from '../Log'
-import Ads from '../Ads'
+import Ads from './AdsPlayer'
 
 import events from './events'
 import autoSetupMixin from '../helpers/autoSetupMixin'

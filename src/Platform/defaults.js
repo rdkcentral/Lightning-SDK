@@ -46,19 +46,10 @@ export const defaultPlatform = {
       negotiatedVersion: 'HDCP2.2',
       maxVersion: 'HDCP2.3'
     },
-    hdr: {
-      hdr10: true,
-      hdr10plus: false,
-      dolbyVision: true,
-      hlg: true
-    },
-    audio: {
-      stereo: true,
-      dolbyDigital: true,
-      dolbyDigitalPlus: true,
-      dolbyAtmos: true
-    },
-    resolution: [1920, 1080], // maybe make this dynamically from the browser window?
+    // 
+    hdr: Object.assign(['dolbyVision', 'hlg'], {hdr10: 'hdr10', hdr10Plus: 'hdr10Plus', dolbyVision: 'dolbyVision', hlg: 'hlg'}),
+    audio:Object.assign(['stereo', 'dolbyDigital'], {stereo: 'stereo', dolbyDigital: 'dolbyDigital', dolbyDigitalPlus: 'dolbyDigtalPlus', dolbyAtmos: 'dolbyAtmos'}),
+    resolution: [1920, 1080],
     name: 'Living Room',
     network: {
       state: 'Connected',
@@ -85,38 +76,5 @@ export const defaultPlatform = {
       enabled: true,
       speed: 5,
     },
-  },
-  profile: {		
-    advertising: {		
-      config: {		
-        advertisingId: '26ccd5a7b2c2a50e7d4b2244e9d4c048',		
-        siteSection: '123',		
-        profile: '123'		
-      },		
-      policy: {		
-        adSkipTier: 'NOSKIP_NORMAL_SPEED',		
-        adSkipGracePeriodSeconds: 60		
-      },		
-      privacy: {		
-        limitTracking: false,		
-      },		
-      clearAdvertisingId: function() {}		
-    },		
-    personalization: {		
-      entitlements: [		
-        {		
-          entitlementId: 'http://entitlements/some/canonical/id',		
-          startTime: '2021-01-01T18:25:43.511Z',		
-          endTime: '2021-12-31T12:59:59.911Z'		
-        },		
-        {		
-          entitlementId: 'http://entitlements/some/canonical/id2',		
-          startTime: '2021-04-23T18:25:43.511Z',		
-          endTime: '2022-04-23T18:25:43.511Z'		
-        }		
-      ],		
-      watched: true, // success		
-      launchPadTile: true // success		
-    }		
   }
 }
