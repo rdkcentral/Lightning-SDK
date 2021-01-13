@@ -211,9 +211,6 @@ const videoPlayerPlugin = {
             this.play()
           })
         })
-
-        // return the hlsJs _instance_
-        return hlsJs
       } else {
         Log.info('VideoPlayer', 'HLS.js is not supported')
       }
@@ -428,6 +425,10 @@ const videoPlayerPlugin = {
 
   get adsEnabled() {
     return state.adsEnabled
+  },
+
+  get hlsJs() {
+    return hlsJs
   },
 
   // prefixed with underscore to indicate 'semi-private'
