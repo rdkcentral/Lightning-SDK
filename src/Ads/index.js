@@ -29,16 +29,17 @@ let getAdvertisingId = function() {
   return '26ccd5a7b2c2a50e7d4b2244e9d4c048'
 }
 
-let clearAdvertisingId = function() {
+let resetAdvertisingId = function() {
   return true;
 }
 
-let getConfig = function() {
+/*let getConfig = function() {
   return {		
     siteSection: '123',		
     profile: '123'		
   }
 }
+*/
 
 let getPolicy = function() {
   return {		
@@ -63,8 +64,8 @@ let getAds = function() {
 
 export const initAdvertising = config => {
   getAdvertisingId = config.getAdvertisingId || getAdvertisingId
-  clearAdvertisingId = config.clearAdvertisingId || clearAdvertisingId
-  getConfig = config.getConfig || getConfig
+  resetAdvertisingId = config.resetAdvertisingId || resetAdvertisingId
+//  getConfig = config.getConfig || getConfig
   getPolicy = config.getPolicy || getPolicy
   getPrivacy = config.getPrivacy || getPrivacy
   getAds = config.getAds || getAds
@@ -74,12 +75,12 @@ export default {
   advertisingId() {
     return getAdvertisingId()
   },
-  clearAdvertisingId() {		
-    return clearAdvertisingId()
+  resetAdvertisingId() {		
+    return resetAdvertisingId()
   },
-  config() {		
-    return getConfig()
-  },		
+//  config() {		
+//    return getConfig()
+//  },		
   policy() {		
     return getPolicy()
   },		

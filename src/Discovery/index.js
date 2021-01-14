@@ -19,21 +19,8 @@
 
 import Log from '../Log'
 
-let getEntitlements = function() {
-  return {		
-    entitlementId: 'http://entitlements/some/canonical/id',		
-    startTime: '2021-01-01T18:25:43.511Z',		
-    endTime: '2021-12-31T12:59:59.911Z'		
-  },		
-  {		
-    entitlementId: 'http://entitlements/some/canonical/id2',		
-    startTime: '2021-04-23T18:25:43.511Z',		
-    endTime: '2022-04-23T18:25:43.511Z'		
-  }	
-}
-
-let setEntitlements = function() {
-  return true;
+let entitlements = function() {
+  return Promise.resolve(true);
 }
 
 let watched = function(watchedItems) {
@@ -41,28 +28,40 @@ let watched = function(watchedItems) {
   return true
 }
 
-let dashBoardTile = function(name, imageUrl, linkUrl) {
-  Log.info('Added to Dashboard: ' + name + ', ' + imageUrl + ', ' + linkUrl)
+/*
+Params (TODO: move to docs)
+  titles - either a String or localized map, e.g.:
+  {
+    "en-US": "Finish watching \"The Crazy Nasty Honey Badger\"",
+    "es": "Terminar de mirar \"The Crazy Nasty Honey Badger\""
+  }
+  linkUrl - String, e.g. "https://www.youtube.com/watch?v=b8fjxn8Kgg4"
+  expires -   ISO8601 Date/Time string, e.g. "2021-01-01T18:25:43.511Z"
+  contentId - canonical ID of the content
+  images - single url as a string, or a localized map with aspect ratios, e.g.
+  {
+    "3x4": {
+        "en-US": "https://i.ytimg.com/vi/4r7wHMg5Yjg/maxresdefault.jpg",
+        "es": "https://i.ytimg.com/vi/4r7wHMg5Yjg/maxresdefault.jpg"
+    },
+    "16x9": {
+        "en": "https://i.ytimg.com/vi/4r7wHMg5Yjg/maxresdefault.jpg"
+    }
+  }
+*/
+let watchNext = function(title, linkUrl, expires, contentId, images) {
+  Log.info('Added to Dashboard: ' + title + ', ' + linkUrl)
+  return Promise.resolve(true)
 }
 
 export const initAdvertising = config => {
-  getEntitlements = config.getEntitlements
-  setEntitlements = config.setEntitlements
+  entitlements = config.entitlements
   watched = config.watched
-  dashBoardTile = config.dashBoardTile
-}
-
-function entitlements(params) {
-  if (params) {
-    return setEntitlements(params)
-  }
-  else {
-    return getEntitlements()
-  }
+  watchNext = config.watchNext
 }
 
 export default {
   entitlements: entitlements,
   watched: watched,
-  dashBoardTile: dashBoardTile
+  watchNext: watchNext
 }
