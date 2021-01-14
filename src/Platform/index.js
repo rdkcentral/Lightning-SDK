@@ -123,11 +123,17 @@ export default {
     model(params) {
       return getOrSet('device', 'model', params)
     },
-    hdcp(params) {
-      return getOrSet('device', 'hdcp', params)
+    hdr(params) {
+      return getOrSet('device', 'hdr', params)
     },
-    resolution(params) {
-      return getOrSet('device', 'resolution', params)
+    audio(params) {
+      return getOrSet('device', 'audio', params)
+    },
+    screenResolution(params) {
+      return getOrSet('device', 'screenResolution', params)
+    },
+    videoResolution(params) {
+      return getOrSet('device', 'videoResolution', params)
     },
     name(params) {
       return getOrSet('device', 'name', params)

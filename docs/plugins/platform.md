@@ -162,21 +162,36 @@ Gets the model of the device running the App. Returns `Metrological` by default 
 Platform.Device.type()
 ```
 
-#### Hdcp
+#### HDR
 
-Gets the hdcp. Returns `{enabled: true, version: 'HDR10` }` by default during _local development_.
+Gets the platforms _HDR_ capabilities. Returns an `Array` of only those capabilities that are supported.
+Defaults to `['hdr10', 'hdr10Plus', 'dolbyVision', 'hlg']` during _local development_.
 
 ```js
-Platform.Device.hdcp()
+Platform.Device.hdr()
 ```
 
-#### Resolution
+#### Audio
 
-Gets the screen resolution as an Array width the `width` and the `height`.
+Gets the platforms _audio_ capabilities. Returns an `Array` of only those capabilities that are supported.
+Defaults to `['stereo', 'dolbyDigital', 'dolbyDigitalPlus', 'dolbyAtmos']` during _local development_.
+
+#### Screen resolution
+
+Gets the screen resolution as an Array with the `width` and the `height`.
 Returns `[1920, 1080]` by default during _local development_.
 
 ```js
-Platform.Device.resolution()
+Platform.Device.screenResolution()
+```
+
+#### Video resolution
+
+Gets the video resolution as an Array with the `width` and the `height`.
+Returns `[1920, 1080]` by default during _local development_.
+
+```js
+Platform.Device.videoResolution()
 ```
 
 #### Name
@@ -247,8 +262,8 @@ you can pass an _Array_ with `strings` of _namespace_ and _key_ (using _dot-nota
 values all at once.
 
 ```js
-Platform.get(['Device.name', 'Device.resolution'])
-// { 'Device.name': 'Living Room', 'Device.resolution': [1920, 1080] }
+Platform.get(['Device.name', 'Device.screenResolution'])
+// { 'Device.name': 'Living Room', 'Device.screenResolution': [1920, 1080] }
 ```
 
 The generic `get`-method can also be used for retrieving _non-standard_, platform specific properties.
@@ -319,8 +334,10 @@ Add a `platform` key in `platformSettings` and only add the values you wish to c
             "packages": [],
             "uid": "ee6723b8-7ab3-462c-8d93-dbf61227998e",
             "stbType": "Metrological",
-            "hdcp": "HDR10",
-            "resolution": [1920, 1080],
+            "hdr": ["hdr10", "hdr10Plus", "dolbyVision", "hlg"],
+            "audio": ["stereo", "dolbyDigital", "dolbyDigitalPlus", "dolbyAtmos"],
+            "screenResolution": [1920, 1080],
+            "videoResolution": [1920, 1080],
             "name": "Living Room",
             "network": {
               "state": "Connected",
