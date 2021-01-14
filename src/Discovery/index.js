@@ -28,27 +28,6 @@ let watched = function(watchedItems) {
   return true
 }
 
-/*
-Params (TODO: move to docs)
-  titles - either a String or localized map, e.g.:
-  {
-    "en-US": "Finish watching \"The Crazy Nasty Honey Badger\"",
-    "es": "Terminar de mirar \"The Crazy Nasty Honey Badger\""
-  }
-  linkUrl - String, e.g. "https://www.youtube.com/watch?v=b8fjxn8Kgg4"
-  expires -   ISO8601 Date/Time string, e.g. "2021-01-01T18:25:43.511Z"
-  contentId - canonical ID of the content
-  images - single url as a string, or a localized map with aspect ratios, e.g.
-  {
-    "3x4": {
-        "en-US": "https://i.ytimg.com/vi/4r7wHMg5Yjg/maxresdefault.jpg",
-        "es": "https://i.ytimg.com/vi/4r7wHMg5Yjg/maxresdefault.jpg"
-    },
-    "16x9": {
-        "en": "https://i.ytimg.com/vi/4r7wHMg5Yjg/maxresdefault.jpg"
-    }
-  }
-*/
 let watchNext = function(title, linkUrl, expires, contentId, images) {
   Log.info('Added to Dashboard: ' + title + ', ' + linkUrl)
   return Promise.resolve(true)
