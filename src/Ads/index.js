@@ -48,11 +48,16 @@ let getPolicy = function() {
   }
 }
 
+/*
 let getPrivacy = function() {
   return {		
-    limitTracking: false,		
+    limitTracking: false,
+    usPrivacy: '1-N-',
+    asHeader: 'lmt=0,us_privacy=1-N-',
+    asUrlParmeter: 'lmt=0&us_privacy=1-N-'
   }
 }
+*/
 
 let getAds = function() {
   return Promise.resolve({
@@ -67,7 +72,7 @@ export const initAdvertising = config => {
   resetAdvertisingId = config.resetAdvertisingId || resetAdvertisingId
 //  getConfig = config.getConfig || getConfig
   getPolicy = config.getPolicy || getPolicy
-  getPrivacy = config.getPrivacy || getPrivacy
+//  getPrivacy = config.getPrivacy || getPrivacy
   getAds = config.getAds || getAds
 }
 
@@ -84,9 +89,9 @@ export default {
   policy() {		
     return getPolicy()
   },		
-  privacy() {		
-    return getPrivacy()
-  },
+//  privacy() {		
+//    return getPrivacy()
+//  },
   get: AdsPlayer.get,
   cancel: AdsPlayer.cancel,
   stop: AdsPlayer.stop
