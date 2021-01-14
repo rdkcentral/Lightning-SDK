@@ -20,10 +20,6 @@ import { Discovery } from '@lightningjs/sdk'
 ### Entitlements
 Gets or sets the users entitlements for this app to enable platform home screen awareness.
 
-```js
-Discovery.entitlements([{},{}])
-```
-
 Takes an Array of entitlements, by default, during _local develompent_:
 
 ```js
@@ -43,10 +39,6 @@ Discovery.entitlements([
 
 ### Watched
 Adds a content the user's watch history to enable platform home screen awareness.
-
-```js
-Discovery.watched([{},{}])
-```
 
 Takes an array of watched items:
 
