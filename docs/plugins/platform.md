@@ -162,10 +162,29 @@ Gets the model of the device running the App. Returns `Metrological` by default 
 Platform.Device.type()
 ```
 
+#### HDCP
+
+Gets the HDCP capabilities. Returns and `Object` with an overview of which HDCP version are and are not supported.
+Returns `{'hdcp1.4': true, 'hdcp2.2': false}` by default  during _local development_.
+
+```js
+Platform.Device.hdcp()
+```
+
 #### HDR
 
-Gets the platforms _HDR_ capabilities. Returns an `Array` of only those capabilities that are supported.
-Defaults to `['hdr10', 'hdr10Plus', 'dolbyVision', 'hlg']` during _local development_.
+Gets the platforms _HDR_ capabilities. Returns an `Object` with an overview of which HDR capabilities are and are not supported.
+
+Returns the following object by default during _local development_.
+
+```js
+{
+  hdr10: true,
+  hdr10Plus: true,
+  dolbyVision: true,
+  hlg: true,
+}
+```
 
 ```js
 Platform.Device.hdr()
@@ -173,8 +192,22 @@ Platform.Device.hdr()
 
 #### Audio
 
-Gets the platforms _audio_ capabilities. Returns an `Array` of only those capabilities that are supported.
-Defaults to `['stereo', 'dolbyDigital', 'dolbyDigitalPlus', 'dolbyAtmos']` during _local development_.
+Gets the platforms _audio_ capabilities. Returns an `Object` with an overview of which audio capabilities are and are not supported.
+
+Returns the following object by default during _local development_.
+
+```js
+{
+  stereo: true,
+  dolbyDigital: true,
+  dolbyDigitalPlus: true,
+  dolbyAtmos: true,
+}
+```
+
+```js
+Platform.Device.audio()
+```
 
 #### Screen resolution
 
@@ -334,8 +367,19 @@ Add a `platform` key in `platformSettings` and only add the values you wish to c
             "packages": [],
             "uid": "ee6723b8-7ab3-462c-8d93-dbf61227998e",
             "stbType": "Metrological",
-            "hdr": ["hdr10", "hdr10Plus", "dolbyVision", "hlg"],
-            "audio": ["stereo", "dolbyDigital", "dolbyDigitalPlus", "dolbyAtmos"],
+            "hdcp": {"hdcp1.4": true, "hdcp2.2": false},
+            "hdr": {
+              "hdr10": true,
+              "hdr10Plus": true,
+              "dolbyVision": true,
+              "hlg": true,
+            },
+            "audio": {
+              "stereo": true,
+              "dolbyDigital": true,
+              "dolbyDigitalPlus": true,
+              "dolbyAtmos": true,
+            },
             "screenResolution": [1920, 1080],
             "videoResolution": [1920, 1080],
             "name": "Living Room",

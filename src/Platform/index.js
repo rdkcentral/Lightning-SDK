@@ -123,6 +123,9 @@ export default {
     model(params) {
       return getOrSet('device', 'model', params)
     },
+    hdcp(params) {
+      return getOrSet('device', 'hdcp', params)
+    },
     hdr(params) {
       return getOrSet('device', 'hdr', params)
     },
