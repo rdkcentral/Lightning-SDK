@@ -162,36 +162,70 @@ Gets the model of the device running the App. Returns `Metrological` by default 
 Platform.Device.type()
 ```
 
+#### HDCP
+
+Gets the supported HDCP profiles.
+
+```js
+Platform.Device.hdcp()
+```
+
+Returns:
+
+```js
+{
+  enabled: true,
+  negotiatedVersion: 'HDCP2.2',
+  maxVersion: 'HDCP2.3'
+}
+```
+by default during _local development_.
+
 #### HDR
 
-Gets the platforms _HDR_ capabilities. Returns an `Array` of only those capabilities that are supported.
-Defaults to `['hdr10', 'hdr10Plus', 'dolbyVision', 'hlg']` during _local development_.
+Gets the supported HDR profiles.
 
 ```js
 Platform.Device.hdr()
 ```
 
+Returns:
+```js
+{
+  hdr10: true,
+  hdr10plus: false,
+  dolbyVision: true,
+  hlg: true
+}
+```
+by default during _local development_.
+
 #### Audio
 
-Gets the platforms _audio_ capabilities. Returns an `Array` of only those capabilities that are supported.
-Defaults to `['stereo', 'dolbyDigital', 'dolbyDigitalPlus', 'dolbyAtmos']` during _local development_.
-
-#### Screen resolution
-
-Gets the screen resolution as an Array with the `width` and the `height`.
-Returns `[1920, 1080]` by default during _local development_.
+Gets the supported audio profiles.
 
 ```js
-Platform.Device.screenResolution()
+Platform.Device.audio()
 ```
 
-#### Video resolution
+Returns:
+```js
+{
+  stereo: true,
+  dolbyDigital: true,
+  dolbyDigitalPlus: true,
+  dolbyAtmos: true
+}
+```
+by default during _local development_.
 
-Gets the video resolution as an Array with the `width` and the `height`.
+#### Resolution
+
+Gets the screen resolution as an Array width the `width` and the `height`.
 Returns `[1920, 1080]` by default during _local development_.
 
 ```js
-Platform.Device.videoResolution()
+Platform.Device.resolution()
 ```
 
 #### Name
@@ -214,10 +248,16 @@ Platform.Device.network()
 
 #### Closed Captions
 
-Gets the closed captions configuration as an `Object`. Returns the following object by default during _local development_.
+Gets the closed captions configuration as an `Object`.
 
 ```js
-`{
+Platform.Accessibility.closedCaptions()
+```
+
+Returns the following object by default during _local development_.
+
+```js
+{
   enabled: true,
   styles: {
     fontFamily: 'Monospace sans-serif',
@@ -231,27 +271,33 @@ Gets the closed captions configuration as an `Object`. Returns the following obj
     textAlign: 'center',
     textAlignVertical: 'middle',
   }
-}`
-```
-
-```js
-Platform.Accessibility.closedCaptions()
+}
 ```
 
 #### Voice Guidance
 
-Gets the voice guidance configuration as an `Object`. Returns `{enabled: true, speed: 5}` by default during _local development_.
+Gets the voice guidance configuration as an `Object`.
 
 ```js
 Platform.Accessibility.voiceGuidance()
 ```
+
+Returns
+
+```js
+{
+  enabled: true,
+  speed: 5
+}
+```
+
+by default during _local development_.
 
 ### Get
 
 First class citizen properties have their own namespaced methods. But all platform values can also be retrieved via a
 generic `Platform.get()` methdod. This method accepts a `string` consisting of the _namespace_ and the _key_ of the
 value to be retrieved, using so called _dot-notation_.
-
 
 ```js
 Platform.get('Device.name')
@@ -262,8 +308,8 @@ you can pass an _Array_ with `strings` of _namespace_ and _key_ (using _dot-nota
 values all at once.
 
 ```js
-Platform.get(['Device.name', 'Device.screenResolution'])
-// { 'Device.name': 'Living Room', 'Device.screenResolution': [1920, 1080] }
+Platform.get(['Device.name', 'Device.resolution'])
+// { 'Device.name': 'Living Room', 'Device.resolution': [1920, 1080] }
 ```
 
 The generic `get`-method can also be used for retrieving _non-standard_, platform specific properties.
@@ -334,10 +380,8 @@ Add a `platform` key in `platformSettings` and only add the values you wish to c
             "packages": [],
             "uid": "ee6723b8-7ab3-462c-8d93-dbf61227998e",
             "stbType": "Metrological",
-            "hdr": ["hdr10", "hdr10Plus", "dolbyVision", "hlg"],
-            "audio": ["stereo", "dolbyDigital", "dolbyDigitalPlus", "dolbyAtmos"],
-            "screenResolution": [1920, 1080],
-            "videoResolution": [1920, 1080],
+            "hdcp": "HDR10",
+            "resolution": [1920, 1080],
             "name": "Living Room",
             "network": {
               "state": "Connected",

@@ -41,10 +41,15 @@ export const defaultPlatform = {
     uid: 'ee6723b8-7ab3-462c-8d93-dbf61227998e',
     type: 'STB',
     model: 'Metrological',
-    hdr: ['hdr10', 'hdr10Plus', 'dolbyVision', 'hlg'],
-    audio: ['stereo', 'dolbyDigital', 'dolbyDigitalPlus', 'dolbyAtmos'],
-    screenResolution: [1920, 1080],
-    videoResolution: [1920, 1080],
+    hdcp: {
+      enabled: true,
+      negotiatedVersion: 'HDCP2.2',
+      maxVersion: 'HDCP2.3'
+    },
+    // 
+    hdr: Object.assign(['dolbyVision', 'hlg'], {hdr10: 'hdr10', hdr10Plus: 'hdr10Plus', dolbyVision: 'dolbyVision', hlg: 'hlg'}),
+    audio:Object.assign(['stereo', 'dolbyDigital'], {stereo: 'stereo', dolbyDigital: 'dolbyDigital', dolbyDigitalPlus: 'dolbyDigtalPlus', dolbyAtmos: 'dolbyAtmos'}),
+    resolution: [1920, 1080],
     name: 'Living Room',
     network: {
       state: 'Connected',
@@ -71,5 +76,5 @@ export const defaultPlatform = {
       enabled: true,
       speed: 5,
     },
-  },
+  }
 }
