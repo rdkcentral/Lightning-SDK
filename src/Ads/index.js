@@ -25,9 +25,9 @@ let consumer
 let getAds = () => {
   // todo: enable some default ads during development, maybe from the settings.json
   return Promise.resolve({
-    prerolls: [],
-    midrolls: [],
-    postrolls: [],
+    preroll: [],
+    midroll: [],
+    postroll: [],
   })
 }
 
@@ -130,15 +130,6 @@ const playAd = ad => {
         fireOnConsumer('Error', ad)
         cleanup()
       },
-      // this doesn't work reliably on sky box, moved logic to timeUpdate event
-      // loadedmetadata() {
-      //   // calculate when to fire the time based events (now that duration is known)
-      //   timeEvents = {
-      //     firstQuartile: videoEl.duration / 4,
-      //     midPoint: videoEl.duration / 2,
-      //     thirdQuartile: (videoEl.duration / 4) * 3,
-      //   }
-      // },
       abort() {
         cleanup()
       },
@@ -234,5 +225,9 @@ export default {
     const videoEl = document.getElementsByTagName('video')[0]
     videoEl.pause()
     videoEl.removeAttribute('src')
+  },
+  // getSet?! yeah .. you set the getAds method
+  setGetAds(getAdsFunction, config) {
+    getAds = getAdsFunction.bind(null, [config])
   },
 }
