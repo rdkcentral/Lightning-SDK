@@ -68,6 +68,102 @@ Send a custom metric related to an App event.
 Metrics.app.event(name, params)
 ```
 
+### Category View
+
+Send a metric that a category page has been viewed.
+
+```js
+Metrics.category.view(name, params)
+```
+
+### Category Leave
+
+Send a metric that a category page has been left.
+
+```js
+Metrics.category.leave(name, params)
+```
+
+### Category Error
+
+Send a metric that an error has occured accessing a category page.
+
+```js
+Metrics.category.error(message, code, params)
+```
+
+### Category Event
+
+Send a custom metric related to a category page event.
+
+```js
+Metrics.category.event(name, params)
+```
+
+### Search View
+
+Send a metric that a search results page has been viewed.
+
+```js
+Metrics.search.view(name, params)
+```
+
+### Search Leave
+
+Send a metric that a search results page has been left.
+
+```js
+Metrics.search.leave(name, params)
+```
+
+### Search Error
+
+Send a metric that an error has occured accessing a search results page.
+
+```js
+Metrics.search.error(message, code, params)
+```
+
+### Search Event
+
+Send a custom metric related to a search results page event.
+
+```js
+Metrics.search.event(name, params)
+```
+
+### Details View
+
+Send a metric that a details page has been viewed.
+
+```js
+Metrics.details.view(name, params)
+```
+
+### Details Leave
+
+Send a metric that a details page has been left.
+
+```js
+Metrics.details.leave(name, params)
+```
+
+### Details Error
+
+Send a metric that an error has occured accessing a details page.
+
+```js
+Metrics.details.error(message, code, params)
+```
+
+### Details Event
+
+Send a custom metric related to a details page event.
+
+```js
+Metrics.details.event(name, params)
+```
+
 ### Page View
 
 Send a metric that a page has been viewed.
@@ -150,3 +246,45 @@ The Lightning SDK's [VideoPlayer plugin](/plugins/videoplayer) automatically tra
 <!-- ### Generic Error
 
 ### Generic Event -->
+
+### Playback
+QoS metrics for use with any player framework.
+
+#### Playback Initiated
+Track when playback has been initiated, i.e. requested (but not necessary started):
+```js
+Metrics.playback.initiated(contentId, startTime) {
+```
+
+#### Playback Started
+Track when playback has been started, i.e. frames are moving:
+```js
+Metrics.playback.started(contentId, startTime) {
+```
+
+#### Progress
+```js
+Metrics.playback.progressAsPercent(contentId, progress, completed = false)
+```
+```js
+Metrics.playback.progressAsSeconds(contentId, progress, duration, completed = false) {
+```
+
+#### Rendition Changed
+Track when the playback rendition, e.g. bitrate or dimensions, has changed:
+```js
+Metrics.playback.renditionChanged(contentId, progress, bitrate, width, height) {
+```
+
+#### Buffer Interruption
+Track when natural playback is unexpected paused due to network constraints. Should only be called when frames stop moving w/out any user intervention (e.g. buffering due to a seek should not result in calling this method):
+
+```js
+Metrics.playback.bufferInterruptionStarted(contentId, progress) {
+```
+
+#### Buffer Interruption Completed
+Track when playback has recovered after a prevoius `bufferInterruptionStarted`:
+```js
+Metrics.playback.bufferInterruptionCompleted(contentId, progress) {
+```

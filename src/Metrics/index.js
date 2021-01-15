@@ -31,6 +31,9 @@ export const initMetrics = config => {
 const metrics = {
   app: ['launch', 'loaded', 'ready', 'close'],
   page: ['view', 'leave'],
+  category: ['view', 'leave'],
+  search: ['view', 'leave'],
+  details: ['view', 'leave'],
   user: ['click', 'input'],
   media: [
     'abort',
@@ -45,6 +48,31 @@ const metrics = {
     'seeking',
     'seeked',
   ],
+  playback: [] // playbackMetrics are spliced in
+}
+
+const playbackMetrics = {
+  progressAsPercent(contentId, progress, completed = false) {
+    sendMetric('playback', 'progress', {contentId: contentId, progress: progress, completed: completed })
+  },
+  progressAsSeconds(contentId, progress, duration, completed = false) {
+    sendMetric('playback', 'progress', {contentId: contentId, progress: progress/duration, completed: completed })
+  },
+  initiated(contentId, startTime) {
+    sendMetric('playback', 'initiated', {contentId: contentId, startTime: startTime })
+  },
+  started(contentId, startTime) {
+    sendMetric('playback', 'started', {contentId: contentId, startTime: startTime })
+  },
+  renditionChanged(contentId, progress, bitrate, width, height) {
+    sendMetric('playback', 'rendition', {contentId: contentId, progress: progress, bitrate, width, height })
+  },
+  bufferInterruptionStarted(contentId, progress) {
+    sendMetric('playback', 'bufferInterupt', {contentId: contentId, progress: progress })
+  },
+  bufferInterruptionCompleted(contentId, progress) {
+    sendMetric('playback', 'bufferResume', {contentId: contentId, progress: progress })
+  }
 }
 
 // error metric function (added to each category)
@@ -53,7 +81,7 @@ const errorMetric = (type, message, code, visible, params = {}) => {
   sendMetric(type, 'error', params)
 }
 
-const Metric = (type, events, options = {}) => {
+const Metric = (type, events, options = {}, extraEvents = null) => {
   return events.reduce(
     (obj, event) => {
       obj[event] = (name, params = {}) => {
@@ -63,6 +91,7 @@ const Metric = (type, events, options = {}) => {
       return obj
     },
     {
+      ...extraEvents,
       error(message, code, params) {
         errorMetric(type, message, code, params)
       },
@@ -79,9 +108,20 @@ const Metrics = types => {
       // media metric works a bit different!
       // it's a function that accepts a url and returns an object with the available metrics
       // url is automatically passed as a param in every metric
-      type === 'media'
-        ? (obj[type] = url => Metric(type, types[type], { url }))
-        : (obj[type] = Metric(type, types[type]))
+      if (type === 'media')
+        (obj[type] = url => Metric(type, types[type], { url }))
+      // playback metric also works different, as it has explicit functions defined above
+      else if (type === 'playback')
+        (obj[type] = Metric(type, types[type], {}, playbackMetrics))
+      else if (type === 'category')
+        (obj[type] = categoryId => Metric(type, types[type], { categoryId }))
+      else if (type === 'search')
+        (obj[type] = query => Metric(type, types[type], { query }))
+      else if (type === 'details')
+        (obj[type] = contentId => Metric(type, types[type], { contentId }))
+      else
+        (obj[type] = Metric(type, types[type]))
+
       return obj
     },
     { error: errorMetric, event: sendMetric }
