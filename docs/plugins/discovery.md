@@ -18,9 +18,11 @@ import { Discovery } from '@lightningjs/sdk'
 ## Available methods
 
 ### Entitlements
-Gets or sets the users entitlements for this app to enable platform home screen awareness.
+Sets the users entitlements for this app to enable platform home screen awareness.
 
-Takes an Array of entitlements, by default, during _local develompent_:
+Note that this overrides previous entitlements sent to this method.
+
+Takes an Array of entitlements:
 
 ```js
 Discovery.entitlements([
