@@ -225,7 +225,11 @@ const handleHashChange = async override => {
     if (isString(result)) {
       navigate(result)
     } else if (isObject(result)) {
-      navigate(result.path, result.params)
+      let store = true
+      if (isBoolean(result.store)) {
+        store = result.store
+      }
+      navigate(result.path, result.params, store)
     }
   }
 }
