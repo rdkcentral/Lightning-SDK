@@ -19,7 +19,6 @@
 
 import Metrics from '../Metrics'
 import Log from '../Log'
-// import Ads from '../Ads'
 
 import events from './events'
 import autoSetupMixin from '../helpers/autoSetupMixin'
@@ -339,13 +338,12 @@ const videoPlayerPlugin = {
   },
 
   enableAds(enabled = true) {
-    // deprecate ? Or maybe still valid to call to disable ads for some reason?
     state.adsEnabled = enabled
   },
 
   ads(advertisingPlugin) {
     Ads = advertisingPlugin.adsHandler
-    this.enableAds() // if deprecating this method, set state.adsEnabled directly
+    this.enableAds()
   },
 
   /* Public getters */

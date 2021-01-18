@@ -1,5 +1,5 @@
 import Platform from '../Platform'
-import Ads from '../Ads'
+import adsHandler from './adsHandler'
 
 export default {
   config() {
@@ -11,22 +11,20 @@ export default {
   advertisingId(reset = false) {
     return reset
       ? Platform.get('Advertising.advertisingId')
-      : // transport layer should interpret 'set null' as 'recreate new id'
+      : // 'set null' means 'recreate new id'
         Platform.set('Advertising.advertisingId', null)
   },
-  // what kind of data does this return?
   deviceAttributes() {
     return Platform.get('Advertising.deviceAttributes')
   },
-  // good name?
   appStoreId() {
     return Platform.get('Advertising.appStoreId')
   },
-  adsHandler: Ads,
-  setGetAds() {
+  adsHandler,
+  set getAds(getAdsFn) {
     this.adsHandler &&
       this.adsHandler.setGetAds &&
-      typeof this.adshandler.setGetAds === 'function' &&
-      this.adsHandler.setGetAds.apply(this.adsHandler, arguments)
+      typeof this.adsHandler.setGetAds === 'function' &&
+      this.adsHandler.setGetAds(this, getAdsFn)
   },
 }

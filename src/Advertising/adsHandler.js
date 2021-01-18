@@ -31,7 +31,7 @@ let getAds = () => {
   })
 }
 
-export const initAds = config => {
+export const initAdsHandler = config => {
   if (config.getAds) {
     getAds = config.getAds
   }
@@ -55,7 +55,6 @@ const playAd = ad => {
       Log.info('Ad', 'Skipping add due to inactive state')
       return resolve()
     }
-    // is it safe to rely on videoplayer plugin already created the video tag?
     const videoEl = document.getElementsByTagName('video')[0]
     videoEl.style.display = 'block'
     videoEl.style.visibility = 'visible'
@@ -226,8 +225,8 @@ export default {
     videoEl.pause()
     videoEl.removeAttribute('src')
   },
-  // getSet?! yeah .. you set the getAds method
-  setGetAds(getAdsFunction, config) {
-    getAds = getAdsFunction.bind(null, [config])
+  // getSet?! yeah .. you set the getAds method :)
+  setGetAds(context, getAdsFunction) {
+    getAds = getAdsFunction.bind(context)
   },
 }

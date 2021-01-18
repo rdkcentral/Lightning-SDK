@@ -17,7 +17,6 @@
  * limitations under the License.
  */
 
-// export { default as Ads } from './src/Ads' => don't think we need this export. it's hidden behind advertising
 export { default as Advertising } from './src/Advertising'
 export { AppData } from './src/Application'
 export { default as Application } from './src/Application'
