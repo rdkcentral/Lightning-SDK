@@ -144,13 +144,12 @@ export const navigate = (url, args = {}, store = true) => {
     hash = forcedHash
   }
   if (hash.replace(/^#/, '') !== url) {
+    setHash(url)
     if (!mustUpdateLocationHash()) {
       forcedHash = url
       handleHashChange(url).then(() => {
         app._refocus()
       })
-    } else {
-      setHash(url)
     }
   } else if (args.reload) {
     handleHashChange(url).then(() => {
@@ -409,7 +408,9 @@ export const initRouter = config => {
  * On hash change we start processing
  */
 window.addEventListener('hashchange', async () => {
-  await handleHashChange()
+  if (mustUpdateLocationHash()) {
+    await handleHashChange()
+  }
 })
 
 // export API
