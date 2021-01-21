@@ -159,7 +159,7 @@ Platform.Device.type()
 Gets the model of the device running the App. Returns `Metrological` by default during _local development_.
 
 ```js
-Platform.Device.type()
+Platform.Device.model()
 ```
 
 #### HDCP
