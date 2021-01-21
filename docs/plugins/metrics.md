@@ -221,28 +221,39 @@ The `Metrics.user` namespace is used for tracking media events.
 
 The [VideoPlayer plugin](/plugins/videoplayer) automatically tracks and sends Metrcs for the following media related events:
 
+- LoadStart
 - Abort
 - CanPlay
 - Ended
 - Pause
 - Play
+- Progress
 - Suspend
 - VolumeChange
 - Waiting
 - Seeking
 - Seeked
 - Ratechange
+- Rendition
 
 For apps that don't use the VideoPlayer plugin, tracking has to be implemented manually. Media metrics are initiated by
-calling the method `Metrics.media()` and passing it the url of the media asset that is being tracked.
+calling the method `Metrics.media()` and passing it the uri of the media asset that is being tracked. The uri may be a qualified URL to the CDN, or a unique identifier from a CMS.
 
 ```js
-const mediaMetrics = Metrics.media(assetUrl)
+const mediaMetrics = Metrics.media(assetUri)
 ```
 
 Next the following methods will become available on the `mediaMetrics` variable:
 
+#### Load Start
+Called when playback is requested, but before the frames are available.
+
+```js
+mediaMetrics.loadstart({ currentTime: ... })
+```
+
 #### Abort
+Playback was aborted, but not due to an error.
 
 ```js
 mediaMetrics.abort({ currentTime: ... })
@@ -255,23 +266,32 @@ mediaMetrics.canplay({ currentTime: ... })
 ```
 
 #### Ended
+Playback has stopped because the end of the media was reached.
 
 ```js
 mediaMetrics.canplay({ currentTime: ... })
 ```
 
 #### Pause
+Playback has been paused.
 
 ```js
 mediaMetrics.pause({ currentTime: ... })
 ```
 
 #### Play
+Playback has started either initially, or after being paused.
 
 ```js
 mediaMetrics.play({ currentTime: ... })
 ```
 
+#### Progress
+Called at regular intervals to update the current progress of playback.
+
+```js
+mediaMetrics.progress({ currentTime: ... })
+```
 
 #### Suspend
 
@@ -279,35 +299,46 @@ mediaMetrics.play({ currentTime: ... })
 mediaMetrics.suspend({ currentTime: ... })
 ```
 
-
 #### Volume Change
+Either the volume or the mute state has changed.
 
 ```js
 mediaMetrics.volumechange({ currentTime: ... })
 ```
 
 #### Waiting
+Playback has stopped because the next frame is not available, but will continue once it is available.
 
 ```js
 mediaMetrics.waiting({ currentTime: ... })
 ```
 
 #### Seeking
+Seeking was initiated.
 
 ```js
 mediaMetrics.seeking({ currentTime: ... })
 ```
 
 #### Seeked
+Seeking has completed.
 
 ```js
 mediaMetrics.seeked({ currentTime: ... })
 ```
 
 #### Ratechange
+The playback rate has changed.
 
 ```js
 mediaMetrics.ratechange({ currentTime: ... })
+```
+
+#### Rendition
+The playback rendition, e.g. bitrate, dimensions, etc., has changed.
+
+```js
+mediaMetrics.rendition({ currentTime: ..., bitrate: ..., width: ..., height: ... })
 ```
 
 <!-- ### Generic Error
