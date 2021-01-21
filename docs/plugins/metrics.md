@@ -219,7 +219,7 @@ Metrics.user.event(name, params)
 
 The `Metrics.user` namespace is used for tracking media events.
 
-The [VideoPlayer plugin](/plugins/videoplayer) automatically tracks and sends Metrcs for the following media related events:
+The [VideoPlayer plugin](/plugins/videoplayer) automatically tracks and sends Metrics for the following media related events:
 
 - Abort
 - CanPlay
@@ -257,7 +257,7 @@ mediaMetrics.canplay({ currentTime: ... })
 #### Ended
 
 ```js
-mediaMetrics.canplay({ currentTime: ... })
+mediaMetrics.ended({ currentTime: ... })
 ```
 
 #### Pause
