@@ -19,7 +19,6 @@
 
 import Metrics from '../Metrics'
 import Log from '../Log'
-import Ads from '../Ads'
 
 import events from './events'
 import autoSetupMixin from '../helpers/autoSetupMixin'
@@ -35,6 +34,7 @@ let metrics
 let consumer
 let precision = 1
 let textureMode = false
+let Ads
 
 export const initVideoPlayer = config => {
   if (config.mediaUrl) {
@@ -198,35 +198,41 @@ const videoPlayerPlugin = {
     this.hide()
     deregisterEventListeners()
 
-    // preload the video to get duration (for ads)
-    //.. currently actually not working because loadedmetadata didn't work reliably on Sky boxes
     videoEl.setAttribute('src', url)
     videoEl.load()
 
-    // const onLoadedMetadata = () => {
-    // videoEl.removeEventListener('loadedmetadata', onLoadedMetadata)
-    const config = { enabled: state.adsEnabled, duration: 300 } // this.duration ||
-    if (details.videoId) {
-      config.caid = details.videoId
-    }
-    Ads.get(config, consumer).then(ads => {
-      state.playingAds = true
-      ads.prerolls().then(() => {
-        state.playingAds = false
-        registerEventListeners()
-        if (this.src !== url) {
-          videoEl.setAttribute('src', url)
-          videoEl.load()
-        }
-        this.show()
-        setTimeout(() => {
-          this.play()
+    if (Ads) {
+      const config = { enabled: state.adsEnabled, duration: 300 }
+      if (details.videoId) {
+        config.caid = details.videoId
+      }
+      Ads.get(config, consumer).then(ads => {
+        state.playingAds = true
+        ads.prerolls().then(() => {
+          state.playingAds = false
+          registerEventListeners()
+          if (this.src !== url) {
+            videoEl.setAttribute('src', url)
+            videoEl.load()
+          }
+          this.show()
+          setTimeout(() => {
+            this.play()
+          })
         })
       })
-    })
-    // }
-
-    // videoEl.addEventListener('loadedmetadata', onLoadedMetadata)
+    } else {
+      // duplication! refactor later
+      registerEventListeners()
+      if (this.src !== url) {
+        videoEl.setAttribute('src', url)
+        videoEl.load()
+      }
+      this.show()
+      setTimeout(() => {
+        this.play()
+      })
+    }
   },
 
   reload() {
@@ -333,6 +339,11 @@ const videoPlayerPlugin = {
 
   enableAds(enabled = true) {
     state.adsEnabled = enabled
+  },
+
+  ads(advertisingPlugin) {
+    Ads = advertisingPlugin.adsHandler
+    this.enableAds()
   },
 
   /* Public getters */
