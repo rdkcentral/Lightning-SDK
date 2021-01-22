@@ -163,7 +163,8 @@ Or return an `object` if you want to send parameters along.
                 params:{
                     msg: "Not authenticated",
                     pageFrom: from
-                }
+                },
+                store: false
             }
         }
     }   

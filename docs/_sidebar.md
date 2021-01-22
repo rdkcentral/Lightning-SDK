@@ -15,10 +15,12 @@
     - [Navigation](/plugins/router/navigation.md)
     - [Data providing](/plugins/router/dataproviding.md)
     - [Router events](/plugins/router/events.md)
+    - [History](/plugins/router/history.md)
     - [Page transitions](/plugins/router/pagetransitions.md)
     - [Widgets](/plugins/router/widgets.md)
     - [Settings](/plugins/router/settings.md)
-    - [Deeplinking & History](/plugins/router/deeplinking.md)
+    - [Deeplinking](/plugins/router/deeplinking.md)
+    - [Public methods](/plugins/router/methods.md)
 
   <!-- - [Keyboard](/plugins/keyboard.md) -->
   - [VideoPlayer](/plugins/videoplayer.md)

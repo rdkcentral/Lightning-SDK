@@ -14,9 +14,3 @@ handle any general operations that has need to be executed for you App to functo
 When a user enters your App via a deeplink, there is technically no history available. By default this would mean that a back key press will lead to an exit of the app.
 
 On some platforms this is not the expected behaviour. For that reason the Router plugin supports _backtracking_ functionality. When enabled (via the platform setting `router.backtracking`), upon a backpress the router will _recursively_ remove the last part of the hash, until it finds a valid path to navigate to.
-
-## History management
-
-The router maintains it’s own history and does not rely on a browser web API. All the routes we have navigated to can end up in history. We don’t keep route duplicates in history, so `#home/player/145` will only be in history once (even if the user navigated to it multiple times) but same route blueprints with different values can live in history, `home/player/178` and `home/player/91737` or `browse/genre/action/50` and `browse/genre/popular/50`
-
-Remote control backpress will check if there are routes in history, pop the last off navigate to that route (invoking the page loading process as discussed before)

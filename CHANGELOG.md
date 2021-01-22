@@ -1,5 +1,29 @@
 # Changelog
 
+## vX.X.X
+
+- Router update
+    - Plugin refactor
+    - Added test Router.isNavigating()
+    - Added Router history interaction
+    - Added Router.getHistory()
+    - Added Router.replaceHistoryState()
+    - Added Router.getHistoryState()
+    - Added hash reload support
+    - Added named navigation support
+    - Added error handling in bootRequest
+    - Fixed Page overlap when on navigate starts before transition finish
+    - Fixed _onActivated() widget event documentation
+    - Fixed navigating to same hash when navigating
+    - Deprecated Router.setupRoutes() - method
+    - Deprecated Router.on() / - data providing must be defined in route object
+    - Deprecated Router.before()
+    - Deprecated Router.after()
+    - Deprecated duplicate route definitions
+    - BREAKING CHANGE: `page.dynamicRouteProperty = hashValue;` is no longer being set, now use `_onUrlParams(args)`. In the previous release on
+    route: `home/browse/:section` and a `navigate()` to: `home/browse/adventure` the Router would set the page prop `page['section'] = 'adventure'` but this could
+    lead to unwanted and error prone behaviour. This undocumented feature has now been removed.
+
 ## v3.2.1
 
 *14 dec 2020*
