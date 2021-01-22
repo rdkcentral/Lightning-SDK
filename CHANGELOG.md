@@ -21,8 +21,11 @@
     - Deprecated Router.after()
     - Deprecated duplicate route definitions
     - BREAKING CHANGE: `page.dynamicRouteProperty = hashValue;` is no longer being set, now use `_onUrlParams(args)`. In the previous release on 
-    route: `home/browse/:section` and a `navigate()` to: `home/browse/adventure` the Router would set the page prop `page['section'] = 'adventure'` but this could
-    lead to unwanted and error prone behaviour. This undocumented feature has now been removed. 
+        route: `home/browse/:section` and a `navigate()` to: `home/browse/adventure` the Router would set the page prop `page['section'] = 'adventure'` but this could
+        lead to unwanted and error prone behaviour. This undocumented feature has now been removed. 
+    - BREAKING CHANGE: The router now only accepts one `route` blueprint per path. You can specify `component` and the `hook` property in the same object, as where 
+    you needed to specify them separately in the previous version.
+       
 
 ## v3.2.0
 
