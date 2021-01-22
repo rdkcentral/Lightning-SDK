@@ -97,13 +97,14 @@ var startApp = function startApp() {
       return window.attachInspector(window.lng);
     }.bind(this)) : Promise.resolve();
   }.bind(this), function () {
-    var bundle = window[appMetadata.id];
-    // support rollup and esbuild
-    if(typeof bundle !== "function"){
+    _newArrowCheck(this, _this2);
+
+    var bundle = window[appMetadata.id]; // support rollup and esbuild
+
+    if (typeof bundle !== 'function') {
       bundle = bundle.default;
     }
 
-    _newArrowCheck(this, _this2);
     console.time('app2');
     settings.appSettings.version = appMetadata.version;
     settings.appSettings.id = appMetadata.identifier;
