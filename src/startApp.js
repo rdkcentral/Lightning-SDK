@@ -49,14 +49,16 @@ const startApp = () => {
           )
         : Promise.resolve(),
     () => {
+      let bundle = window[appMetadata.id]
+      // support rollup and esbuild
+      if (typeof bundle !== 'function') {
+        bundle = bundle.default
+      }
+
       console.time('app2')
       settings.appSettings.version = appMetadata.version
       settings.appSettings.id = appMetadata.identifier
-      app = window[appMetadata.id](
-        settings.appSettings,
-        settings.platformSettings,
-        settings.appData
-      )
+      app = bundle(settings.appSettings, settings.platformSettings, settings.appData)
       canvas = app.stage.getCanvas()
       document.body.appendChild(canvas)
     },
