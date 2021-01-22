@@ -20,9 +20,15 @@
     - Deprecated Router.before()
     - Deprecated Router.after()
     - Deprecated duplicate route definitions
-    - BREAKING CHANGE: `page.dynamicRouteProperty = hashValue;` is no longer being set, now use `_onUrlParams(args)`. In the previous release on 
+    - BREAKING CHANGE: `page.dynamicRouteProperty = hashValue;` is no longer being set, now use `_onUrlParams(args)`. In the previous release on
     route: `home/browse/:section` and a `navigate()` to: `home/browse/adventure` the Router would set the page prop `page['section'] = 'adventure'` but this could
-    lead to unwanted and error prone behaviour. This undocumented feature has now been removed. 
+    lead to unwanted and error prone behaviour. This undocumented feature has now been removed.
+
+## v3.2.1
+
+*14 dec 2020*
+
+- Updated LocalCookie dependency to v1.1.1 (fixes persistance of cookies beyond browser session)
 
 ## v3.2.0
 
@@ -33,13 +39,6 @@
 - Fixed calculation of precision in VideoPlayer plugin, when no AppInstance is defined
 - Fixed loading of language files for Language Plugin
 - Fixed namespacing in Storage Plugin
-
-## v3.1.1
-
-*6 nov 2020*
-
-- Added warning to postinstall script do manual upgrade of the Lightning-SDK when a mismatch in package names is detected
-- Added _changelog_ and _current package version_ to the documentation
 
 ## v3.1.1
 
