@@ -33,11 +33,13 @@ const metrics = {
   page: ['view', 'leave'],
   user: ['click', 'input'],
   media: [
+    'loadstart',
     'abort',
     'canplay',
     'ended',
     'pause',
     'play',
+    'progress',
     // with some videos there occur almost constant suspend events ... should investigate
     // 'suspend',
     'volumechange',
@@ -45,6 +47,7 @@ const metrics = {
     'seeking',
     'seeked',
     'ratechange',
+    'renditionchange'
   ],
 }
 
