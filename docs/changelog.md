@@ -5,7 +5,7 @@
 *22 jan 2021*
 
 - Removed deprecated Image plugin methods
-- Fixed Storage plugin to compile with webpack and esbuld
+- Fixed Storage plugin to compile with webpack and esbuild
 - Added support for experimental esbuild support
 - Router Plugin refactor
   - Breaking changes
