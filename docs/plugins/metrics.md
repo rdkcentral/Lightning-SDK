@@ -338,7 +338,7 @@ mediaMetrics.ratechange({ currentTime: ... })
 The playback rendition, e.g. bitrate, dimensions, etc., has changed.
 
 ```js
-mediaMetrics.rendition({ currentTime: ..., bitrate: ..., width: ..., height: ... })
+mediaMetrics.renditionchange({ currentTime: ..., bitrate: ..., width: ..., height: ... })
 ```
 
 <!-- ### Generic Error
