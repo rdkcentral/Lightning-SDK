@@ -1,9 +1,16 @@
 # Changelog
 
-## vX.X.X
+## v4.0.0
 
-- Router update
-    - Plugin refactor
+*22 jan 2021*
+
+- Removed deprecated Image plugin methods
+- Fixed Storage plugin to compile with webpack and esbuld
+- Added support for experimental esbuild support
+- Router Plugin refactor
+  - Breaking changes
+    - `page.dynamicRouteProperty = hashValue;` is no longer being set, now use `_onUrlParams(args)`. In the previous release on route: `home/browse/:section` and a `navigate()` to: `home/browse/adventure` the Router would set the page prop `page['section'] = 'adventure'` but this could lead to unwanted and error prone behaviour. This undocumented feature has now been removed.
+  - New features
     - Added test Router.isNavigating()
     - Added Router history interaction
     - Added Router.getHistory()
@@ -12,17 +19,17 @@
     - Added hash reload support
     - Added named navigation support
     - Added error handling in bootRequest
+  - Fixes
     - Fixed Page overlap when on navigate starts before transition finish
     - Fixed _onActivated() widget event documentation
     - Fixed navigating to same hash when navigating
     - Deprecated Router.setupRoutes() - method
-    - Deprecated Router.on() / - data providing must be defined in route object
+  - Deprecations
+    - Deprecated Router.on() - data providing must be defined in route object
     - Deprecated Router.before()
     - Deprecated Router.after()
     - Deprecated duplicate route definitions
-    - BREAKING CHANGE: `page.dynamicRouteProperty = hashValue;` is no longer being set, now use `_onUrlParams(args)`. In the previous release on
-    route: `home/browse/:section` and a `navigate()` to: `home/browse/adventure` the Router would set the page prop `page['section'] = 'adventure'` but this could
-    lead to unwanted and error prone behaviour. This undocumented feature has now been removed.
+- Removed SDK namespace replacement functionality from postinstall script
 
 ## v3.2.1
 
