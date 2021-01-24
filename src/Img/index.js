@@ -80,58 +80,11 @@ export default (imageUrl, options) => {
     // official api
     exact: (w, h) => make(setOptions({ type: 'exact', w, h })),
     landscape: w => make(setOptions({ type: 'landscape', w })),
-    // fixme: remove deprecated stuff in future release of SDK
-    portrait: (w_but_actually_h, deprecated_h) => {
-      if (typeof deprecated_h !== 'undefined' && deprecated_h !== null) {
-        console.warn(
-          "The signature of the 'portrait()'-method has changed, soon it will only accept the height as a single argument (instead of 'portrait(width, height)')"
-        )
-        w_but_actually_h = deprecated_h
-      }
-      return make(setOptions({ type: 'portrait', h: w_but_actually_h }))
-    },
+    portrait: h => make(setOptions({ type: 'portrait', h })),
     cover: (w, h) => make(setOptions({ type: 'cover', w, h })),
     contain: (w, h) => make(setOptions({ type: 'contain', w, h })),
     original: () => make(setOptions({ type: 'contain' })),
 
     // todo: add positioning - i.e. top, bottom, center, left etc.
-
-    // FIXME: remove deprecated api (summer of 2020)
-    crop: (w, h) => {
-      console.warn(
-        "The 'crop()'-method is deprecated and will be removed. Please use 'cover()' instead"
-      )
-      return make(setOptions({ type: 'cover', w, h }))
-    },
-    fit: (w, h) => {
-      console.warn(
-        "The 'fit()'-method is deprecated and will be removed. Please use 'exact()' instead"
-      )
-      return make(setOptions({ type: 'exact', w, h }))
-    },
-    parent: (w, h) => {
-      console.warn(
-        "The 'parent()'-method is deprecated and will be removed. Please use 'exact()' instead"
-      )
-      return make(setOptions({ type: 'exact', w, h }))
-    },
-    height: (w, h) => {
-      console.warn(
-        "The 'height()'-method is deprecated and will be removed. Please use 'portrait()' instead"
-      )
-      return make(setOptions({ type: 'portrait', w, h }))
-    },
-    width: (w, h) => {
-      console.warn(
-        "The 'width()'-method is deprecated and will be removed. Please use 'landscape()' instead"
-      )
-      return make(setOptions({ type: 'landscape', w, h }))
-    },
-    auto: (w, h) => {
-      console.warn(
-        "The 'auto()'-method is deprecated and will be removed. Please use 'cover()' instead"
-      )
-      return make(setOptions({ type: 'contain', w, h }))
-    },
   }
 }
