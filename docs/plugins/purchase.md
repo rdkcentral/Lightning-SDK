@@ -99,6 +99,39 @@ Purchase.setup('http://csp-backend.com/api', {
 })
 ```
 
+In some cases the CSP backend setup is too different from the default specification, that it becomes too difficult
+to configure the enpoint uri's. In those cases you can specify a `callback` instead, and handle the request to the
+CSP backend entirely yourself.
+
+The callback function will receive 2 arguments: `params` and `data` and should _always_ return a `Promise` which resolves the result (or rejects an error in case of a failure). When a callback is specified, all other keys in that `endpoint` config
+are ignored.
+
+
+```js
+Purchase.setup('http://csp-backend.com/api', {
+  asset: {
+    callback(params, data) {
+      return Promise((resolve, reject) => {
+        Api.getAssetDetails(params.id)
+          .then(resolve)
+          .catch(reject)
+      }
+    }
+  },
+  signature: {
+    callback(params, data) {
+      return fetch('http://csp-backend.com/api/' + data.household + '?productId=' + params.id, {
+        headers: {
+          'Accept': 'application/json',
+				  'Content-Type': 'application/json'
+        }),
+        method: 'POST',
+      })
+    }
+  },
+})
+```
+
 ### Assets
 
 The `assets` method returns a Promise with the result of the request to the CSP to retrieve assets available for purchase. In most cases it would return an `Array` of objects with information about the assets (i.e. _title_, _description_ and _price_).

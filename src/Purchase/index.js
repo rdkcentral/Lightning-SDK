@@ -92,17 +92,24 @@ const cspRequest = (type, data = null, params = {}) => {
     if (!endpoint) {
       reject('No endpoint found for "' + type + '" call')
     } else {
-      request(
-        createUrl(endpoint.uri, cspUrl, params),
-        endpoint.method,
-        {
-          ...(endpoint.data || {}),
-          ...data,
-        },
-        endpoint.headers || {}
-      )
-        .then(resolve)
-        .catch(reject)
+      if (endpoint.callback && typeof endpoint.callback === 'function') {
+        endpoint
+          .callback(data, params)
+          .then(resolve)
+          .catch(reject)
+      } else {
+        request(
+          createUrl(endpoint.uri, cspUrl, params),
+          endpoint.method,
+          {
+            ...(endpoint.data || {}),
+            ...data,
+          },
+          endpoint.headers || {}
+        )
+          .then(resolve)
+          .catch(reject)
+      }
     }
   })
 }
