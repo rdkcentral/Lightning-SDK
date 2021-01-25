@@ -63,7 +63,7 @@ const createUrl = (uri, baseUrl, params = {}) => {
   )
 }
 
-const request = (url, method = 'GET', data) => {
+const request = (url, method = 'GET', data, headers = {}) => {
   if (method === 'GET' && data) {
     url.search = new URLSearchParams(data)
   }
@@ -71,8 +71,11 @@ const request = (url, method = 'GET', data) => {
   return new Promise((resolve, reject) => {
     fetch(url, {
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        ...{
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        ...headers,
       },
       method: method,
       body: method !== 'GET' && data ? JSON.stringify(data) : null,
@@ -89,10 +92,15 @@ const cspRequest = (type, data = null, params = {}) => {
     if (!endpoint) {
       reject('No endpoint found for "' + type + '" call')
     } else {
-      request(createUrl(endpoint.uri, cspUrl, params), endpoint.method, {
-        ...(endpoint.data || {}),
-        ...data,
-      })
+      request(
+        createUrl(endpoint.uri, cspUrl, params),
+        endpoint.method,
+        {
+          ...(endpoint.data || {}),
+          ...data,
+        },
+        endpoint.headers || {}
+      )
         .then(resolve)
         .catch(reject)
     }

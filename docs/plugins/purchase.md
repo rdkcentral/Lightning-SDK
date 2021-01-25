@@ -45,11 +45,13 @@ The `setup`-method is used to configure the Purchase plugin to match with a spec
 
 The `setup`-method should be called once, before any other method on the Purchase plugin is called.
 
-The method accepts a config `object` as its only argument. This object can have 2 keys: `cspUrl` and `endPoints`.
+The method accepts a config `object` as its only argument. This object can have 2 keys: `cspUrl` and `endpoints`.
 
 `cspUrl` specifies the _base Url_ of the backend of the CSP.
 
-`endPoints` can be used to customize those API endpoints that differ from the default specification (as outlined below). For each _endpoint_ that deviates from the default, specify the _uri_ (which will be appended to the `cspUrl`, unless specified as a fully qualified domain) and the REST _method_ to use.
+`endpoints` can be used to customize those API endpoints that differ from the default specification (as outlined below). For each _endpoint_ that deviates from the default, specify the _uri_ (which will be appended to the `cspUrl`, unless specified as a fully qualified domain) and the REST _method_ to use.
+
+If needed you can also specify an object with custom `headers` that will be merged in with the defaults headers (`{ Accept: 'application/json', 'Content-Type': 'application/json' }`)
 
 ```js
 {
@@ -85,6 +87,14 @@ Purchase.setup('http://csp-backend.com/api', {
   unsubscribe: {
     uri: '/subscriptions/:id',
     method: 'DELETE',
+  },
+  signature: {
+    uri: '/assets/:id/signature',
+    method: 'POST',
+    headers: {
+      'x-auth-token': 'abcd123xyz'
+      'cache-control': 'no-cache'
+    }
   },
 })
 ```
