@@ -103,7 +103,7 @@ Profile.mac()
 
 ### Operator
 
-Gets the operator. Returns `Metrological` by default during _local development_.
+Gets the operator. Returns `metrological` by default during _local development_.
 
 ```js
 Profile.operator()
@@ -111,7 +111,7 @@ Profile.operator()
 
 ### Platform
 
-Gets the platform. Returns `Metrological` by default during _local development_.
+Gets the platform. Returns `metrological` by default during _local development_.
 
 ```js
 Profile.platform()
@@ -135,7 +135,7 @@ Profile.uid()
 
 ### StbType
 
-Gets the stbType. Returns `Metrological` by default during _local development_.
+Gets the stbType. Returns `metrological` by default during _local development_.
 
 ```js
 Profile.stbType()
@@ -161,11 +161,11 @@ Add a `profile` key in `platformSettings` and only add the values you wish to ch
          "latlon": [40.7128, 74.006],
          "locale": "en-US",
          "mac": "00:00:00:00:00:00",
-         "operator": "Metrological",
-         "platform": "Metrological",
+         "operator": "metrological",
+         "platform": "metrological",
          "packages": [],
          "uid": "ee6723b8-7ab3-462c-8d93-dbf61227998e",
-         "stbType": "Metrological"
+         "stbType": "metrological"
       }
    }
 }
