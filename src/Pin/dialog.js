@@ -75,6 +75,7 @@ class PinInput extends Lightning.Component {
 export default class PinDialog extends Lightning.Component {
   static _template() {
     return {
+      zIndex: 1,
       w: w => w,
       h: h => h,
       rect: true,

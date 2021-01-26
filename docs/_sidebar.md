@@ -7,7 +7,7 @@
   - [Log](/plugins/log.md)
   - [Metrics](/plugins/metrics.md)
   - [Profile](/plugins/profile.md)
-  <!-- - [Purchase](/plugins/purchase.md) -->
+  - [Purchase](/plugins/purchase.md)
   - [Language](/plugins/language.md)
   - [Lightning](/plugins/lightning.md)
   - [Router](/plugins/router/index.md)
