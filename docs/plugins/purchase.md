@@ -1,6 +1,6 @@
 # Purchase
 
-The Purchase plugin helps you build In App Purchases into your App, in combination with the Metrological Billing.
+The Purchase plugin helps you build In App Purchases into your App, in combination with the Metrological Billing server.
 
 ## Usage
 
