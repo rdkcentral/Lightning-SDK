@@ -1,5 +1,12 @@
 # Changelog
 
+
+## v4.1.0
+
+*26 jan 2021*
+
+- Added Purchase plugin
+
 ## v4.0.0
 
 *22 jan 2021*

@@ -27,6 +27,7 @@ import { initStorage } from '../Storage'
 import { initAds } from '../Ads'
 import { initRouter } from '../Router'
 import { initTV } from '../TV'
+import { initPurchase } from '../Purchase'
 import Application from '../Application'
 
 export let ApplicationInstance
@@ -36,7 +37,6 @@ export default (App, appSettings, platformSettings, appData) => {
 
   initUtils(platformSettings)
   initStorage()
-
   // Initialize plugins
   if (platformSettings.plugins) {
     platformSettings.plugins.profile && initProfile(platformSettings.plugins.profile)
@@ -46,6 +46,7 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.ads && initAds(platformSettings.plugins.ads)
     platformSettings.plugins.router && initRouter(platformSettings.plugins.router)
     platformSettings.plugins.tv && initTV(platformSettings.plugins.tv)
+    platformSettings.plugins.purchase && initPurchase(platformSettings.plugins.purchase)
   }
 
   const app = Application(App, appData, platformSettings)
