@@ -23,7 +23,7 @@ import isProbablyLightningComponent from '../helpers/isProbablyLightningComponen
 import { initBaseEvents } from './base'
 import { initLightningEvents } from './lightning'
 
-const supportedStates = ['loading', 'active', 'paused', 'background', 'closed']
+const supportedStates = ['loading', 'active', 'paused', 'background', 'close']
 let currentState = supportedStates[0]
 
 export const initLifecycle = (app, transport) => {
@@ -51,7 +51,7 @@ const stateChange = (state) => {
 
 // public API
 export default {
-  ready() { stateChange('background') },
+  ready() { stateChange('active') },
   close() { stateChange('close') }, // when the app wants to close
   state() { return currentState },
   addEventListener,
