@@ -28,6 +28,7 @@ import { initStorage } from '../Storage'
 import { initAdsHandler } from '../Advertising/adsHandler'
 import { initRouter } from '../Router'
 import { initTV } from '../TV'
+import { initEvents } from '../Events'
 import Application from '../Application'
 import isProbablyLightningComponent from '../helpers/isProbablyLightningComponent'
 
@@ -49,6 +50,7 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.ads && initAdsHandler(platformSettings.plugins.ads)
     platformSettings.plugins.router && initRouter(platformSettings.plugins.router)
     platformSettings.plugins.tv && initTV(platformSettings.plugins.tv)
+    platformSettings.plugins.events && initEvents(platformSettings.plugins.events)
   }
 
   if (isProbablyLightningComponent(App)) {
