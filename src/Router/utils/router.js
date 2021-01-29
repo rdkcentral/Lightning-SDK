@@ -161,6 +161,7 @@ const mixin = app => {
   app._handleBack = e => {
     step(-1)
     e.preventDefault()
+    return false
   }
   app._captureKey = capture.bind(null)
 }
