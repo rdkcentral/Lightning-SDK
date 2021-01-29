@@ -33,17 +33,21 @@ const metrics = {
   page: ['view', 'leave'],
   user: ['click', 'input'],
   media: [
+    'loadstart',
     'abort',
     'canplay',
     'ended',
     'pause',
     'play',
+    'progress',
     // with some videos there occur almost constant suspend events ... should investigate
     // 'suspend',
     'volumechange',
     'waiting',
     'seeking',
     'seeked',
+    'ratechange',
+    'renditionchange',
   ],
 }
 
@@ -63,8 +67,9 @@ const Metric = (type, events, options = {}) => {
       return obj
     },
     {
-      error(message, code, params) {
-        errorMetric(type, message, code, params)
+      error(message, code, visible, params) {
+        console.log(type, message, visible, code, params)
+        errorMetric(type, message, code, visible, params)
       },
       event(name, params) {
         sendMetric(type, name, params)

@@ -19,32 +19,87 @@
 
 import Log from '../Log'
 
-const callbacks = {}
+let listenerId = 0
+const listeners = {}
 
-const emit = (event, ...args) => {
-  callbacks[event] &&
-    callbacks[event].forEach(cb => {
-      cb.apply(null, args)
-    })
+export const emit = (plugin, event, value) => {
+  Log.info('Events', 'Emitting event', plugin, event, value)
+
+  const callbacks = {
+    ...(listeners['*.*'] || {}),
+    ...(listeners[plugin + '.*'] || {}),
+    ...(listeners[plugin + '.' + event] || {}),
+  }
+
+  Object.keys(callbacks).forEach(listenerId => {
+    callbacks[listenerId](value, plugin, event)
+  })
 }
 
-const addEventListener = (event ,cb) => {
-  if (typeof cb === 'function') {
-    callbacks[event] = callbacks[event] || []
-    callbacks[event].push(cb)
-  } else {
-    Log.error('Please provide a function as a callback')
-  }
-}
-
-const removeEventListener = (event, cb = false) => {
-  if (callbacks[event] && callbacks[event].length) {
-    callbacks[event] = cb ? callbacks[event].filter(_cb => _cb === cb) : []
-  }
+export const initEvents = config => {
+  if (config.emit) config.emit(emit)
 }
 
 export default {
-  emit,
-  addEventListener,
-  removeEventListener
+  listen(...args) {
+    // grab the callback (i.e. the last argument)
+    const callback = args.pop()
+
+    if (typeof callback !== 'function') {
+      Log.error('Events', 'No valid callback passed')
+      return false
+    } else {
+      listenerId++
+      const plugin = args[0] || '*'
+      const event = args[1] || '*'
+
+      const key = plugin + '.' + event
+
+      listeners[key] = listeners[key] || {}
+      listeners[key][listenerId] = callback
+
+      return listenerId
+    }
+  },
+  clear(pluginOrId = false, event = false) {
+    if (typeof pluginOrId === 'number') {
+      Log.info('Events', 'Clear listener by id (' + pluginOrId + ')')
+      const searchId = pluginOrId.toString()
+      Object.keys(listeners).every(key => {
+        if (listeners[key][searchId]) {
+          // delete callback
+          delete listeners[key][searchId]
+          // delete the whole namespace if it was the only callback
+          if (Object.keys(listeners[key]).length === 0) {
+            delete listeners[key]
+          }
+          return false
+        }
+        return true
+      })
+    } else {
+      if (!pluginOrId && !event) {
+        Log.info('Events', 'Clear all listeners')
+        Object.keys(listeners).forEach(key => {
+          delete listeners[key]
+        })
+      } else if (!event) {
+        Log.info('Events', 'Clear listeners by plugin (' + pluginOrId + ')')
+        Object.keys(listeners).forEach(key => {
+          if (key.indexOf(pluginOrId) === 0) {
+            delete listeners[key]
+          }
+        })
+      } else {
+        Log.info(
+          'Events',
+          'Clear listeners by plugin: (' + pluginOrId + ') and event (' + event + ')'
+        )
+        delete listeners[pluginOrId + '.' + event]
+      }
+    }
+  },
+  broadcast(event, value) {
+    emit('App', event, value)
+  },
 }

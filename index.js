@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-export { default as Ads } from './src/Ads'
+export { default as Advertising } from './src/Advertising'
 export { AppData } from './src/Application'
 export { default as Application } from './src/Application'
 export { default as AudioPlayer } from './src/AudioPlayer'

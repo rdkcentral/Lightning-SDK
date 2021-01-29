@@ -17,7 +17,8 @@
  * limitations under the License.
  */
 
-import { initAds } from '../Ads'
+import { initAdsHandler } from '../Advertising/adsHandler'
+import { initEvents } from '../Events'
 import { initLifecycle } from '../Lifecycle'
 import { initMetrics } from '../Metrics'
 import { initMediaPlayer } from '../MediaPlayer'
@@ -48,9 +49,10 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.metrics && initMetrics(platformSettings.plugins.metrics)
     platformSettings.plugins.mediaPlayer && initMediaPlayer(platformSettings.plugins.mediaPlayer)
     platformSettings.plugins.mediaPlayer && initVideoPlayer(platformSettings.plugins.mediaPlayer)
-    platformSettings.plugins.ads && initAds(platformSettings.plugins.ads)
+    platformSettings.plugins.ads && initAdsHandler(platformSettings.plugins.ads)
     platformSettings.plugins.router && initRouter(platformSettings.plugins.router)
     platformSettings.plugins.tv && initTV(platformSettings.plugins.tv)
+    platformSettings.plugins.events && initEvents(platformSettings.plugins.events)
   }
 
   if (isProbablyLightningComponent(App)) {
