@@ -17,42 +17,53 @@
  * limitations under the License.
  */
 
-import { emit, addEventListener, removeEventListener } from '../Events'
+import Events, { emit } from '../Events'
 import Log from '../Log'
-import isProbablyLightningComponent from '../helpers/isProbablyLightningComponent'
-import { initBaseEvents } from './base'
-import { initLightningEvents } from './lightning'
+import Settings from '../Settings'
+import Registry from '../Registry'
 
-const supportedStates = ['init', 'active', 'pause', 'background', 'close']
-let currentState = 'init'
-
-export const initLifecycle = (app, transport) => {
-  if (transport) {
-    transport.stateChange = stateChange
-    if (transport.onClose && typeof transport.onClose === 'function') {
-      addEventListener('close', transport.onClose)
+const supportedStates = ['init', 'ready', 'active', 'pause', 'background', 'close']
+const store = {
+  _previous: null,
+  _current: 'init',
+  get current() {
+    return this._current
+  },
+  set current(v) {
+    if (supportedStates.indexOf(v) && this.current !== v) {
+      this._previous = this._current
+      this._current = v
+      Log.info('Lifecycle', 'State changed from ' + this._previous + ' to ' + this._current)
+      emit('Lifecycle', 'close', {
+        from: this._previous,
+        to: this._current,
+      })
     }
-  }
-
-  if (isProbablyLightningComponent(app)) {
-    initLightningEvents.init()
-  }
-
-  initBaseEvents()
+  },
 }
 
-const stateChange = (state) => {
-  if (supportedStates.indexOf(state) !== -1) {
-    Log.info('State change: ', state)
-    emit(state)
-    currentState = state
-  }
+export const initLifecycle = config => {
+  // todo wire up the transport layer (from config)
+
+  Events.listen('Lifecycle', 'close', () => {
+    Settings.clearSubscribers()
+    Registry.clear()
+    Events.clear() // maybe this should be moved to an after close ...
+    if (config.onClose && typeof config.onClose === 'function') {
+      config.onClose()
+    }
+  })
 }
 
 // public API
 export default {
-  close() { stateChange('close') }, // when the app wants to close
-  state() { return currentState },
-  addEventListener,
-  removeEventListener,
+  close() {
+    store.current = 'close'
+  },
+  ready() {
+    store.current = 'ready'
+  },
+  state() {
+    return store.current
+  },
 }

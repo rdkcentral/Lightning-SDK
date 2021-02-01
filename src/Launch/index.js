@@ -37,9 +37,9 @@ import isProbablyLightningComponent from '../helpers/isProbablyLightningComponen
 export let ApplicationInstance
 
 export default (App, appSettings, platformSettings, appData) => {
-  initLifecycle(App, platformSettings)
   initSettings(appSettings, platformSettings)
   initUtils(platformSettings)
+  initLifecycle((platformSettings.plugins && platformSettings.plugins.events) || {})
   initStorage()
 
   // Initialize plugins

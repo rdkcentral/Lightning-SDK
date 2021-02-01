@@ -27,8 +27,7 @@ import FpsCounter from '../FpsCounter'
 import Log from '../Log'
 import { initLanguage } from '../Language'
 import Utils from '../Utils'
-// import Registry from '../Registry'
-// import Events from '../Events'
+import Events from '../Events'
 
 import { version as sdkVersion } from '../../package.json'
 
@@ -118,6 +117,8 @@ export default function(App, appData, platformSettings) {
               zIndex: 1,
             })
           }
+
+          Events.listen('Lifecycle', 'close', () => this.close())
 
           super._setup()
         })

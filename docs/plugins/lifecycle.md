@@ -1,10 +1,13 @@
 # Lifecycle
 
-The SDK provides Application lifecycle events to control the running state. As an application you can listen for state changes and handle them accordingly.
+Via the Lifecycle plugin the current lifecycle state can be etrieved. The plugin also allows an App to change the state of the application (limited to 'close' and 'ready').
+
+The SDK also informs the App whenever the App lifecycle state changes by emitting events. You can listen to these events by using
+the `Events` plugin.
 
 ## Usage
 
-The SDK supports different lifecycle states to be used on the device. The lifecycle plugin makes the states available to the application through events.
+Whenever you need to change or consult the current Lifecycle state, import the `Lifecycle` plugin from the SDK.
 
 ```js
 import { Lifecycle } from '@lightningjs/sdk'
@@ -17,9 +20,10 @@ The following states are available:
 | State         | Description                                 |
 | ------------- |:-------------------------------------------:|
 | init          | Application is initialising                 |
+| ready         | Application is ready for user interaction   |
 | active        | Application is running, and in focus        |
 | background    | Application is running, not in focus        |
-| pause         | Application is paused, not in focus         |
+| pause         | Application is pausing, not in focus        |
 | close         | Application is closing and will be unloaded |
 
 ## State handling
@@ -33,34 +37,56 @@ As an application developer it is important to understand the impact of differen
 
 ## Available methods
 
-### Listening for events
+### Retrieve the current state
 
-To listen for events you can set a `addEventListener` providing a `state` event and a `callback` function to be called when the state changes
-
-```js
-Lifecycle.addEventListener('background', myStateHandler)
-```
-
-### Remove event listener
-
-To remove an event listener will prevent it from being subsequently called if the state changes. To remove the event listener please provide the appropriate `state` event and `callback`.
+If the Application needs to know the current state, you can call the `state` function at any given time.
 
 ```js
-Lifecycle.removeEventListener('background', myCoolFunction)
+Lifecycle.state() // returns init, active etc.
 ```
 
-### Current state
+### Change current state to ready
 
-If the Application likes to know the current state, you can call the `state` function at any given time.
+The Lifecycle state can be set to ready
 
 ```js
-Lifecycle.state()
+Lifecycle.ready()
 ```
 
-### Close
+### Change current state to close
 
 If the app wants to close the `close` function can be called. This will call the appropriate SDK functions to start its cleanup routine.
 
 ```js
 Lifecycle.close()
+```
+### Listening for events
+
+In order to listen for Lifecycle events, import the `Events` plugin from the SDK
+
+```js
+import { Lifecycle } from '@lightningjs/sdk'
+```
+
+The _Lifecycle_ plugin will emit any change in state via the `Events` plugin under the _Lifecycle_ plugin namespace.
+You'll be able to execute a callback upon any event. For more info please refer to the [Events](#plugins/events) plugin.
+
+Some examples:
+
+```js
+Events.listen('Lifecycle', 'background', () => {
+  // the app is going into the background
+})
+```
+
+```js
+Events.listen('Lifecycle', 'close', () => {
+  // the app is about to close, send events and do cleanup
+})
+```
+
+```js
+Events.listen('Lifecycle', (val, plugin, event) => {
+  // listen to all 'Lifecycle' events
+})
 ```
