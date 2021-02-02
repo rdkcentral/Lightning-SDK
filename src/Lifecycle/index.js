@@ -43,8 +43,6 @@ const store = {
 }
 
 export const initLifecycle = config => {
-  // todo wire up the transport layer (from config)
-
   Events.listen('Lifecycle', 'close', () => {
     Settings.clearSubscribers()
     Registry.clear()
