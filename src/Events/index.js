@@ -25,15 +25,16 @@ const listeners = {}
 export const emit = (plugin, event, value) => {
   Log.info('Events', 'Emitting event', plugin, event, value)
 
-  const callbacks = {
-    ...(listeners['*.*'] || {}),
-    ...(listeners[plugin + '.*'] || {}),
-    ...(listeners[plugin + '.' + event] || {}),
-  }
+  callCallbacks(listeners['*.*'], [plugin, event, value])
+  callCallbacks(listeners[plugin + '.*'], [event, value])
+  callCallbacks(listeners[plugin + '.' + event], [value])
+}
 
-  Object.keys(callbacks).forEach(listenerId => {
-    callbacks[listenerId](value, plugin, event)
-  })
+const callCallbacks = (cbs, args) => {
+  cbs &&
+    Object.keys(cbs).forEach(listenerId => {
+      cbs[listenerId].apply(null, args)
+    })
 }
 
 export const initEvents = config => {

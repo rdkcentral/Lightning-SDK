@@ -24,22 +24,24 @@ Listen to events and execute a callback when they occur.
 
 Examples:
 
-1) Listen to a specific event on a specific Plugin
+1) Listen to a specific event on a specific Plugin.
 
 ```js
 Events.listen('Lifecycle', 'pause', () => {
   console.log('The App is going in a pause state')
 })
 
-Events.listen('Platform', 'device.hdcp', val => {
-  console.log('The hdcp value changed on the platform!', val)
+Events.listen('Platform', 'device.hdcp', value => {
+  console.log('The hdcp value changed on the platform!', value)
 })
 ```
+
+When listening for a specific event (on a specific Plugin), the callback function is passed a `value` as its first and only argument.
 
 2) Listen to all events of a specific Plugin
 
 ```js
-Events.listen('Lifecycle', (val, plugin, event) => {
+Events.listen('Lifecycle', (event, value) => {
   if(event === 'init') {
     // execute init functionality
   }
@@ -49,10 +51,12 @@ Events.listen('Lifecycle', (val, plugin, event) => {
 })
 ```
 
+When listening for all events on a specific Plugin, the callback function is passed, the `event` as its first argument and a `value` as its second argument.
+
 3) Listen to all events
 
 ```js
-Events.listen((val, plugin, event) => {
+Events.listen((plugin, event, value) => {
   if(plugin === 'Router' && event === 'pageLoad') {
     // a new page was loaded
   }
@@ -61,6 +65,9 @@ Events.listen((val, plugin, event) => {
   }
 })
 ```
+
+When listening for all events of all Plugins, the callback function is passed, the `plugin` as its first argument, followed by the `event` and finally a `value` argument.
+
 
 Note that it's possible to register multiple listeners for the same event
 
