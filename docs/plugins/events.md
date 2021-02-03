@@ -32,7 +32,7 @@ Events.listen('Lifecycle', 'pause', () => {
 })
 
 Events.listen('Platform', 'device.hdcp', value => {
-  console.log('The hdcp value changed on the platform!', value)
+  console.log('Device HDCP version changed to ' + value)
 })
 ```
 
@@ -72,12 +72,12 @@ When listening for all events of all Plugins, the callback function is passed, t
 Note that it's possible to register multiple listeners for the same event
 
 ```js
-Events.listen('Platform', 'device.hdcp', val => {
-  console.log('Listen once!', val)
+Events.listen('Platform', 'device.hdcp', () => {
+  console.log('Listen once!')
 })
 
-Events.listen('Platform', 'device.hdcp', val => {
-  console.log('Listen twice!', val)
+Events.listen('Platform', 'device.hdcp', () => {
+  console.log('Listen twice!')
 })
 ```
 
@@ -88,7 +88,9 @@ Registered events can be cleared
 1) By id
 
 ```js
-const listenerId = Events.listen('Platform', 'device.dhcp', () => {})
+const listenerId = Events.listen('Platform', 'device.hdcp', (value) => {
+  console.log('Device HDCP version changed to + ' value)
+})
 
 Events.clear(listenerId)
 ```
@@ -96,9 +98,15 @@ Events.clear(listenerId)
 2) By Plugin
 
 ```js
-Events.listen('Platform', 'device.dhcp', () => {})
-Events.listen('Platform', 'localization.language', () => {})
-Events.listen('Lifecycle', 'init', () => {})
+Events.listen('Platform', 'device.hdcp', (value) => {
+  console.log('Device HDCP version changed to + ' value)
+})
+Events.listen('Platform', 'localization.language', (language) => {
+  console.log('Device language changed to', language)
+})
+Events.listen('Lifecycle', 'init', () => {
+  console.log('App is initializing')
+})
 
 Events.clear('Platform') // removes all listeners to the Platform plugin
 ```
@@ -106,19 +114,31 @@ Events.clear('Platform') // removes all listeners to the Platform plugin
 3) By Plugin and Event
 
 ```js
-Events.listen('Platform', 'device.dhcp', () => {})
-Events.listen('Platform', 'localization.language', () => {})
-Events.listen('Lifecycle', 'init', () => {})
+Events.listen('Platform', 'device.hdcp', (value) => {
+  console.log('Device HDCP version changed to + ' value)
+})
+Events.listen('Platform', 'localization.language', () => {
+  console.log('Device language changed to', language)
+})
+Events.listen('Lifecycle', 'init', () => {
+  console.log('App is initializing')
+})
 
-Events.clear('Platform', 'device.dhcp') // removes only the listeners to Platform.device.dhcp
+Events.clear('Platform', 'device.hdcp') // removes only the listener to Platform.device.hdcp
 ```
 
 4) All
 
 ```js
-Events.listen('Platform', 'device.dhcp', () => {})
-Events.listen('Platform', 'localization.language', () => {})
-Events.listen('Lifecycle', 'init', () => {})
+Events.listen('Platform', 'device.hdcp', (value) => {
+  console.log('Device HDCP version changed to + ' value)
+})
+Events.listen('Platform', 'localization.language', () => {
+  console.log('Device language changed to', language)
+})
+Events.listen('Lifecycle', 'init', () => {
+  console.log('App is initializing')
+})
 
 Events.clear() // removes all listeners
 ```
