@@ -8,7 +8,12 @@ Under the hood, an underlaying transport layer will then take care of calling th
 
 The Platform plugin is most often used to _retrieve_ information from the Platform. In some cases it can also be used to _pass_ information back to the Platform. This might differ per platform.
 
-The Platform plugin is divided into 4 different sections: Localization, Profile, Device, Accessibility.
+The Platform plugin is divided into 4 different sections / namespaces:
+
+- localization
+- profile
+- device
+- accessibility
 
 ## Usage
 
@@ -33,7 +38,7 @@ it will `reject` the promise.
 Gets the city. `New York` by default during _local development_.
 
 ```js
-Platform.Localization.city()
+Platform.localization.city()
 ```
 
 
@@ -42,7 +47,7 @@ Platform.Localization.city()
 Gets the zipCode. Returns `27505` by default during _local development_.
 
 ```js
-Platform.Localization.zipCode()
+Platform.localization.zipCode()
 ```
 
 #### CountryCode
@@ -50,7 +55,7 @@ Platform.Localization.zipCode()
 Gets the countryCode. Returns `US` by default during _local development_.
 
 ```js
-Platform.Localization.countryCode()
+Platform.localization.countryCode()
 ```
 
 #### LatLon
@@ -59,7 +64,7 @@ Gets the LatLon. During _local development_ will try to return your actual latit
 If during _local development_ you want to force to use the browser's built in _geolocation_ for retrieving the latitude and longitude, add the key `forceBrowserGeolocation` with the value `true` as a _platform setting_ in `settings.json`.
 
 ```js
-Platform.Localization.latLon()
+Platform.localization.latLon()
 ```
 
 #### Locale
@@ -67,7 +72,7 @@ Platform.Localization.latLon()
 Get the locale. During _local development_ will attempt to return the browser's locale, with a fallback to to `en-US`.
 
 ```js
-Platform.Localization.locale()
+Platform.localization.locale()
 ```
 
 #### Language
@@ -75,7 +80,7 @@ Platform.Localization.locale()
 Gets the language. During _local development_ will attempt to return the browser's language, with a default to `en`.
 
 ```js
-Platform.Localization.language()
+Platform.localization.language()
 ```
 
 ### Profile
@@ -85,7 +90,7 @@ Platform.Localization.language()
 Gets the ageRating for the current Profile. Returns `adult` by default during _local development_.
 
 ```js
-Platform.Profile.ageRating()
+Platform.profile.ageRating()
 ```
 
 ### Device
@@ -95,7 +100,7 @@ Platform.Profile.ageRating()
 Gets the ip. Returns `127.0.0.1` by default during _local development_.
 
 ```js
-Platform.Device.ip()
+Platform.device.ip()
 ```
 
 #### Household
@@ -103,7 +108,7 @@ Platform.Device.ip()
 Gets the houseHold-id. Returns `b2244e9d4c04826ccd5a7b2c2a50e7d4` by default during _local development_.
 
 ```js
-Platform.Device.household()
+Platform.device.household()
 ```
 
 #### Mac
@@ -111,7 +116,7 @@ Platform.Device.household()
 Get the Mac. Returns `00:00:00:00:00:00` by default during _local development_.
 
 ```js
-Platform.Device.mac()
+Platform.device.mac()
 ```
 
 #### Operator
@@ -119,7 +124,7 @@ Platform.Device.mac()
 Gets the operator. Returns `Metrological` by default during _local development_.
 
 ```js
-Platform.Device.operator()
+Platform.device.operator()
 ```
 
 #### Platform
@@ -127,7 +132,7 @@ Platform.Device.operator()
 Gets the platform name. Returns `Metrological` by default during _local development_.
 
 ```js
-Platform.Device.platform()
+Platform.device.platform()
 ```
 
 #### Packages
@@ -135,7 +140,7 @@ Platform.Device.platform()
 Gets the packages. Returns `[]` by default during _local development_.
 
 ```js
-Platform.Device.packages()
+Platform.device.packages()
 ```
 
 #### Uid
@@ -143,7 +148,7 @@ Platform.Device.packages()
 Gets the uid. Returns `ee6723b8-7ab3-462c-8d93-dbf61227998e` by default during _local development_.
 
 ```js
-Platform.Device.uid()
+Platform.device.uid()
 ```
 
 #### Type
@@ -151,7 +156,7 @@ Platform.Device.uid()
 Gets the type of device (STB or TV) running the App. Returns `STB` by default during _local development_.
 
 ```js
-Platform.Device.type()
+Platform.device.type()
 ```
 
 #### Model
@@ -159,7 +164,7 @@ Platform.Device.type()
 Gets the model of the device running the App. Returns `Metrological` by default during _local development_.
 
 ```js
-Platform.Device.model()
+Platform.device.model()
 ```
 
 #### HDCP
@@ -168,7 +173,7 @@ Gets the HDCP capabilities. Returns and `Object` with an overview of which HDCP 
 Returns `{'hdcp1.4': true, 'hdcp2.2': false}` by default  during _local development_.
 
 ```js
-Platform.Device.hdcp()
+Platform.device.hdcp()
 ```
 
 #### HDR
@@ -187,7 +192,7 @@ Returns the following object by default during _local development_.
 ```
 
 ```js
-Platform.Device.hdr()
+Platform.device.hdr()
 ```
 
 #### Audio
@@ -206,7 +211,7 @@ Returns the following object by default during _local development_.
 ```
 
 ```js
-Platform.Device.audio()
+Platform.device.audio()
 ```
 
 #### Screen resolution
@@ -215,7 +220,7 @@ Gets the screen resolution as an Array with the `width` and the `height`.
 Returns `[1920, 1080]` by default during _local development_.
 
 ```js
-Platform.Device.screenResolution()
+Platform.device.screenResolution()
 ```
 
 #### Video resolution
@@ -224,7 +229,7 @@ Gets the video resolution as an Array with the `width` and the `height`.
 Returns `[1920, 1080]` by default during _local development_.
 
 ```js
-Platform.Device.videoResolution()
+Platform.device.videoResolution()
 ```
 
 #### Name
@@ -232,7 +237,7 @@ Platform.Device.videoResolution()
 Gets the friendly name of the STB. Returns `Living Room` by default during _local development_.
 
 ```js
-Platform.Device.name()
+Platform.device.name()
 ```
 
 #### Network
@@ -240,7 +245,7 @@ Platform.Device.name()
 Gets the network information as an `Object`. Returns `{state: 'Connected', type: 'WIFI'}` by default during _local development_.
 
 ```js
-Platform.Device.network()
+Platform.device.network()
 ```
 
 ### Accessibility
@@ -268,7 +273,7 @@ Gets the closed captions configuration as an `Object`. Returns the following obj
 ```
 
 ```js
-Platform.Accessibility.closedCaptions()
+Platform.accessibility.closedCaptions()
 ```
 
 #### Voice Guidance
@@ -276,7 +281,7 @@ Platform.Accessibility.closedCaptions()
 Gets the voice guidance configuration as an `Object`. Returns `{enabled: true, speed: 5}` by default during _local development_.
 
 ```js
-Platform.Accessibility.voiceGuidance()
+Platform.accessibility.voiceGuidance()
 ```
 
 ### Get
@@ -287,7 +292,7 @@ value to be retrieved, using so called _dot-notation_.
 
 
 ```js
-Platform.get('Device.name')
+Platform.get('device.name')
 ```
 
 The generic getter may also come in handy when you want to retrieve _multiple_ platform values. Instead of calling each method separately,
@@ -295,7 +300,7 @@ you can pass an _Array_ with `strings` of _namespace_ and _key_ (using _dot-nota
 values all at once.
 
 ```js
-Platform.get(['Device.name', 'Device.screenResolution'])
+Platform.get(['device.name', 'device.screenResolution'])
 // { 'Device.name': 'Living Room', 'Device.screenResolution': [1920, 1080] }
 ```
 
@@ -312,9 +317,9 @@ first citizen properties, or platform specific, custom properties.
 The method accepts the _namespaced key_ (using _dot-notation_) as a first argument and the _value_ to update to as a second argument.
 
 ```js
-Platform.set('Device.name', 'Bedroom')
+Platform.set('device.name', 'Bedroom')
 
-Platform.set('Accessibility.voiceGuidance', {
+Platform.set('accessibility.voiceGuidance', {
   enabled: true,
   speed: 5,
 })
@@ -329,8 +334,8 @@ This method accepts the _namespaced key_ (using _dot-notation_) as its single ar
 if the property exists and `false` if the property is not available.
 
 ```js
-Platform.has('Device.name') // resolves true
-Platform.has('Device.bla') // resolves false
+Platform.has('device.name') // resolves true
+Platform.has('device.bla') // resolves false
 ```
 
 Note that the resolved value only indicates if the property is "known" and can be "consulted" on the platform. It doesn't
