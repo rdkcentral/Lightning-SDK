@@ -24,7 +24,9 @@ The following states are available:
 | active        | Application is running, and in focus        |
 | background    | Application is running, not in focus        |
 | pause         | Application is pausing, not in focus        |
-| close         | Application is closing and will be unloaded |
+| paused        | Application is paused                       |
+| close         | Application is closing                      |
+| closed        | Application is closed and will be unloaded  |
 
 ## State handling
 
@@ -66,10 +68,20 @@ Lifecycle.close()
 
 The App can also be put in a `close` state by the platform itself. This will emit the `close` event under the `Lifecycle` namespace.
 
-In the closing callback, the App can execute some logic, such as saving state, sending out analytics calls etc. When completed, the App
-should call the `Lifecycle.finished()` method, indicating that the App can be fully terminated.
+In the callback, the App can execute some logic, such as saving state, sending out analytics calls etc. When completed, the App
+should call the `Lifecycle.closed()` method, indicating that the App can be fully terminated.
 
-Note that the platform can decide to terminate the App _before_ the `finished()`-method is called, in case the App's closing logic is taking too long.
+Note that the platform can decide to terminate the App _before_ the `closed()`-method is called, in case the App's closing logic is taking too long.
+
+### Pause state
+
+The App can be put in a `paused` state by the platform. This will emit the `pause` event under the `Lifecycle` namespace.
+
+In the callback, the App can execute some logic, such as saving state, sending out analytics calls etc. When completed, the App
+should call the `Lifecycle.paused()` method, indicating that the App is ready to be put in a _paused_ state
+
+Note that the platform can decide to pause the App _before_ the `paused()`-method is called, in case the App's pausing logic is taking too long.
+
 ### Listening for events
 
 In order to listen for Lifecycle events, import the `Events` plugin from the SDK

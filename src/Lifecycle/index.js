@@ -22,7 +22,16 @@ import Log from '../Log'
 import Settings from '../Settings'
 import Registry from '../Registry'
 
-const supportedStates = ['init', 'ready', 'active', 'pause', 'background', 'close', 'finished']
+const supportedStates = [
+  'init',
+  'ready',
+  'active',
+  'pause',
+  'paused',
+  'background',
+  'close',
+  'closed',
+]
 const store = {
   _previous: null,
   _current: 'init',
@@ -46,10 +55,14 @@ export const initLifecycle = config => {
   Events.listen('Lifecycle', 'close', () => {
     Settings.clearSubscribers()
     Registry.clear()
-    Events.clear() // maybe this should be moved to an after close ...
+    // maybe not needed?
     if (config.onClose && typeof config.onClose === 'function') {
       config.onClose()
     }
+  })
+
+  Events.listen('Lifecycle', 'closed', () => {
+    Events.clear()
   })
 }
 
@@ -61,8 +74,11 @@ export default {
   ready() {
     store.current = 'ready'
   },
-  finished() {
-    store.current = 'finished'
+  paused() {
+    store.current = 'paused'
+  },
+  closed() {
+    store.current = 'closed'
   },
   state() {
     return store.current
