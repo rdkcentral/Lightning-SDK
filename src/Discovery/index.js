@@ -25,7 +25,7 @@ let entitlements = function(items) {
 
 let watched = function(watchedItems) {
   watchedItems.reduce( (items, item) => { Log.info('Added ' + watchedItems.watchedOn + ": " + watchedItems.contentId )})
-  return true
+  return Promise.resolve(true)
 }
 
 let watchNext = function(title, linkUrl, expires, contentId, images) {
