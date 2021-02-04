@@ -45,21 +45,31 @@ If the Application needs to know the current state, you can call the `state` fun
 Lifecycle.state() // returns init, active etc.
 ```
 
-### Change current state to ready
+### Ready state
 
-The Lifecycle state can be set to ready
+Upon launch the App will enter the `init` state. As soon as the App is minimally loaded and ready to be displayed / used.
+The App should notify the platform that it's _ready_ by calling `Lifecycle.ready()`.
+
+Once in a ready state, the platform can put the App in an `active` state, meaning the App is fully up and running, and in focus.
 
 ```js
 Lifecycle.ready()
 ```
 
-### Change current state to close
+### Close state
 
-If the app wants to close the `close` function can be called. This will call the appropriate SDK functions to start its cleanup routine.
+If the app wants to close, the `Lifecycle.close()` method can be called. This will trigger the appropriate SDK and platform functions to start the cleanup routine.
 
 ```js
 Lifecycle.close()
 ```
+
+The App can also be put in a `close` state by the platform itself. This will emit the `close` event under the `Lifecycle` namespace.
+
+In the closing callback, the App can execute some logic, such as saving state, sending out analytics calls etc. When completed, the App
+should call the `Lifecycle.finished()` method, indicating that the App can be fully terminated.
+
+Note that the platform can decide to terminate the App _before_ the `finished()`-method is called, in case the App's closing logic is taking too long.
 ### Listening for events
 
 In order to listen for Lifecycle events, import the `Events` plugin from the SDK
@@ -82,6 +92,8 @@ Events.listen('Lifecycle', 'background', () => {
 ```js
 Events.listen('Lifecycle', 'close', () => {
   // the app is about to close, send events and do cleanup
+  // when ready to be terminated, notify back to the platform
+  Lifecycle.finished()
 })
 ```
 

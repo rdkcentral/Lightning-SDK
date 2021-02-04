@@ -22,7 +22,7 @@ import Log from '../Log'
 import Settings from '../Settings'
 import Registry from '../Registry'
 
-const supportedStates = ['init', 'ready', 'active', 'pause', 'background', 'close']
+const supportedStates = ['init', 'ready', 'active', 'pause', 'background', 'close', 'finished']
 const store = {
   _previous: null,
   _current: 'init',
@@ -34,7 +34,7 @@ const store = {
       this._previous = this._current
       this._current = v
       Log.info('Lifecycle', 'State changed from ' + this._previous + ' to ' + this._current)
-      emit('Lifecycle', 'close', {
+      emit('Lifecycle', this.current, {
         from: this._previous,
         to: this._current,
       })
@@ -60,6 +60,9 @@ export default {
   },
   ready() {
     store.current = 'ready'
+  },
+  finished() {
+    store.current = 'finished'
   },
   state() {
     return store.current
