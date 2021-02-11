@@ -20,10 +20,10 @@ The following states are available:
 | State         | Description                                 |
 | ------------- |:-------------------------------------------:|
 | init          | Application is initialising                 |
-| ready         | Application is ready for user interaction   |
+| ready         | Application is ready to be displayed        |
 | active        | Application is running, and in focus        |
 | background    | Application is running, not in focus        |
-| pause         | Application is pausing, not in focus        |
+| pause         | Application is _pausing_, not in focus      |
 | paused        | Application is paused                       |
 | close         | Application is closing                      |
 | closed        | Application is closed and will be unloaded  |
@@ -68,8 +68,8 @@ Lifecycle.close()
 
 The App can also be put in a `close` state by the platform itself. This will emit the `close` event under the `Lifecycle` namespace.
 
-In the callback, the App can execute some logic, such as saving state, sending out analytics calls etc. When completed, the App
-should call the `Lifecycle.closed()` method, indicating that the App can be fully terminated.
+In the callback of this close listener, the App can execute some logic, such as saving state, sending out analytics calls etc.
+When completed, the App should call the `Lifecycle.closed()` method, indicating that the App can be fully terminated.
 
 Note that the platform can decide to terminate the App _before_ the `closed()`-method is called, in case the App's closing logic is taking too long.
 
@@ -77,8 +77,8 @@ Note that the platform can decide to terminate the App _before_ the `closed()`-m
 
 The App can be put in a `paused` state by the platform. This will emit the `pause` event under the `Lifecycle` namespace.
 
-In the callback, the App can execute some logic, such as saving state, sending out analytics calls etc. When completed, the App
-should call the `Lifecycle.paused()` method, indicating that the App is ready to be put in a _paused_ state
+In the callback of this pause listener, the App can execute some logic, such as saving state, sending out analytics calls etc.
+When completed, the App should call the `Lifecycle.paused()` method, indicating that the App is ready to be put in a _paused_ state
 
 Note that the platform can decide to pause the App _before_ the `paused()`-method is called, in case the App's pausing logic is taking too long.
 
