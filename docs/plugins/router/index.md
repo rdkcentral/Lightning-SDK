@@ -1,34 +1,25 @@
 # Router
 
-
 The *Router* plugin provides an easy-to-use API that helps you create a *URL-driven, routed* Lightning App.
-
 
 The Router is typically used to navigate between *Page components*, which are effectively *Lightning Components* (that is, classes that extend the standard `Lightning.Component`).
 
-
 Optionally, you can attach one or more `callback` functions to a route.
 
-
-Besides taking away a lot of boilerplate code, the Router plugin can be beneficial for *memory management* as well, due to it's configurable
-[lazy creation](settings.md#lazyCreate) and [lazy destroy](settings.md#lazyDestroy) functionality. This is especially helpful when deploying an App on low-end devices with less memory (RAM / VRAM)
+Besides taking away a lot of boilerplate code, the Router plugin can be beneficial for *memory management* as well, due to it's configurable [lazy creation](settings.md#lazyCreate) and [lazy destroy](settings.md#lazyDestroy) functionality. This is especially helpful when deploying an App on low-end devices with less memory (RAM / VRAM)
 
 > As this plugin requires a specific *chronological reading order*, each topic concludes with a reference to the next topic.
 
 ## Example App
 
-
 The following link provides an example App that showcases all the features of the Router: [https://github.com/mlapps/Router-example-app](https://github.com/mlapps/router-example-app).
-
 
 Feel free to use this App as a foundation of your App, or copy parts of it to your existing App.
 
 ## Usage
 
-
 To power your App with Router capabilities, you first need to import the Router plugin from the Lightning SDK
 in your **App.js** file:
-
 
 ```
 import { Router } from '@lightningjs/sdk'
@@ -36,9 +27,7 @@ import { Router } from '@lightningjs/sdk'
 
 ### App Base Class
 
-
 The App Base Class constructor function is defined as follows:
-
 
 ```
 class MyApp extends Router.App {
@@ -48,12 +37,9 @@ class MyApp extends Router.App {
 
 ### Setup
 
-
 Normally, your App extends the standard `Lightning.Component`.
 
-
 If you want to make your App *routed*, you extend `Router.App` instead. This provides a default setup for the `template`, `states` and `getters`:
-
 
 ```
 import { Router } from '@lightningjs/sdk'
@@ -65,13 +51,11 @@ export default class App extends Router.App {
 }
 ```
 
-
 In the next step, you configure the available *routes* for your App. You do this using the `Router.startRouter` method, a Router configuration object as its first argument. See [Router Configuration](configuration.md) for more information.
 
 > It is recommended to initiate the Router by implementing the `_setup`[lifecycle event](../../../lightning-core-reference/Components/LifecycleEvents.md) of your App in **App.js**.
 
 ### Basic Routes
-
 
 The `routes` key is an Array of route definition items. Each item represents a route path to which the App listens, and specifies which Page component should be displayed when that route is hit.
 
@@ -79,16 +63,12 @@ The `routes` key is an Array of route definition items. Each item represents a r
 
 ### Navigating
 
-
 Consider the Router configuration above. If you point your browser to `localhost:8080#home` (note that the 8080 port serves as an example), it displays the **Home** page, while  `locahost:8080#home/browse/adventure` displays the **Browse** page.
-
 
 If you want to navigate between pages inside your App, you should *never* set the browser's location hash *directly*.
 Use the `navigate` method instead, which is provided by the Router plugin.
 
-
 If this method is called correctly, it updates the browser hash and handles the entire navigation flow between pages accordingly. For example:
-
 
 ```
 Router.navigate('home')
@@ -101,7 +81,6 @@ Router.navigate('home/browse/adventure')
 
 ### back()
 
-
 ```
 Router.back()
 ```
@@ -109,7 +88,6 @@ Router.back()
 > See [Router History](history.md#back) for more information.
 
 ### focusPage()
-
 
 ```
 Router.focusPage()
@@ -119,7 +97,6 @@ Router.focusPage()
 
 ### focusWidget()
 
-
 ```
 Router.focusWidget("Menu")
 ```
@@ -128,46 +105,37 @@ Router.focusWidget("Menu")
 
 ### getActiveHash()
 
-
 ```
 Router.getActiveHash()
 ```
-
 
 Returns the active `hash`
 
 ### getActivePage()
 
-
 ```
 Router.getActivePage()
 ```
-
 
 Returns the reference of the active `Page` instance.
 
 ### getActiveRoute()
 
-
 ```
 Router.getActiveRoute()
 ```
-
 
 Returns the active route `path` blueprint
 
 ### getActiveWidget()
 
-
 ```
 Router.getActiveWidget()
 ```
 
-
 Returns the instance of the widget that has `focus`.
 
 ### getHistory()
-
 
 ```
 Router.getHistory()
@@ -177,7 +145,6 @@ Router.getHistory()
 
 ### getHistoryState()
 
-
 ```
 Router.getHistoryState()
 ```
@@ -185,7 +152,6 @@ Router.getHistoryState()
 > See [Router History](history.md#gethistorystate) for more information.
 
 ### go()
-
 
 ```
 Router.go(-3)
@@ -195,7 +161,6 @@ Router.go(-3)
 
 ### isNavigating()
 
-
 ```
 Router.isNavigating()
 ```
@@ -203,7 +168,6 @@ Router.isNavigating()
 > See [Router Navigation](navigation.md#is-navigating) for more information.
 
 ### navigate()
-
 
 ```
 Router.navigate("path/to/navigate")
@@ -213,7 +177,6 @@ Router.navigate("path/to/navigate")
 
 ### replaceHistoryState()
 
-
 ```
 Router.replaceHistoryState({a:1, b:2})
 ```
@@ -222,7 +185,6 @@ Router.replaceHistoryState({a:1, b:2})
 
 ### resume()
 
-
 ```
 Router.resume()
 ```
@@ -230,7 +192,6 @@ Router.resume()
 > See [Router Configuration](configuration.md#bootcomponent) for more information.
 
 ### startRouter()
-
 
 ```
 Router.startRouter(routes)

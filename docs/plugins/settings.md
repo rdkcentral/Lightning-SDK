@@ -1,11 +1,8 @@
 # Settings
 
-
 An App that is created with the Lightning SDK, can be configured with various options. These options can be grouped into [App settings](#app-settings) and [Platform settings](#platform-settings).
 
-
 During development, you can configure your own settings in **settings.json**  to simulate different environments. For example:
-
 
 ```
 {
@@ -28,17 +25,13 @@ During development, you can configure your own settings in **settings.json**  to
 
 ## Usage
 
-
 Most settings are automatically handled by the Lightning SDK. Sometimes, you may want to access settings in your App code *directly*. For that purpose, you can import the *Settings* plugin from the Lightning SDK:
-
 
 ```
 import { Settings } from '@lightningjs/sdk'
 ```
 
-
 The SDK automatically creates the App or Platform types from the Launch parameters.
-
 
 Optionally, you can specify *user-defined* settings at runtime, which can be accessed anywhere in your App. You can use the `user` type for that purpose.
 
@@ -46,9 +39,7 @@ Optionally, you can specify *user-defined* settings at runtime, which can be acc
 
 ### get()
 
-
 Returns a settings value.
-
 
 ```
 Settings.get(type, key, [fallback])
@@ -60,9 +51,7 @@ Settings.get(type, key, [fallback])
 
 ### set()
 
-
 Sets a key for *a user-defined setting* where  `value` is of type `user`.
-
 
 ```
 Settings.set(key, value)
@@ -70,9 +59,7 @@ Settings.set(key, value)
 
 ### has()
 
-
 Returns 'true' or 'false', depending on whether a setting is defined or not.
-
 
 ```
 Settings.has(type, key)
@@ -80,38 +67,29 @@ Settings.has(type, key)
 
 ### subscribe()
 
-
 Adds a callback to the notification stack. The callback is notified when the value of a `user` key has changed. You can add multiple callbacks for the same key.
-
 
 ```
 Settings.subscribe(key, callback)
 ```
 
-
 The callback receives the setting's `value` as an argument.
 
 ### unsubscribe()
 
-
 Removes one or more callback(s) from the notification stack for a specific `user` key.
-
 
 ```
 Settings.unsubscribe(key, [callback])
 ```
 
-
 When a reference to a previously subscribed callback is passed, the `unsubscribe` method removes *only* the referenced callback.
-
 
 If the optional `callback` parameter is omitted, the method pops *all* callbacks from the notification stack for the given key.
 
 ### clearSubscribers()
 
-
 Clears *all* subscribers that are listening for `user` key changes.
-
 
 `Settings.clearSubscribers()
 `
@@ -127,7 +105,6 @@ This method is automatically called when the App is closed, to prevent *memory l
 |---|---|---|---|
 | `stage` | Object | { w: 1920, h: 1080, clearColor: 0x00000000, Canvas2D: false } | Object with stage configuration options that are specified in [Runtime Configuration.](../../lightning-core-reference/RuntimeConfig/index.md#stage-configuration-options) |
 | `debug` | Boolean | false | Indicates whether or not to run Lightning in debug mode. |
-
 
 ### Platform Settings
 

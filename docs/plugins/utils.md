@@ -1,13 +1,10 @@
 # Utils
 
-
 The Lightning SDK provides a number of useful *helper* functions  (or *utilities*) that you can use when building your App.
 
 ## Usage
 
-
 If you want to use one or more of these helper functions, import the Utils plugin from the Lightning SDK:
-
 
 ```
 import { Utils } from '@lighntingjs/sdk'
@@ -17,9 +14,7 @@ import { Utils } from '@lighntingjs/sdk'
 
 ### asset()
 
-
 Generates a full URL to local App assets (such as images), based on the `path` that is configured in [Platform Settings](settings.md#platform-settings).
-
 
 ```
 Utils.asset('images/logo.png')
@@ -29,9 +24,7 @@ Utils.asset('images/logo.png')
 
 ### proxyUrl()
 
-
 Generates a proxy URL. This is useful if you are using remote APIs that do not have CORS (Cross-Origin Resource Sharing) configured correctly.
-
 
 ```
 Utils.proxyUrl(url, options)

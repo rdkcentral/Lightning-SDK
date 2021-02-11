@@ -1,8 +1,6 @@
 # Data Providing
 
-
 The *Data Providing* interface of the Router plugin enables you to execute *asynchronous API requests* to grab data and make this data available to a certain Page.
-
 
 The following three types of data providing callbacks are available for this purpose:
 
@@ -10,9 +8,7 @@ The following three types of data providing callbacks are available for this pur
 * [before()](#before)
 * [after()](#after)
 
-
 You can only use *one* data providing callback type for each route.
-
 
 The data providing callbacks are configured in the *global* configuration object of the routes.
 
@@ -22,9 +18,7 @@ The data providing callbacks are configured in the *global* configuration object
 
 ### on()
 
-
 The `on` data provider shows the Loader, performs the data request, hides the Loader and displays the new page. For example:
-
 
 ```
 {
@@ -48,7 +42,6 @@ The `on` data provider shows the Loader, performs the data request, hides the Lo
 }
 ```
 
-
 If you navigate to: `localhost:8080/#player/267/173688` via `Router.navigate('player/267/173688');`, the Router performs the following subsequent actions:
 
 1. Hide the current page (and destroy it to free up memory, if so configured)
@@ -58,9 +51,7 @@ If you navigate to: `localhost:8080/#player/267/173688` via `Router.navigate('pl
 
 ### before()
 
-
 The `before` data provider works similar to the `on` data provider. They only differ in the way that pages are loaded. For example:
-
 
 ```
 {
@@ -72,7 +63,6 @@ The `before` data provider works similar to the `on` data provider. They only di
 }
 ```
 
-
 The Router plugin performs the following actions:
 
 1. Make the request
@@ -82,9 +72,7 @@ The Router plugin performs the following actions:
 
 ### after()
 
-
 The `after` data provider works similarly, but follows a slightly different sequence for displaying the old and the new Page. For example:
-
 
 ```
 {
@@ -96,7 +84,6 @@ The `after` data provider works similarly, but follows a slightly different sequ
 }
 ```
 
-
 The Router plugin performs the following actions:
 
 1. Show (if necessary, first create) the new page
@@ -105,7 +92,6 @@ The Router plugin performs the following actions:
 
 ### `cache` Property
 
-
 By specifying a `cache` property in the route definition, you can control how long the provided date stays valid if the same page is visited twice. If the same route is hit within the specified cache time, the page is loaded with the cached data. Otherwise, a
 new request will be made.
 
@@ -113,15 +99,11 @@ new request will be made.
 
 ### onDataProvided()
 
-
 The `_onDataProvided` method is invoked when the `on`, `before` or `after` data providing callback has resolved.
-
 
 By adding `_onDataProvided() {..}` to your Lightning Component, you can listen when the data providing is ready.
 
-
 This will not fire when the page is not expired (and loaded from memory).
-
 
 ```
 class Browse extends Lightning.Component{
