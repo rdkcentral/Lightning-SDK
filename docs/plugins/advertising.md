@@ -3,7 +3,7 @@
 The _Advertising_ plugin helps to enable (video) advertisements in an App.
 
 The plugin can be used as a drop-in solution that takes care of the entire Ad playback flow (in combination with the VideoPlayer plugin),
-as well as the integration with different advertisment distributers depending on the specific platform deployment.
+as well as the integration with different advertisment distributors depending on the specific platform deployment.
 
 However if your App requires a custom Advertisement setup with it's own Ad playback logic and integration with an Ad provider, the Advertising
 plugin can be used to retrieve important configuration and settings related to advertisements.

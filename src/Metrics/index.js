@@ -47,7 +47,7 @@ const metrics = {
     'seeking',
     'seeked',
     'ratechange',
-    'renditionchange'
+    'renditionchange',
   ],
 }
 

@@ -17,17 +17,20 @@
  * limitations under the License.
  */
 
-import { initUtils } from '../Utils'
+import { initAdsHandler } from '../Advertising/adsHandler'
+import { initEvents } from '../Events'
+import { initLifecycle } from '../Lifecycle'
+import { initMetrics } from '../Metrics'
+import { initMediaPlayer } from '../MediaPlayer'
 import { initProfile } from '../Profile'
 import { initPlatform } from '../Platform'
-import { initMetrics } from '../Metrics'
-import { initSettings } from '../Settings'
-import { initMediaPlayer } from '../MediaPlayer'
-import { initVideoPlayer } from '../VideoPlayer'
-import { initStorage } from '../Storage'
-import { initAdsHandler } from '../Advertising/adsHandler'
 import { initRouter } from '../Router'
+import { initSettings } from '../Settings'
+import { initStorage } from '../Storage'
 import { initTV } from '../TV'
+import { initUtils } from '../Utils'
+import { initVideoPlayer } from '../VideoPlayer'
+
 import Application from '../Application'
 import isProbablyLightningComponent from '../helpers/isProbablyLightningComponent'
 
@@ -35,8 +38,8 @@ export let ApplicationInstance
 
 export default (App, appSettings, platformSettings, appData) => {
   initSettings(appSettings, platformSettings)
-
   initUtils(platformSettings)
+  initLifecycle((platformSettings.plugins && platformSettings.plugins.events) || {})
   initStorage()
 
   // Initialize plugins
@@ -49,6 +52,7 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.ads && initAdsHandler(platformSettings.plugins.ads)
     platformSettings.plugins.router && initRouter(platformSettings.plugins.router)
     platformSettings.plugins.tv && initTV(platformSettings.plugins.tv)
+    platformSettings.plugins.events && initEvents(platformSettings.plugins.events)
   }
 
   if (isProbablyLightningComponent(App)) {

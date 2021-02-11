@@ -20,14 +20,14 @@
 import Deepmerge from 'deepmerge'
 import Lightning from '../Lightning'
 import Locale from '../Locale'
+import Lifecycle from '../Lifecycle'
 import Metrics from '../Metrics'
 import VersionLabel from '../VersionLabel'
 import FpsCounter from '../FpsCounter'
 import Log from '../Log'
-import Settings from '../Settings'
 import { initLanguage } from '../Language'
 import Utils from '../Utils'
-import Registry from '../Registry'
+import Events from '../Events'
 
 import { version as sdkVersion } from '../../package.json'
 
@@ -118,6 +118,8 @@ export default function(App, appData, platformSettings) {
             })
           }
 
+          Events.listen('Lifecycle', 'close', () => this.close())
+
           super._setup()
         })
         .catch(console.error)
@@ -132,16 +134,9 @@ export default function(App, appData, platformSettings) {
     }
 
     closeApp() {
+      Log.info('Firing close event')
+      Lifecycle.close()
       Log.info('Closing App')
-
-      Settings.clearSubscribers()
-      Registry.clear()
-
-      if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
-        platformSettings.onClose(...arguments)
-      } else {
-        this.close()
-      }
     }
 
     close() {

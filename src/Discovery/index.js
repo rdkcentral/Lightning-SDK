@@ -20,11 +20,13 @@
 import Log from '../Log'
 
 let entitlements = function(items) {
-  return Promise.resolve(true);
+  return Promise.resolve(true)
 }
 
 let watched = function(watchedItems) {
-  watchedItems.reduce( (items, item) => { Log.info('Added ' + watchedItems.watchedOn + ": " + watchedItems.contentId )})
+  watchedItems.reduce((items, item) => {
+    Log.info('Added ' + watchedItems.watchedOn + ': ' + watchedItems.contentId)
+  })
   return Promise.resolve(true)
 }
 
@@ -42,5 +44,5 @@ export const initAdvertising = config => {
 export default {
   entitlements: entitlements,
   watched: watched,
-  watchNext: watchNext
+  watchNext: watchNext,
 }
