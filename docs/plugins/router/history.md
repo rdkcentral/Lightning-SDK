@@ -1,39 +1,50 @@
-# Router
+# Router History
 
-## History
 
-The router maintains it’s own history and does not rely on a browser web API. All the routes we have navigated to can end up in history. We don’t keep route duplicates in history, so `#home/player/145` will only be in history once (even if the user navigated to it multiple times) but same route blueprints with different values can live in history, `home/player/178` and `home/player/91737` or `browse/genre/action/50` and `browse/genre/popular/50`
+The Router maintains its own history and does not rely on a browser web API.
 
-### Navigating through history
 
-By default the Router will take ownership in navigating back in history, when you press `back` on your remote control the router will call:
+Generally, all the routes to which you have navigated, can be added to history. However, route duplicates are *not* added, so `#home/player/145` will only be added to history *once* (even if you have navigated to it multiple times).
 
-##### back()
 
-```js
+On the other hand, similar route blueprints with different values *are* added, for example: `home/player/178` and `home/player/91737`
+or
+`browse/genre/action/50` and `browse/genre/popular/50`.
+
+## Navigating Through History
+
+### back()
+
+
+By default, the Router takes ownership in navigating back through history. This means that, if you press **Back** on your remote control, the router calls the `back()` method and goes a step back in history.
+
+
+```
 Router.back()
 ```
 
-And do a step back in history.
+### go()
 
-##### go()
 
-If you want to override the default `Router.back()` invocation you can add the following to your `Page` class:
+If you want to *override* this default call of the `back()` method, you can add the `go()` method to your `Page` class to specify the entry to which you want to navigate back to:
 
-```js
+
+```
 _handleback(){
     Router.go(-3);
 }
 ```
 
-This will try to navigate to the third last `history` entry
 
-### history object {}
+Based on the example above, the *go()* method will try to navigate to the third last entry in history.
 
-When you navigate away from a page via `Router.navigate("my/next/page")` the calling page (hash) will end up
-as a new entry in the Router's history, for instance:  
+#### history object {}
 
-```js
+
+If you navigate away from a page via `Router.navigate("my/next/page")`, the calling page (hash) is added to the Router history as a new entry. For example:
+
+
+```
 {
     hash: 'home/browse/adventure',
     state: {
@@ -43,15 +54,18 @@ as a new entry in the Router's history, for instance:
 }
 ```
 
-`hash` is the hash that started the new `navigate` and state is an optional state history object that your page can provide.
+
+In the example, `hash` represents the page that initiated the new `navigate`, and `state` is an optional *state history object* that your page can provide.
 
 ### historyState()
 
-##### pushing
+#### Pushing
 
-If you want your page to push a state object in history you can do the following: 
 
-```js
+If you want your page to add ('push') a state object to history, you can do the following:
+
+
+```
 
 class Browse extends Lightning.Component {    
     static _template(){
@@ -67,22 +81,25 @@ class Browse extends Lightning.Component {
 }
 ```
 
-When you navigate away from the browse page, the Router will check for the existence of historyState function
-and store the return value if it's an `object`
 
-##### popping
+When you navigate away from the Browse page, the Router checks for the existence of the `historyState()` function,
+and stores the return value (if this is an object).
 
-If the browse page gets loaded via a history navigate, and there is a state object in history, the Router will call
-the same `historyState()`-method with the `stateObject` as argument
+#### Popping
 
-```js
+
+If the Browse page is loaded ('popped') from history with a history `navigate`, and there is a state object in history, the Router calls
+the `historyState()` method, with the *state object* as argument. For example:
+
+
+```
 
 historyState(params){
     if(params){
-        // called because entry got loaded from history
+        // called because entry was loaded from history
         this.setIndex(params.focusIndex)
     }else{
-        // called because page will be put in history
+        // called because page was added to history
         return {
             focusIndex: 12,
             someVal: Math.random()
@@ -93,26 +110,30 @@ historyState(params){
 
 ### getHistory()
 
-You can get a copy of the Router's current history by calling:  
-```js
+
+You can get a copy of the Router's current history by calling the `getHistory()` method, which returns an *Array* of history objects:
+
+
+```
 const history = Router.getHistory()
 ```
 
-this will return an `array` of `history objects`
-
-
 ### replaceHistoryState()
 
-It's possible to replace the state object of the last entry that ended in history:
 
-```js
+The `replaceHistoryState()` method overrides the state object of the *last* entry that was added to history:
+
+
+```
 Router.replaceHistoryState({a:1, b:2});
 ```
 
-This will override (or set) the history state object of the last entry. It's also possible to replace other 
-entries, but you will need to provide the `hash` as second argument: 
 
-```js
+If you want to replace *other*
+entries, you must provide the `hash` as the second argument:
+
+
+```
 const history = Router.getHistory();
 const record = history[2];
 
@@ -121,19 +142,23 @@ Router.replaceHistoryState({a:1, b:2}, record.hash);
 
 ### getHistoryState()
 
-In addition to replacing the history state, you can also review the history state of previous entries: 
 
-```js
-// this will return state object of the last entry
+You can use the `getHistoryState()` method to *review* the history state of one or more previous history entries. For example:
+
+
+```
+// this returns the state object of the last entry
 const state = Router.getHistoryState()
 ```
 
-of provide a hash
 
-```js
+You can also provide a `hash`:
+
+
+```
 const history = Router.getHistory();
 const record = history[4];
 
-// this will return the state object for the provided hash
+// this returns the state object for the provided hash
 const state = Router.getHistoryState(record.hash)
 ```

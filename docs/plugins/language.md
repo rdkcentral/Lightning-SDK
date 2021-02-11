@@ -1,32 +1,37 @@
 # Language
 
-The Language plugin supports internationalisation features for your App.
+
+The Language plugin supports internationalization features for your App.
 
 ## Usage
 
-In order to use the Language plugin, import it from the Lightning SDK.
 
-```js
+If you want to use the Language plugin, import it from the Lightning SDK:
+
+
+```
 import { Language } from '@lightningjs/sdk'
 ```
 
-### Loading on boot
+### Loading on Boot
 
-You can automatically load and initialize the Language plugin when your App boots, by specifying a `static` method `language()`
-on the `App`-class in `src/App.js`.
 
-The `language`-method should return which language to use on initialisation. This can either be a string or a Promise that resolves a
+You can automatically load and initialize the Language plugin when your App boots, by specifying a `static` method `language()` 
+on the `App` class in **src/App.js**.
+
+
+The `language` method returns the language to be used on initialization. This can either be a string or a promise that resolves a
 string with the language code.
 
 
-```js
-export default class App extends Lightning.Component {
+```
+export default class App extends Lightning.component {
 
   static language() {
     // hardcoded string
     return 'en'
-    // or string retrieved van Storage
-    return Storage.get('selectedLanguage') || 'en'
+    // or string retrieved from Storage
+    return Storage.get('selectedLanguage')  || 'en'
     // or a promise (e.g. using the Profile plugin)
     return Profile.language()
   }
@@ -34,16 +39,19 @@ export default class App extends Lightning.Component {
 }
 ```
 
-### Translations file
+### Translations File
 
-By default the Language plugin expects a `json` file, called `translations.json` in the `static` folder of your App.
+
+By default, the Language plugin expects a JSON translations file, called **translations.json**, which is located in the **static** folder of your App.
+
 
 If you want, you can specify a different name and / or location for your translations file, or even host it on a remote CDN.
-You can configure this via the `static` method `language()` on `App.js`, by returning an object with a `file` and a
+You can configure this via the `static` method `language()` on **App.js**, by returning an object with a `file` and a
 `language` property (instead of just the initial language).
 
-```js
-export default class App extends Lightning.Component {
+
+```
+export default class App extends Lightning.component {
 
   static language() {
     return {
@@ -55,9 +63,11 @@ export default class App extends Lightning.Component {
 }
 ```
 
-The translations file should contain valid json in the following format.
 
-```json
+The translations file should contain valid JSON in the following format:
+
+
+```
 {
   "en": {
     "key": "translated string in English",
@@ -70,9 +80,11 @@ The translations file should contain valid json in the following format.
 }
 ```
 
-Optionally you can add an extra `meta`-key to `translations.json` with more detailed configuration and metadata.
 
-```json
+Optionally, you can add a `meta` key to **translations.json**, that contains more detailed configuration and metadata.
+
+
+```
 {
   "meta": {
     "default": "en", // default fallback language
@@ -97,29 +109,32 @@ Optionally you can add an extra `meta`-key to `translations.json` with more deta
 }
 ```
 
-#### Splitting up in several files
+### Splitting Up in Several Files
+
 
 Depending on the size of an App and the number of supported languages, the translations file may grow rather large.
-This can make managing translations more cumbersome during development. But it can also negatively affect loading time
-(since the entire `translations.json` is loaded upon boot).
+This can make translation management more cumbersome during development. Also, it can negatively affect the loading time
+(since the entire **translations.json** is loaded upon boot).
 
-For this reason, the Language plugin offers the option to split the translations in different files (i.e. `en.json` and `nl.json`).
-Each file must contain a basic _JSON_ object with keys and their translated values. For example:
 
-```json
+For this reason, the Language plugin offers the option to *split* the translations in different files (for example, **en.json** and **nl.json**) where each file must contain a basic JSON object with keys and their translated values. For example:
+
+
+```
 {
   "key": "translated string in English",
   "another key": "another translated string in English"
 }
 ```
 
-Next, in the main `translations.json` the different language files must be properly wired up.
 
-Instead of specifying an entire _JSON_ object, the location of the corresponding JSON file in the `static`-folder should be specified as a `String`.
+In the main **translations.json** file, the different language files must be properly wired up. Instead of specifying an entire JSON object, the location of the corresponding JSON file in the **static** folder should be specified as a *string*.
+
 
 For example:
 
-```json
+
+```
 {
   "meta": {
     "default": "en",
@@ -129,64 +144,80 @@ For example:
 }
 ```
 
-It is possible to use both inline JSON objects and references to external language files in the same `translations.json` file.
 
-External language files are loaded on the fly when a specific language is being set. This may add some load time
-when switching languages.
+It is possible to use both inline JSON objects and references to external language files in the same **translations.json** file.
 
-## Available methods
 
-### Set
+External language files are loaded on-the-fly when a specific language is set. This may result in additional load time
+when switching between languages.
 
-Sets or changes the current Language.
+## Available Methods
 
-```js
+### set()
+
+
+Sets or changes the current language.
+
+
+```
 const languageCode = 'en'
 Language.set(languageCode).then(() => {
   // the current language is now 'en'
 }).catch()
 ```
 
-The `set`-method returns a Promise, that resolves when the Language has been properly changed.
-Setting the language is _instant_ for translations specified inline in the `translations.json` file.
-In the case of external language files an _asynchronous_ load request will be made.
 
-The language code should match with one of the language-keys specified in your `translations.json`.
+The `set` method returns a promise that resolves when the `Language` has been properly changed.
+Setting the language is *instant* for translations specified inline in the **translations.json** file.
+For external language files, an *asynchronous* load request will be made.
 
-The `map` option in the `meta` key of your translations file can be used to specify _aliases_, and as such can be used
-to map different ISO codes (i.e. en-GB, en-US, etc.) to a single language key (en).
+
+The language code should match with one of the language keys specified in your **translations.json**.
+
+
+The `map` option in the `meta` key of your translations file can be used to specify *aliases*, and as such can be used
+to map different ISO codes (i.e., en-GB, en-US) to a single language key (en).
+
 
 If you have specified a `default` language in the `meta` key of your translations file, the Language plugin will use
-that as a fallback in case no matching language was found.
+that as a *fallback* if no matching language was found.
 
-Note, changing the language doesn't automatically trigger a template render update.
+> Changing the language doesn't automatically trigger a template render update.
 
-### Get
+### get()
 
-Gets and returns the current selected language.
 
-```js
+Gets and returns the currently selected language.
+
+
+```
 // The current language is 'en'
 const currentLanguage = Language.get()
 // currentLanguage = 'en'
 ```
 
-#### Translate
+### translate()
+
 
 Translates a key to the matching value.
 
-```js
+
+```
 Language.translate('hello')
 ```
 
-The translate method will lookup the translation-key in the current selected language and return the _translated_ value.
-If no value is found in the dictionary of the current language, it will return the supplied key.
 
-Optionally you can specify _replacements_ in the translated string. There are 2 ways of defining replacements: _order_ based and _name_ based.
+The `translate` method looks up the translation key in the currently selected language and returns the *translated* value.
+If no value is found in the dictionary of the current language, it returns the supplied key.
+
+
+Optionally, you can specify *replacements* in the translated string. There are two ways of defining replacements: *order-based* and *name-based*.
+
 
 Consider the following `translations.json`:
 
-```json
+
+```
 {
   "en": {
     "introduction1": "Hi, my name is {0}, my lastname is {1} and I am {2} years old",
@@ -195,42 +226,54 @@ Consider the following `translations.json`:
 }
 ```
 
-We can either pass a set of function argument for order based replacements.
 
-```js
+For *order-based* replacements, you pass a set of function arguments:
+
+
+```
 Language.translate('introduction1', 'John', 'Doe', 18)
 // Hi, my name is John, my lastname is Doe and I am 18 years old
 ```
 
-Or a _key-value_-object for name based replacements.
 
-```js
+For *name-based* replacements, you pass a *key-value* object:
+
+
+```
 Language.translate('introduction2', {lastname: 'Smith', firstname: 'Joe', age: 27}) // name based replacements
 // Hi, my name is Joe, my lastname is Smith and I am 27 years old
 ```
 
-### Available
+### available()
 
-Returns an Array with the available languages as specified in `translations.json`, which can for example be used to display
+
+Returns an Array with the available languages as specified in **translations.json**, which, for example, can be used to display
 a dynamic language switcher in your App.
 
-The `available`-method will return an Array of objects with a `code` and a `name` property.
 
-The `name` property will be set to the language name as specified in the `meta.names` property of your translation file.
-If you have not specified `names`, or if a particular language does not have a name defined, the property will default to
-the `code`-value.
+The `available` method returns an Array of objects with a `code` and a `name` property.
 
-```js
+
+The `name` property is set to the language name as specified in the `meta.names` property of your translation file.
+
+
+If you have not specified `names`, or if a particular language does not have a name defined, the property defaults to
+the `code` value.
+
+
+```
 Language.available()
 // [{code: 'en', name: 'English'}, {code: 'nl', name: 'Nederlands'}, {code: 'de': name: 'de'}]
 ```
 
-### Translations
+### translations()
+
 
 Advanced method that allows you to set the translations manually during runtime, instead of using the automatic load
-of `translations.json` on boot.
+of **translations.json** on boot.
 
-```js
+
+```
 
 const translations = {
   meta: {

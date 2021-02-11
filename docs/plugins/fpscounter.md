@@ -1,21 +1,20 @@
-# FPS counter
+# FPS Counter
 
-Frames per second (FPS) is an important measure for the performance of your App. A higher FPS indicates a smoother experience.
-When validating an App on a certain platform it's useful to get an indication of the FPS score.
+The number of *Frames per second (FPS)* is an important measure for the performance of your App. The higher the FPS, the smoother the experience. When you are validating your App on a certain platform, it's useful to get an indication of the *FPS score*.
 
-The SDK contains a built-in **FPS counter** that can be turned on or off via the [Platform Setting](/plugins/settings?id=platform) `showFps` in `settings.json`.
+The SDK contains a built-in *FPS counter* that can be enabled or disabled via the Platform Setting `showFps` in `settings.json`. When it is enabled, a *real-time* counter with the current FPS will be displayed as an overlay in the top left corner of your App.
 
-When enabled a _real-time_ counter with the current FPS will be displayed as an overlay in the top left corner of the App.
+## Advanced Configuration
 
-## Advanced configuration
+If you need more control over the behavior of the FPS counter, you can pass an *object* that contains one or more of the following configuration options (instead of passing only a `boolean`):
 
-If you need more control over the behaviour of the FPS counter, you can pass an `object` with more configuration instead of a `boolean`.
+| Name | Default | Description |
+|---|---|---|
+| `interval` | 500 | Refresh rate in milliseconds |
+| `log` | false | Indicates whether or not to *also* log the calculated FPS value to the console |
+| `threshold` | 1 | Minimum difference between FPS values to display / log |
 
-- **interval** - specifies the refresh rate in miliseconds (defaults to `500`)
-- **log** - whether to _also_ log the calculated FPS value to the console (defaults to `false`)
-- **threshold** - minimal difference between FPS values to display / log (defaults to `1`)
-
-```json
+```
 "showFps": {
   "interval": 300,
   "log": true,

@@ -1,31 +1,41 @@
 # Utils
 
-The Lightning SDK exposes a number of useful helper functions, that can come in handy when building your App.
+
+The Lightning SDK provides a number of useful *helper* functions  (or *utilities*) that you can use when building your App.
 
 ## Usage
 
-Whenever you need such a utility function, import the Utils plugin from the Lightning SDK.
 
-```js
+If you want to use one or more of these helper functions, import the Utils plugin from the Lightning SDK:
+
+
+```
 import { Utils } from '@lighntingjs/sdk'
 ```
 
-## Available methods
+## Available Methods
 
-### Asset
+### asset()
 
-Generates a full url to local App assets (such as images), taking into account the `path` configured in Platform [settings](/plugins/settings). It's important _always_ use the asset helper (instead of relative paths for example), to ensure that your assets will load properly as well hosted on a CDN in production.
 
-```js
+Generates a full URL to local App assets (such as images), based on the `path` that is configured in [Platform Settings](settings.md#platform-settings).
+
+
+```
 Utils.asset('images/logo.png')
 ```
 
-### ProxyUrl
+> It's important that you *always* use the asset helper instead of relative paths (for example). This ensures that your assets will load properly during local development and that the assets, once in production, are hosted on a CDN (Content Delivery Network).
 
-Generates a proxy url. Useful when using remote API's that don't have CORS configured correctly.
+### proxyUrl()
 
-```js
+
+Generates a proxy URL. This is useful if you are using remote APIs that do not have CORS (Cross-Origin Resource Sharing) configured correctly.
+
+
+```
 Utils.proxyUrl(url, options)
 ```
 
-Note: during development you need to specify a `proxyUrl` as a platform Setting (in `settings.json`). In production the proxyUrl will be set for you.
+> During *development* you must specify a `proxyUrl` as a [Platform Setting](settings.md#platform-settings) in **settings.json**.
+During *production*, the proxyUrl is automatically set.

@@ -1,58 +1,77 @@
 # Log
 
-It's common practice to use `console.log` to quickly debug an App.
 
-While this can be very useful during development and QA, it's not desirable to deploy an app in production with all sorts of logs still enabled.
+It is common practice to use `console.log` to quickly debug an App.
 
-Instead of using console.log (or debug, error, warn) it is recommended to use the Log plugin. It will only generate (prettier) logs, when the [Platform setting](/plugins/settings) `log` is set to `true`. This way it's possible to keep a (small) number of relevant logs inside your App code, without needing to remove them before pushing to production.
+
+Although this can be very useful during development and QA, it is not desirable to deploy an App in production while all sorts of logs are still enabled.
+
+
+Instead of using `console.log` (or `.debug`, `.error`, `.warn`), it is recommended to use the *Log* plugin.
+
+
+The Log plugin generates (prettier) logs *only* if the [Platform Setting](settings.md#platform-settings)`log` is set to 'true'. As a result, you can keep a (small) number of relevant logs inside your App code without the need to remove them before you push your App to production (this is handled automatically).
 
 ## Usage
 
-In order to use the Log plugin, import it from the Lightning SDK.
 
-```js
+If you want to use the Log plugin, import it from the Lightning SDK:
+
+
+```
 import { Log } from '@lightningjs/sdk'
 ```
 
-## Available methods
+## Available Methods
 
-### Info
+### info()
 
-Invokes a console.log when the Platform setting log is true.
 
-```js
+Invokes a `console.log` when the Platform Setting `log` is 'true'.
+
+
+```
 Log.info(label, argument1, argument2, argument3, ..., argumentx)
 ```
 
-The info method accepts any number of arguments. If the first argument passed is a `String` it will be displayed as a custom label instead of the default label 'Info'.
 
-### Debug
+The `info` method accepts any number of arguments. If the first argument is a String, it will be displayed as a custom label instead of the default label 'Info'.
 
-Invokes a console.debug when the Platform setting log is true.
+### debug()
 
-```js
+
+Invokes a `console.debug` when the Platform Setting `log` is 'true'.
+
+
+```
 Log.debug(label, argument1, argument2, argument3, ..., argumentx)
 ```
 
-The debug method accepts any number of arguments. If the first argument passed is a `String` it will be displayed as a custom label instead of the default label 'Debug'.
 
-### Error
+The `debug `method accepts any number of arguments. If the first argument is a String, it will be displayed as a custom label instead of the default label 'Debug'.
 
-Invokes a console.error when the Platform setting log is true.
+### error()
 
-```js
+
+Invokes a `console.error` when the Platform Setting `log` is 'true'.
+
+
+```
 Log.error(label, argument1, argument2, argument3, ..., argumentx)
 ```
 
-The error_method accepts any number of arguments. If the first argument passed is a `String` it will be displayed as a custom label instead of the default label 'Error'.
+
+The `error` method accepts any number of arguments. If the first argument is a String, it will be displayed as a custom label instead of the default label 'Error'.
+
+### warn()
 
 
-### Warn
+Invokes a `console.warm` when the Platform Setting `log` is 'true'.
 
-Invokes a console.warm when the Platform setting log is true.
 
-```js
+```
 Log.warn(label, argument1, argument2, argument3, ..., argumentx)
 ```
 
-The warn method accepts any number of arguments. If the first argument passed is a `String` it will be displayed as a custom label instead of the default label 'Warn'.
+
+The `warn` method accepts any number of arguments. If the first argument passed is a String, it will be displayed as a custom label instead of the default label 'Warn'.

@@ -1,34 +1,61 @@
 # Router
 
-The Router plugin provides an easy to use api that helps you create a _url driven, routed_ Lightning App.
 
-The Router is typically used to navigate between _Pages_, which are effectively _Lightning Components_ (i.e. a class that extends `Lightning.Component`).
-Optionally you can also attach one or more _Callback_ `functions` to a route.
+The *Router* plugin provides an easy-to-use API that helps you create a *URL-driven, routed* Lightning App.
 
-Besides taking away a lot of boilerplate code, the Router plugin can be beneficial for _memory management_ as well, due to it's configurable
-[lazy creation and destroy](settings?id=lazy-creation) functionality. This is especially helpful when deploying an App on low-end devices with less memory (RAM / VRAM)
 
-## Example app
+The Router is typically used to navigate between *Page components*, which are effectively *Lightning Components* (that is, classes that extend the standard `Lightning.Component`).
 
-We've provided an example App that showcases all the features of the Router: https://github.com/mlapps/router-example-app.
 
-Feel free to use this App as the foundation of your App or copy parts of it to your existing App.
+Optionally, you can attach one or more `callback` functions to a route.
+
+
+Besides taking away a lot of boilerplate code, the Router plugin can be beneficial for *memory management* as well, due to it's configurable
+[lazy creation](settings.md#lazyCreate) and [lazy destroy](settings.md#lazyDestroy) functionality. This is especially helpful when deploying an App on low-end devices with less memory (RAM / VRAM)
+
+> As this plugin requires a specific *chronological reading order*, each topic concludes with a reference to the next topic.
+
+## Example App
+
+
+The following link provides an example App that showcases all the features of the Router: [https://github.com/mlapps/Router-example-app](https://github.com/mlapps/router-example-app).
+
+
+Feel free to use this App as a foundation of your App, or copy parts of it to your existing App.
 
 ## Usage
 
-In order to power your App with router capabilities you first need to import the Router plugin from the Lightning-SDK
-in your `App.js`
 
-```js
+To power your App with Router capabilities, you first need to import the Router plugin from the Lightning SDK
+in your **App.js** file:
+
+
+```
 import { Router } from '@lightningjs/sdk'
+```
+
+### App Base Class
+
+
+The App Base Class constructor function is defined as follows:
+
+
+```
+class MyApp extends Router.App {
+
+}
 ```
 
 ### Setup
 
-Normally your App extends a standard Lightning Component. When you want to make your App _routed_, you can extend `Router.App` instead,
-which comes with a default setup for the `template`, `states` and `getters`.
 
-```js
+Normally, your App extends the standard `Lightning.Component`.
+
+
+If you want to make your App *routed*, you extend `Router.App` instead. This provides a default setup for the `template`, `states` and `getters`:
+
+
+```
 import { Router } from '@lightningjs/sdk'
 
 export default class App extends Router.App {
@@ -38,48 +65,178 @@ export default class App extends Router.App {
 }
 ```
 
-The next step is to configure the available routes that exist for your App, using the `Router.startRouter` method, which accepts an object with [router configuration](configuration) as it's first argument. A good place to initiate the router is in your App's `_setup` lifecycle event.
 
-### Basic routes
+In the next step, you configure the available *routes* for your App. You do this using the `Router.startRouter` method, a Router configuration object as its first argument. See [Router Configuration](configuration.md) for more information.
 
-The Router's _configuration object_ should contain a `routes` key, which is an `array` of route definitions.
+> It is recommended to initiate the Router by implementing the `_setup`[lifecycle event](../../../lightning-core-reference/Components/LifecycleEvents.md) of your App in **App.js**.
 
-Each item represents a _route-path_ that the App should listen for and specifies which _component_ (i.e. page) should be displayed when that route is hit.
+### Basic Routes
 
-You can define your routes object directly inside your `App.js`, but it's recommended to specify your routes in a separate `routes.js` file.
 
-```js
-// file: src/routes.js
-import { Home, Browse } from './pages';
+The `routes` key is an Array of route definition items. Each item represents a route path to which the App listens, and specifies which Page component should be displayed when that route is hit.
 
-export default {
-  routes: [
-    {
-      path: 'home',
-      component: Home
-    },
-    {
-      path: 'home/browse/adventure',
-      component: Browse
-    }
-  ]
-}
-```
+> See [Router Configuration](configuration.md#routes) for more information.
 
 ### Navigating
 
-Considering the router configuration above, whenever you point your browser to `localhost:8080#home` it will display the `Home` page component and
-`locahost:8080#home/browse/adventure` will display the `Browse` page.
 
-When you want to navigate between pages inside your App, you should never set the browser's location hash directly.
-Instead you can use the `navigate` method exported by the Router plugin.
+Consider the Router configuration above. If you point your browser to `localhost:8080#home` (note that the 8080 port serves as an example), it displays the **Home** page, while  `locahost:8080#home/browse/adventure` displays the **Browse** page.
 
-```js
+
+If you want to navigate between pages inside your App, you should *never* set the browser's location hash *directly*.
+Use the `navigate` method instead, which is provided by the Router plugin.
+
+
+If this method is called correctly, it updates the browser hash and handles the entire navigation flow between pages accordingly. For example:
+
+
+```
 Router.navigate('home')
 Router.navigate('home/browse/adventure')
 ```
 
-Calling these methods will update the browser hash properly for you and handle the entire navigation flow between Pages.
+> See [Router Navigation](navigation.md) for more information.
 
-Next:
-[Router configuration](configuration.md)
+## Available Methods
+
+### back()
+
+
+```
+Router.back()
+```
+
+> See [Router History](history.md#back) for more information.
+
+### focusPage()
+
+
+```
+Router.focusPage()
+```
+
+> See [Router Widgets](widgets.md#handling-focus) for more information.
+
+### focusWidget()
+
+
+```
+Router.focusWidget("Menu")
+```
+
+> See [Router Widgets](widgets.md#handling-focus) for more information.
+
+### getActiveHash()
+
+
+```
+Router.getActiveHash()
+```
+
+
+Returns the active `hash`
+
+### getActivePage()
+
+
+```
+Router.getActivePage()
+```
+
+
+Returns the reference of the active `Page` instance.
+
+### getActiveRoute()
+
+
+```
+Router.getActiveRoute()
+```
+
+
+Returns the active route `path` blueprint
+
+### getActiveWidget()
+
+
+```
+Router.getActiveWidget()
+```
+
+
+Returns the instance of the widget that has `focus`.
+
+### getHistory()
+
+
+```
+Router.getHistory()
+```
+
+> See [Router History](history.md#gethistory) for more information.
+
+### getHistoryState()
+
+
+```
+Router.getHistoryState()
+```
+
+> See [Router History](history.md#gethistorystate) for more information.
+
+### go()
+
+
+```
+Router.go(-3)
+```
+
+> See [Router History](history.md#go) for more information.
+
+### isNavigating()
+
+
+```
+Router.isNavigating()
+```
+
+> See [Router Navigation](navigation.md#is-navigating) for more information.
+
+### navigate()
+
+
+```
+Router.navigate("path/to/navigate")
+```
+
+> See [Router Navigation](navigation.md#router-navigation) for more information.
+
+### replaceHistoryState()
+
+
+```
+Router.replaceHistoryState({a:1, b:2})
+```
+
+> See [Router History](history.md#replacehistorystate) for more information.
+
+### resume()
+
+
+```
+Router.resume()
+```
+
+> See [Router Configuration](configuration.md#bootcomponent) for more information.
+
+### startRouter()
+
+
+```
+Router.startRouter(routes)
+```
+
+> See [Setup](#setup) and [Router Configuration Object](configuration.md#router-configuration) for more information.
+
+#### NEXT:
+[Router Configuration](configuration.md)

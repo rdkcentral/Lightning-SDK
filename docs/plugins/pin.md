@@ -1,75 +1,112 @@
 # Pin
 
-The Pin plugin serves as an abstraction layer to the Pin functionality of a STB. The interface allows you to
-check with the middleware layer whether the STB is currently _locked_ or _unlocked_. It also allows you to submit
-a Pincode from your App in order to unlock the device.
 
-With the Pin plugin you can lock certain content or screens in your App depending on the _locked_ state of the STB.
+The *Pin* plugin adds an abstraction layer to the STB's Pin functionality.
+
+
+You can use the interface to
+check the middleware layer for the current state of the STB: *locked* or *unlocked*. You can also use it to submit
+a Pin code from your App to unlock the device.
+
+
+Depending on the  state of the STB, you can use the Pin plugin to lock certain content or screens in your App.
 
 ## Usage
 
-In order to use the Pin plugin, import it from the Lightning SDK.
 
-```js
+If you want to use the Pin plugin, import it from the Lightning SDK:
+
+
+```
 import { Pin } from '@lightningjs/sdk'
 ```
 
-## Available methods
+## Available Methods
 
-### Show
+### show()
 
-Shows a standard, built-in Pin dialog where the user can supply a Pincode.
 
-```js
+Shows a standard, built-in **Pin** dialog where the user can supply a Pin code.
+
+
+```
 Pin.show()
 ```
 
-### Hide
+### hide()
 
-Hides the visible Pin dialog.
 
-```js
+Hides the visible **Pin** dialog.
+
+
+```
 Pin.hide()
 ```
 
-### Submit
+### submit()
 
-Sends a Pincode to the middleware layer, where it will be verified. In case of a correct code the STB will be unlocked. The `submit`-method will be
-automatically invoked when using the builtin Pin dialog. Only if you want to make a fully custom Pin dialog in your App, you should
-use this method to send the Pincode.
 
-```js
-Pin.submit('0000').then(() => console.log('Unlocked!')).catch(e => console.log('Pin error', e))
+Sends a Pin code to the middleware layer for verification. If the code is correct, the STB is unlocked.
+
+
+The `submit` method is
+automatically invoked when you are using the built-in **Pin** dialog. Use this method for sending the Pin code *only* if you are making a fully custom **Pin** dialog in your App.
+
+
+```
+Pin.submit('0000')
+  .then(() => console.log('Unlocked!'))
+  .catch(e => console.log('Pin error', e))
 ```
 
-The `submit`-method returns a _promise_ which _resolves_ `true` when the supplied Pincode is correct and the STB is successfully unlocked.
-When the Pincode is wrong, the _promise_ will resolve `false`. In case the middleware is unable to unlock the STB, the promise will be
-_rejected_ (with an optional error message).
 
-During development the default Pincode will be `0000`. Optionally you can overwrite the default Pincode during development by editing the
-`settings.json` file and adding the key `pin` as a `platformSetting` with a different valid Pincode.
+If the supplied Pin code is correct, the `submit` method returns a *promise* which resolves with 'true' and the STB is successfully unlocked.
 
-### Unlocked
 
-Checks if the STB is currently _unlocked_.
+If the Pin code is wrong, the returned promise resolves with 'false'. If the middleware is unable to unlock the STB, the promise is
+*rejected* (with an optional error message).
 
-```js
+
+The default Pin code is  `0000`. Optionally, you can overwrite the default Pin code during development by editing the
+**settings.json** file and adding the key `pin` as a Platform Setting with a different (valid) Pin code.
+
+### unlocked()
+
+
+Checks if the STB is currently *unlocked*.
+
+
+```
 Pin.unlocked()
-  .then(unlocked => unlocked === true ? console.log('STB is unlocked') : console.log('STB is locked'))
+  .then(
+    unlocked => unlocked === true ?
+      console.log('STB is unlocked') :
+      console.log('STB is locked'))
 ```
 
-The `unlocked`-method returns a _promise_ which _resolves_ `true` when the device is _unlocked_ and `false` when the device is _locked_.
-The promise is _rejected_ when the middleware is unable to retrieve the current state.
 
-### Locked
+The `unlocked` method returns a *promise* which resolves to 'true'  if the device is *unlocked* or to 'false' if the device is *locked*.
 
-Checks if the STB is currently _locked_.
 
-```js
+If the middleware is unable to retrieve the current state, the promise is *rejected*.
+
+### locked()
+
+
+Checks if the STB is currently *locked*.
+
+
+```
 Pin.locked()
-  .then(locked => locked === true ? console.log('STB is locked') : console.log('STB is unlocked'))
+  .then(
+    locked => locked === true ?
+      console.log('STB is locked') :
+      console.log('STB is unlocked'))
 ```
 
-The `locked`-method is the exact counter part of the `unlocked`-method. It returns a _promise_ which _resolves_ `true` when
-the device is _locked_ and `false` when the device is _unlocked_.
-The promise is _rejected_ when the middleware is unable to retrieve the current state.
+
+The `locked` method is the *exact* counterpart of the `unlocked` method. It returns a *promise* which resolves to 'true' if
+the device is *locked* or to 'false' if the device is *unlocked*.
+
+
+If the middleware is unable to retrieve the current state, the promise is *rejected*.

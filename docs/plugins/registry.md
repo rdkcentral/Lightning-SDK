@@ -1,106 +1,126 @@
 # Registry
 
-The Registry plugin can be used to globally register and unregister _event listeners_, _timeouts_ and _intervals_.
+
+You use the *Registry* plugin to globally register and unregister *event listeners*, *timeouts* and *intervals*.
+
 
 The plugin primarily serves as a proxy for the standard HTML5 Web APIs for setting and clearing listeners, intervals and timeouts
-(i.e. `window.setTimeout()` and `element.addEventListener()`).
+(for example, `window.setTimeout()` and `element.addEventListener()`).
 
-The added benefit of using the _Registry_ plugin is that any running timers, intervals and event listeners will be
-automatically cleaned up when closing the App.
 
-It is recommended to _always_ use the Registry plugin instead of the HTML5 Web APIs, since not properly cleaning up these
-listeners and intervals, is a common cause for memory leaks.
+An additional benefit of the *Registry* plugin is that any running timers, intervals and event listeners are
+automatically cleaned up when your App is closed.
+
+> It is recommended to *always* use the Registry plugin (instead of the HTML5 Web APIs) because memory leaks are often caused by listeners and intervals that are not properly cleaned up.
 
 ## Usage
 
-Whenever you need to register a _timeout_, _interval_ or _event listener_, import the Registry plugin from the Lightning SDK
 
-```js
+If you need to register a timeout, interval or event listener, import the Registry plugin from the Lightning SDK:
+
+
+```
 import { Registry } from '@lightningjs/sdk'
 ```
 
-## Available methods
+## Available Methods
 
-### setTimeout
+### setTimeout()
 
-Call a function after a specified number of milliseconds.
 
-```js
+Calls a function after a specified number of milliseconds.
+
+
+```
 Registry.setTimeout(() => {
   console.log('Hello!!')
 }, 2000)
 ```
 
-Following the signature of `window.setTimeout()`, you can specify extra parameters that will be passed into the callback function.
 
-```js
+Following the signature of `window.setTimeout()`, you can specify additional  parameters to be passed to the callback function. For example:
+
+
+```
 Registry.setTimeout((param1, param2) => {
   console.log(param1)
   console.log(param2)
 }, 20000, 'Hello', 'Goodbye')
 ```
 
-The `setTimeout` method returns the `id` of the timeout, that can be used to cancel the timer with `Registry.clearTimeout()`.
+
+The `setTimeout` method returns the `id` of the timeout, which can be used to cancel the timer with `Registry.clearTimeout()`.
+
+### clearTimeout()
 
 
-### clearTimeout
+Cancels a running timeout and prevents it from being executed.
 
-Cancel a running timeout and prevent it from being executed.
 
-```js
+```
 // long running timeout (30 minutes)
 const timeoutId = Registry.setTimeout(() => {}, 30 * 60 * 1000)
 
 Registry.clearTimeout(timeoutId)
 ```
 
-### clearTimeouts
+### clearTimeouts()
 
-Cancel _all_ running timeouts and prevent them from being executed.
 
-```js
+Cancels *all* running timeouts and prevents them from being executed.
+
+
+```
 Registry.clearTimeouts()
 ```
 
+### setInterval()
 
-### setInterval
 
-Call a function at a specified interval in milliseconds.
+Calls a function at a specified interval in milliseconds.
 
-```js
+
+```
 Registry.setInterval(() => {
   console.log('Hello!!')
 }, 1000)
 ```
 
-Following the signature of `window.setInterval()`, you can specify extra parameters that will be passed into the callback function.
 
-The `setInterval` method returns the `id` of the interval, that can be used to cancel the interval with `Registry.clearInterval()`.
+Following the signature of `window.setInterval()`, you can specify additional parameters to be passed to the callback function.
 
 
-### clearInterval
+The `setInterval` method returns the `id` of the interval, which can be used to cancel the interval with `Registry.clearInterval()`.
 
-Cancel a running interval and prevent it from being executed.
+### clearInterval()
 
-```js
+
+Cancels a running interval and prevents it from being executed.
+
+
+```
 const intervalId = Registry.setInterval(() => {}, 1500)
 
 Registry.clearInterval(intervalId)
 ```
 
-### clearIntervals
+### clearIntervals()
 
-Cancel _all_ running intervals and prevent them from being executed.
 
-```js
+Cancesl *all* running intervals and prevents them from being executed.
+
+
+```
 Registry.clearIntervals()
 ```
 
-### addEventListener
+### addEventListener()
 
-Attach an event handler to the specified target.
 
-```js
+Attaches an event handler to the specified target.
+
+
+```
 const target = document.body
 const event = 'click'
 const handler = () => {
@@ -109,11 +129,13 @@ const handler = () => {
 Registry.addEventListener(target, event, handler)
 ```
 
-### removeEventListener
+### removeEventListener()
 
-Remove a previously attached event handler from a specific target.
 
-```js
+Removes a previously attached event handler from a specific target.
+
+
+```
 const target = document.body
 const event = 'click'
 const handler = () => {}
@@ -122,19 +144,27 @@ Registry.addEventListener(target, event, cb)
 Registery.removeEventListener(target, event, cb)
 ```
 
-Note that it is required to pass a reference to the original _handler_ function.
+> It is required to pass a reference to the original *handler* function.
 
-### removeEventListeners
+### removeEventListeners()
 
-Remove _multiple_ registered event listeners at once.
 
-The `removeEventListeners` method accepts 2 optional arguments (`target` and `event`):
+Removes *multiple* registered event listeners all at once.
 
-- When no arguments are passed, _all_ previously registered listeners will be removed
-- When passed only a `target` argument, all event listeners for the specified _target_ will be unregistered
-- When passed a `target` and an `event` argument, all listeners for that specific _event_ on that _target_ will be removed
 
-```js
+The `removeEventListeners` method accepts two optional arguments, `target` and `event`. It handles the arguments as follows:
+
+* If *no* arguments are passed, *all* previously registered listeners are removed.
+
+* If *only* a `target` argument is passed, all event listeners for the specified *target* are unregistered.
+
+* If a `target`*and* an `event` argument are passed, all listeners for that specific *event* on that *target* are removed.
+
+
+Summarizing:
+
+
+```
 // Remove all event listeners
 Registry.removeEventListeners()
 
@@ -145,15 +175,18 @@ Registry.removeEventListeners(document.body)
 Registry.removeEventListeners(document.body, 'click')
 ```
 
-### Clear
+### clear()
+
 
 Cleans up all registered timeouts, intervals and event listeners.
 
-Effectively a combination of `Registry.clearIntervals()`  `Registry.clearTimeouts()` and `Registry.removeEventListeners()` into one.
 
-```js
+```
 Registry.clear()
 ```
 
-Note that `Registry.clear()` is called _automatically_ for you by the SDK when closing the App, in order to enable a full App clean up
-and prevent potential memory leaks.
+
+The `Registry.clear()` method is a combination of the `Registry.clearIntervals()`, `Registry.clearTimeouts()` and `Registry.removeEventListeners()` methods.
+
+> This method is called *automatically* by the SDK when the App is closed. This is done to enable a full App clean-up
+and to prevent potential memory leaks.

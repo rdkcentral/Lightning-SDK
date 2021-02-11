@@ -1,14 +1,15 @@
-# Router
+# Router Widgets
 
-## Widgets
 
-Widgets are Lightning Component that can live on multiple pages.
+Widgets are Lightning Components that can be applied to multiple pages.
 
->  Widgets overlay the pages as they will always have the highest z-index
+> Widgets overlay pages because they always have the highest z-index.
 
-In you App's `template`, Widgets need to be placed inside a `Widget` wrapper on the root level of your app. For example:
 
-```js
+You place widgets inside a `Widgets` wrapper in your App's template, on the *root* level of your App. For example:
+
+
+```
 static _template(){
     return {
         Pages: {
@@ -31,12 +32,16 @@ static _template(){
 }
 ```
 
-### Activating widgets
+## Activating Widgets
 
-Widgets are hidden by default, but can be made visible per route by adding the property `widgets` to a route definition.
-The value of `widgets` should be an `Array` with the `refs` of the widgets to be displayed when that particular route is hit.
 
-```js
+Widgets are hidden by default. You can make them visible for a route by adding the property `widgets` to the route definition.
+
+
+The value of `widgets` must be an Array that contains the `refs` of the widgets to be displayed when that particular route is hit. For example:
+
+
+```
 {
     path: 'discover/player/:userId/:videoId',
     component: Player,
@@ -45,18 +50,21 @@ The value of `widgets` should be an `Array` with the `refs` of the widgets to be
 }
 ```
 
-Considering the example above, whenever you do `Router.navigate('discover/player/998/29174')` the `visible`-property of both `Notification` and `StatusBar` will be set to `true`.
+
+If you apply  `Router.navigate('discover/player/998/29174')`, the `visible` property of both `Notification` and `StatusBar` is set to 'true'.
+
+## Handling Focus
 
 
-### Handling focus
+In Lightning, key presses are handled by the component that has the *focus* (see [Key Handling](../../../lightning-core-reference/RemoteControl/KeyHandling.md) for more information).
 
-In Lightning key presses are handled by the component that has _focus_ ([handle remote-control keys](https://rdkcentral.github.io/Lightning/docs/focus/keyhandler))
 
-In a routed App, by default the focus is delegated to the current Page. In order to move the focus from the Page to an
-active `Widget` , you can use the `focusWidget` method exported by the Router plugin and pass it the _reference_ to the
-Widget you want to give focus.
+In a routed App, the focus is by default on the currently active page. To move the focus to an
+active widget, you can use the `focusWidget` method which is provided by the Router plugin. With this method, you can pass the *reference* to the
+widget to which you want to give the focus.
 
-```js
+
+```
 class SearchPage extends Lightning.Component {
    _handleUp(){
        Router.focusWidget('Menu');
@@ -64,9 +72,11 @@ class SearchPage extends Lightning.Component {
 }
 ```
 
-Subsequently you can delegate the focus from a widget back to the active Router page by using the `focusPage` method.
 
-```js
+Similarly, you can delegate the focus from a widget *back* to the active page by using the `focusPage` method:
+
+
+```
 class Menu extends Lightning.Component {
    _handleDown(){
        Router.focusPage();
@@ -74,16 +84,17 @@ class Menu extends Lightning.Component {
 }
 ```
 
-### Interaction
+## Interaction
 
-A `page` can interact with one of the widgets via the `widgets` property that is made
-available to the `page` instance. The widgets can be referenced via their lowercase `ref`
 
-```js
+A page can *interact* with one of the widgets via the `widgets` property, which is passed to the `page` instance. The widgets can be referenced by their *lowercase reference*. For example:
+
+
+```
 _handleEnter(){
     this.widgets.notification.notify("hello!")
 }
 ```
 
-Next:
+#### NEXT:
 [Settings](settings.md)

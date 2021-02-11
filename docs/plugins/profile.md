@@ -1,153 +1,194 @@
 # Profile
 
-Sometimes your App might require profile information about the current user. This information generally comes from the platform or operator.
 
-Since each operator / platform may have a different implementation, the Lightning SDK offers a Profile plugin with a generic interface to the developer.
+Occasionally, your App requires profile information about the current user. This information is usually provided by the operator or platform.
 
-The Profile plugin also offers the ability to update profile information.
+
+Because each operator or platform might implement user profile information in a different way, the Lightning SDK provides the *Profile* plugin. This plugin is a generic interface for developers, independent of any operator or platform.
+
+
+You can also use the Profile plugin to *update* profile information.
 
 ## Usage
 
-Whenever you need Profile information, import the Profile plugin from the Lightning SDK
 
-```js
+If you need Profile information, import the Profile plugin from the Lightning SDK:
+
+
+```
 import { Profile } from '@lightningjs/sdk'
 ```
 
-## Available methods
+## Available Methods
 
-When you call a method without params it will _return_ the Profile information in the form of a promise.
-If you pass params, it will _update_ the Profile information.
 
-### ageRating
+If you call one of the methods below *without* parameters, it returns the Profile information in the form of a *promise*. If you pass parameters, the method *updates* the Profile information.
 
-Gets the ageRating. Returns `adult` by default during _local development_.
+### ageRating()
 
-```js
+
+Gets the user's age rating. Returns `adult` by default during *local development*.
+
+
+```
 Profile.ageRating()
 ```
 
-### City
+### city()
 
-Gets the city. `New York` by default during _local development_.
 
-```js
+Gets the user's city. Returns `New York` by default during *local development*.
+
+
+```
 Profile.city()
 ```
 
+### zipCode()
 
-### ZipCode
 
-Gets the zipCode. Returns `27505` by default during _local development_.
+Gets the user's zip code. Returns `27505` by default during *local development*.
 
-```js
+
+```
 Profile.zipCode()
 ```
 
-### CountryCode
+### countryCode()
 
-Gets the countryCode. Returns `US` by default during _local development_.
 
-```js
+Gets the user's country code. Returns `US` by default during *local development*.
+
+
+```
 Profile.countryCode()
 ```
 
-### Ip
+### ip()
 
-Gets the ip. Returns `127.0.0.1` by default during _local development_.
 
-```js
+Gets the user's IP address. Returns `127.0.0.1` by default during *local development*.
+
+
+```
 Profile.ip()
 ```
 
-### Household
+### household()
 
-Gets the houseHold-id. Returns `b2244e9d4c04826ccd5a7b2c2a50e7d4` by default during _local development_.
 
-```js
+Gets the user's household ID. Returns `b2244e9d4c04826ccd5a7b2c2a50e7d4` by default during *local development*.
+
+
+```
 Profile.household()
 ```
 
-### Language
+### language()
 
-Gets the language. During _local development_ will attempt to return the browser's language, with a default to `en`.
 
-```js
+Gets the user's mother language. During *local development*, it attempts to return the browser's language with `en` as default.
+
+
+```
 Profile.language()
 ```
 
-### LatLon
+### latLon()
 
-Gets the LatLon. During _local development_ will try to return your actual latitude and longitude from a remote API service. If unsuccessful, will default to `[40.7128, 74.006]`.
-If during _local development_ you want to force to use the browser's built in _geolocation_ for retrieving the latitude and longitude, add the key `forceBrowserGeolocation` with the value `true` as a _platform setting_ in `settings.json`.
 
-```js
+Gets the user's latitude and longitude.
+
+
+During *local development*, it returns the user's actual latitude and longitude from a remote API service. If unsuccessful, it defaults to `[40.7128, 74.006]`.
+
+
+If, during *local development*, you want to force to use the browser's built-in *geolocation* for retrieving the latitude and longitude, add the key `forceBrowserGeolocation` with the value 'true' as a Platform Setting in **settings.json**.
+
+
+```
 Profile.latLon()
 ```
 
-### Locale
+### locale()
 
-Get the locale. During _local development_ will attempt to return the browser's locale, with a fallback to to `en-US`.
 
-```js
+Gets the user's locale. During *local development*, it returns the browser's locale, with a fallback to `en-US`.
+
+
+```
 Profile.locale()
 ```
 
-### Mac
+### mac()
 
-Get the Mac. Returns `00:00:00:00:00:00` by default during _local development_.
 
-```js
+Gets the user's Mac address. Returns `00:00:00:00:00:00` by default during *local development*.
+
+
+```
 Profile.mac()
 ```
 
-### Operator
+### operator()
 
-Gets the operator. Returns `metrological` by default during _local development_.
 
-```js
+Gets the user's operator. Returns `Metrological` by default during *local development*.
+
+
+```
 Profile.operator()
 ```
 
-### Platform
+### platform()
 
-Gets the platform. Returns `metrological` by default during _local development_.
 
-```js
+Gets the user's platform. Returns `Metrological` by default during *local development*.
+
+
+```
 Profile.platform()
 ```
 
-### Packages
+### packages()
 
-Gets the packages. Returns `[]` by default during _local development_.
 
-```js
+Gets the user's packages. Returns `[]` by default during *local development*.
+
+
+```
 Profile.packages()
 ```
 
-### Uid
+### uid
 
-Gets the uid. Returns `ee6723b8-7ab3-462c-8d93-dbf61227998e` by default during _local development_.
 
-```js
+Gets the user ID. Returns `ee6723b8-7ab3-462c-8d93-dbf61227998e` by default during *local development*.
+
+
+```
 Profile.uid()
 ```
 
-### StbType
+### stbType
 
-Gets the stbType. Returns `metrological` by default during _local development_.
 
-```js
+Gets the user's STB type. Returns `Metrological` by default during *local development*.
+
+
+```
 Profile.stbType()
 ```
 
-## Overwriting default values
+## Overwriting Default Values
 
-During development you might want to test your App with different profile values (i.e. a different language or age rating).
-When you want to overwrite the default values, you can do so by editing the `settings.json` file.
+
+During development you might want to test your App with different profile values (for example, a different language or age rating).
+When you want to overwrite the default values, you can do so by editing the **settings.json** file.
 Add a `profile` key in `platformSettings` and only add the values you wish to change here.
 
-```json
+
+```
 {
   "platformSettings": {
       "profile": {
@@ -161,12 +202,12 @@ Add a `profile` key in `platformSettings` and only add the values you wish to ch
          "latlon": [40.7128, 74.006],
          "locale": "en-US",
          "mac": "00:00:00:00:00:00",
-         "operator": "metrological",
-         "platform": "metrological",
+         "operator": "Metrological",
+         "platform": "Metrological",
          "packages": [],
          "uid": "ee6723b8-7ab3-462c-8d93-dbf61227998e",
-         "stbType": "metrological"
+         "stbType": "Metrological"
       }
    }
 }
- ```
+```

@@ -1,21 +1,38 @@
-# Router
+# Data Providing
 
-## Data providing
 
-The Router offers an interface to do `async` API requests to grab data and make it available to the Page.
+The *Data Providing* interface of the Router plugin enables you to execute *asynchronous API requests* to grab data and make this data available to a certain Page.
 
-There are 3 types of data providing callbacks available: `on()`, `before()` and `after()`. You can only use one type of
-data providing for each route.
 
-The data providing callbacks are configured in the global routes configuration object. A data providing callback must always return Promise (and `resolve` or `reject` it).
+The following three types of data providing callbacks are available for this purpose:
 
-```js
+* [on()](#on)
+* [before()](#before)
+* [after()](#after)
+
+
+You can only use *one* data providing callback type for each route.
+
+
+The data providing callbacks are configured in the *global* configuration object of the routes.
+
+> A data providing callback must always return a *promise* (which either *resolves* or *rejects*).
+
+## Callback Functions
+
+### on()
+
+
+The `on` data provider shows the Loader, performs the data request, hides the Loader and displays the new page. For example:
+
+
+```
 {
     path: 'player/:playlistId/:assetId',
     // page instance and dynamic url data
     // will be available in the callback
     on: (page, {playlistId, assetId}) => {
-        return new Promise((resolve, reject)=>{
+        return new promise((resolve, reject)=>{
             // do a request
             doRequest.then((lists)=>{
                 // set property on the page
@@ -31,26 +48,21 @@ The data providing callbacks are configured in the global routes configuration o
 }
 ```
 
-Considering the route configuration above, when you navigate to: `localhost:8080/#player/267/173688` via `Router.navigate('player/267/173688');` the router will:
+
+If you navigate to: `localhost:8080/#player/267/173688` via `Router.navigate('player/267/173688');`, the Router performs the following subsequent actions:
 
 1. Hide the current page (and destroy it to free up memory, if so configured)
-2. Show an optional `Loading` Component
+2. Show a `Loading` Component (optional)
 3. Wait for the data provider's request to resolve
-4. Show the new page attached to route
+4. Show the new page attached to the route
 
-### Caching data
+### before()
 
-By specifying a cache property on the route definition, you can control how long the provided date stays valid upon visiting
-the same page twice. If the same route is hit within the cache time, the Page will be loaded with the cached data. Otherwise a
-new request will be made.
 
-This only applies if the Page still exists in memory.
+The `before` data provider works similar to the `on` data provider. They only differ in the way that pages are loaded. For example:
 
-### Before data provider
 
-The _Before_ data provider works almost the same as the _On_ data provider. The difference is in the way the Pages are loaded.
-
-```js
+```
 {
     path: 'settings/wifi/:hotspotId/connect',
     before: (page, {hotspotId})=>{
@@ -60,18 +72,21 @@ The _Before_ data provider works almost the same as the _On_ data provider. The 
 }
 ```
 
-Considering the route definiton above, the Router plugin will:
 
-1. Make the the request
+The Router plugin performs the following actions:
+
+1. Make the request
 2. Keep the current page visible
 3. Wait for the request to resolve
-4. Show the new page (and destroy it from memory if configured)
+4. Show the new page (and destroy it from memory, if so configured)
 
-### After data provider
+### after()
 
-The _After_ data provider also works similar, but follows a slightly different sequence for displaying the old and the new Page
 
-```js
+The `after` data provider works similarly, but follows a slightly different sequence for displaying the old and the new Page. For example:
+
+
+```
 {
     path: 'home/assets/popular',
     after: (page)=>{
@@ -81,17 +96,34 @@ The _After_ data provider also works similar, but follows a slightly different s
 }
 ```
 
-Considering the route definiton above, the Router plugin will:
 
-1. Show (and first create if needed) the new page
+The Router plugin performs the following actions:
+
+1. Show (if necessary, first create) the new page
 2. Hide the old page
-3. Do the request
+3. Perform the request
+
+### `cache` Property
 
 
-By adding `_onDataProvided() {..}` to your Lightning Component you can listen to when the data-providing is ready. This
-will not fire when the page is not expired (and loaded from memory).
+By specifying a `cache` property in the route definition, you can control how long the provided date stays valid if the same page is visited twice. If the same route is hit within the specified cache time, the page is loaded with the cached data. Otherwise, a
+new request will be made.
 
-```js
+> This only applies if the page still exists in memory.
+
+### onDataProvided()
+
+
+The `_onDataProvided` method is invoked when the `on`, `before` or `after` data providing callback has resolved.
+
+
+By adding `_onDataProvided() {..}` to your Lightning Component, you can listen when the data providing is ready.
+
+
+This will not fire when the page is not expired (and loaded from memory).
+
+
+```
 class Browse extends Lightning.Component{
     static _template(){...}
 
@@ -101,5 +133,5 @@ class Browse extends Lightning.Component{
 }
 ```
 
-Next:
-[Router events](events.md)
+#### NEXT:
+[Router Events](events.md)

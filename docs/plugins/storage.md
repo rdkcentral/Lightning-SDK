@@ -1,57 +1,77 @@
 # Storage
 
-Often you will want to persist data inside your App. The Storage plugin is a convenient way to store data in a platform independent way.
 
-By default the browser's _LocalStorage_ will be used, but will automatically fall back to _Cookies_ when LocalStorage is not supported by the platform. Please note that Cookie size is limited (4096 Bytes).
-
-When an `appId` is configured in [Settings](/plugins/settings), the keys for storing data will be _namespaced_ to prevent naming collissions with others apps (which might cause unexpected bugs).
+Occasionally, you may want to persist data inside your App. By default, the browser's localStorage is used for that purpose. However, if localStorage is not supported by the platform, it automatically falls back to *Cookies*.
 
 
+Please note that the Cookie size is limited to 4096 Bytes.
+
+
+The *Storage* plugin is a convenient way to store data in a platform-independent way.
+
+
+If an `appId` is configured in the [Settings](settings.md) plugin, the keys for storing data will be *namespaced* to prevent naming collisions with others Apps (which might cause unexpected bugs). (During *local* development, the **settings.json** file is used to pass the data to the Settings plugin, but when the App is in *production*, the **settings.json** file is ignored and the platform takes care of passing the data.)
 
 ## Usage
 
-Whenever you need to persist data inside your App, you can import the Storage plugin from the Lightning SDK
 
-```js
+If you need to persist data inside your App, import the Storage plugin from the Lightning SDK:
+
+
+```
 import { Storage } from '@lightningjs/sdk'
 ```
 
 ## Available methods
 
-### Set
+### set()
+
 
 Saves a key-value combination in storage.
 
-```js
+
+```
 Storage.set(key, value)
 ```
 
-The key is expected to be a `String`. The value can be a `String`, `Object`, `Boolean` or `Array`. The value is automatically converted to a JSON object when saving, so there's not need to call `JSON.stringify()` on objects yourself.
 
-### Get
+The `key` can be of type String (which is usually the case), Object, Boolean or Array.
+
+
+When saved, the `value` is automatically converted to a JSON object, so you do not have to call `JSON.stringify()` on objects.
+
+### get()
+
 
 Retrieves previously stored data from storage.
 
-```js
+
+```
 Storage.get(key)
 ```
 
-In case you stored an `Object`, the data is automatically converted back to an object, so there is no need to call `JSON.parse()` yourself.
 
-### Remove
+If you stored an Object, the data is automatically converted back to an Object, soyou do not have to call  `JSON.parse()`.
 
-Removes a specific key from storage
+### remove()
 
-```js
+
+Removes a specific key from storage.
+
+
+```
 Storage.remove(key)
 ```
 
-### Clear
+### clear()
 
-Removes all data from LocalStorage
 
-```js
+Removes *all* data from localStorage.
+
+
+```
 Storage.clear()
 ```
 
-In case an `appId` is configured, only keys matching the namespaced will be removed from Storage. This way you can be sure you don't clear data stored for other Apps on the same domain.
+
+If an `appId` is configured, only keys that match the *namespaced* keys are removed from storage. This ensures that you do not clear any data that is stored for other Apps on the same domain.
