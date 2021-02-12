@@ -14,7 +14,7 @@ If you need more control over the behavior of the FPS counter, you can pass an *
 | `log` | false | Indicates whether or not to *also* log the calculated FPS value to the console |
 | `threshold` | 1 | Minimum difference between FPS values to display / log |
 
-```
+```js
 "showFps": {
   "interval": 300,
   "log": true,
