@@ -118,7 +118,7 @@ export default function(App, appData, platformSettings) {
             })
           }
 
-          Events.listen('Lifecycle', 'close', () => this.close())
+          Events.listen('Lifecycle', 'closing', () => this.close())
 
           super._setup()
         })

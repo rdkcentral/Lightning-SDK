@@ -1,6 +1,6 @@
 # Lifecycle
 
-Via the Lifecycle plugin the current lifecycle state can be etrieved. The plugin also allows an App to change the state of the application (limited to 'close' and 'ready').
+Via the Lifecycle plugin the current lifecycle state can be etrieved. The plugin also allows an App to change the state of the application (limited to `close` and `ready`).
 
 The SDK also informs the App whenever the App lifecycle state changes by emitting events. You can listen to these events by using
 the `Events` plugin.
@@ -23,9 +23,9 @@ The following states are available:
 | ready         | Application is ready to be displayed        |
 | active        | Application is running, and in focus        |
 | background    | Application is running, not in focus        |
-| pause         | Application is _pausing_, not in focus      |
+| pausing       | Application is _pausing_, not in focus      |
 | paused        | Application is paused                       |
-| close         | Application is closing                      |
+| closing       | Application is closing                      |
 | closed        | Application is closed and will be unloaded  |
 
 ## State handling
@@ -33,8 +33,8 @@ The following states are available:
 As an application developer it is important to understand the impact of different states and handle state transitions accordingly. Information to consider:
 
 * In _background_ state the application is not in focus, something may be obstructing the screen however application can continue to process data and use media playback.
-* In _pause_ state the application runtime *may* be stopped, however the Application should stop media playback, clear the screen and reduce runtime intervals/timers where possible.
-* The _close_ state is a intermediate state and means the application will be unloaded soon, you should stop all timers/intervals and remove references to data for garbage collection. Any graphics should be cleaned up.
+* In _pausing_ state the application runtime *may* be stopped, however the Application should stop media playback, clear the screen and reduce runtime intervals/timers where possible.
+* The _closing_ state is a intermediate state and means the application will be unloaded soon, you should stop all timers/intervals and remove references to data for garbage collection. Any graphics should be cleaned up.
 * The _init_ state is a intermediate state and means the application is starting.
 
 ## Available methods
@@ -58,29 +58,29 @@ Once in a ready state, the platform can put the App in an `active` state, meanin
 Lifecycle.ready()
 ```
 
-### Close state
+### Closing state
 
-If the app wants to close, the `Lifecycle.close()` method can be called. This will trigger the appropriate SDK and platform functions to start the cleanup routine.
+If the App wants to close, the `Lifecycle.close()` method can be called. This put the App in a `closing` state and will trigger the appropriate SDK and platform functions to start the cleanup routine.
 
 ```js
 Lifecycle.close()
 ```
 
-The App can also be put in a `close` state by the platform itself. This will emit the `close` event under the `Lifecycle` namespace.
+The App can also be put in a `closing` state by the platform itself. This will emit the `closing` event under the `Lifecycle` namespace.
 
-In the callback of this close listener, the App can execute some logic, such as saving state, sending out analytics calls etc.
+In the callback of this closing listener, the App can execute some logic, such as saving state, sending out analytics calls etc.
 When completed, the App should call the `Lifecycle.closed()` method, indicating that the App can be fully terminated.
 
 Note that the platform can decide to terminate the App _before_ the `closed()`-method is called, in case the App's closing logic is taking too long.
 
-### Pause state
+### Pausing state
 
-The App can be put in a `paused` state by the platform. This will emit the `pause` event under the `Lifecycle` namespace.
+The App can be put in a `pausing` state by the platform. This will emit the `pausing` event under the `Lifecycle` namespace.
 
-In the callback of this pause listener, the App can execute some logic, such as saving state, sending out analytics calls etc.
+In the callback of this pausing listener, the App can execute some logic, such as saving state, sending out analytics calls etc.
 When completed, the App should call the `Lifecycle.paused()` method, indicating that the App is ready to be put in a _paused_ state
 
-Note that the platform can decide to pause the App _before_ the `paused()`-method is called, in case the App's pausing logic is taking too long.
+Note that the platform can decide to completely pause the App _before_ the `paused()`-method is called, in case the App's pausing logic is taking too long.
 
 ### Listening for events
 
@@ -102,10 +102,10 @@ Events.listen('Lifecycle', 'background', () => {
 ```
 
 ```js
-Events.listen('Lifecycle', 'close', () => {
+Events.listen('Lifecycle', 'closing', () => {
   // the app is about to close, send events and do cleanup
   // when ready to be terminated, notify back to the platform
-  Lifecycle.finished()
+  Lifecycle.closed()
 })
 ```
 

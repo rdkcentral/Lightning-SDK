@@ -27,8 +27,8 @@ Examples:
 1) Listen to a specific event on a specific Plugin.
 
 ```js
-Events.listen('Lifecycle', 'pause', () => {
-  console.log('The App is going in a pause state')
+Events.listen('Lifecycle', 'pausing', () => {
+  console.log('The App is going in a pausing state')
 })
 
 Events.listen('Platform', 'device.hdcp', value => {
@@ -45,7 +45,7 @@ Events.listen('Lifecycle', (event, value) => {
   if(event === 'init') {
     // execute init functionality
   }
-  if(event === 'close') {
+  if(event === 'closing') {
     // execute close functionality
   }
 })
