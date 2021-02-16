@@ -6,7 +6,7 @@ The Language plugin supports internationalization features for your App.
 
 If you want to use the Language plugin, import it from the Lightning SDK:
 
-```
+```js
 import { Language } from '@lightningjs/sdk'
 ```
 
@@ -18,8 +18,8 @@ on the `App` class in **src/App.js**.
 The `language` method returns the language to be used on initialization. This can either be a string or a promise that resolves a
 string with the language code.
 
-```
-export default class App extends Lightning.component {
+```js
+export default class App extends Lightning.Component {
 
   static language() {
     // hardcoded string
@@ -35,14 +35,14 @@ export default class App extends Lightning.component {
 
 ### Translations File
 
-By default, the Language plugin expects a JSON translations file, called **translations.json**, which is located in the **static** folder of your App.
+By default, the Language plugin expects a file with translations in JSON format, called **translations.json**, which is located in the **static** folder of your App.
 
 If you want, you can specify a different name and / or location for your translations file, or even host it on a remote CDN.
 You can configure this via the `static` method `language()` on **App.js**, by returning an object with a `file` and a
 `language` property (instead of just the initial language).
 
-```
-export default class App extends Lightning.component {
+```js
+export default class App extends Lightning.Component {
 
   static language() {
     return {
@@ -56,7 +56,7 @@ export default class App extends Lightning.component {
 
 The translations file should contain valid JSON in the following format:
 
-```
+```js
 {
   "en": {
     "key": "translated string in English",
@@ -71,7 +71,7 @@ The translations file should contain valid JSON in the following format:
 
 Optionally, you can add a `meta` key to **translations.json**, that contains more detailed configuration and metadata.
 
-```
+```js
 {
   "meta": {
     "default": "en", // default fallback language
@@ -104,7 +104,7 @@ This can make translation management more cumbersome during development. Also, i
 
 For this reason, the Language plugin offers the option to *split* the translations in different files (for example, **en.json** and **nl.json**) where each file must contain a basic JSON object with keys and their translated values. For example:
 
-```
+```js
 {
   "key": "translated string in English",
   "another key": "another translated string in English"
@@ -115,7 +115,7 @@ In the main **translations.json** file, the different language files must be pro
 
 For example:
 
-```
+```js
 {
   "meta": {
     "default": "en",
@@ -136,7 +136,7 @@ when switching between languages.
 
 Sets or changes the current language.
 
-```
+```js
 const languageCode = 'en'
 Language.set(languageCode).then(() => {
   // the current language is now 'en'
@@ -161,7 +161,7 @@ that as a *fallback* if no matching language was found.
 
 Gets and returns the currently selected language.
 
-```
+```js
 // The current language is 'en'
 const currentLanguage = Language.get()
 // currentLanguage = 'en'
@@ -171,7 +171,7 @@ const currentLanguage = Language.get()
 
 Translates a key to the matching value.
 
-```
+```js
 Language.translate('hello')
 ```
 
@@ -182,7 +182,7 @@ Optionally, you can specify *replacements* in the translated string. There are t
 
 Consider the following `translations.json`:
 
-```
+```js
 {
   "en": {
     "introduction1": "Hi, my name is {0}, my lastname is {1} and I am {2} years old",
@@ -193,14 +193,14 @@ Consider the following `translations.json`:
 
 For *order-based* replacements, you pass a set of function arguments:
 
-```
+```js
 Language.translate('introduction1', 'John', 'Doe', 18)
 // Hi, my name is John, my lastname is Doe and I am 18 years old
 ```
 
 For *name-based* replacements, you pass a *key-value* object:
 
-```
+```js
 Language.translate('introduction2', {lastname: 'Smith', firstname: 'Joe', age: 27}) // name based replacements
 // Hi, my name is Joe, my lastname is Smith and I am 27 years old
 ```
@@ -217,7 +217,7 @@ The `name` property is set to the language name as specified in the `meta.names`
 If you have not specified `names`, or if a particular language does not have a name defined, the property defaults to
 the `code` value.
 
-```
+```js
 Language.available()
 // [{code: 'en', name: 'English'}, {code: 'nl', name: 'Nederlands'}, {code: 'de': name: 'de'}]
 ```
@@ -227,7 +227,7 @@ Language.available()
 Advanced method that allows you to set the translations manually during runtime, instead of using the automatic load
 of **translations.json** on boot.
 
-```
+```js
 const translations = {
   meta: {
     map: {
