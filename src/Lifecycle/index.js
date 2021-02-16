@@ -26,10 +26,10 @@ const supportedStates = [
   'init',
   'ready',
   'active',
-  'pause',
+  'pausing',
   'paused',
   'background',
-  'close',
+  'closing',
   'closed',
 ]
 const store = {
