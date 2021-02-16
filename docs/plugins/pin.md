@@ -10,7 +10,7 @@ Depending on the  state of the STB, you can use the Pin plugin to lock certain c
 
 If you want to use the Pin plugin, import it from the Lightning SDK:
 
-```
+```js
 import { Pin } from '@lightningjs/sdk'
 ```
 
@@ -20,7 +20,7 @@ import { Pin } from '@lightningjs/sdk'
 
 Shows a standard, built-in **Pin** dialog where the user can supply a Pin code.
 
-```
+```js
 Pin.show()
 ```
 
@@ -28,7 +28,7 @@ Pin.show()
 
 Hides the visible **Pin** dialog.
 
-```
+```js
 Pin.hide()
 ```
 
@@ -38,7 +38,7 @@ Sends a Pin code to the middleware layer for verification. If the code is correc
 
 The `submit` method is automatically invoked when you are using the built-in **Pin** dialog. Use this method for sending the Pin code *only* if you are making a fully custom **Pin** dialog in your App.
 
-```
+```js
 Pin.submit('0000')
   .then(() => console.log('Unlocked!'))
   .catch(e => console.log('Pin error', e))
@@ -56,7 +56,7 @@ The default Pin code is  `0000`. Optionally, you can overwrite the default Pin c
 
 Checks if the STB is currently *unlocked*.
 
-```
+```js
 Pin.unlocked()
   .then(
     unlocked => unlocked === true ?
@@ -72,7 +72,7 @@ If the middleware is unable to retrieve the current state, the promise is *rejec
 
 Checks if the STB is currently *locked*.
 
-```
+```js
 Pin.locked()
   .then(
     locked => locked === true ?

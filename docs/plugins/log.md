@@ -12,7 +12,7 @@ The Log plugin generates (prettier) logs *only* if the [Platform Setting](settin
 
 If you want to use the Log plugin, import it from the Lightning SDK:
 
-```
+```js
 import { Log } from '@lightningjs/sdk'
 ```
 ## Available Methods
@@ -21,7 +21,7 @@ import { Log } from '@lightningjs/sdk'
 
 Invokes a `console.log` when the Platform Setting `log` is 'true'.
 
-```
+```js
 Log.info(label, argument1, argument2, argument3, ..., argumentx)
 ```
 
@@ -31,7 +31,7 @@ The `info` method accepts any number of arguments. If the first argument is a St
 
 Invokes a `console.debug` when the Platform Setting `log` is 'true'.
 
-```
+```js
 Log.debug(label, argument1, argument2, argument3, ..., argumentx)
 ```
 
@@ -41,7 +41,7 @@ The `debug `method accepts any number of arguments. If the first argument is a S
 
 Invokes a `console.error` when the Platform Setting `log` is 'true'.
 
-```
+```js
 Log.error(label, argument1, argument2, argument3, ..., argumentx)
 ```
 
@@ -51,7 +51,7 @@ The `error` method accepts any number of arguments. If the first argument is a S
 
 Invokes a `console.warm` when the Platform Setting `log` is 'true'.
 
-```
+```js
 Log.warn(label, argument1, argument2, argument3, ..., argumentx)
 ```
 

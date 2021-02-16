@@ -14,7 +14,7 @@ automatically cleaned up when your App is closed.
 
 If you need to register a timeout, interval or event listener, import the Registry plugin from the Lightning SDK:
 
-```
+```js
 import { Registry } from '@lightningjs/sdk'
 ```
 
@@ -24,7 +24,7 @@ import { Registry } from '@lightningjs/sdk'
 
 Calls a function after a specified number of milliseconds.
 
-```
+```js
 Registry.setTimeout(() => {
   console.log('Hello!!')
 }, 2000)
@@ -32,7 +32,7 @@ Registry.setTimeout(() => {
 
 Following the signature of `window.setTimeout()`, you can specify additional  parameters to be passed to the callback function. For example:
 
-```
+```js
 Registry.setTimeout((param1, param2) => {
   console.log(param1)
   console.log(param2)
@@ -45,7 +45,7 @@ The `setTimeout` method returns the `id` of the timeout, which can be used to ca
 
 Cancels a running timeout and prevents it from being executed.
 
-```
+```js
 // long running timeout (30 minutes)
 const timeoutId = Registry.setTimeout(() => {}, 30 * 60 * 1000)
 
@@ -56,7 +56,7 @@ Registry.clearTimeout(timeoutId)
 
 Cancels *all* running timeouts and prevents them from being executed.
 
-```
+```js
 Registry.clearTimeouts()
 ```
 
@@ -64,7 +64,7 @@ Registry.clearTimeouts()
 
 Calls a function at a specified interval in milliseconds.
 
-```
+```js
 Registry.setInterval(() => {
   console.log('Hello!!')
 }, 1000)
@@ -78,7 +78,7 @@ The `setInterval` method returns the `id` of the interval, which can be used to 
 
 Cancels a running interval and prevents it from being executed.
 
-```
+```js
 const intervalId = Registry.setInterval(() => {}, 1500)
 
 Registry.clearInterval(intervalId)
@@ -88,7 +88,7 @@ Registry.clearInterval(intervalId)
 
 Cancesl *all* running intervals and prevents them from being executed.
 
-```
+```js
 Registry.clearIntervals()
 ```
 
@@ -96,7 +96,7 @@ Registry.clearIntervals()
 
 Attaches an event handler to the specified target.
 
-```
+```js
 const target = document.body
 const event = 'click'
 const handler = () => {
@@ -109,7 +109,7 @@ Registry.addEventListener(target, event, handler)
 
 Removes a previously attached event handler from a specific target.
 
-```
+```js
 const target = document.body
 const event = 'click'
 const handler = () => {}
@@ -134,7 +134,7 @@ The `removeEventListeners` method accepts two optional arguments, `target` and `
 
 Summarizing:
 
-```
+```js
 // Remove all event listeners
 Registry.removeEventListeners()
 
@@ -149,7 +149,7 @@ Registry.removeEventListeners(document.body, 'click')
 
 Cleans up all registered timeouts, intervals and event listeners.
 
-```
+```js
 Registry.clear()
 ```
 

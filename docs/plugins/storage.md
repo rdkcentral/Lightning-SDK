@@ -12,7 +12,7 @@ If an `appId` is configured in the [Settings](settings.md) plugin, the keys for 
 
 If you need to persist data inside your App, import the Storage plugin from the Lightning SDK:
 
-```
+```js
 import { Storage } from '@lightningjs/sdk'
 ```
 
@@ -22,7 +22,7 @@ import { Storage } from '@lightningjs/sdk'
 
 Saves a key-value combination in storage.
 
-```
+```js
 Storage.set(key, value)
 ```
 
@@ -34,7 +34,7 @@ When saved, the `value` is automatically converted to a JSON object, so you do n
 
 Retrieves previously stored data from storage.
 
-```
+```js
 Storage.get(key)
 ```
 
@@ -44,7 +44,7 @@ If you stored an Object, the data is automatically converted back to an Object, 
 
 Removes a specific key from storage.
 
-```
+```js
 Storage.remove(key)
 ```
 
@@ -52,7 +52,7 @@ Storage.remove(key)
 
 Removes *all* data from localStorage.
 
-```
+```js
 Storage.clear()
 ```
 

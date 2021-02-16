@@ -29,7 +29,7 @@ For example:
 This event passes dynamic URL parameters to a page.
 The configuration is as follows:
 
-```
+```js
 export default {
     routes: [
         {
@@ -42,7 +42,7 @@ export default {
 
 For example, if you navigate to  `Router.navigate('account/12456/56783')`, the corresponding call is as follows:
 
-```
+```js
 class Account extends Lightning.Component{
   _onUrlParams(params){
       // params => {user: 12456, device:56783}
@@ -57,7 +57,7 @@ When the Router's history is empty, the SDK will continue to handle the **Back**
 You can prevent this by adding `_handleAppClose()` to your App class, for instance to show
 an **Exit** dialog:
 
-```
+```js
 class MyApp extends Router.App{
 
   _handleAppClose(params){

@@ -56,7 +56,7 @@ export default class App extends Lightning.Component {
 
 The translations file should contain valid JSON in the following format:
 
-```js
+```json
 {
   "en": {
     "key": "translated string in English",
@@ -71,7 +71,7 @@ The translations file should contain valid JSON in the following format:
 
 Optionally, you can add a `meta` key to **translations.json**, that contains more detailed configuration and metadata.
 
-```js
+```json
 {
   "meta": {
     "default": "en", // default fallback language
@@ -104,7 +104,7 @@ This can make translation management more cumbersome during development. Also, i
 
 For this reason, the Language plugin offers the option to *split* the translations in different files (for example, **en.json** and **nl.json**) where each file must contain a basic JSON object with keys and their translated values. For example:
 
-```js
+```json
 {
   "key": "translated string in English",
   "another key": "another translated string in English"
@@ -115,7 +115,7 @@ In the main **translations.json** file, the different language files must be pro
 
 For example:
 
-```js
+```json
 {
   "meta": {
     "default": "en",
@@ -182,7 +182,7 @@ Optionally, you can specify *replacements* in the translated string. There are t
 
 Consider the following `translations.json`:
 
-```js
+```json
 {
   "en": {
     "introduction1": "Hi, my name is {0}, my lastname is {1} and I am {2} years old",
