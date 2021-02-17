@@ -101,7 +101,6 @@ export const setupVideoTag = () => {
     videoEl.setAttribute('id', 'video-player')
     videoEl.setAttribute('width', withPrecision(1920))
     videoEl.setAttribute('height', withPrecision(1080))
-    videoEl.setAttribute('crossorigin', 'anonymous')
     videoEl.style.position = 'absolute'
     videoEl.style.zIndex = '1'
     videoEl.style.display = 'none'
@@ -423,6 +422,7 @@ export default autoSetupMixin(videoPlayerPlugin, () => {
 
   textureMode = Settings.get('platform', 'textureMode', false)
   if (textureMode === true) {
+    videoEl.setAttribute('crossorigin', 'anonymous')
     videoTexture = setUpVideoTexture()
   }
 })
