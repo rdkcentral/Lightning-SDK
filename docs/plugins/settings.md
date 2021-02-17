@@ -4,7 +4,7 @@ An App that is created with the Lightning SDK, can be configured with various op
 
 During development, you can configure your own settings in **settings.json**  to simulate different environments. For example:
 
-```json
+```
 {
     "appSettings": {
         "stage": {
@@ -27,7 +27,7 @@ During development, you can configure your own settings in **settings.json**  to
 
 Most settings are automatically handled by the Lightning SDK. Sometimes, you may want to access settings in your App code *directly*. For that purpose, you can import the *Settings* plugin from the Lightning SDK:
 
-```js
+```
 import { Settings } from '@lightningjs/sdk'
 ```
 
@@ -41,7 +41,7 @@ Optionally, you can specify *user-defined* settings at runtime, which can be acc
 
 Returns a settings value.
 
-```js
+```
 Settings.get(type, key, [fallback])
 ```
 
@@ -53,7 +53,7 @@ Settings.get(type, key, [fallback])
 
 Sets a key for *a user-defined setting* where  `value` is of type `user`.
 
-```js
+```
 Settings.set(key, value)
 ```
 
@@ -61,7 +61,7 @@ Settings.set(key, value)
 
 Returns 'true' or 'false', depending on whether a setting is defined or not.
 
-```js
+```
 Settings.has(type, key)
 ```
 
@@ -69,7 +69,7 @@ Settings.has(type, key)
 
 Adds a callback to the notification stack. The callback is notified when the value of a `user` key has changed. You can add multiple callbacks for the same key.
 
-```js
+```
 Settings.subscribe(key, callback)
 ```
 
@@ -79,7 +79,7 @@ The callback receives the setting's `value` as an argument.
 
 Removes one or more callback(s) from the notification stack for a specific `user` key.
 
-```js
+```
 Settings.unsubscribe(key, [callback])
 ```
 

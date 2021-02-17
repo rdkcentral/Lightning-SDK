@@ -9,7 +9,7 @@ not change the browser's hash location *directly*, because the implementation mi
 
 The Router plugin provides a `navigate` method which accepts three arguments: `path`, `params` and `store:`
 
-```js
+```
 Router.navigate(path, params, store)
 ```
 
@@ -18,7 +18,7 @@ Router.navigate(path, params, store)
 For example, if you call `Router.navigate('player/1638/17421')` anywhere in your App, the Router starts loading the Player
 component. It updates the browser location hash accordingly, assuming that the following route is configured:
 
-```js
+```
 {
   path: 'player/:assetId/:playlistId',
   component: Player
@@ -30,14 +30,14 @@ component. It updates the browser location hash accordingly, assuming that the f
 If you want to pass *additional data* to the page to which you are navigating, you can supply a *data object*
 as the second argument of the `navigate` method. For example:
 
-```js
+```
 Router.navigate('player/1638', { a: 1, b: 2, from: this } )
 ```
 
 This loads the Page that is associated with the specified route path, and provides the additional data inside
 a `params` property on the instance of that Component. For example:
 
-```js
+```
 class Player extends Lightning.Component{
     set params(args) {
         // do something with data passed in the navigate
@@ -52,13 +52,13 @@ By default, all visited routes are added to the history stack (unless this featu
 To prevent the `navigate` method from adding a Page to the history stack, you pass
 `false` as a *second* argument:
 
-```js
+```
 Router.navigate("player/1638", false)
 ```
 
 Or, if your second argument is a data object, as a *third* argument:
 
-```js
+```
 Router.navigate("player/1638", {a:1, b:2}, false)
 ```
 
@@ -70,7 +70,7 @@ Sometimes, you might want to keep the current page from which you are navigating
 
 For example:
 
-```js
+```
 Router.navigate('player/1638', {keepAlive: true, a:1, b:2})
 ```
 
@@ -78,7 +78,7 @@ Router.navigate('player/1638', {keepAlive: true, a:1, b:2})
 
 At some point, you might want to check if the Router is busy processing a request. You can use the `isNavigating` method for that purpose. This method returns a `boolean`.
 
-```js
+```
 Router.isNavigating()
 ```
 

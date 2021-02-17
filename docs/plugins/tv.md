@@ -9,7 +9,7 @@ You can use the TV plugin to adapt your App contextually to what the user is cur
 
 If you want to use the TV plugin, import it from the Lightning SDK:
 
-```js
+```
 import { TV } from '@lightningjs/sdk'
 ```
 
@@ -21,7 +21,7 @@ Either *[retrieves](#retrieve-current-channel)* information about the TV channel
 
 #### Retrieve Current Channel
 
-```js
+```
 TV.channel().then(channel => console.log(channel))
 ```
 
@@ -29,7 +29,7 @@ The `channel` method returns a *promise* that returns the channel information as
 
 During *development*, the `channel` method returns a *random mocked channel*. Optionally, you can [overwrite](#overwriting-default-values) the default values by editing the **settings.json** file. For example:
 
-```json
+```
 {
   number: 1,
   name: 'Metro News 1',
@@ -40,7 +40,7 @@ During *development*, the `channel` method returns a *random mocked channel*. Op
 
 #### Change Current Channel
 
-```js
+```
 const channelNumber = 2
 TV.channel(channelNumber).then(channel => console.log(channel))
 ```
@@ -57,7 +57,7 @@ made available to certain *whitelisted* Apps.
 
 Retrieves information about the TV program that is currently being watched.
 
-```js
+```
 TV.program().then(program => console.log(program))
 ```
 
@@ -65,7 +65,7 @@ The `program` method returns a *promise* that returns the program information as
 
 During *development*, the `program` method returns a mocked program that is linked to a random mocked channel. Optionally, you can [overwrite](#overwriting-default-values) the default values by editing the **settings.json** file. For example:
 
-```json
+```
 {
   title: 'The Tonight Show Starring Jimmy Fallon',
   description: 'Late-night talk show hosted by Jimmy Fallon on NBC',
@@ -79,7 +79,7 @@ During *development*, the `program` method returns a mocked program that is link
 
 Indicates whether the user is entitled to watch the current TV channel or not.
 
-```js
+```
 TV.entitled().then(entitled => console.log(entitled))
 ```
 
@@ -91,7 +91,7 @@ During *development*, the `entitled` method returns the entitlement value of the
 
 Allows you to listen for TV events and executes a callback if these events occur.
 
-```js
+```
 const event = 'channelChange'
 const callback = (channel) => { console.log(channel) }
 
@@ -106,7 +106,7 @@ You can register *multiple* callbacks for the same event.
 
 Allows you to remove previously registered callbacks  (via the `addEventListener` method) for TV events.
 
-```js
+```
 const event = 'channelChange'
 const callback = (channel) => { console.log(channel) }
 
@@ -121,7 +121,7 @@ During development, you might want to test your App with different TV channels a
 You can *overwrite* the default values by editing the **settings.json** file.
 Just add a `tv` key in `platformSettings` and supply it with an `Array` of channels in the following format:
 
-```json
+```
 {
   "platformSettings": {
     "tv": [

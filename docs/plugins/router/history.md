@@ -13,7 +13,7 @@ or `browse/genre/action/50` and `browse/genre/popular/50`.
 
 By default, the Router takes ownership in navigating back through history. This means that, if you press **Back** on your remote control, the router calls the `back()` method and goes a step back in history.
 
-```js
+```
 Router.back()
 ```
 
@@ -21,7 +21,7 @@ Router.back()
 
 If you want to *override* this default call of the `back()` method, you can add the `go()` method to your `Page` class to specify the entry to which you want to navigate back to:
 
-```js
+```
 _handleback(){
     Router.go(-3);
 }
@@ -33,7 +33,7 @@ Based on the example above, the *go()* method will try to navigate to the third 
 
 If you navigate away from a page via `Router.navigate("my/next/page")`, the calling page (hash) is added to the Router history as a new entry. For example:
 
-```js
+```
 {
     hash: 'home/browse/adventure',
     state: {
@@ -51,7 +51,7 @@ In the example, `hash` represents the page that initiated the new `navigate`, an
 
 If you want your page to add ('push') a state object to history, you can do the following:
 
-```js
+```
 
 class Browse extends Lightning.Component {
     static _template(){
@@ -74,7 +74,7 @@ and stores the return value (if this is an object).
 If the Browse page is loaded ('popped') from history with a history `navigate`, and there is a state object in history, the Router calls
 the `historyState()` method, with the *state object* as argument. For example:
 
-```js
+```
 historyState(params){
     if(params){
         // called because entry was loaded from history
@@ -93,7 +93,7 @@ historyState(params){
 
 You can get a copy of the Router's current history by calling the `getHistory()` method, which returns an *Array* of history objects:
 
-```js
+```
 const history = Router.getHistory()
 ```
 
@@ -101,13 +101,13 @@ const history = Router.getHistory()
 
 The `replaceHistoryState()` method overrides the state object of the *last* entry that was added to history:
 
-```js
+```
 Router.replaceHistoryState({a:1, b:2});
 ```
 
 If you want to replace *other* entries, you must provide the `hash` as the second argument:
 
-```js
+```
 const history = Router.getHistory();
 const record = history[2];
 
@@ -118,14 +118,14 @@ Router.replaceHistoryState({a:1, b:2}, record.hash);
 
 You can use the `getHistoryState()` method to *review* the history state of one or more previous history entries. For example:
 
-```js
+```
 // this returns the state object of the last entry
 const state = Router.getHistoryState()
 ```
 
 You can also provide a `hash`:
 
-```js
+```
 const history = Router.getHistory();
 const record = history[4];
 

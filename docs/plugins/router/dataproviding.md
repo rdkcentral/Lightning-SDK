@@ -20,7 +20,7 @@ The data providing callbacks are configured in the *global* configuration object
 
 The `on` data provider shows the Loader, performs the data request, hides the Loader and displays the new page. For example:
 
-```js
+```
 {
     path: 'player/:playlistId/:assetId',
     // page instance and dynamic url data
@@ -53,7 +53,7 @@ If you navigate to: `localhost:8080/#player/267/173688` via `Router.navigate('pl
 
 The `before` data provider works similar to the `on` data provider. They only differ in the way that pages are loaded. For example:
 
-```js
+```
 {
     path: 'settings/wifi/:hotspotId/connect',
     before: (page, {hotspotId})=>{
@@ -74,7 +74,7 @@ The Router plugin performs the following actions:
 
 The `after` data provider works similarly, but follows a slightly different sequence for displaying the old and the new Page. For example:
 
-```js
+```
 {
     path: 'home/assets/popular',
     after: (page)=>{
@@ -105,7 +105,7 @@ By adding `_onDataProvided() {..}` to your Lightning Component, you can listen w
 
 This will not fire when the page is not expired (and loaded from memory).
 
-```js
+```
 class Browse extends Lightning.Component{
     static _template(){...}
 
