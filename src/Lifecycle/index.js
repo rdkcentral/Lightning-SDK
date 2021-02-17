@@ -68,8 +68,11 @@ export const initLifecycle = config => {
 
 // public API
 export default {
-  close() {
-    store.current = 'close'
+  exit(unload = false) {
+    if (unload)
+      store.current = 'closed'
+    else
+      store.current = 'paused'
   },
   ready() {
     store.current = 'ready'
