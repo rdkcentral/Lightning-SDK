@@ -72,3 +72,13 @@ Router.navigate('player/1638', {keepAlive: true, a:1, b:2})
 
 Next:
 [Data providing](dataproviding.md)
+
+### isNavigating()
+
+To check if the Router is processing a Request you can call: 
+
+```js
+Router.isNavigating()
+```
+
+This will return a `boolean`
