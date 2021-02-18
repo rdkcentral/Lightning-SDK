@@ -49,14 +49,14 @@ const startApp = () => {
           )
         : Promise.resolve(),
     () => {
-      let bundle = window[appMetadata.id]
+      let bundle = window[appMetadata.safeId]
       // support rollup and esbuild
       if (typeof bundle !== 'function') {
         bundle = bundle.default
       }
 
       console.time('app2')
-      settings.appSettings.version = appMetadata.version
+      settings.appSettings = { ...appMetadata }
       settings.appSettings.id = appMetadata.identifier
       app = bundle(settings.appSettings, settings.platformSettings, settings.appData)
       canvas = app.stage.getCanvas()
@@ -67,7 +67,7 @@ const startApp = () => {
 
 const getAppMetadata = () => {
   return fetchJson('./metadata.json').then(metadata => {
-    metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
+    metadata.safeId = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
     return metadata
   })
 }
