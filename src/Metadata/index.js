@@ -19,15 +19,6 @@
 let metadata = {}
 
 export const initMetadata = metadataObj => {
-  const metadataItems = ['icon', 'id', 'name', 'version']
-  Object.keys(metadataObj)
-    .filter(key => {
-      return !metadataItems.includes(key)
-    })
-    .forEach(key => {
-      delete metadataObj[key]
-    })
-
   metadata = metadataObj
 }
 
@@ -36,22 +27,18 @@ export default {
     const val = metadata[key]
     return val !== undefined ? val : fallback
   },
-
   appId() {
     return this.get('id')
   },
-
   appName() {
     return this.get('name')
   },
-
   appVersion() {
     let ver = this.get('version')
     // Get only version and not the hashvalue
     let version = ver.split('-')
     return version[0]
   },
-
   appIcon() {
     return this.get('icon')
   },

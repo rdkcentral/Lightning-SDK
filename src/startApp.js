@@ -56,8 +56,12 @@ const startApp = () => {
       }
 
       console.time('app2')
+      //Adding complete metadata info to app settings
       settings.appSettings = { ...appMetadata }
+      //To align with the production response, adding the 'identifier' as 'id'
       settings.appSettings.id = appMetadata.identifier
+      //Deleting the identifier as it is no longer required
+      delete settings.appSettings.identifier
       app = bundle(settings.appSettings, settings.platformSettings, settings.appData)
       canvas = app.stage.getCanvas()
       document.body.appendChild(canvas)
