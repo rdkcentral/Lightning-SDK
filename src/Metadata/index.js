@@ -27,6 +27,8 @@ export const initMetadata = metadataObj => {
     .forEach(key => {
       delete metadataObj[key]
     })
+
+  metadata = metadataObj
 }
 
 export default {
