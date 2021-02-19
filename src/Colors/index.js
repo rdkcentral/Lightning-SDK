@@ -1,3 +1,4 @@
+import Log from '../Log'
 import { mergeColors, calculateAlpha, isObject, isString, argbToHSLA, hslaToARGB } from './utils.js'
 
 let colors = {
@@ -46,8 +47,10 @@ export const initColors = file => {
         addColors(json)
         resolve()
       })
-      .catch(e => {
-        reject(e)
+      .catch(() => {
+        const error = 'Colors file ' + file + ' not found'
+        Log.error(error)
+        reject(error)
       })
   })
 }

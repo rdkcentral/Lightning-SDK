@@ -1,6 +1,6 @@
 # Colors
 
-This plugin is primarily for storing colors so you can easily access them anywhere in your project, without the hassle of remembering the actual color code or argb code. This library will calculate the desired color and return them in ARGB format.
+This plugin is primarily for storing colors so you can easily access them anywhere in your project, without the hassle of remembering the actual color code or argb code. This plugin will calculate the desired color and return them in ARGB format.
 
 The plugin comes with 8 standard colors; white, black, red, green, blue, yellow, cyan, and magenta.
 
@@ -29,7 +29,7 @@ export default class App extends Lightning.Component {
             focus: '#276ee5'
         }
         //string
-        return 'my/custom/language-file.json'
+        return 'my/custom/colors-file.json'
     }
 }
 ```
@@ -38,10 +38,10 @@ export default class App extends Lightning.Component {
 
 With the default, and string option during boot the Colors plugin expects a JSON file. The default option will look for a JSON file named colors.json. Or a JSON file at a custom location defined with the string option. The JSON file should look something like this:
 
-```js
+```json
 {
     "background": "#c9deff",
-    "focus": "#276EE5",
+    "focus": "#276EE5"
 }
 ```
 
@@ -53,27 +53,79 @@ Retrieving a color from the Colors plugin is very easy. You simply import Colors
 Colors('white').get()
 ```
 
-If your want your white color to have some opacity / alpha your can use the following:
+### Adjusting Color values
+
+With this plugin you can also adjust the values of a specific color before retrieving it.
+
+#### Alpha
+If you want your color to have some opacity / alpha you can use the following:
 
 ```js
-Colors('white').alpha(0.4).get()
+Colors('red').alpha(0.4).get()
 ```
 
-You can also make your colors lighter or darker. For example:
+The parameter used in the alpha function expects a value with 0 as a minimum, and 1 as maximum value.
+
+#### Hue
+You can adjust the Hue value of your color using the following:
 
 ```js
-Colors('blue').lighter(0.3).get()
-Colors('green').darker(0.3).get()
+Colors('red').hue(120).get()
 ```
 
-With this library you can also chain methods, if for example a specific color darker and give it a specific opacity:
+The parameter used in the hue function expects a value with 0 as a minimum, and 360 as maximum value.
+
+
+#### Lightness
+You can adjust the Lightness value of your color using the following:
 
 ```js
-Colors('red').darker(0.2).alpha(0.8).get()
+Colors('green').lightness(0.3).get()
 ```
 
-If you want to mix two different colors you can do it with the mix function. The first two parameters can be stored colors, #RRGGBB, or ARGB. The third parameter is the percentage of how it is mixed, we normalized it to a value from 0 to 1.
+The parameter used in the lightness function expects a value with 0 as a minimum, and 1 as maximum value.
+
+#### Saturation
+You can adjust the Saturation value of your color using the following:
+
+```js
+Colors('blue').saturation(0.3).get()
+```
+
+The parameter used in the saturation function expects a value with 0 as a minimum, and 1 as maximum value.
+
+#### Lighter
+You can also make your color Lighter using the following:
+
+```js
+Colors('red').lighter(0.3).get()
+```
+
+The lighter function takes the current Lightness value and changes that according to the parameter.
+The parameter used in the lighter function expects a value with 0 as a minimum, and 1 as maximum value.
+
+#### Darker
+You can also make your color Darker using the following:
+
+```js
+Colors('red').darker(0.3).get()
+```
+
+The darker function takes the current Brightness value and changes that according to the parameter.
+The parameter used in the lighter function expects a value with 0 as a minimum, and 1 as maximum value.
+
+
+#### Mixing
+If you want to mix two different colors you can do it with the mix function. The first parameter can be a stored color, or an ARGB color. The second parameter is the percentage of how it is mixed, we normalized it to a value from 0 to 1.
 
 ```js
 Colors('cyan').mix(Colors('magenta').get(), 0.5).get()
+```
+
+### Chaining
+
+With this plugin you can also chain functions, if for example a specific color darker and give it a specific opacity:
+
+```js
+Colors('red').darker(0.2).alpha(0.8).get()
 ```
