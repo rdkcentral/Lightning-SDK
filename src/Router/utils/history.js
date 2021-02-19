@@ -18,8 +18,8 @@
  */
 
 import { getActiveHash, getActivePage } from './router'
-import { getOption } from './route'
-import { isBoolean, isFunction, isObject, isArray, symbols } from './helpers'
+import { getOption, getRouteByHash } from './route'
+import { isFunction, isObject, isArray, symbols } from './helpers'
 import { getRouterConfig } from './router'
 
 /**
@@ -36,18 +36,14 @@ export const updateHistory = request => {
     return
   }
 
-  const route = request.route
+  const activeRoute = getRouteByHash(hash)
   const register = request.register
-  const storeHash = getOption(route.options, 'store')
   const regStore = register.get(symbols.store)
   const routerConfig = getRouterConfig()
 
-  let configPrevent = getOption(route.options, 'preventStorage')
-  let configStore = true
-
-  if ((isBoolean(storeHash) && storeHash === false) || configPrevent) {
-    configStore = false
-  }
+  // test preventStorage on route
+  let configPrevent = getOption(activeRoute.options, 'preventStorage')
+  let configStore = !configPrevent
 
   if (regStore && configStore) {
     const toStore = hash.replace(/^\//, '')
