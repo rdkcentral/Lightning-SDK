@@ -16,7 +16,7 @@ the SDK is highly recommended.
 In the Lightning components that require video playback capabilities (i.e., Player components), you can import the
 VideoPlayer plugin from the Lightning SDK:
 
-```
+```js
 import { VideoPlayer } from '@lightningjs/sdk'
 ```
 
@@ -28,10 +28,10 @@ The first time that you interact with the VideoPlayer plugin, a `<video>` tag is
 
 Defines which Lightning component is consuming media [events](#events) that are emitted by the VideoPlayer plugin.
 
-```
+```js
 import { Lightning, VideoPlayer } from '@lightningjs/sdk''
 
-class Player extends Lightning.component {
+class Player extends Lightning.Component {
   _firstActive() {
     VideoPlayer.consumer(this)
   }
@@ -50,7 +50,7 @@ The `position` method accepts 2 arguments: `top` and `left`. Both values must be
 
 For example:
 
-```
+```js
 // move VideoPlayer 100 pixels down and 200 pixels to the right
 VideoPlayer.position(100, 200)
 ```
@@ -64,7 +64,7 @@ Sets the size of the video player.
 The `size` method accepts 2 arguments: `width` and `height`. Both values must be positive absolute numbers.
 The default value for `width` is 1920, while `height`defaults to 1080.
 
-```
+```js
 // resize VideoPlayer to half its normal size
 VideoPlayer.size(960, 540)
 ```
@@ -77,7 +77,7 @@ The `area` method accepts 4 arguments: `top`, `right`, `bottom` and `left`. The 
 of each argument corresponds with the *margin* that is calculated from the edge of the screen to each side
 of the video player.
 
-```
+```js
 const top = 100
 const right = 200
 const bottom = 100
@@ -94,7 +94,7 @@ Opens a video (specified as a URL) and starts playing it as soon as the video pl
 
 For example:
 
-```
+```js
 const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
 VideoPlayer.open(videoUrl)
 ```
@@ -103,7 +103,7 @@ VideoPlayer.open(videoUrl)
 
 Stops the video that is currently playing, and restarts it from the beginning.
 
-```
+```js
 VideoPlayer.open(videoUrl)
 
 // reload video after 5 seconds
@@ -116,7 +116,7 @@ setTimeout(() => {
 
 Unsets the `source` of the video player and then hides the video player.
 
-```
+```js
 VideoPlayer.close()
 ```
 
@@ -124,7 +124,7 @@ VideoPlayer.close()
 
 Unsets the `source` of the video player (without hiding it).
 
-```
+```js
 VideoPlayer.clear()
 ```
 
@@ -132,7 +132,7 @@ VideoPlayer.clear()
 
 Pauses the video that is currently playing.
 
-```
+```js
 VideoPlayer.open(videoUrl)
 
 // pause the video after 5 seconds
@@ -145,7 +145,7 @@ setTimeout(() => {
 
 Plays the currently loaded video.
 
-```
+```js
 VideoPlayer.play(videoUrl)
 ```
 
@@ -155,7 +155,7 @@ Pauses or plays the video player, depending on its current state.
 
 If a video is currently playing, the method pauses it. And, vice versa, it plays a video that is currently paused.
 
-```
+```js
 VideoPlayer.playPause()
 ```
 
@@ -166,7 +166,7 @@ Mutes or unmutes the video player, depending on its current state.
 The `mute` method accepts a Boolean as its single argument. When passed 'true' (or when omitted), it mutes the video player.
 When passed 'false', it sets the video player to unmuted.
 
-```
+```js
 // mute a video
 VideoPlayer.mute()
 // unmute a video
@@ -181,7 +181,7 @@ The `loop` method accepts a Boolean as its single argument. When passed 'true' (
 instructs the video player to loop (i.e., to restart the current video when it reaches the end). When
 passed 'false', it instructs the video player to *not* loop the video.
 
-```
+```js
 // loop a video
 VideoPlayer.loop()
 // unloop a video
@@ -198,7 +198,7 @@ are automatically rounded up to 0.
 If the value *exceeds* the duration
 of the video, it rounds the value down and jumps straight to the end of the video.
 
-```
+```js
 // seek to 20 seconds
 VideoPlayer.seek(20)
 // seek to 150 seconds
@@ -219,7 +219,7 @@ the `skip` method automatically rounds up to 0.
 
 Similarly, if you jump further than the duration of the video, the `skip` method rounds down the value and goes straight to the end of the video.
 
-```
+```js
 // skip forward 20 seconds
 VideoPlayer.skip(20)
 
@@ -231,7 +231,7 @@ VideoPlayer.skip(-20)
 
 Shows the video player.
 
-```
+```js
 VideoPlayer.show()
 ```
 
@@ -239,7 +239,7 @@ VideoPlayer.show()
 
 Hides the video player.
 
-```
+```js
 VideoPlayer.hide()
 ```
 
@@ -247,7 +247,7 @@ VideoPlayer.hide()
 
 Getter that retrieves the total duration of the current video in seconds.
 
-```
+```js
 VideoPlayer.duration // e.g. 160.44 (seconds)
 ```
 
@@ -255,7 +255,7 @@ VideoPlayer.duration // e.g. 160.44 (seconds)
 
 Getter that retrieves the video's current time in seconds.
 
-```
+```js
 VideoPlayer.currentTime // e.g. 20.01 (seconds)
 ```
 
@@ -263,7 +263,7 @@ VideoPlayer.currentTime // e.g. 20.01 (seconds)
 
 Getter that retrieves the *mute state* of the video player ('true' or 'false').
 
-```
+```js
 VideoPlayer.mute()
 VideoPlayer.muted // true
 
@@ -275,7 +275,7 @@ VideoPlayer.muted // false
 
 Getter that retrieves the *loop state* of the video player ('true' or 'false').
 
-```
+```js
 VideoPlayer.loop()
 VideoPlayer.looped // true
 
@@ -287,7 +287,7 @@ VideoPlayer.looped // false
 
 Getter that retrieves the video player's current source (src).
 
-```
+```js
 const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
 VideoPlayer.open(videoUrl)
 
@@ -298,7 +298,7 @@ VideoPlayer.src // http://commondatastorage.googleapis.com/gtv-videos-bucket/sam
 
 Getter that indicates whether the video player is currently in a *playing* state ('true') or a *paused* state ('false').
 
-```
+```js
 VideoPlayer.play()
 VideoPlayer.playing // true
 
@@ -310,7 +310,7 @@ VideoPlayer.playing // false
 
 Getter that retrieves the *top y* position of the video player.
 
-```
+```js
 VideoPlayer.position(100, 200)
 VideoPlayer.top // 100
 ```
@@ -319,7 +319,7 @@ VideoPlayer.top // 100
 
 Getter that retrieves the *left x* position of the video player.
 
-```
+```js
 VideoPlayer.position(100, 200)
 VideoPlayer.left // 200
 ```
@@ -328,7 +328,7 @@ VideoPlayer.left // 200
 
 Getter that retrieves the *bottom y* position of the video player.
 
-```
+```js
 VideoPlayer.area(100, 200, 100, 200)
 VideoPlayer.bottom // 100
 ```
@@ -337,7 +337,7 @@ VideoPlayer.bottom // 100
 
 Getter that retrieves the *right x* position of the video player.
 
-```
+```js
 VideoPlayer.area(100, 200, 100, 200)
 VideoPlayer.right // 200
 ```
@@ -346,7 +346,7 @@ VideoPlayer.right // 200
 
 Getter that retrieves the width of the video player.
 
-```
+```js
 VideoPlayer.size(960, 540)
 VideoPlayer.width // 960
 ```
@@ -355,7 +355,7 @@ VideoPlayer.width // 960
 
 Getter that retrieves the height of the video player.
 
-```
+```js
 VideoPlayer.size(960, 540)
 VideoPlayer.height // 540
 ```
@@ -364,7 +364,7 @@ VideoPlayer.height // 540
 
 Getter that retrieves whether the video player is set to visible ('true') or hidden ('false').
 
-```
+```js
 VideoPlayer.show()
 VideoPlayer.visible // true
 

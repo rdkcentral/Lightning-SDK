@@ -6,7 +6,7 @@ You can use the Purchase plugin to integrate *in-app purchases* in your App, in 
 
 If you want to integrate purchases in your App, import the Purchase plugin from the Lightning SDK:
 
-```
+```js
 import { Purchase } from '@lightningjs/sdk'
 ```
 
@@ -30,7 +30,7 @@ The `buy` method performs the following actions:
 
 The `buy` method accepts an `assetId `(as defined by the CSP) as its first argument. For example:
 
-```
+```js
 const assetId = '123abc'
 Purchase.buy(assetId).then(() => {
   // asset succesfully bought
@@ -50,7 +50,7 @@ The `setup` method accepts a *configuration object* as its only argument. The ob
 * `cspUrl`: specifies the *base URL* of the backend of the CSP (Content Service Provider).
 * `endPoints`: used to customize API endpoints that differ from the default specification (as outlined below). For each *endpoint* that differs from the default, you specify the *URI* (which is appended to the `cspUrl`, unless specified as a fully qualified domain) and the REST *method* to use.
 
-```
+```js
 {
   assets: {
     uri: '/assets',
@@ -75,7 +75,7 @@ The `setup` method accepts a *configuration object* as its only argument. The ob
 }
 ```
 
-```
+```js
 Purchase.setup('http://csp-backend.com/api', {
   assets: {
     uri: '/products',
@@ -98,7 +98,7 @@ You can use the `household` option to return information on whether the assets w
 
 The `assets` method is an *optional* convenience method provided by the Purchase plugin. Depending on the CSP's API integration, you can implement the functionality to retrieve assets in your App in a fully customized manner.
 
-```
+```js
 Purchase.assets().then(assets => {
   // do something with assets
 })
@@ -112,7 +112,7 @@ You can use the  `household` option to return information on whether the asset w
 
 The `asset` method is an *optional* convenience method provided by the Purchase plugin. Depending on the CSP's API integration, you can implement the functionality to retrieve assets in your App in a fully customized manner.
 
-```
+```js
 const assetId = '123abc'
 Purchase.asset(assetId).then(assets => {
   // do something with assets
@@ -129,7 +129,7 @@ The `household` option is automatically added  as a `query param` in the request
 
 The `signature` method is an *optional* convenience method provided by the Purchase plugin. Depending on the CSP's API integration, you can implement the functionality to generate a purchase signature in your App in a fully customized manner.
 
-```
+```js
 const assetId = '123abc'
 Purchase.signature(assetId).then(signature => {
   // call Purchase.payment() with signature
@@ -142,7 +142,7 @@ The `payment` method calls the Metrological Billing Server to execute a purchase
 
 The method returns a *Promise*. If successful, the Promise resolves to a transaction object (that can be stored on the CSP side). If not, it rejects with an error code in case of a failure.
 
-```
+```js
 const signature = {} // received from Payment.signature()
 Purchase.payment(signature).then(() => {
   // call Payment.subscribe()
@@ -157,7 +157,7 @@ The `subscribe` method returns a *Promise* with the result of the request made t
 
 The `subscribe` method is an *optional* convenience method provided by the Purchase plugin. Depending on the CSP's API integration, you can implement the functionality to register a purchase in your App in a fully customized manner.
 
-```
+```js
 const assetId = '123abc'
 const transaction = {} // received from Purchase.payment()
 Purchase.subscribe(assetId, transaction).then(() => {
@@ -173,7 +173,7 @@ Calling the method notifies the Metrological Billing Server that the CSP has rec
 
 The method returns a *Promise* which resolves in case of a successful confirmation. If the `transactionId` is not valid, the Promise is rejected.
 
-```
+```js
 const transaction = {} // received from Purchase.payment()
 Purchase.subscribe(transaction.transactionId).then(() => {
   // full purchase flow done
@@ -188,7 +188,7 @@ The `unsubscribe` method returns a *Promise* with the result of the request made
 
 The `unsubscribe` method is an *optional* convenience method provided by the Purchase plugin. Depending on the CSP's API integration, you can implement the functionality to cancel recurring purchases in your App in a fully customized manner.
 
-```
+```js
 const assetId = '123abc'
 Purchase.unsubscribe(assetId).then(() => {
   // unsubscribed

@@ -25,7 +25,7 @@ The value must match the *path* of one of the defined routes.
 
 Typically, you either specify the path to a **Splash** or **Home** page as `root`:
 
-```
+```js
 import { Splash } from './pages';
 
 export default {
@@ -41,7 +41,7 @@ export default {
 
 or you specify a function:
 
-```
+```js
 export default {
   root: () => {
     return new promise((resolve) => {
@@ -67,7 +67,7 @@ If so required, you can specify a *function*  in the `boot` key of the configura
 The `boot` function is not only executed when you open the root of your App, but is also invoked when you open
 a [deeplinked](deeplinking.md) location in the App.
 
-```
+```js
 export default {
     boot: () => {
         return new promise(resolve => {
@@ -83,7 +83,7 @@ export default {
 The `querystring` (`qs`) is passed as an *object*.
 For example, if you point the browser to: `localhost:8080#splash?deviceId=1801&amp;partnerId=145`, the corresponding code looks like this:
 
-```
+```js
 export default {
     boot: (qs) => {
         // qs => { deviceId: '1801', partnerId: '145' }
@@ -98,7 +98,7 @@ If you want to display a **Splash** or **Loading** screen while the Router is bo
 
 The component is not only displayed when you open the root of your App, but also when you open a [deeplinked](deeplinking.md) location in the App.
 
-```
+```js
 import { Splash } from './pages',
 
 export default {
@@ -125,7 +125,7 @@ Based on the `from` and `to` parameters that are passed by the Router to the hoo
 
 The hook must resolve to a *promise*. If it resolves to 'true', the Router continues the process. If it resolves to 'false', the process is aborted.
 
-```
+```js
 {
     ...
     routes:[...],
@@ -141,7 +141,7 @@ The hook must resolve to a *promise*. If it resolves to 'true', the Router conti
 
 You can also redirect the `navigate` by returning a *String*. The Router will then try to navigate to the provided hash.
 
-```
+```js
 {
     ...
     routes:[...],
@@ -155,7 +155,7 @@ You can also redirect the `navigate` by returning a *String*. The Router will th
 
 If you want to pass parameters, the hook must return an *object*:
 
-```
+```js
 {
     ...
     routes:[...],
@@ -181,7 +181,7 @@ The `routes` key is an Array of route definition items. Each item represents a r
 
 Although you can define your `routes` object directly inside your **App.js**, it is recommended to specify your routes in a separate **routes.js** file. For example:
 
-```
+```js
 // file: src/routes.js
 import { Home, Browse } from './pages';
 
@@ -205,7 +205,7 @@ So far, we have only specified *static* route paths (for example, `home/browse/a
 
 You can make a route part dynamic by prefixing it with `:` as shown in the following example:
 
-```
+```js
 {
   path: 'player/:assetId/:playlistId',
   component: Player
@@ -223,7 +223,7 @@ the Router adds the properties `.assetId = 14728` and `.playlistId = 38101` to t
 You can also use [setters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic
 when the applicable properties are set. For example:
 
-```
+```js
 class Player extends Lightning.Component {
     static _template(){
         return {...}
@@ -244,7 +244,7 @@ combinations of characters.
 
 You do this by adding `${PATTERN/MODIFIERS}` after the dynamic name. For example:
 
-```
+```js
 // this will match #player/1493847
 // but will fail on #player/ah26134
 {
@@ -258,7 +258,7 @@ You do this by adding `${PATTERN/MODIFIERS}` after the dynamic name. For example
 The `component` property can be a *Lightning Component* (i.e., a class that extends the `Lightning.Component`) or a *function*
 that returns a [dynamic import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Dynamic_Imports). For example:
 
-```
+```js
 // component
 {
     path: 'home/browse/adventure',
@@ -266,7 +266,7 @@ that returns a [dynamic import](https://developer.mozilla.org/en-US/docs/Web/Jav
 }
 ```
 
-```
+```js
 // dynamic import
 {
     path: 'home/browse/adventure',
@@ -285,7 +285,7 @@ The *first* argument of the `hook` function is a reference to the `application`.
 
 Any data that are provided via route parts, are passed in an object in the *second* argument. For example:
 
-```
+```js
 {
   path: 'settings/hotspots/delete/:hotspotId/:actionId',
   hook: (application, {hotspotId, actionId}) => {
@@ -306,7 +306,7 @@ For specific routes, you can specify an object that contains `options` to influe
 
 For example:
 
-```
+```js
 {
     path: 'settings/hotspots/delete/:hotspotId/:actionId',
     options: {
@@ -343,7 +343,7 @@ If you want to prevent this, you set `reuseInstance: false`. This [setting](sett
 This is a local hook that you can specify for a specific route, and is invoked right before the Router navigates to that route.
 It follows the same rules as the [global ](#beforeeachroute) hook `beforeEachRoute`. For example:
 
-```
+```js
 {
     path: 'player/:playlistId${/[0-9]{3,8}/i}',
     component: Player,
@@ -368,7 +368,7 @@ There are two *special* routes that can be configured in the `routes` Array, and
 
 The `*` path indicates which Page component must be displayed when an *unknown* route path is hit (i.e., URL not found):
 
-```
+```js
 {
     path: '*',
     component: NotFoundPage,
@@ -381,7 +381,7 @@ The `!` path indicates which Page component must be displayed as a *global error
 
 The Router displays this route when the [data provider](dataproviding.md) of a page returns an error. For example:
 
-```
+```js
 {
     path: '!',
     component: ErrorPage

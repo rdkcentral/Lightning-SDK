@@ -9,7 +9,7 @@ To decrease the memory footprint even further, you can configure specific Router
 
 For example:
 
-```
+```json
 {
     "appSettings": {
     },

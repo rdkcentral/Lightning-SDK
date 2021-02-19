@@ -19,7 +19,7 @@ There are four event-related categories for sending metrics:
 
 Import the Metrics plugin in components where you want to track and send events:
 
-```
+```js
 import { Metrics } from '@lightningjs/sdk'
 ```
 
@@ -29,7 +29,7 @@ import { Metrics } from '@lightningjs/sdk'
 
 Sends a metric that the App is launched (implemented automatically by the SDK).
 
-```
+```js
 Metrics.App.launch()
 ```
 
@@ -37,7 +37,7 @@ Metrics.App.launch()
 
 Sends a metric that the App is loaded (implemented automatically by the SDK).
 
-```
+```js
 Metrics.App.loaded()
 ```
 
@@ -45,7 +45,7 @@ Metrics.App.loaded()
 
 Sends a metric that the App is ready to be used.
 
-```
+```js
 Metrics.App.ready()
 ```
 
@@ -53,7 +53,7 @@ Metrics.App.ready()
 
 Sends a metric that the App is closed (implemented automatically by the SDK).
 
-```
+```js
 Metrics.App.close()
 ```
 
@@ -61,7 +61,7 @@ Metrics.App.close()
 
 Sends a metric that an error has occurred in the App.
 
-```
+```js
 Metrics.App.error(message, code, params)
 ```
 
@@ -69,7 +69,7 @@ Metrics.App.error(message, code, params)
 
 Sends a custom metric that is related to an App event.
 
-```
+```js
 Metrics.App.event(name, params)
 ```
 
@@ -77,7 +77,7 @@ Metrics.App.event(name, params)
 
 Sends a metric that a page has been viewed.
 
-```
+```js
 Metrics.page.view(name, params)
 ```
 
@@ -85,7 +85,7 @@ Metrics.page.view(name, params)
 
 Sends a metric that a page has been left.
 
-```
+```js
 Metrics.page.leave(name, params)
 ```
 
@@ -93,7 +93,7 @@ Metrics.page.leave(name, params)
 
 Sends a metric that an error has occurred when accessing a page.
 
-```
+```js
 Metrics.page.error(message, code, params)
 ```
 
@@ -101,7 +101,7 @@ Metrics.page.error(message, code, params)
 
 Sends a custom metric that is related to a Page event.
 
-```
+```js
 Metrics.page.event(name, params)
 ```
 
@@ -109,7 +109,7 @@ Metrics.page.event(name, params)
 
 Sends a metric that a user has clicked on an element.
 
-```
+```js
 Metrics.user.click(name, params)
 ```
 
@@ -117,7 +117,7 @@ Metrics.user.click(name, params)
 
 Sends a metric that a user has supplied input.
 
-```
+```js
 Metrics.user.input(name, params)
 ```
 
@@ -125,7 +125,7 @@ Metrics.user.input(name, params)
 
 Sends a metric that an error has occurred that is related to a User event.
 
-```
+```js
 Metrics.user.error(message, code, params)
 ```
 
@@ -133,7 +133,7 @@ Metrics.user.error(message, code, params)
 
 Sends a custom metric that is related to a User event.
 
-```
+```js
 Metrics.user.event(name, params)
 ```
 

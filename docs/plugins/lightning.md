@@ -12,10 +12,10 @@ Apart from that, you can use Lightning to take advantage of the default texture 
 
 In addition to *importing* Lightning from the Lightning SDK, you must *extend* the Lightning component in *all* components of your App (including the main `App` component in the **App.js** file):
 
-```
+```js
 import { Lightning } from '@lightningjs/sdk'
 
-export default class MyComponent extends Lightning.component {
+export default class MyComponent extends Lightning.Component {
   //
 }
 ```
@@ -24,10 +24,10 @@ export default class MyComponent extends Lightning.component {
 
 Lightning provides a set of tools that you can use in your App. For example:
 
-```
+```js
 import { Lightning } from '@lightningjs/sdk'
 
-export default class MyComponent extends Lightning.component {
+export default class MyComponent extends Lightning.Component {
   static _template() {
     return {
       RoundedRectangle: {
@@ -42,10 +42,10 @@ export default class MyComponent extends Lightning.component {
 
 You can use textures provided by Lightning as shown in the following example:
 
-```
+```js
 import { Lightning } from '@lightningjs/sdk'
 
-export default class MyComponent extends Lightning.component {
+export default class MyComponent extends Lightning.Component {
   static _template() {
     return {
       RoundedRectangle: {

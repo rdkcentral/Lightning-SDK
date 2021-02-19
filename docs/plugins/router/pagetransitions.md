@@ -24,7 +24,7 @@ the `pageTransition` method.
 
 For example:
 
-```
+```js
 class SettingsPage extends Lightning.Component {
   static _template() {
     return {...}
@@ -58,7 +58,7 @@ The `pageTransition` method receives the new (`pageIn`) and old (`pageOut`) page
 
 For example:
 
-```
+```js
 class BrowsePage extends Lightning.Component {
   static _template() {
       return {...}

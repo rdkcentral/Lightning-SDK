@@ -21,7 +21,7 @@ Feel free to use this App as a foundation of your App, or copy parts of it to yo
 To power your App with Router capabilities, you first need to import the Router plugin from the Lightning SDK
 in your **App.js** file:
 
-```
+```js
 import { Router } from '@lightningjs/sdk'
 ```
 
@@ -29,7 +29,7 @@ import { Router } from '@lightningjs/sdk'
 
 The App Base Class constructor function is defined as follows:
 
-```
+```js
 class MyApp extends Router.App {
 
 }
@@ -41,7 +41,7 @@ Normally, your App extends the standard `Lightning.Component`.
 
 If you want to make your App *routed*, you extend `Router.App` instead. This provides a default setup for the `template`, `states` and `getters`:
 
-```
+```js
 import { Router } from '@lightningjs/sdk'
 
 export default class App extends Router.App {
@@ -70,7 +70,7 @@ Use the `navigate` method instead, which is provided by the Router plugin.
 
 If this method is called correctly, it updates the browser hash and handles the entire navigation flow between pages accordingly. For example:
 
-```
+```js
 Router.navigate('home')
 Router.navigate('home/browse/adventure')
 ```
@@ -81,7 +81,7 @@ Router.navigate('home/browse/adventure')
 
 ### back()
 
-```
+```js
 Router.back()
 ```
 
@@ -89,7 +89,7 @@ Router.back()
 
 ### focusPage()
 
-```
+```js
 Router.focusPage()
 ```
 
@@ -97,7 +97,7 @@ Router.focusPage()
 
 ### focusWidget()
 
-```
+```js
 Router.focusWidget("Menu")
 ```
 
@@ -105,7 +105,7 @@ Router.focusWidget("Menu")
 
 ### getActiveHash()
 
-```
+```js
 Router.getActiveHash()
 ```
 
@@ -113,7 +113,7 @@ Returns the active `hash`
 
 ### getActivePage()
 
-```
+```js
 Router.getActivePage()
 ```
 
@@ -121,7 +121,7 @@ Returns the reference of the active `Page` instance.
 
 ### getActiveRoute()
 
-```
+```js
 Router.getActiveRoute()
 ```
 
@@ -129,7 +129,7 @@ Returns the active route `path` blueprint
 
 ### getActiveWidget()
 
-```
+```js
 Router.getActiveWidget()
 ```
 
@@ -137,7 +137,7 @@ Returns the instance of the widget that has `focus`.
 
 ### getHistory()
 
-```
+```js
 Router.getHistory()
 ```
 
@@ -145,7 +145,7 @@ Router.getHistory()
 
 ### getHistoryState()
 
-```
+```js
 Router.getHistoryState()
 ```
 
@@ -153,7 +153,7 @@ Router.getHistoryState()
 
 ### go()
 
-```
+```js
 Router.go(-3)
 ```
 
@@ -161,7 +161,7 @@ Router.go(-3)
 
 ### isNavigating()
 
-```
+```js
 Router.isNavigating()
 ```
 
@@ -169,7 +169,7 @@ Router.isNavigating()
 
 ### navigate()
 
-```
+```js
 Router.navigate("path/to/navigate")
 ```
 
@@ -177,7 +177,7 @@ Router.navigate("path/to/navigate")
 
 ### replaceHistoryState()
 
-```
+```js
 Router.replaceHistoryState({a:1, b:2})
 ```
 
@@ -185,7 +185,7 @@ Router.replaceHistoryState({a:1, b:2})
 
 ### resume()
 
-```
+```js
 Router.resume()
 ```
 
@@ -193,7 +193,7 @@ Router.resume()
 
 ### startRouter()
 
-```
+```js
 Router.startRouter(routes)
 ```
 
