@@ -93,6 +93,30 @@ const fireHook = (event, args) => {
   hooks[event] && typeof hooks[event] === 'function' && hooks[event].call(null, event, args)
 }
 
+let customLoader = null
+let customUnloader = null
+
+const loader = (url, videoEl) => {
+  return customLoader && typeof customLoader === 'function'
+    ? customLoader(url, videoEl)
+    : new Promise(resolve => {
+        url = mediaUrl(url)
+        videoEl.setAttribute('src', url)
+        videoEl.load()
+        resolve()
+      })
+}
+
+const unloader = videoEl => {
+  return customUnloader && typeof customUnloader === 'function'
+    ? customUnloader(videoEl)
+    : new Promise(resolve => {
+        videoEl.removeAttribute('src')
+        videoEl.load()
+        resolve()
+      })
+}
+
 export const setupVideoTag = () => {
   const videoEls = document.getElementsByTagName('video')
   if (videoEls && videoEls.length) {
@@ -162,6 +186,14 @@ const videoPlayerPlugin = {
     consumer = component
   },
 
+  loader(loaderFn) {
+    customLoader = loaderFn
+  },
+
+  unloader(unloaderFn) {
+    customUnloader = unloaderFn
+  },
+
   position(top = 0, left = 0) {
     videoEl.style.left = withPrecision(left)
     videoEl.style.top = withPrecision(top)
@@ -189,61 +221,23 @@ const videoPlayerPlugin = {
     if (!this.canInteract) return
     metrics = Metrics.media(url)
 
-    // destroy any previous instance of HLS.js that might exist
-    if (hlsJs && hlsJs.destroy && typeof hlsJs.destroy === 'function') {
-      hlsJs.destroy()
-    }
-    if (details.hlsJs && details.hlsJs.lib) {
-      // (re)instantiate HLS.js library passed down
-      hlsJs = new details.hlsJs.lib(details.hlsJs.config || {})
+    this.hide()
+    deregisterEventListeners()
 
-      this.hide()
-      deregisterEventListeners()
-
-      if (details.hlsJs.lib.isSupported()) {
-        hlsJs.loadSource(url)
-        hlsJs.attachMedia(videoEl)
-        // maybe make event to 'start' playing on configurable ?
-        hlsJs.on(details.hlsJs.lib.Events.MANIFEST_PARSED, () => {
-          registerEventListeners()
-          this.show()
-          setTimeout(() => {
-            this.play()
-          })
-        })
-      } else {
-        Log.info('VideoPlayer', 'HLS.js is not supported')
-      }
+    if (this.src == url) {
+      this.clear().then(this.open(url, details))
     } else {
-      // prep the media url to play depending on platform
-      url = mediaUrl(url)
-
-      // if url is same as current clear (which is effectively a reload)
-      if (this.src == url) {
-        this.clear()
-      }
-
-      this.hide()
-      deregisterEventListeners()
-
-      videoEl.setAttribute('src', url)
-      videoEl.load()
-
-      const config = { enabled: state.adsEnabled, duration: 300 } // this.duration ||
+      const adConfig = { enabled: state.adsEnabled, duration: 300 }
       if (details.videoId) {
-        config.caid = details.videoId
+        adConfig.caid = details.videoId
       }
-      Ads.get(config, consumer).then(ads => {
+      Ads.get(adConfig, consumer).then(ads => {
         state.playingAds = true
         ads.prerolls().then(() => {
           state.playingAds = false
-          registerEventListeners()
-          if (this.src !== url) {
-            videoEl.setAttribute('src', url)
-            videoEl.load()
-          }
-          this.show()
-          setTimeout(() => {
+          loader(url, videoEl).then(() => {
+            registerEventListeners()
+            this.show()
             this.play()
           })
         })
@@ -279,9 +273,9 @@ const videoPlayerPlugin = {
     // pause the video first to disable sound
     this.pause()
     if (textureMode === true) videoTexture.stop()
-    fireOnConsumer('Clear', { videoElement: videoEl })
-    videoEl.removeAttribute('src')
-    videoEl.load()
+    return unloader(videoEl).then(() => {
+      fireOnConsumer('Clear', { videoElement: videoEl })
+    })
   },
 
   play() {
