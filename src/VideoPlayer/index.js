@@ -35,7 +35,6 @@ let metrics
 let consumer
 let precision = 1
 let textureMode = false
-let hlsJs
 
 export const initVideoPlayer = config => {
   if (config.mediaUrl) {
@@ -96,9 +95,9 @@ const fireHook = (event, args) => {
 let customLoader = null
 let customUnloader = null
 
-const loader = (url, videoEl) => {
+const loader = (url, videoEl, config) => {
   return customLoader && typeof customLoader === 'function'
-    ? customLoader(url, videoEl)
+    ? customLoader(url, videoEl, config)
     : new Promise(resolve => {
         url = mediaUrl(url)
         videoEl.setAttribute('src', url)
@@ -217,7 +216,7 @@ const videoPlayerPlugin = {
     this.size(right - left, bottom - top)
   },
 
-  open(url, details = {}) {
+  open(url, config = {}) {
     if (!this.canInteract) return
     metrics = Metrics.media(url)
 
@@ -225,17 +224,17 @@ const videoPlayerPlugin = {
     deregisterEventListeners()
 
     if (this.src == url) {
-      this.clear().then(this.open(url, details))
+      this.clear().then(this.open(url, config))
     } else {
       const adConfig = { enabled: state.adsEnabled, duration: 300 }
-      if (details.videoId) {
-        adConfig.caid = details.videoId
+      if (config.videoId) {
+        adConfig.caid = config.videoId
       }
       Ads.get(adConfig, consumer).then(ads => {
         state.playingAds = true
         ads.prerolls().then(() => {
           state.playingAds = false
-          loader(url, videoEl).then(() => {
+          loader(url, videoEl, config).then(() => {
             registerEventListeners()
             this.show()
             this.play()
@@ -419,10 +418,6 @@ const videoPlayerPlugin = {
 
   get adsEnabled() {
     return state.adsEnabled
-  },
-
-  get hlsJs() {
-    return hlsJs
   },
 
   // prefixed with underscore to indicate 'semi-private'
