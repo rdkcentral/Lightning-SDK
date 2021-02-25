@@ -57,7 +57,7 @@ const startApp = () => {
 
       console.time('app2')
       //Adding complete metadata info to app settings
-      settings.appSettings = Object.assign(settings.appSettings, appMetadata)
+      Object.assign(settings.appSettings, appMetadata)
       //To align with the production response, adding the 'identifier' as 'id'
       settings.appSettings.id = appMetadata.identifier
       //Deleting the identifier as it is no longer required

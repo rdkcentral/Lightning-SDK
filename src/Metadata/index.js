@@ -37,7 +37,12 @@ export default {
   },
   appVersion() {
     // Get only version and not the hashvalue
-    return this.get('version') !== undefined ? this.get('version').split('-')[0] : undefined
+    let ver = this.get('version')
+    if (ver) {
+      let versionString = ver.split('-') //Split the string with '-'
+      ver = versionString.length ? versionString[0] : ver
+    }
+    return ver
   },
   appIcon() {
     return this.get('icon')
