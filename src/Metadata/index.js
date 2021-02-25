@@ -24,20 +24,20 @@ export const initMetadata = metadataObj => {
 
 export default {
   get(key, fallback = undefined) {
-    const val = metadata[key]
-    return val !== undefined ? val : fallback
+    return key in metadata ? metadata[key] : fallback
   },
   appId() {
     return this.get('id')
+  },
+  safeAppId() {
+    return this.get('safeId')
   },
   appName() {
     return this.get('name')
   },
   appVersion() {
-    let ver = this.get('version')
     // Get only version and not the hashvalue
-    let version = ver.split('-')
-    return version[0]
+    return this.get('version') !== undefined ? this.get('version').split('-')[0] : undefined
   },
   appIcon() {
     return this.get('icon')
