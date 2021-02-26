@@ -1,6 +1,6 @@
 # FPS Counter
 
-The number of *Frames per second (FPS)* is an important measure for the performance of your App. The higher the FPS, the smoother the experience. When you are validating your App on a certain platform, it's useful to get an indication of the *FPS score*.
+The number of *Frames per second (FPS)* is an important measure for the performance of your App. The higher the FPS, the smoother the experience. When you are validating your App on a certain platform, it is useful to get an indication of the *FPS score*.
 
 The SDK contains a built-in *FPS counter* that can be enabled or disabled via the [Platform Setting](settings.md#platform-settings) `showFps` in `settings.json`. When it is enabled, a *real-time* counter with the current FPS will be displayed as an overlay in the top left corner of your App.
 
