@@ -436,6 +436,7 @@ export default {
   setHistory,
   getHistoryState,
   replaceHistoryState,
+  symbols,
   App: RoutedApp,
   // keep backwards compatible
   focusPage: restoreFocus,
