@@ -16,7 +16,7 @@ The data providing callbacks are configured in the *global* configuration object
 
 ## Callback Functions
 
-### on()
+### on
 
 The `on` data provider shows the Loader, performs the data request, hides the Loader and displays the new page. For example:
 
@@ -49,7 +49,7 @@ If you navigate to: `localhost:8080/#player/267/173688` via `Router.navigate('pl
 3. Wait for the data provider's request to resolve
 4. Show the new page attached to the route
 
-### before()
+### before
 
 The `before` data provider works similar to the `on` data provider. They only differ in the way that pages are loaded. For example:
 
@@ -70,7 +70,7 @@ The Router plugin performs the following actions:
 3. Wait for the request to resolve
 4. Show the new page (and destroy it from memory, if so configured)
 
-### after()
+### after
 
 The `after` data provider works similarly, but follows a slightly different sequence for displaying the old and the new Page. For example:
 
@@ -97,7 +97,7 @@ new request will be made.
 
 > This only applies if the page still exists in memory.
 
-### onDataProvided()
+### onDataProvided
 
 The `_onDataProvided` method is invoked when the `on`, `before` or `after` data providing callback has resolved.
 

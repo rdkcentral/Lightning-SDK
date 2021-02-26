@@ -20,7 +20,7 @@ import { Registry } from '@lightningjs/sdk'
 
 ## Available Methods
 
-### setTimeout()
+### setTimeout
 
 Calls a function after a specified number of milliseconds.
 
@@ -41,7 +41,7 @@ Registry.setTimeout((param1, param2) => {
 
 The `setTimeout` method returns the `id` of the timeout, which can be used to cancel the timer with `Registry.clearTimeout()`.
 
-### clearTimeout()
+### clearTimeout
 
 Cancels a running timeout and prevents it from being executed.
 
@@ -52,7 +52,7 @@ const timeoutId = Registry.setTimeout(() => {}, 30 * 60 * 1000)
 Registry.clearTimeout(timeoutId)
 ```
 
-### clearTimeouts()
+### clearTimeouts
 
 Cancels *all* running timeouts and prevents them from being executed.
 
@@ -60,7 +60,7 @@ Cancels *all* running timeouts and prevents them from being executed.
 Registry.clearTimeouts()
 ```
 
-### setInterval()
+### setInterval
 
 Calls a function at a specified interval in milliseconds.
 
@@ -74,7 +74,7 @@ Following the signature of `window.setInterval()`, you can specify additional pa
 
 The `setInterval` method returns the `id` of the interval, which can be used to cancel the interval with `Registry.clearInterval()`.
 
-### clearInterval()
+### clearInterval
 
 Cancels a running interval and prevents it from being executed.
 
@@ -84,7 +84,7 @@ const intervalId = Registry.setInterval(() => {}, 1500)
 Registry.clearInterval(intervalId)
 ```
 
-### clearIntervals()
+### clearIntervals
 
 Cancesl *all* running intervals and prevents them from being executed.
 
@@ -92,7 +92,7 @@ Cancesl *all* running intervals and prevents them from being executed.
 Registry.clearIntervals()
 ```
 
-### addEventListener()
+### addEventListener
 
 Attaches an event handler to the specified target.
 
@@ -105,7 +105,7 @@ const handler = () => {
 Registry.addEventListener(target, event, handler)
 ```
 
-### removeEventListener()
+### removeEventListener
 
 Removes a previously attached event handler from a specific target.
 
@@ -120,7 +120,7 @@ Registery.removeEventListener(target, event, cb)
 
 > It is required to pass a reference to the original *handler* function.
 
-### removeEventListeners()
+### removeEventListeners
 
 Removes *multiple* registered event listeners all at once.
 
@@ -145,7 +145,7 @@ Registry.removeEventListeners(document.body)
 Registry.removeEventListeners(document.body, 'click')
 ```
 
-### clear()
+### clear
 
 Cleans up all registered timeouts, intervals and event listeners.
 

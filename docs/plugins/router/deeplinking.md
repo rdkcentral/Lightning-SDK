@@ -11,7 +11,6 @@ Deeplinking is an important feature, because:
 
 ## Backtracking
 
-
 When a user enters your App via a deeplink, there is technically *no* history available. By default, this would mean that a **Back** key press leads to exiting the App.
 
 On some platforms, this is not the desired behavior. For that reason, the Router plugin supports the *[backtracking](settings.md#backtracking)* functionality.

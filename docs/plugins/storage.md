@@ -18,7 +18,7 @@ import { Storage } from '@lightningjs/sdk'
 
 ## Available methods
 
-### set()
+### set
 
 Saves a key-value combination in storage.
 
@@ -30,7 +30,7 @@ The `key` can be of type String (which is usually the case), Object, Boolean or 
 
 When saved, the `value` is automatically converted to a JSON object, so you do not have to call `JSON.stringify()` on objects.
 
-### get()
+### get
 
 Retrieves previously stored data from storage.
 
@@ -40,7 +40,7 @@ Storage.get(key)
 
 If you stored an Object, the data is automatically converted back to an Object, soyou do not have to call  `JSON.parse()`.
 
-### remove()
+### remove
 
 Removes a specific key from storage.
 
@@ -48,7 +48,7 @@ Removes a specific key from storage.
 Storage.remove(key)
 ```
 
-### clear()
+### clear
 
 Removes *all* data from localStorage.
 

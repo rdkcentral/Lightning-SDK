@@ -16,7 +16,7 @@ import { Pin } from '@lightningjs/sdk'
 
 ## Available Methods
 
-### show()
+### show
 
 Shows a standard, built-in **Pin** dialog where the user can supply a Pin code.
 
@@ -24,7 +24,7 @@ Shows a standard, built-in **Pin** dialog where the user can supply a Pin code.
 Pin.show()
 ```
 
-### hide()
+### hide
 
 Hides the visible **Pin** dialog.
 
@@ -32,7 +32,7 @@ Hides the visible **Pin** dialog.
 Pin.hide()
 ```
 
-### submit()
+### submit
 
 Sends a Pin code to the middleware layer for verification. If the code is correct, the STB is unlocked.
 
@@ -52,7 +52,7 @@ If the Pin code is wrong, the returned promise resolves with 'false'. If the mid
 The default Pin code is  `0000`. Optionally, you can overwrite the default Pin code during development by editing the
 **settings.json** file and adding the key `pin` as a Platform Setting with a different (valid) Pin code.
 
-### unlocked()
+### unlocked
 
 Checks if the STB is currently *unlocked*.
 
@@ -68,7 +68,7 @@ The `unlocked` method returns a *promise* which resolves to 'true'  if the devic
 
 If the middleware is unable to retrieve the current state, the promise is *rejected*.
 
-### locked()
+### locked
 
 Checks if the STB is currently *locked*.
 

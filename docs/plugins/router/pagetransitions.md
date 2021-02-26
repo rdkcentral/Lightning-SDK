@@ -18,7 +18,6 @@ The Router plugin provides default transitions that you can add to your Page. Th
 | `fade` | For the new page, perform  a transition from `alpha:0` to `alpha:1`. |
 | `crossFade` | For the new page, perform a transition from `alpha:0` to `alpha:1`. For the old page, perform a transition from `alpha:1` to `alpha:0`. |
 
-
 You can invoke a default transition on your page by returning a *String* that contains the transition name in
 the `pageTransition` method.
 

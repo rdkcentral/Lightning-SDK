@@ -5,7 +5,7 @@ Once you've set up the [correct routes](configuration.md) for your app, you can 
 Under the hood, the Router plugin listens for URL hash changes and displays the correct Page accordingly. You should
 not change the browser's hash location *directly*, because the implementation might differ between platforms.
 
-## Navigate()
+## Navigate
 
 The Router plugin provides a `navigate` method which accepts three arguments: `path`, `params` and `store:`
 
@@ -74,7 +74,7 @@ For example:
 Router.navigate('player/1638', {keepAlive: true, a:1, b:2})
 ```
 
-## isNavigating()
+## isNavigating
 
 At some point, you might want to check if the Router is busy processing a request. You can use the `isNavigating` method for that purpose. This method returns a `boolean`.
 

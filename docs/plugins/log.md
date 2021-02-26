@@ -17,7 +17,7 @@ import { Log } from '@lightningjs/sdk'
 ```
 ## Available Methods
 
-### info()
+### info
 
 Invokes a `console.log` when the Platform Setting `log` is 'true'.
 
@@ -27,7 +27,7 @@ Log.info(label, argument1, argument2, argument3, ..., argumentx)
 
 The `info` method accepts any number of arguments. If the first argument is a String, it will be displayed as a custom label instead of the default label 'Info'.
 
-### debug()
+### debug
 
 Invokes a `console.debug` when the Platform Setting `log` is 'true'.
 
@@ -37,7 +37,7 @@ Log.debug(label, argument1, argument2, argument3, ..., argumentx)
 
 The `debug `method accepts any number of arguments. If the first argument is a String, it will be displayed as a custom label instead of the default label 'Debug'.
 
-### error()
+### error
 
 Invokes a `console.error` when the Platform Setting `log` is 'true'.
 
@@ -47,7 +47,7 @@ Log.error(label, argument1, argument2, argument3, ..., argumentx)
 
 The `error` method accepts any number of arguments. If the first argument is a String, it will be displayed as a custom label instead of the default label 'Error'.
 
-### warn()
+### warn
 
 Invokes a `console.warm` when the Platform Setting `log` is 'true'.
 

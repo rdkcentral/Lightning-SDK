@@ -79,7 +79,7 @@ Router.navigate('home/browse/adventure')
 
 ## Available Methods
 
-### back()
+### back
 
 ```js
 Router.back()
@@ -87,7 +87,7 @@ Router.back()
 
 > See [Router History](history.md#back) for more information.
 
-### focusPage()
+### focusPage
 
 ```js
 Router.focusPage()
@@ -95,7 +95,7 @@ Router.focusPage()
 
 > See [Router Widgets](widgets.md#handling-focus) for more information.
 
-### focusWidget()
+### focusWidget
 
 ```js
 Router.focusWidget("Menu")
@@ -103,7 +103,7 @@ Router.focusWidget("Menu")
 
 > See [Router Widgets](widgets.md#handling-focus) for more information.
 
-### getActiveHash()
+### getActiveHash
 
 ```js
 Router.getActiveHash()
@@ -111,7 +111,7 @@ Router.getActiveHash()
 
 Returns the active `hash`
 
-### getActivePage()
+### getActivePage
 
 ```js
 Router.getActivePage()
@@ -119,7 +119,7 @@ Router.getActivePage()
 
 Returns the reference of the active `Page` instance.
 
-### getActiveRoute()
+### getActiveRoute
 
 ```js
 Router.getActiveRoute()
@@ -127,7 +127,7 @@ Router.getActiveRoute()
 
 Returns the active route `path` blueprint
 
-### getActiveWidget()
+### getActiveWidget
 
 ```js
 Router.getActiveWidget()
@@ -135,7 +135,7 @@ Router.getActiveWidget()
 
 Returns the instance of the widget that has `focus`.
 
-### getHistory()
+### getHistory
 
 ```js
 Router.getHistory()
@@ -143,7 +143,7 @@ Router.getHistory()
 
 > See [Router History](history.md#gethistory) for more information.
 
-### getHistoryState()
+### getHistoryState
 
 ```js
 Router.getHistoryState()
@@ -151,7 +151,7 @@ Router.getHistoryState()
 
 > See [Router History](history.md#gethistorystate) for more information.
 
-### go()
+### go
 
 ```js
 Router.go(-3)
@@ -159,7 +159,7 @@ Router.go(-3)
 
 > See [Router History](history.md#go) for more information.
 
-### isNavigating()
+### isNavigating
 
 ```js
 Router.isNavigating()
@@ -167,7 +167,7 @@ Router.isNavigating()
 
 > See [Router Navigation](navigation.md#is-navigating) for more information.
 
-### navigate()
+### navigate
 
 ```js
 Router.navigate("path/to/navigate")
@@ -175,7 +175,7 @@ Router.navigate("path/to/navigate")
 
 > See [Router Navigation](navigation.md#router-navigation) for more information.
 
-### replaceHistoryState()
+### replaceHistoryState
 
 ```js
 Router.replaceHistoryState({a:1, b:2})
@@ -183,7 +183,7 @@ Router.replaceHistoryState({a:1, b:2})
 
 > See [Router History](history.md#replacehistorystate) for more information.
 
-### resume()
+### resume
 
 ```js
 Router.resume()
@@ -191,7 +191,7 @@ Router.resume()
 
 > See [Router Configuration](configuration.md#bootcomponent) for more information.
 
-### startRouter()
+### startRouter
 
 ```js
 Router.startRouter(routes)

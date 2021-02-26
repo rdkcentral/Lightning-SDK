@@ -24,7 +24,7 @@ The first time that you interact with the VideoPlayer plugin, a `<video>` tag is
 
 ## Available methods
 
-### consumer()
+### consumer
 
 Defines which Lightning component is consuming media [events](#events) that are emitted by the VideoPlayer plugin.
 
@@ -42,7 +42,7 @@ In the `_firstActive` (or `_init`) [lifecycle event](../../lightning-core-refere
 
 > Only *one* component can consume VideoPlayer events at the same time.
 
-### position()
+### position
 
 Sets the x and y position of the video player.
 
@@ -57,7 +57,7 @@ VideoPlayer.position(100, 200)
 
 > If you change the position of the video player, it can move (partially) out of view. This depends on the size of the video player.
 
-### size()
+### size
 
 Sets the size of the video player.
 
@@ -69,7 +69,7 @@ The default value for `width` is 1920, while `height`defaults to 1080.
 VideoPlayer.size(960, 540)
 ```
 
-### area()
+### area
 
 Sets the x and y position *and* the size of the video player at the same time.
 
@@ -88,7 +88,7 @@ VideoPlayer.area(top, right, bottom, left)
 By default, the video player is located in the *top left* corner (i.e., `top = 0` and `left = 0`) and covers the *full*
 screen (i.e., `bottom = 1080` and `right = 1920`).
 
-### open()
+### open
 
 Opens a video (specified as a URL) and starts playing it as soon as the video player has buffered enough to begin.
 
@@ -99,7 +99,7 @@ const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/samp
 VideoPlayer.open(videoUrl)
 ```
 
-### reload()
+### reload
 
 Stops the video that is currently playing, and restarts it from the beginning.
 
@@ -112,7 +112,7 @@ setTimeout(() => {
 }, 5000)
 ```
 
-### close()
+### close
 
 Unsets the `source` of the video player and then hides the video player.
 
@@ -128,7 +128,7 @@ Unsets the `source` of the video player (without hiding it).
 VideoPlayer.clear()
 ```
 
-### pause()
+### pause
 
 Pauses the video that is currently playing.
 
@@ -141,7 +141,7 @@ setTimeout(() => {
 }, 5000)
 ```
 
-### play()
+### play
 
 Plays the currently loaded video.
 
@@ -149,7 +149,7 @@ Plays the currently loaded video.
 VideoPlayer.play(videoUrl)
 ```
 
-### playPause()
+### playPause
 
 Pauses or plays the video player, depending on its current state.
 
@@ -159,7 +159,7 @@ If a video is currently playing, the method pauses it. And, vice versa, it plays
 VideoPlayer.playPause()
 ```
 
-### mute()
+### mute
 
 Mutes or unmutes the video player, depending on its current state.
 
@@ -173,7 +173,7 @@ VideoPlayer.mute()
 VideoPlayer.mute(false)
 ```
 
-### loop()
+### loop
 
 Sets the loop state of the video player.
 
@@ -188,7 +188,7 @@ VideoPlayer.loop()
 VideoPlayer.loop(false)
 ```
 
-### seek()
+### seek
 
 Sets the current time of the video player to the specified time in seconds.
 
@@ -207,7 +207,7 @@ VideoPlayer.seek(150)
 VideoPlayer.seek(1000)
 ```
 
-### skip()
+### skip
 
 Jumps a specified number of seconds forward or backward from the video's current time.
 
@@ -227,7 +227,7 @@ VideoPlayer.skip(20)
 VideoPlayer.skip(-20)
 ```
 
-### show()
+### show
 
 Shows the video player.
 
@@ -235,7 +235,7 @@ Shows the video player.
 VideoPlayer.show()
 ```
 
-### hide()
+### hide
 
 Hides the video player.
 
@@ -243,7 +243,7 @@ Hides the video player.
 VideoPlayer.hide()
 ```
 
-### duration()
+### duration
 
 Getter that retrieves the total duration of the current video in seconds.
 
@@ -251,7 +251,7 @@ Getter that retrieves the total duration of the current video in seconds.
 VideoPlayer.duration // e.g. 160.44 (seconds)
 ```
 
-### currentTime()
+### currentTime
 
 Getter that retrieves the video's current time in seconds.
 
@@ -259,7 +259,7 @@ Getter that retrieves the video's current time in seconds.
 VideoPlayer.currentTime // e.g. 20.01 (seconds)
 ```
 
-### muted()
+### muted
 
 Getter that retrieves the *mute state* of the video player ('true' or 'false').
 
@@ -271,7 +271,7 @@ VideoPlayer.mute(false)
 VideoPlayer.muted // false
 ```
 
-### looped()
+### looped
 
 Getter that retrieves the *loop state* of the video player ('true' or 'false').
 
@@ -283,7 +283,7 @@ VideoPlayer.loop(false)
 VideoPlayer.looped // false
 ```
 
-### src()
+### src
 
 Getter that retrieves the video player's current source (src).
 
@@ -294,7 +294,7 @@ VideoPlayer.open(videoUrl)
 VideoPlayer.src // http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
 ```
 
-### playing()
+### playing
 
 Getter that indicates whether the video player is currently in a *playing* state ('true') or a *paused* state ('false').
 
@@ -306,7 +306,7 @@ VideoPlayer.pause()
 VideoPlayer.playing // false
 ```
 
-### top()
+### top
 
 Getter that retrieves the *top y* position of the video player.
 
@@ -315,7 +315,7 @@ VideoPlayer.position(100, 200)
 VideoPlayer.top // 100
 ```
 
-### left()
+### left
 
 Getter that retrieves the *left x* position of the video player.
 
@@ -324,7 +324,7 @@ VideoPlayer.position(100, 200)
 VideoPlayer.left // 200
 ```
 
-### bottom()
+### bottom
 
 Getter that retrieves the *bottom y* position of the video player.
 
@@ -333,7 +333,7 @@ VideoPlayer.area(100, 200, 100, 200)
 VideoPlayer.bottom // 100
 ```
 
-### right()
+### right
 
 Getter that retrieves the *right x* position of the video player.
 
@@ -342,7 +342,7 @@ VideoPlayer.area(100, 200, 100, 200)
 VideoPlayer.right // 200
 ```
 
-### width()
+### width
 
 Getter that retrieves the width of the video player.
 
@@ -351,7 +351,7 @@ VideoPlayer.size(960, 540)
 VideoPlayer.width // 960
 ```
 
-### height()
+### height
 
 Getter that retrieves the height of the video player.
 
@@ -360,7 +360,7 @@ VideoPlayer.size(960, 540)
 VideoPlayer.height // 540
 ```
 
-### visible()
+### visible
 
 Getter that retrieves whether the video player is set to visible ('true') or hidden ('false').
 

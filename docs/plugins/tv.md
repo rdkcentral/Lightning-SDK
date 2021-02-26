@@ -15,7 +15,7 @@ import { TV } from '@lightningjs/sdk'
 
 ## Available methods
 
-### channel()
+### channel
 
 Either *[retrieves](#retrieve-current-channel)* information about the TV channel that is currently being watched, or *[changes](#change-current-channel)* the current TV channel.
 
@@ -53,7 +53,7 @@ During *development*, you can pass either 1, 2 or 3 as the `channelNumber`, so t
 > In a *production* setting, most Apps are *not* able to change the currently live TV channel. The functionality is only
 made available to certain *whitelisted* Apps.
 
-### program()
+### program
 
 Retrieves information about the TV program that is currently being watched.
 
@@ -75,7 +75,7 @@ During *development*, the `program` method returns a mocked program that is link
 }
 ```
 
-### entitled()
+### entitled
 
 Indicates whether the user is entitled to watch the current TV channel or not.
 
@@ -87,7 +87,7 @@ The `entitled` method returns a *promise* that returns 'true' if the user is ent
 
 During *development*, the `entitled` method returns the entitlement value of the random mocked channel. Optionally, you can [overwrite](#overwriting-default-values) the default values by editing the **settings.json** file.
 
-### addEventListener()
+### addEventListener
 
 Allows you to listen for TV events and executes a callback if these events occur.
 
@@ -102,7 +102,7 @@ Currently, *only one* event is supported: `channelChange`. This passes an object
 
 You can register *multiple* callbacks for the same event.
 
-### removeEventListener()
+### removeEventListener
 
 Allows you to remove previously registered callbacks  (via the `addEventListener` method) for TV events.
 

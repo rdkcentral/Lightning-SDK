@@ -37,7 +37,7 @@ Optionally, you can specify *user-defined* settings at runtime, which can be acc
 
 ## Available Methods
 
-### get()
+### get
 
 Returns a settings value.
 
@@ -49,7 +49,7 @@ Settings.get(type, key, [fallback])
 * `Key` can be any of the existing settings.
 * You can specify an optional `fallback` value if the setting is not defined.
 
-### set()
+### set
 
 Sets a key for *a user-defined setting* where  `value` is of type `user`.
 
@@ -57,7 +57,7 @@ Sets a key for *a user-defined setting* where  `value` is of type `user`.
 Settings.set(key, value)
 ```
 
-### has()
+### has
 
 Returns 'true' or 'false', depending on whether a setting is defined or not.
 
@@ -65,7 +65,7 @@ Returns 'true' or 'false', depending on whether a setting is defined or not.
 Settings.has(type, key)
 ```
 
-### subscribe()
+### subscribe
 
 Adds a callback to the notification stack. The callback is notified when the value of a `user` key has changed. You can add multiple callbacks for the same key.
 
@@ -75,7 +75,7 @@ Settings.subscribe(key, callback)
 
 The callback receives the setting's `value` as an argument.
 
-### unsubscribe()
+### unsubscribe
 
 Removes one or more callback(s) from the notification stack for a specific `user` key.
 
@@ -87,13 +87,12 @@ When a reference to a previously subscribed callback is passed, the `unsubscribe
 
 If the optional `callback` parameter is omitted, the method pops *all* callbacks from the notification stack for the given key.
 
-### clearSubscribers()
+### clearSubscribers
 
 Clears *all* subscribers that are listening for `user` key changes.
 
 `Settings.clearSubscribers()
 `
-
 
 This method is automatically called when the App is closed, to prevent *memory leaks*.
 

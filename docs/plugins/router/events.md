@@ -7,15 +7,15 @@ In addition to Lightning's default [life cycle events](../../../lightning-core-r
 
 ## Page Events
 
-### _onDataProvided()
+### _onDataProvided
 
 If you use [Data Providing](dataproviding.md#on-data-provided), the `_onDataProvided` method is invoked when the `on`, `before` or `after` data providing callback has resolved.
 
-### _onMounted()
+### _onMounted
 
 The `_onMounted` method is invoked when the Router creates a Page component.
 
-### _onChanged()
+### _onChanged
 
 The `_onChanged` method is invoked when a Page instance is reused in navigation.
 
@@ -50,7 +50,7 @@ class Account extends Lightning.Component{
 }
 ```
 
-### _handleAppClose()
+### _handleAppClose
 
 When the Router's history is empty, the SDK will continue to handle the **Back** key and close the App.
 

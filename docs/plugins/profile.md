@@ -18,7 +18,7 @@ import { Profile } from '@lightningjs/sdk'
 
 If you call one of the methods below *without* parameters, it returns the Profile information in the form of a *promise*. If you pass parameters, the method *updates* the Profile information.
 
-### ageRating()
+### ageRating
 
 Gets the user's age rating. Returns `adult` by default during *local development*.
 
@@ -26,7 +26,7 @@ Gets the user's age rating. Returns `adult` by default during *local development
 Profile.ageRating()
 ```
 
-### city()
+### city
 
 Gets the user's city. Returns `New York` by default during *local development*.
 
@@ -34,7 +34,7 @@ Gets the user's city. Returns `New York` by default during *local development*.
 Profile.city()
 ```
 
-### zipCode()
+### zipCode
 
 Gets the user's zip code. Returns `27505` by default during *local development*.
 
@@ -42,7 +42,7 @@ Gets the user's zip code. Returns `27505` by default during *local development*.
 Profile.zipCode()
 ```
 
-### countryCode()
+### countryCode
 
 Gets the user's country code. Returns `US` by default during *local development*.
 
@@ -50,7 +50,7 @@ Gets the user's country code. Returns `US` by default during *local development*
 Profile.countryCode()
 ```
 
-### ip()
+### ip
 
 Gets the user's IP address. Returns `127.0.0.1` by default during *local development*.
 
@@ -58,7 +58,7 @@ Gets the user's IP address. Returns `127.0.0.1` by default during *local develop
 Profile.ip()
 ```
 
-### household()
+### household
 
 Gets the user's household ID. Returns `b2244e9d4c04826ccd5a7b2c2a50e7d4` by default during *local development*.
 
@@ -66,7 +66,7 @@ Gets the user's household ID. Returns `b2244e9d4c04826ccd5a7b2c2a50e7d4` by defa
 Profile.household()
 ```
 
-### language()
+### language
 
 Gets the user's mother language. During *local development*, it attempts to return the browser's language with `en` as default.
 
@@ -74,7 +74,7 @@ Gets the user's mother language. During *local development*, it attempts to retu
 Profile.language()
 ```
 
-### latLon()
+### latLon
 
 Gets the user's latitude and longitude.
 
@@ -86,7 +86,7 @@ If, during *local development*, you want to force to use the browser's built-in 
 Profile.latLon()
 ```
 
-### locale()
+### locale
 
 Gets the user's locale. During *local development*, it returns the browser's locale, with a fallback to `en-US`.
 
@@ -94,7 +94,7 @@ Gets the user's locale. During *local development*, it returns the browser's loc
 Profile.locale()
 ```
 
-### mac()
+### mac
 
 Gets the user's Mac address. Returns `00:00:00:00:00:00` by default during *local development*.
 
@@ -102,7 +102,7 @@ Gets the user's Mac address. Returns `00:00:00:00:00:00` by default during *loca
 Profile.mac()
 ```
 
-### operator()
+### operator
 
 Gets the user's operator. Returns `Metrological` by default during *local development*.
 
@@ -110,7 +110,7 @@ Gets the user's operator. Returns `Metrological` by default during *local develo
 Profile.operator()
 ```
 
-### platform()
+### platform
 
 Gets the user's platform. Returns `Metrological` by default during *local development*.
 
@@ -118,7 +118,7 @@ Gets the user's platform. Returns `Metrological` by default during *local develo
 Profile.platform()
 ```
 
-### packages()
+### packages
 
 Gets the user's packages. Returns `[]` by default during *local development*.
 

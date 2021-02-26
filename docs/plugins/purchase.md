@@ -12,7 +12,7 @@ import { Purchase } from '@lightningjs/sdk'
 
 ## Available Methods
 
-### buy()
+### buy
 
 The `buy` method executes all the required steps to do a full purchase of an asset.
 
@@ -27,7 +27,6 @@ The `buy` method performs the following actions:
 * Attempt to register a successful purchase at the CSP backend
 * Confirm back to the Metrological Billing Server that the purchase has been registered by the CSP backend
 
-
 The `buy` method accepts an `assetId `(as defined by the CSP) as its first argument. For example:
 
 ```js
@@ -39,7 +38,7 @@ Purchase.buy(assetId).then(() => {
 })
 ```
 
-### setup()
+### setup
 
 You use the `setup` method to configure the Purchase plugin for matching with a specific CSP backend setup, which is used for providing available assets and storing purchased asset records.
 
@@ -90,7 +89,7 @@ Purchase.setup('http://csp-backend.com/api', {
 
 > If the CSP backend does *not* completely follow the expected blueprint, or can not be configured properly via the `setup` method, the steps in the `buy` method can also be implemented *manually*. In that case, you can use the Plugin methods `signature`, `payment`, `subscribe` and `confirm` (see [below](#signature)).
 
-### assets()
+### assets
 
 The `assets` method returns a *Promise* with the result of the request that is made to the CSP to retrieve available assets for purchase. Typically, it returns an Array of objects containing information about the assets (such as *title*, *description* and *price*).
 
@@ -104,7 +103,7 @@ Purchase.assets().then(assets => {
 })
 ```
 
-### asset()
+### asset
 
 The `asset` method returns a Promise with the result of the request to the CSP to retrieve details for a specific asset.
 
@@ -119,7 +118,7 @@ Purchase.asset(assetId).then(assets => {
 })
 ```
 
-### signature()
+### signature
 
 To make a payment request to the Metrological Billing Server, the CSP must provide a *signed signature*.
 
@@ -136,7 +135,7 @@ Purchase.signature(assetId).then(signature => {
 })
 ```
 
-### payment()
+### payment
 
 The `payment` method calls the Metrological Billing Server to execute a purchase. It accepts a *valid signature* (as retrieved from the CSP) as its argument.
 
@@ -149,7 +148,7 @@ Purchase.payment(signature).then(() => {
 })
 ```
 
-### subscribe()
+### subscribe
 
 After a successful transaction, the CSP stores the purchase on their system. Especially in the case of recurring subscriptions, where storing the purchase is essential.
 
@@ -165,7 +164,7 @@ Purchase.subscribe(assetId, transaction).then(() => {
 })
 ```
 
-### confirm()
+### confirm
 
 The `confirm` method calls the Metrological Billing Server to confirm a purchase. It accepts a `transactionId` (which is available inside the transaction object that is returned by a successful `payment` request) as its argument.
 
@@ -180,7 +179,7 @@ Purchase.subscribe(transaction.transactionId).then(() => {
 })
 ```
 
-### unsubscribe()
+### unsubscribe
 
 Since the CSP is responsible for renewing subscriptions in the context of the Metrological Billing Server, the CSP must be able to handle *cancellations of recurring purchases*.
 

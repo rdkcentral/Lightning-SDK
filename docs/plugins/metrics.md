@@ -25,7 +25,7 @@ import { Metrics } from '@lightningjs/sdk'
 
 ## Available Methods
 
-### App.launch()
+### App.launch
 
 Sends a metric that the App is launched (implemented automatically by the SDK).
 
@@ -33,7 +33,7 @@ Sends a metric that the App is launched (implemented automatically by the SDK).
 Metrics.App.launch()
 ```
 
-### App.loaded()
+### App.loaded
 
 Sends a metric that the App is loaded (implemented automatically by the SDK).
 
@@ -41,7 +41,7 @@ Sends a metric that the App is loaded (implemented automatically by the SDK).
 Metrics.App.loaded()
 ```
 
-### App.ready()
+### App.ready
 
 Sends a metric that the App is ready to be used.
 
@@ -49,7 +49,7 @@ Sends a metric that the App is ready to be used.
 Metrics.App.ready()
 ```
 
-### App.close()
+### App.close
 
 Sends a metric that the App is closed (implemented automatically by the SDK).
 
@@ -57,7 +57,7 @@ Sends a metric that the App is closed (implemented automatically by the SDK).
 Metrics.App.close()
 ```
 
-### App.error()
+### App.error
 
 Sends a metric that an error has occurred in the App.
 
@@ -65,7 +65,7 @@ Sends a metric that an error has occurred in the App.
 Metrics.App.error(message, code, params)
 ```
 
-### App.event()
+### App.event
 
 Sends a custom metric that is related to an App event.
 
@@ -73,7 +73,7 @@ Sends a custom metric that is related to an App event.
 Metrics.App.event(name, params)
 ```
 
-### Page.view()
+### Page.view
 
 Sends a metric that a page has been viewed.
 
@@ -81,7 +81,7 @@ Sends a metric that a page has been viewed.
 Metrics.page.view(name, params)
 ```
 
-### Page.leave()
+### Page.leave
 
 Sends a metric that a page has been left.
 
@@ -89,7 +89,7 @@ Sends a metric that a page has been left.
 Metrics.page.leave(name, params)
 ```
 
-### Page.error()
+### Page.error
 
 Sends a metric that an error has occurred when accessing a page.
 
@@ -97,7 +97,7 @@ Sends a metric that an error has occurred when accessing a page.
 Metrics.page.error(message, code, params)
 ```
 
-### Page.event()
+### Page.event
 
 Sends a custom metric that is related to a Page event.
 
@@ -105,7 +105,7 @@ Sends a custom metric that is related to a Page event.
 Metrics.page.event(name, params)
 ```
 
-### User.click()
+### User.click
 
 Sends a metric that a user has clicked on an element.
 
@@ -113,7 +113,7 @@ Sends a metric that a user has clicked on an element.
 Metrics.user.click(name, params)
 ```
 
-### User.input()
+### User.input
 
 Sends a metric that a user has supplied input.
 
@@ -121,7 +121,7 @@ Sends a metric that a user has supplied input.
 Metrics.user.input(name, params)
 ```
 
-### User.error()
+### User.error
 
 Sends a metric that an error has occurred that is related to a User event.
 
@@ -129,7 +129,7 @@ Sends a metric that an error has occurred that is related to a User event.
 Metrics.user.error(message, code, params)
 ```
 
-### User.event()
+### User.event
 
 Sends a custom metric that is related to a User event.
 

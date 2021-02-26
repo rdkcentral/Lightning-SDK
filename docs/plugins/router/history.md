@@ -9,7 +9,7 @@ or `browse/genre/action/50` and `browse/genre/popular/50`.
 
 ## Navigating Through History
 
-### back()
+### back
 
 By default, the Router takes ownership in navigating back through history. This means that, if you press **Back** on your remote control, the router calls the `back()` method and goes a step back in history.
 
@@ -17,7 +17,7 @@ By default, the Router takes ownership in navigating back through history. This 
 Router.back()
 ```
 
-### go()
+### go
 
 If you want to *override* this default call of the `back()` method, you can add the `go()` method to your `Page` class to specify the entry to which you want to navigate back to:
 
@@ -45,7 +45,7 @@ If you navigate away from a page via `Router.navigate("my/next/page")`, the call
 
 In the example, `hash` represents the page that initiated the new `navigate`, and `state` is an optional *state history object* that your page can provide.
 
-### historyState()
+### historyState
 
 #### Pushing
 
@@ -89,7 +89,7 @@ historyState(params){
 }
 ```
 
-### getHistory()
+### getHistory
 
 You can get a copy of the Router's current history by calling the `getHistory()` method, which returns an *Array* of history objects:
 
@@ -97,7 +97,7 @@ You can get a copy of the Router's current history by calling the `getHistory()`
 const history = Router.getHistory()
 ```
 
-### replaceHistoryState()
+### replaceHistoryState
 
 The `replaceHistoryState()` method overrides the state object of the *last* entry that was added to history:
 
@@ -114,7 +114,7 @@ const record = history[2];
 Router.replaceHistoryState({a:1, b:2}, record.hash);
 ```
 
-### getHistoryState()
+### getHistoryState
 
 You can use the `getHistoryState()` method to *review* the history state of one or more previous history entries. For example:
 

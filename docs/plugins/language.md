@@ -132,7 +132,7 @@ when switching between languages.
 
 ## Available Methods
 
-### set()
+### set
 
 Sets or changes the current language.
 
@@ -157,7 +157,7 @@ that as a *fallback* if no matching language was found.
 
 > Changing the language doesn't automatically trigger a template render update.
 
-### get()
+### get
 
 Gets and returns the currently selected language.
 
@@ -167,7 +167,7 @@ const currentLanguage = Language.get()
 // currentLanguage = 'en'
 ```
 
-### translate()
+### translate
 
 Translates a key to the matching value.
 
@@ -205,7 +205,7 @@ Language.translate('introduction2', {lastname: 'Smith', firstname: 'Joe', age: 2
 // Hi, my name is Joe, my lastname is Smith and I am 27 years old
 ```
 
-### available()
+### available
 
 Returns an Array with the available languages as specified in **translations.json**, which, for example, can be used to display
 a dynamic language switcher in your App.
@@ -222,7 +222,7 @@ Language.available()
 // [{code: 'en', name: 'English'}, {code: 'nl', name: 'Nederlands'}, {code: 'de': name: 'de'}]
 ```
 
-### translations()
+### translations
 
 Advanced method that allows you to set the translations manually during runtime, instead of using the automatic load
 of **translations.json** on boot.
