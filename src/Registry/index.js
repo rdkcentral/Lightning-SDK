@@ -92,7 +92,7 @@ export default {
   // Event listeners
   addEventListener(target, event, handler) {
     target.addEventListener(event, handler)
-    let targetIndex =
+    const targetIndex =
       registry.targets.indexOf(target) > -1
         ? registry.targets.indexOf(target)
         : registry.targets.push(target) - 1
