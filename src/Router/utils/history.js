@@ -42,8 +42,7 @@ export const updateHistory = request => {
   const routerConfig = getRouterConfig()
 
   // test preventStorage on route
-  let configPrevent = getOption(activeRoute.options, 'preventStorage')
-  let configStore = !configPrevent
+  const configStore = !getOption(activeRoute.options, 'preventStorage')
 
   if (regStore && configStore) {
     const toStore = hash.replace(/^\//, '')
