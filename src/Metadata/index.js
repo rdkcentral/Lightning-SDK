@@ -30,7 +30,7 @@ export default {
     return this.get('id')
   },
   safeAppId() {
-    return "APP_".concat(this.get('id').replace(/[^0-9a-zA-Z_$]/g, '_'))
+    return this.get('id').replace(/[^0-9a-zA-Z_$]/g, '_')
   },
   appName() {
     return this.get('name')
