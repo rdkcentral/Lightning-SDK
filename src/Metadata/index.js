@@ -36,18 +36,12 @@ export default {
     return this.get('name')
   },
   appVersion() {
-    // Get only version and not the hashvalue
-    let ver = this.get('version')
-    if (ver) {
-      let versionString = ver.split('-') //Split the string with '-'
-      ver = versionString.length ? versionString[0] : ver
-    }
-    return ver
+    return (this.get('version') || '').split('-').shift()
   },
   appIcon() {
     return this.get('icon')
   },
-  // Version from app store
+  // Version from app store (with commit hash)
   appFullVersion() {
     return this.get('version')
   },
