@@ -6,6 +6,7 @@
   - [Settings](/plugins/settings.md)
   - [Log](/plugins/log.md)
   - [Metrics](/plugins/metrics.md)
+  - [Metadata](/plugins/metadata.md)
   - [Profile](/plugins/profile.md)
   - [Purchase](/plugins/purchase.md)
   - [Language](/plugins/language.md)
