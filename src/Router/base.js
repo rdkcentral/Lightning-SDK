@@ -19,6 +19,8 @@
 
 import Lightning from '../Lightning'
 import { default as Router } from './index'
+import { routerConfig } from './utils/router.js'
+import { isBoolean } from './utils/helpers'
 
 export class RoutedApp extends Lightning.Component {
   static _template() {
@@ -84,7 +86,16 @@ export class RoutedApp extends Lightning.Component {
         }
 
         _handleKey() {
-          Router.focusPage()
+          const restoreFocus = routerConfig.get('autoRestoreRemote')
+          /**
+           * The Router used to delegate focus back to the page instance on
+           * every unhandled key. This is barely usefull in any situation
+           * so for now we offer the option to explicity turn that behaviour off
+           * so we don't don't introduce a breaking change.
+           */
+          if (!isBoolean(restoreFocus) || restoreFocus === true) {
+            Router.focusPage()
+          }
         }
       },
     ]

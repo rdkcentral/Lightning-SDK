@@ -50,7 +50,7 @@ export const types = {
 const execProvider = request => {
   const route = request.route
   const provider = route.provider
-  const expires = 0
+  const expires = route.cache ? route.cache * 1000 : 0
   const params = addPersistData(request)
   return provider.request(request.page, { ...params }).then(() => {
     request.page[symbols.expires] = Date.now() + expires

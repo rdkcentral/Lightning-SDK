@@ -79,7 +79,9 @@ export const load = async request => {
       return request.page
     }
   } catch (request) {
-    if (!expired) {
+    if (!request.route) {
+      console.error(request)
+    } else if (!expired) {
       // @todo: revisit
       const { route } = request
       // clean up history if modifier is set
