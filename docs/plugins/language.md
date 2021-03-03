@@ -12,11 +12,9 @@ import { Language } from '@lightningjs/sdk'
 
 ### Loading on Boot
 
-You can automatically load and initialize the Language plugin when your App boots, by specifying a `static` method `language()`
-on the `App` class in **src/App.js**.
+You can automatically load and initialize the Language plugin when your App boots, by specifying a `static` method `language()` on the `App` class in **src/App.js**.
 
-The `language` method returns the language to be used on initialization. This can either be a string or a promise that resolves a
-string with the language code.
+The `language` method should return the language to be used on initialization. This can either be a string or a Promise that resolves to a string with the language code.
 
 ```js
 export default class App extends Lightning.Component {
@@ -26,7 +24,7 @@ export default class App extends Lightning.Component {
     return 'en'
     // or string retrieved from Storage
     return Storage.get('selectedLanguage')  || 'en'
-    // or a promise (e.g. using the Profile plugin)
+    // or a Promise (e.g. using the Profile plugin)
     return Profile.language()
   }
 
@@ -35,7 +33,9 @@ export default class App extends Lightning.Component {
 
 ### Translations File
 
-By default, the Language plugin expects a file with translations in JSON format, called **translations.json**, which is located in the **static** folder of your App.
+An important prerequisite for using the Language plugin is a file with translations in JSON format, which is by default called **translations.json** and located in the **static** folder of your App.
+
+> It is important that you create this file before using the Language plugin.
 
 If you want, you can specify a different name and / or location for your translations file, or even host it on a remote CDN.
 You can configure this via the `static` method `language()` on **App.js**, by returning an object with a `file` and a
@@ -143,14 +143,14 @@ Language.set(languageCode).then(() => {
 }).catch()
 ```
 
-The `set` method returns a promise that resolves when the `Language` has been properly changed.
+The `set` method returns a Promise that resolves when the `Language` has been properly changed.
 Setting the language is *instant* for translations specified inline in the **translations.json** file.
 For external language files, an *asynchronous* load request will be made.
 
 The language code should match with one of the language keys specified in your **translations.json**.
 
 The `map` option in the `meta` key of your translations file can be used to specify *aliases*, and as such can be used
-to map different ISO codes (i.e., en-GB, en-US) to a single language key (en).
+to map different ISO codes (e.g., en-GB, en-US) to a single language key (en).
 
 If you have specified a `default` language in the `meta` key of your translations file, the Language plugin will use
 that as a *fallback* if no matching language was found.

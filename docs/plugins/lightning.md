@@ -1,6 +1,6 @@
 # Lightning
 
-The Lightning SDK is built on top of Lightning (Core), but it also exposes Lightning as a module that can be imported in your App. In other words, there is no need to install Lightning Core as a separate dependency.
+The Lightning SDK exposes Lightning as a module that can be imported in your App. In other words, there is no need to install Lightning Core as a separate dependency.
 
 You use Lightning in every component, since components extend the `Lightning component` base class.
 
@@ -10,7 +10,7 @@ Apart from that, you can use Lightning to take advantage of the default texture 
 
 ### Extending the Lightning Component
 
-In addition to *importing* Lightning from the Lightning SDK, you must *extend* the Lightning component in *all* components of your App (including the main `App` component in the **App.js** file):
+It is required that *all* components in your App (including the main App) extend the Lightning component.
 
 ```js
 import { Lightning } from '@lightningjs/sdk'

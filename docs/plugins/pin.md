@@ -34,7 +34,7 @@ Pin.hide()
 
 ### submit
 
-Sends a Pin code to the middleware layer for verification. If the code is correct, the STB is unlocked.
+Sends a Pin code to the middleware layer for verification. If the code is correct, the STB will be unlocked.
 
 The `submit` method is automatically invoked when you are using the built-in **Pin** dialog. Use this method for sending the Pin code *only* if you are making a fully custom **Pin** dialog in your App.
 
@@ -44,13 +44,11 @@ Pin.submit('0000')
   .catch(e => console.log('Pin error', e))
 ```
 
-If the supplied Pin code is correct, the `submit` method returns a *promise* which resolves with 'true' and the STB is successfully unlocked.
+The `submit` method returns a *Promise*. If the supplied Pin code is correct, the Promise resolves with `true` and the STB will be unlocked. If the Pin code is wrong, the Promise resolves with `false`.
 
-If the Pin code is wrong, the returned promise resolves with 'false'. If the middleware is unable to unlock the STB, the promise is
-*rejected* (with an optional error message).
+If the middleware is unable to unlock the STB, the Promise is *rejected* (with an optional error message).
 
-The default Pin code is  `0000`. Optionally, you can overwrite the default Pin code during development by editing the
-**settings.json** file and adding the key `pin` as a Platform Setting with a different (valid) Pin code.
+During development, the default Pin code is  `0000`. Optionally, you can overwrite the default Pin code during development by editing the **settings.json** file and adding the key `pin` as a Platform Setting with a different valid Pin code.
 
 ### unlocked
 
@@ -64,9 +62,9 @@ Pin.unlocked()
       console.log('STB is locked'))
 ```
 
-The `unlocked` method returns a *promise* which resolves to 'true'  if the device is *unlocked* or to 'false' if the device is *locked*.
+The `unlocked` method returns a *Promise* which resolves with `true` if the device is *unlocked*, or with `false` if the device is *locked*.
 
-If the middleware is unable to retrieve the current state, the promise is *rejected*.
+If the middleware is unable to retrieve the current state, the Promise is *rejected*.
 
 ### locked
 
@@ -80,7 +78,7 @@ Pin.locked()
       console.log('STB is unlocked'))
 ```
 
-The `locked` method is the *exact* counterpart of the `unlocked` method. It returns a *promise* which resolves to 'true' if
-the device is *locked* or to 'false' if the device is *unlocked*.
+The `locked` method is the *exact* counterpart of the `unlocked` method. It returns a *Promise* which resolves to `true` if
+the device is *locked* or to `false` if the device is *unlocked*.
 
-If the middleware is unable to retrieve the current state, the promise is *rejected*.
+If the middleware is unable to retrieve the current state, the Promise is *rejected*.

@@ -6,6 +6,8 @@ Because each operator or platform might implement user profile information in a 
 
 You can also use the Profile plugin to *update* profile information.
 
+> The profile information that can actually be updated, depends on the operator or platform.
+
 ## Usage
 
 If you need Profile information, import the Profile plugin from the Lightning SDK:
@@ -16,7 +18,9 @@ import { Profile } from '@lightningjs/sdk'
 
 ## Available Methods
 
-If you call one of the methods below *without* parameters, it returns the Profile information in the form of a *promise*. If you pass parameters, the method *updates* the Profile information.
+If you call one of the methods below *without* parameters, it returns the Profile information in the form of a *promise*.
+
+If you pass parameters, the method will *attempt to update* the Profile information. The information that can actually be updated, depends on the operator / platform.
 
 ### ageRating
 
@@ -68,7 +72,7 @@ Profile.household()
 
 ### language
 
-Gets the user's mother language. During *local development*, it attempts to return the browser's language with `en` as default.
+Gets the user's language, based on the currently set locale. During *local development*, it attempts to return the browser's language with `en` as default.
 
 ```js
 Profile.language()
