@@ -25,7 +25,7 @@ Either *[retrieves](#retrieve-current-channel)* information about the TV channel
 TV.channel().then(channel => console.log(channel))
 ```
 
-The `channel` method returns a *promise* that returns the channel information as an object.
+The `channel` method returns a *Promise* that returns the channel information as an object.
 
 During *development*, the `channel` method returns a *random mocked channel*. Optionally, you can [overwrite](#overwriting-default-values) the default values by editing the **settings.json** file. For example:
 
@@ -46,7 +46,7 @@ TV.channel(channelNumber).then(channel => console.log(channel))
 ```
 
 If a `channelNumber` is passed as an argument, the `channel` method attempts to change the TV channel.
-It returns a *promise* that returns the channel information as an object.
+It returns a *Promise* that returns the channel information as an object.
 
 During *development*, you can pass either 1, 2 or 3 as the `channelNumber`, so that one of the default mocked channels can be selected.
 
@@ -61,7 +61,7 @@ Retrieves information about the TV program that is currently being watched.
 TV.program().then(program => console.log(program))
 ```
 
-The `program` method returns a *promise* that returns the program information as an object.
+The `program` method returns a *Promise* that returns the program information as an object.
 
 During *development*, the `program` method returns a mocked program that is linked to a random mocked channel. Optionally, you can [overwrite](#overwriting-default-values) the default values by editing the **settings.json** file. For example:
 
@@ -83,7 +83,7 @@ Indicates whether the user is entitled to watch the current TV channel or not.
 TV.entitled().then(entitled => console.log(entitled))
 ```
 
-The `entitled` method returns a *promise* that returns 'true' if the user is entitled and 'false' if not.
+The `entitled` method returns a *Promise* that returns `true` if the user is entitled and `false` if not.
 
 During *development*, the `entitled` method returns the entitlement value of the random mocked channel. Optionally, you can [overwrite](#overwriting-default-values) the default values by editing the **settings.json** file.
 

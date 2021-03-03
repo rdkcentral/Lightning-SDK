@@ -44,7 +44,7 @@ The value of `widgets` must be an Array that contains the `refs` of the widgets 
 }
 ```
 
-If you apply  `Router.navigate('discover/player/998/29174')`, the `visible` property of both `Notification` and `StatusBar` is set to 'true'.
+If you apply  `Router.navigate('discover/player/998/29174')`, the `visible` property of both `Notification` and `StatusBar` is set to `true`.
 
 ## Handling Focus
 

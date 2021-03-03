@@ -20,7 +20,7 @@ The configuration object can contain five different
 The `root` key indicates which route path must be used as *entry point* of your App if *no* location hash is specified
 in the URL.
 
-The value of `root` should be a *String*, or a *function* that returns a *promise* that resolves to a String.
+The value of `root` should be a *String*, or a *function* that returns a *Promise* that resolves to a String.
 The value must match the *path* of one of the defined routes.
 
 Typically, you either specify the path to a **Splash** or **Home** page as `root`:
@@ -44,7 +44,7 @@ or you specify a function:
 ```js
 export default {
   root: () => {
-    return new promise((resolve) => {
+    return new Promise((resolve) => {
         if(authenticated) {
             resolve('browse')
         }else{
@@ -62,7 +62,7 @@ the **Splash** page.
 
 The `boot` key provides the ability to execute functionality *before* the Router loads the first page. For example, this key can be applied to obtain API tokens.
 
-If so required, you can specify a *function*  in the `boot` key of the configuration object. This function must return a *promise*. If the promise resolves, the Router initiates the navigation process.
+If so required, you can specify a *function*  in the `boot` key of the configuration object. This function must return a *Promise*. If the Promise resolves, the Router initiates the navigation process.
 
 The `boot` function is not only executed when you open the root of your App, but is also invoked when you open
 a [deeplinked](deeplinking.md) location in the App.
@@ -70,7 +70,7 @@ a [deeplinked](deeplinking.md) location in the App.
 ```js
 export default {
     boot: () => {
-        return new promise(resolve => {
+        return new Promise(resolve => {
             Api.getToken().then(() => {
                 resolve()
             })
@@ -87,7 +87,7 @@ For example, if you point the browser to: `localhost:8080#splash?deviceId=1801&a
 export default {
     boot: (qs) => {
         // qs => { deviceId: '1801', partnerId: '145' }
-        return promise.resolve()
+        return Promise.resolve()
     }
 }
 ```
@@ -103,7 +103,7 @@ import { Splash } from './pages',
 
 export default {
     boot: () => {
-        return new promise(resolve => {
+        return new Promise(resolve => {
             Api.getToken().then(() => {
                 resolve();
             })
@@ -123,14 +123,14 @@ The `beforeEachRoute` key is a global hook that is invoked right after starting 
 
 Based on the `from` and `to` parameters that are passed by the Router to the hook, you can decide to *continue*, *stop* or *redirect* the `navigate`.
 
-The hook must resolve to a *promise*. If it resolves to 'true', the Router continues the process. If it resolves to 'false', the process is aborted.
+The hook must resolve to a *Promise*. If it resolves to `true`, the Router continues the process. If it resolves to `false`, the process is aborted.
 
 ```js
 {
     ...
     routes:[...],
     beforeEachRoute: (from, to)=>{
-        return new promise((resolve)=>{
+        return new Promise((resolve)=>{
              if(to === "home/account" &amp;&amp; auth){
                  resolve(true)
              }
@@ -319,15 +319,15 @@ For example:
 
 ### preventStorage
 
-Indicates whether or not to prevent a route from storage in history. Possible values: 'true' or 'false' (default).
+Indicates whether or not to prevent a route from storage in history. Possible values: `true` or `false` (default).
 
 ### clearHistory
 
-Indicates whether or not to reset the history of a route when that route is visited. Possible values: 'true' or 'false' (default).
+Indicates whether or not to reset the history of a route when that route is visited. Possible values: `true` or `false` (default).
 
 ### reuseInstance
 
-Indicates whether or not to reuse the current Page instance. Possible values: 'true' (default) or 'false'.
+Indicates whether or not to reuse the current Page instance. Possible values: `true` (default) or `false`.
 
 When the new hash that you navigate to, shares the same route and the previous:
 
@@ -348,7 +348,7 @@ It follows the same rules as the [global ](#beforeeachroute) hook `beforeEachRou
     path: 'player/:playlistId${/[0-9]{3,8}/i}',
     component: Player,
     beforeNavigate:(from)=>{
-        return new promise((resolve)=>{
+        return new Promise((resolve)=>{
              if(from === "home/browse/adventure"){
                  resolve(true)
              }

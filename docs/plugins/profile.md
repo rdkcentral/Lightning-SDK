@@ -18,7 +18,7 @@ import { Profile } from '@lightningjs/sdk'
 
 ## Available Methods
 
-If you call one of the methods below *without* parameters, it returns the Profile information in the form of a *promise*.
+If you call one of the methods below *without* parameters, it returns the Profile information in the form of a *Promise*.
 
 If you pass parameters, the method will *attempt to update* the Profile information. The information that can actually be updated, depends on the operator / platform.
 
@@ -84,7 +84,7 @@ Gets the user's latitude and longitude.
 
 During *local development*, it returns the user's actual latitude and longitude from a remote API service. If unsuccessful, it defaults to `[40.7128, 74.006]`.
 
-If, during *local development*, you want to force to use the browser's built-in *geolocation* for retrieving the latitude and longitude, add the key `forceBrowserGeolocation` with the value 'true' as a Platform Setting in **settings.json**.
+If, during *local development*, you want to force to use the browser's built-in *geolocation* for retrieving the latitude and longitude, add the key `forceBrowserGeolocation` with the value `true` as a Platform Setting in **settings.json**.
 
 ```js
 Profile.latLon()

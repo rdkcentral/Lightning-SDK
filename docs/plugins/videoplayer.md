@@ -163,8 +163,8 @@ VideoPlayer.playPause()
 
 Mutes or unmutes the video player, depending on its current state.
 
-The `mute` method accepts a Boolean as its single argument. When passed 'true' (or when omitted), it mutes the video player.
-When passed 'false', it sets the video player to unmuted.
+The `mute` method accepts a Boolean as its single argument. When passed `true` (or when omitted), it mutes the video player.
+When passed `false`, it sets the video player to unmuted.
 
 ```js
 // mute a video
@@ -177,9 +177,9 @@ VideoPlayer.mute(false)
 
 Sets the loop state of the video player.
 
-The `loop` method accepts a Boolean as its single argument. When passed 'true' (or when omitted), it
+The `loop` method accepts a Boolean as its single argument. When passed `true` (or when omitted), it
 instructs the video player to loop (i.e., to restart the current video when it reaches the end). When
-passed 'false', it instructs the video player to *not* loop the video.
+passed `false`, it instructs the video player to *not* loop the video.
 
 ```js
 // loop a video
@@ -261,7 +261,7 @@ VideoPlayer.currentTime // e.g. 20.01 (seconds)
 
 ### muted
 
-Getter that retrieves the *mute state* of the video player ('true' or 'false').
+Getter that retrieves the *mute state* of the video player (`true` or `false`).
 
 ```js
 VideoPlayer.mute()
@@ -273,7 +273,7 @@ VideoPlayer.muted // false
 
 ### looped
 
-Getter that retrieves the *loop state* of the video player ('true' or 'false').
+Getter that retrieves the *loop state* of the video player (`true` or `false`).
 
 ```js
 VideoPlayer.loop()
@@ -296,7 +296,7 @@ VideoPlayer.src // http://commondatastorage.googleapis.com/gtv-videos-bucket/sam
 
 ### playing
 
-Getter that indicates whether the video player is currently in a *playing* state ('true') or a *paused* state ('false').
+Getter that indicates whether the video player is currently in a *playing* state (`true`) or a *paused* state (`false`).
 
 ```js
 VideoPlayer.play()
@@ -362,7 +362,7 @@ VideoPlayer.height // 540
 
 ### visible
 
-Getter that retrieves whether the video player is set to visible ('true') or hidden ('false').
+Getter that retrieves whether the video player is set to visible (`true`) or hidden (`false`).
 
 ```js
 VideoPlayer.show()

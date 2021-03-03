@@ -75,7 +75,7 @@ class MyApp extends Router.App{
 
 ### _onActivated(page)
 
-The `onActivated()` event is an event to which the Router widgets can listen. It is called when the Router changes the visibility to 'true'. The `page` parameter is the reference to the page instance that activated the widget.
+The `onActivated()` event is an event to which the Router widgets can listen. It is called when the Router changes the visibility to `true`. The `page` parameter is the reference to the page instance that activated the widget.
 
 #### NEXT:
 [Page Transitions](pagetransitions.md)

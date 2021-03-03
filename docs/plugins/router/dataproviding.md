@@ -12,7 +12,7 @@ You can only use *one* data providing callback type for each route.
 
 The data providing callbacks are configured in the *global* configuration object of the routes.
 
-> A data providing callback must always return a *promise* (which either *resolves* or *rejects*).
+> A data providing callback must always return a *Promise* (which either *resolves* or *rejects*).
 
 ## Callback Functions
 
@@ -26,7 +26,7 @@ The `on` data provider shows the Loader, performs the data request, hides the Lo
     // page instance and dynamic url data
     // will be available in the callback
     on: (page, {playlistId, assetId}) => {
-        return new promise((resolve, reject)=>{
+        return new Promise((resolve, reject)=>{
             // do a request
             doRequest.then((lists)=>{
                 // set property on the page

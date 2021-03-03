@@ -59,7 +59,7 @@ Settings.set(key, value)
 
 ### has
 
-Returns 'true' or 'false', depending on whether a setting is defined or not.
+Returns `true` or `false`, depending on whether a setting is defined or not.
 
 ```js
 Settings.has(type, key)

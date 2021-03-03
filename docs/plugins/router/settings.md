@@ -31,31 +31,31 @@ The settings are described below.
 
 ### lazyCreate
 
-If you enable *Lazy Creation* by setting `lazyCreate` to 'true', pages are not created until you actually *navigate* to a route.
+If you enable *Lazy Creation* by setting `lazyCreate` to `true`, pages are not created until you actually *navigate* to a route.
 
 By default, Lazy Creation is *disabled*. This results in faster navigation between pages, but is also more memory-consuming.
 
 ### lazyDestroy
 
-If you enable *Lazy Destroy* by setting `lazyDestroy` to 'true', pages from which you navigate, are removed from the [Render Tree](../../../lightning-core-reference/RenderEngine/RenderTree.md) (and thus from memory).
+If you enable *Lazy Destroy* by setting `lazyDestroy` to `true`, pages from which you navigate, are removed from the [Render Tree](../../../lightning-core-reference/RenderEngine/RenderTree.md) (and thus from memory).
 
 By default, Lazy Destroy is *disabled*. This results in faster navigating back to a previous page, but also is more memory-consuming.
 
 ### gcOnUnload
 
-If you want to free up texture memory *directly* after a previous page has been destroyed and you do not want to wait for Lightning's (texture) garbage collection, you can set `gcOnUnload` to 'true'. This forces a texture garbage collect directly after destroying the page.
+If you want to free up texture memory *directly* after a previous page has been destroyed and you do not want to wait for Lightning's (texture) garbage collection, you can set `gcOnUnload` to `true`. This forces a texture garbage collect directly after destroying the page.
 
 ### backtracking
 
-If you want to enable *backtracking* in your app, you set `backtracking` to 'true'.
+If you want to enable *backtracking* in your app, you set `backtracking` to `true`.
 
 ### destroyOnHistoryBack
 
-If you want to remove a page from memory *only* when it is unloaded after doing a step back in history  (see [Router History](history.md#back) for more information), you can set `lazyDestroy` to 'false' and `destroyOnHistoryBack` to 'true'.
+If you want to remove a page from memory *only* when it is unloaded after doing a step back in history  (see [Router History](history.md#back) for more information), you can set `lazyDestroy` to `false` and `destroyOnHistoryBack` to `true`.
 
 ### updateHash
 
-If you do *not* want the Router to update the hash on a `navigate`, you can set `updateHash` to 'false'.
+If you do *not* want the Router to update the hash on a `navigate`, you can set `updateHash` to `false`.
 
 ### reuseInstance
 
