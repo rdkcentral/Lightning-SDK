@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.1.1
+
+*3 march 2021*
+
+- Fixed bug in Registry plugin (removing interval from reference list after first invocation)
 
 ## v4.1.0
 
