@@ -62,7 +62,7 @@ export default {
   setInterval(cb, interval, ...params) {
     const intervalId = setInterval(
       () => {
-        registry.intervals = registry.intervals.filter(id => id !== intervalId)
+        registry.intervals.filter(id => id !== intervalId)
         cb.apply(null, params)
       },
       interval,
