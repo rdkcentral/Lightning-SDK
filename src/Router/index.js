@@ -95,8 +95,12 @@ const start = () => {
       if (isString(rootHash)) {
         navigate(rootHash)
       } else if (isFunction(rootHash)) {
-        rootHash().then(url => {
-          navigate(url)
+        rootHash().then(res => {
+          if (isObject(res)) {
+            navigate(res.path, res.params)
+          } else {
+            navigate(res)
+          }
         })
       }
     } else {
