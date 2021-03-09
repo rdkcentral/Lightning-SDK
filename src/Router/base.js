@@ -123,12 +123,6 @@ export class RoutedApp extends Lightning.Component {
   _handleBack() {}
 
   /**
-   * we MUST register _captureKey for dev quick-navigation
-   * (via keyboard 1-9)
-   */
-  _captureKey() {}
-
-  /**
    * We MUST return Router.activePage() so the new Page
    * can listen to the remote-control.
    */

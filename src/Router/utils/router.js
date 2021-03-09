@@ -104,6 +104,15 @@ export let beforeEachRoute = async (from, to)=>{
 }
 
 /**
+ * Will be called after a navigate successfully resolved,
+ * can be overridden via routes config
+ * @param request - request object
+ */
+export let afterEachRoute = async request => {
+  return true
+}
+
+/**
  * All configured routes
  * @type {Map<string, object>}
  */
@@ -162,7 +171,6 @@ const mixin = app => {
     step(-1)
     e.preventDefault()
   }
-  app._captureKey = capture.bind(null)
 }
 
 export const bootRouter = (config, instance) => {
@@ -232,6 +240,9 @@ const init = config => {
   }
   if (isFunction(config.beforeEachRoute)) {
     beforeEachRoute = config.beforeEachRoute
+  }
+  if (isFunction(config.afterEachRoute)) {
+    afterEachRoute = config.afterEachRoute
   }
   if (config.bootComponent) {
     if (isPage(config.bootComponent)) {
@@ -318,6 +329,10 @@ export const onRequestResolved = request => {
   activeHash = request.hash
   activeRoute = route.path
 
+  afterEachRoute(request).then(() => {
+    // silent
+  })
+
   Log.info('[route]:', route.path)
   Log.info('[hash]:', hash)
 }
@@ -362,42 +377,6 @@ const cleanUp = (page, request) => {
       visible: false,
     })
   }
-}
-
-/**
- * Capture each keypress so we can quick-nav
- * to defined routes
- * @param key
- * @returns {boolean}
- */
-const capture = ({ key }) => {
-  // in Loading state we want to stop propagation
-  // by returning true explicitly
-  if (app.state === 'Loading') {
-    return true
-  }
-  // if not set we want to continue propagation
-  // by explicitly returning false
-  if (!routerConfig.get('numberNavigation')) {
-    return false
-  }
-  key = parseInt(key)
-  if (!isNaN(key)) {
-    let match
-    let idx = 1
-    for (let route of routes.keys()) {
-      if (idx === key) {
-        match = route
-        break
-      } else {
-        idx++
-      }
-    }
-    if (match) {
-      navigate(match)
-    }
-  }
-  return false
 }
 
 export const getActiveHash = () => {
