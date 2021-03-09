@@ -162,7 +162,6 @@ const mixin = app => {
     step(-1)
     e.preventDefault()
   }
-  app._captureKey = capture.bind(null)
 }
 
 export const bootRouter = (config, instance) => {
@@ -362,42 +361,6 @@ const cleanUp = (page, request) => {
       visible: false,
     })
   }
-}
-
-/**
- * Capture each keypress so we can quick-nav
- * to defined routes
- * @param key
- * @returns {boolean}
- */
-const capture = ({ key }) => {
-  // in Loading state we want to stop propagation
-  // by returning true explicitly
-  if (app.state === 'Loading') {
-    return true
-  }
-  // if not set we want to continue propagation
-  // by explicitly returning false
-  if (!routerConfig.get('numberNavigation')) {
-    return false
-  }
-  key = parseInt(key)
-  if (!isNaN(key)) {
-    let match
-    let idx = 1
-    for (let route of routes.keys()) {
-      if (idx === key) {
-        match = route
-        break
-      } else {
-        idx++
-      }
-    }
-    if (match) {
-      navigate(match)
-    }
-  }
-  return false
 }
 
 export const getActiveHash = () => {
