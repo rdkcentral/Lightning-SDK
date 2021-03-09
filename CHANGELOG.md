@@ -1,5 +1,16 @@
 # Changelog
 
+## v4.x.x
+
+- Router updates
+    - Root function can now resolve object
+    - Fixed `preventStorage` setting 
+    - Fixed page cache
+    - `location.hash` now gets set on `hashchange` disabled
+    - Added support to prevent auto widget focus restore
+    - Improved error notification
+    - Exposed internal Symbols mapping
+    
 
 ## v4.1.0
 
