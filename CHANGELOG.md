@@ -8,6 +8,7 @@
     - Fixed page cache
     - `location.hash` now gets set on `hashchange` disabled
     - Added support to prevent auto widget focus restore
+    - Added `afterEachRoute()` support
     - Improved error notification
     - Exposed internal Symbols mapping
     
