@@ -104,6 +104,15 @@ export let beforeEachRoute = async (from, to)=>{
 }
 
 /**
+ * Will be called after a navigate successfully resolved,
+ * can be overridden via routes config
+ * @param request - request object
+ */
+export let afterEachRoute = async request => {
+  return true
+}
+
+/**
  * All configured routes
  * @type {Map<string, object>}
  */
@@ -232,6 +241,9 @@ const init = config => {
   if (isFunction(config.beforeEachRoute)) {
     beforeEachRoute = config.beforeEachRoute
   }
+  if (isFunction(config.afterEachRoute)) {
+    afterEachRoute = config.afterEachRoute
+  }
   if (config.bootComponent) {
     if (isPage(config.bootComponent)) {
       config.routes.push({
@@ -316,6 +328,10 @@ export const onRequestResolved = request => {
 
   activeHash = request.hash
   activeRoute = route.path
+
+  afterEachRoute(request).then(() => {
+    // silent
+  })
 
   Log.info('[route]:', route.path)
   Log.info('[hash]:', hash)
