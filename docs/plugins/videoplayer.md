@@ -95,6 +95,69 @@ const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/samp
 VideoPlayer.open(videoUrl)
 ```
 
+### Loader
+
+The default sequence for loading a new video in the VideoPlayer plugin, is to set the `src` of the Video tag and subsequently call `load()` on the Video tag.
+
+When you want to have more control over the loading sequence, you can use the `VideoPlayer.loader()` function to override the default loading behaviour. This can be useful when you want to implement a custom video client library, such as HLS.js or ShakaPlayer, in combination with the SDK's VideoPlayer plugin.
+
+The `loader`-method accepts a custom loader function as it's only argument. The custom loader function is invoked every time a new
+video is opened (via `VideoPlayer.open()`). The custom loader function has to return a Promise that is resolved as soon as the
+Video tag is ready to receive a `play` event. The custom loader function receives 3 arguments: the url passed to the `open()`-method,
+a reference to the video tag and an optional configuration object (passed as the second argument of the `open`-method).
+
+```js
+const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+
+// Note: this is in fact the default loader function
+const myLoader = (url, videoEl, config) => {
+  return new Promise(resolve => {
+    videoEl.setAttribute('src', url)
+    videoEl.load()
+    resolve()
+  })
+}
+
+VideoPlayer.loader(myLoader)
+VideoPlayer.open(url)
+```
+
+<!-- Todo: add hls.js example, or better: link to the video player reference app with example -->
+
+The loader function will stay configured between video opens, but you can reinstantiate it for every open if needed.
+If you want to unset the custom loader, simply call `VideoPlayer.loader()` without passing any argument.
+
+
+### Unloader
+
+The default sequence for unloading a video in the VideoPlayer plugin, is to remove the `src` of the Video tag and subsequently call `load()` on the Video tag.
+
+When you want to have more control over the unloading sequence, you can use the `VideoPlayer.unloader()` function to override the default unloading behaviour. This can be useful when you've utilized the `loader` method to specify custom loading functionality.
+For example you could make sure that an instance of HLS.js is properly destroyed and cleaned up in the custom unloading function.
+
+The `unloader`-method accepts a custom unloading function as it's only argument. The custom unloader function is invoked every time the `VideoPlayer.clear()` or `VideoPlayer.close()` method is called.
+
+The custom unloader function has to return a Promise that is resolved as soon as the video player is properly cleaned up. The custom unloader function receives a reference to the video tag as it's only argument.
+
+```js
+// Note: this is in fact the default unloader function
+const myUnloader = (url, videoEl, config) => {
+  new Promise(resolve => {
+    videoEl.removeAttribute('src')
+    videoEl.load()
+    resolve()
+  })
+}
+
+VideoPlayer.unloader(myUnLoader)
+VideoPlayer.open(url)
+```
+
+<!-- Todo: add hls.js example, or better: link to the video player reference app with example -->
+
+The unloader function will stay configured between video opens, but you can reinstantiate it for every open if needed.
+If you want to unset the custom unloader, simply call `VideoPlayer.unloader()` without passing any argument.
+
 ### reload
 
 Stops the current playing video and restarts it from the beginning.
