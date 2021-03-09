@@ -1,6 +1,8 @@
 # Changelog
 
-## v4.x.x
+## v4.2.0
+
+*9 march 2021*
 
 - Router updates
     - Root function can now resolve object
@@ -11,6 +13,9 @@
     - Added `afterEachRoute()` support
     - Improved error notification
     - Exposed internal Symbols mapping
+- Added Metadata plugin
+- Added Colors plugin
+- Added `loader` and `unloader` functionality to the VideoPlayer plugin
 
 ## v4.1.1
 
