@@ -43,9 +43,7 @@
     - Fixed navigating to same hash when navigating
     - Deprecated Router.setupRoutes() - method
   - Deprecations
-    - Deprecated Router.on() - data providing must be defined in route object
-    - Deprecated Router.before()
-    - Deprecated Router.after()
+    - Deprecated calling on() | before() | after() directly - data providers must be defined in route object: https://rdkcentral.github.io/Lightning-SDK/#/plugins/router/dataproviding
     - Deprecated duplicate route definitions
 - Removed SDK namespace replacement functionality from postinstall script
 
