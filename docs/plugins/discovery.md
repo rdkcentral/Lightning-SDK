@@ -42,13 +42,26 @@ Discovery.entitlements([
 ### Watched
 Adds a content the user's watch history to enable platform home screen awareness.
 
-Takes an array of watched items:
+Takes details on what was watched:
+
+```json
+Discovery.watched(contentId, watchedOn, progress, completed)
+```
+
+`contentId` - the content identifier of what was watched
+`watchedOn` - the date/time the user watched
+`progress` - the most recent percentile position (> 0, <= 1) the user reached while watching
+`completed` - whether or not the app considers this content fully watched, e.g. the credits have been reached
+
+or an array of the same details, for a bulk update:
 
 ```json
 Discovery.watched([
   {
     "contentId": "http://content/some/canonical/id",
-    "watchedOn": "2022-04-23T18:25:43.511Z"
+    "watchedOn": "2022-04-23T18:25:43.511Z",
+    "progress": 0.5,
+    "completed": false
   }
 ])
 ```
