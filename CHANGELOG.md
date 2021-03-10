@@ -1,17 +1,27 @@
 # Changelog
 
-## v4.x.x
+## v4.2.0
+
+*9 march 2021*
 
 - Router updates
     - Root function can now resolve object
-    - Fixed `preventStorage` setting 
+    - Fixed `preventStorage` setting
     - Fixed page cache
     - `location.hash` now gets set on `hashchange` disabled
     - Added support to prevent auto widget focus restore
     - Added `afterEachRoute()` support
     - Improved error notification
     - Exposed internal Symbols mapping
-    
+- Added Metadata plugin
+- Added Colors plugin
+- Added `loader` and `unloader` functionality to the VideoPlayer plugin
+
+## v4.1.1
+
+*3 march 2021*
+
+- Fixed bug in Registry plugin (removing interval from reference list after first invocation)
 
 ## v4.1.0
 

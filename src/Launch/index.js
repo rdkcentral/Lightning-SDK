@@ -28,12 +28,14 @@ import { initAds } from '../Ads'
 import { initRouter } from '../Router'
 import { initTV } from '../TV'
 import { initPurchase } from '../Purchase'
+import { initMetadata } from '../Metadata'
 import Application from '../Application'
 
 export let ApplicationInstance
 
 export default (App, appSettings, platformSettings, appData) => {
   initSettings(appSettings, platformSettings)
+  initMetadata(appSettings)
 
   initUtils(platformSettings)
   initStorage()
