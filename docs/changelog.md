@@ -1,5 +1,27 @@
 # Changelog
 
+## v4.2.0
+
+*9 march 2021*
+
+- Router updates
+    - Root function can now resolve object
+    - Fixed `preventStorage` setting
+    - Fixed page cache
+    - `location.hash` now gets set on `hashchange` disabled
+    - Added support to prevent auto widget focus restore
+    - Added `afterEachRoute()` support
+    - Improved error notification
+    - Exposed internal Symbols mapping
+- Added Metadata plugin
+- Added Colors plugin
+- Added `loader` and `unloader` functionality to the VideoPlayer plugin
+
+## v4.1.1
+
+*3 march 2021*
+
+- Fixed bug in Registry plugin (removing interval from reference list after first invocation)
 
 ## v4.1.0
 
@@ -32,9 +54,7 @@
     - Fixed navigating to same hash when navigating
     - Deprecated Router.setupRoutes() - method
   - Deprecations
-    - Deprecated Router.on() - data providing must be defined in route object
-    - Deprecated Router.before()
-    - Deprecated Router.after()
+    - Deprecated calling on() | before() | after() directly - data providers must be defined in route object: https://rdkcentral.github.io/Lightning-SDK/#/plugins/router/dataproviding
     - Deprecated duplicate route definitions
 - Removed SDK namespace replacement functionality from postinstall script
 
