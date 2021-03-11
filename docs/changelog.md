@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.2.1
+
+*9 march 2021*
+
+- Fixed Router `navigate()` always adding new queue entry
+
 ## v4.2.0
 
 *9 march 2021*

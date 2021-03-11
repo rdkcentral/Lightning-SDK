@@ -140,25 +140,37 @@ export const navigate = (url, args = {}, store = true) => {
       return
     }
   }
-  // push request in the queue
-  queue(url, args, store)
 
   let hash = getHash()
   if (!mustUpdateLocationHash() && forcedHash) {
     hash = forcedHash
   }
   if (hash.replace(/^#/, '') !== url) {
+    // push request in the queue
+    queue(url, args, store)
+
     setHash(url)
     if (!mustUpdateLocationHash()) {
       forcedHash = url
-      handleHashChange(url).then(() => {
-        app._refocus()
-      })
+      handleHashChange(url)
+        .then(() => {
+          app._refocus()
+        })
+        .catch(e => {
+          console.error(e)
+        })
     }
   } else if (args.reload) {
-    handleHashChange(url).then(() => {
-      app._refocus()
-    })
+    // push request in the queue
+    queue(url, args, store)
+
+    handleHashChange(url)
+      .then(() => {
+        app._refocus()
+      })
+      .catch(e => {
+        console.error(e)
+      })
   }
 }
 
