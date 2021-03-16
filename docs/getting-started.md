@@ -34,35 +34,38 @@ Whenever you want to review this documentation, you can run `lng docs` in the ro
 
 ## Fonts
 
-Lightning application can setup the fonts used across the application by implementing getFonts() method inside App component and returning the list of fonts to be used.
+Lightning application can setup the fonts used across the application by implementing getFonts() method inside Application main component and returning the array of fonts to be used.
 
 Example:
 
 ```js
     getFonts() {
-        return []
+        return [
+            {family: 'Roboto', url: Utils.asset('fonts/Roboto-Regular.ttf'), descriptors: {}},
+            {family: 'Roboto', url: Utils.asset('fonts/Roboto-Bold.ttf'), descriptors: {weight: 'bold'}}
+        ]
     }
-```
-We can also setup the fallback fonts in case if the provided fonts are not available. This can be done by providing the array of font.
 
-If we have a single font then the object should be of the below format :
-```js
-{
-    family: 'Great Vibes',
-    url: Utils.asset('fonts/GreatVibes-Regular.otf'),
-    descriptors: { weight: 'bold' }
-},
 ```
+We can also setup the fallback font files in case if the provided primary font files are not available. This can be done by providing the array of fonts for each family.
 
-If we have multiple fonts the object should be of the below format:
+Example:
+
 ```js
 {
     family: 'ChunkFive',
     urls: [
-        Utils.asset('fonts/ChunkFivePrint.otf'),
+        Utils.asset('fonts/ChunkFivePrint.ttf'),
         Utils.asset('fonts/Pacifico.ttf'),
-        Utils.asset('fonts/GreatVibes-Regular.otf'),
+        Utils.asset('fonts/GreatVibes-Regular.ttf'),
         ],
     descriptors: { weight: 'bold' }
 },
 ```
+In the above example,
+
+* *ChunkFivePrint.ttf* will be loaded, if it is available.
+* *Pacifico.ttf* will be loaded, if *ChunkFivePrint.ttf* is not available.
+* *GreatVibes-Regular.ttf* will be loaded, if both *ChunkFivePrint.ttf* & *Pacifico.ttf* are not available.
+
+
