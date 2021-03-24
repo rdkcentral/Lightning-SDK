@@ -1,5 +1,6 @@
 import loader from './loader'
 import { isFunction, isObject, isArray } from './utils'
+import Audio from './audio'
 
 let AudioCtx
 let ctx
@@ -28,6 +29,7 @@ const init = () => {
       gainNode = ctx.createGain()
     }
   }
+  Audio.prototype._audioContext = ctx
   initialized = true
 }
 
@@ -95,117 +97,37 @@ const processSounds = async sounds => {
   }
 }
 
-const createAudioSource = config => {
-  const { identifier, offset, volume = 1.0, loop = false } = config
-
+const createAudioSource = (identifier) => {
   const source = ctx.createBufferSource()
   source.buffer = buffers.get(identifier)
-
-  if (gainNode) {
-    gainNode.gain.value = volume
-    gainNode.connect(ctx.destination)
-    source.connect(gainNode)
-    gainNode.connect(ctx.destination)
-  } else {
-    source.connect(ctx.destination)
-  }
-
-  source.loop = loop
   return source
 }
 
-const play = (identifier, offset = 0, volume) => {
-  let config = identifier
-
-  // support for config object
-  if (!isObject(config)) {
-    config = {
-      identifier,
-      offset,
-      volume,
-    }
+const play =  (identifier) => {
+  if(buffers.has(identifier)){
+    const source = createAudioSource(identifier)
+    const audio = new Audio()
+    audio.sourceNode = source
+    audio.duration = parseFloat(buffers.get(identifier).duration.toFixed(2))
+    allSourceNodes.set(identifier, audio)
+    return audio
+  } else {
+    console.error(`fx: ${identifier} not found`)
+    return {}
   }
-  return new Promise((resolve, reject) => {
-    if (buffers.has(config.identifier)) {
-      let sourceData, source
-      let props = {}
-
-      if(allSourceNodes.has(identifier)){
-        sourceData = allSourceNodes.get(identifier)
-        sourceData.node.stop()
-        props = sourceData.metadata
-      } else {
-        sourceData = {}
-        props.duration = parseFloat(buffers.get(config.identifier).duration.toFixed(2))
-      }
-
-      source = createAudioSource(config)
-
-      if(ctx.state == 'suspended') ctx.resume()
-
-      source.start(0, config.offset)
-      props.lastStartedAt = parseFloat(ctx.currentTime.toFixed(2))
-      props.playing = true
-      props.offset = config.offset ?  config.offset : 0
-      props.volume = config.volume
-      props.loop = config.loop
-
-      sourceData.node = source
-      sourceData.metadata = props
-      allSourceNodes.set(config.identifier, sourceData)
-
-      // if we're not looping we're waiting for onended
-      // event and then resolve; in case of a loop
-      // we return the AudioBufferSource
-      if (!config.loop) {
-        source.onended = () => {
-          resolve()
-        }
-      } else {
-        resolve(source)
-      }
-    } else {
-      reject(`fx: ${config.identifier} not found`)
-    }
-  })
 }
 
-const loop = async (identifier, volume) => {
-  let config = identifier
-  if (!isObject(config)) {
-    config = {
-      identifier,
-      volume,
-      loop: true,
-    }
-  }
-  return await play(config)
+const loop = (identifier) => {
+  const audio = play(identifier)
+  audio.loop()
+  return audio
 }
 
 const pause = async (identifier) => {
   if(allSourceNodes.has(identifier)){
-    const sourceData = allSourceNodes.get(identifier)
-
-    if(sourceData.metadata.playing){
-      sourceData.node.stop()
-      const pausedAt =  parseFloat(ctx.currentTime.toFixed(2));
-      const props = sourceData.metadata
-      const playedTime = parseFloat((pausedAt - props.lastStartedAt).toFixed(2))
-      let offset;
-      if(props.loop && playedTime > props.duration){
-        const numOfLoops = Math.floor((playedTime + props.offset)/props.duration)
-        offset = parseFloat(((playedTime + props.offset) - numOfLoops * props.duration).toFixed(2))
-      } else {
-        offset = parseFloat((props.offset + playedTime).toFixed(2))
-        if(props.loop &&  offset > props.duration){
-          offset = parseFloat((offset - props.duration).toFixed(2))
-        }
-      }
-
-      props.playing = false
-      props.offset = offset
-      sourceData.metadata = props
-      allSourceNodes.set(identifier, sourceData)
+    const audio = allSourceNodes.get(identifier)
+    if(audio.playing){
+      audio.pause()
     }
   } else {
     console.error(`${identifier} not playing`)
@@ -213,35 +135,21 @@ const pause = async (identifier) => {
 }
 
 const resume = async (identifier) => {
+
   if(allSourceNodes.has(identifier)){
-    const sourceData = allSourceNodes.get(identifier)
-    const source = sourceData.node
-    const props = sourceData.metadata
+    const audio = allSourceNodes.get(identifier)
 
-    if(!props.playing){
-
-      const config = {
-        identifier,
-        volume : props.volume,
-        loop: props.loop
-      }
-
-      const newSource = createAudioSource(config)
-      newSource.start(0, props.offset)
-
-      props.lastStartedAt = parseFloat(ctx.currentTime.toFixed(2))
-      props.playing = true
-      sourceData.node = newSource
-      sourceData.metadata = props
-      allSourceNodes.set(identifier, sourceData)
+    if(!audio.playing){
+      const newSource = createAudioSource(identifier, audio.loop)
+      audio.sourceNode = newSource
+      audio.start()
     }
   }
 }
 
 const stop = async (identifier) => {
   if(allSourceNodes.has(identifier)){
-    const source = allSourceNodes.get(identifier).node
-    source.stop()
+    allSourceNodes.get(identifier).stop()
     allSourceNodes.delete(identifier)
   }
 }
@@ -258,16 +166,15 @@ const resumeAll = async() => {
   }
 }
 
-const playAll = async(volume, offset = 0, loop = false) => {
-
+const playAll = async(config) => {
   for(let identifier of buffers.keys()){
-    let config = {
-      identifier,
-      volume,
-      offset,
-      loop
+    const audio = play(identifier)
+    if(isObject(config)){
+      for(let key in config){
+        audio[key](config[key])
+      }
     }
-    play(config)
+    audio.start()
   }
 }
 
@@ -275,14 +182,13 @@ const remove = async(identifier) => {
   if(buffers.has(identifier)){
     buffers.delete(identifier)
     if(allSourceNodes.has(identifier)){
-      allSourceNodes.get(identifier).node.stop()
+      allSourceNodes.get(identifier).sourceNode.stop()
       allSourceNodes.delete(identifier)
     }
   } else {
     console.error(`${identifier} not found`)
   }
 }
-
 
 
 export default {
@@ -301,5 +207,5 @@ export default {
   pauseAll,
   resumeAll,
   playAll,
-  remove
+  remove,
 }
