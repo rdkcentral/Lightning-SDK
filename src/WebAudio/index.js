@@ -7,7 +7,8 @@ let ctx
 let gainNode
 let buffers = new Map()
 let initialized = false
-let allSourceNodes = new Map()
+let allAudioInstances = new Map()
+let effectsBuffers = new Map()
 
 /**
  * Platform van override AudioContext constructor
@@ -37,7 +38,6 @@ const init = () => {
  * Start sound loading processs; optional provide
  * an context instance
  * @param config
- * @returns {Promise<void>}
  */
 const load = async (config = {}) => {
   if (config.audioContext) {
@@ -95,7 +95,38 @@ const processSounds = async sounds => {
   if (bufferList.size) {
     buffers = new Map([...bufferList, ...buffers])
   }
+  Audio.prototype._audioBuffers = buffers
 }
+
+/**
+ * Load the configured effects
+ * @param  effects
+ */
+const loadEffects = async (effects) => {
+
+    if(!isArray(effects)){
+      console.error('Effects must be an array')
+    }
+    const list = new Map()
+    effects.forEach((effect, index) => {
+      if(!Object.keys(effect).length){
+        return
+      }
+      const identifier = Object.keys(effect)[0]
+      if (!list.has(identifier)) {
+        list.set(identifier, effect[identifier])
+      } else {
+        console.error(`Duplicate effect: ${identifier}`)
+      }
+    })
+
+    const bufferList = await loader(ctx, list)
+
+    if (bufferList.size) {
+      effectsBuffers = new Map([...bufferList, ...effectsBuffers])
+    }
+    Audio.prototype._effectsBuffers = effectsBuffers
+  }
 
 const createAudioSource = (identifier) => {
   const source = ctx.createBufferSource()
@@ -103,98 +134,76 @@ const createAudioSource = (identifier) => {
   return source
 }
 
-const play =  (identifier) => {
-  if(buffers.has(identifier)){
-    const source = createAudioSource(identifier)
-    const audio = new Audio()
-    audio.sourceNode = source
-    audio.duration = parseFloat(buffers.get(identifier).duration.toFixed(2))
-    allSourceNodes.set(identifier, audio)
-    return audio
+const getAudio = (identifier) => {
+  if(allAudioInstances.has(identifier)){
+    return allAudioInstances.get(identifier)
   } else {
-    console.error(`fx: ${identifier} not found`)
-    return {}
-  }
-}
-
-const loop = (identifier) => {
-  const audio = play(identifier)
-  audio.loop()
-  return audio
-}
-
-const pause = async (identifier) => {
-  if(allSourceNodes.has(identifier)){
-    const audio = allSourceNodes.get(identifier)
-    if(audio.playing){
-      audio.pause()
-    }
-  } else {
-    console.error(`${identifier} not playing`)
-  }
-}
-
-const resume = async (identifier) => {
-
-  if(allSourceNodes.has(identifier)){
-    const audio = allSourceNodes.get(identifier)
-
-    if(!audio.playing){
-      const newSource = createAudioSource(identifier, audio.loop)
-      audio.sourceNode = newSource
-      audio.start()
+    if(buffers.has(identifier)){
+      const audio = new Audio(identifier)
+      audio.duration = parseFloat(buffers.get(identifier).duration.toFixed(2))
+      allAudioInstances.set(identifier, audio)
+      return audio
+    } else {
+      console.error(`fx: ${identifier} not found`)
     }
   }
 }
 
-const stop = async (identifier) => {
-  if(allSourceNodes.has(identifier)){
-    allSourceNodes.get(identifier).stop()
-    allSourceNodes.delete(identifier)
+const play =  async (config) => {
+ for(let key of buffers.keys()){
+   const audio = getAudio(key)
+   if(audio){
+      if(config && isObject(config)){
+        for(let prop in config){
+          audio[prop](config[prop])
+        }
+      }
+      audio.play()
+   }
+ }
+}
+
+const stop = async () => {
+  for(let key of allAudioInstances.keys()){
+    allAudioInstances.get(key).stop()
   }
 }
 
-const pauseAll = async () => {
+const pause = async () => {
   if(ctx.state == 'running'){
     await ctx.suspend()
   }
 }
 
-const resumeAll = async() => {
+const resume = async() => {
   if(ctx.state == 'suspended'){
     await ctx.resume()
   }
 }
 
-const playAll = async(config) => {
-  for(let identifier of buffers.keys()){
-    const audio = play(identifier)
-    if(isObject(config)){
-      for(let key in config){
-        audio[key](config[key])
-      }
+const remove = async(identifiers) => {
+  if(identifiers){
+    if(!isArray(identifiers)){
+      console.error('Identifiers must be an array')
     }
-    audio.start()
-  }
-}
-
-const remove = async(identifier) => {
-  if(buffers.has(identifier)){
-    buffers.delete(identifier)
-    if(allSourceNodes.has(identifier)){
-      allSourceNodes.get(identifier).sourceNode.stop()
-      allSourceNodes.delete(identifier)
+    for(let id of identifiers){
+      allAudioInstances.get(id).stop()
+      allAudioInstances.delete(id)
+      buffers.delete(id)
     }
   } else {
-    console.error(`${identifier} not found`)
+    for(let id of buffers.keys()){
+      allAudioInstances.get(id).stop()
+    }
+    buffers = new Map()
+    allAudioInstances = new Map()
   }
 }
-
 
 export default {
   load,
+  getAudio,
   play,
-  loop,
   getBuffers: () => {
     return new Map(buffers)
   },
@@ -204,8 +213,6 @@ export default {
   pause,
   resume,
   stop,
-  pauseAll,
-  resumeAll,
-  playAll,
   remove,
+  loadEffects
 }
