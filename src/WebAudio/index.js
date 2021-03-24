@@ -4,14 +4,13 @@ import Audio from './audio'
 
 let AudioCtx
 let ctx
-let gainNode
 let buffers = new Map()
 let initialized = false
 let allAudioInstances = new Map()
 let effectsBuffers = new Map()
 
 /**
- * Platform van override AudioContext constructor
+ * Platform can override AudioContext constructor
  * @param config
  */
 export const initWebAudio = config => {
@@ -26,9 +25,6 @@ const init = () => {
   if (!ctx) {
     window.AudioContext = AudioCtx || window.AudioContext || window.webkitAudioContext
     ctx = new AudioContext()
-    if (isFunction(ctx.createGain)) {
-      gainNode = ctx.createGain()
-    }
   }
   Audio.prototype._audioContext = ctx
   initialized = true
@@ -82,7 +78,7 @@ const processSounds = async sounds => {
         return
       }
       const identifier = Object.keys(sound)[0]
-      if (!list.has(identifier)) {
+      if (!list.has(identifier) && !buffers.has(identifier)) {
         list.set(identifier, sound[identifier])
       } else {
         console.error(`Duplicate sounds: ${identifier}`)
@@ -153,6 +149,7 @@ const play =  async (config) => {
  for(let key of buffers.keys()){
    const audio = getAudio(key)
    if(audio){
+      audio.reset()
       if(config && isObject(config)){
         for(let prop in config){
           audio[prop](config[prop])
@@ -164,20 +161,20 @@ const play =  async (config) => {
 }
 
 const stop = async () => {
-  for(let key of allAudioInstances.keys()){
-    allAudioInstances.get(key).stop()
+  for(const audio of allAudioInstances.values()){
+    audio.stop()
   }
 }
 
 const pause = async () => {
-  if(ctx.state == 'running'){
-    await ctx.suspend()
+  for( const audio of allAudioInstances.values()){
+    audio.pause()
   }
 }
 
 const resume = async() => {
-  if(ctx.state == 'suspended'){
-    await ctx.resume()
+  for (const audio of allAudioInstances.values()){
+    audio.resume()
   }
 }
 
@@ -192,15 +189,31 @@ const remove = async(identifiers) => {
       buffers.delete(id)
     }
   } else {
-    for(let id of buffers.keys()){
-      allAudioInstances.get(id).stop()
-    }
+    allAudioInstances.forEach((value, key) => {
+      value.stop()
+    })
     buffers = new Map()
     allAudioInstances = new Map()
   }
 }
 
+const removeEffects = async(identifiers) => {
+  let keys
+  if(identifiers){
+    if(!isArray(identifiers)){
+      console.error('Identifiers must be an array')
+    }
+    keys = identifiers
+  } else {
+    keys = Array.from(effectsBuffers.keys())
+  }
+  keys.forEach( key => {
+    effectsBuffers.delete(key)
+  })
+}
+
 export default {
+  initWebAudio,
   load,
   getAudio,
   play,
@@ -214,5 +227,6 @@ export default {
   resume,
   stop,
   remove,
-  loadEffects
+  loadEffects,
+  removeEffects
 }

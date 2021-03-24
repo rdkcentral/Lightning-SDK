@@ -4,16 +4,14 @@ export default class Audio {
 
     constructor(identifier) {
         this._identifier = identifier
-        this._origOffset = 0
-        this._offset = 0
-        this._loop = false
-        this._volume = 1
-        this._createAudioGain()
+        this._initOffset = 0
+        this._currentOffset = 0
+        this._nodes = new Map()
+        this._createEntryForDelayNode()
     }
 
-    _createAudioGain(){
-        this._gainNode = this._audioContext.createGain()
-        this._gainNode.gain.value = this._volume
+    _createEntryForDelayNode(){
+        this._nodes.set("delay", null)
     }
 
     set duration(v){
@@ -25,11 +23,10 @@ export default class Audio {
     }
 
     skip(v){
-        if(!this._validate("skip", v, [0, this._duration])){
-            return this
+        if(this._validate("skip", v, [0, this._duration])){
+            this._initOffset = v
+            this._currentOffset = v
         }
-        this._origOffset = v
-        this._offset = v
         return this
     }
 
@@ -40,7 +37,7 @@ export default class Audio {
         }
         if(range){
             if(v < range[0] || v > range[1]){
-                console.warn(`${mName} must be in range ${range}`)
+                console.warn(`${mName} must be in range (${range})`)
                 return false
             }
         }
@@ -53,24 +50,24 @@ export default class Audio {
     }
 
     volume(v){
-        if(!this._validate("volume", v)){
-            return this
+        if(this._validate("volume", v)){
+            if(this._nodes.has("gain")){
+                this._nodes.get("gain").gain.value = v
+            } else {
+                const gainNode = this._audioContext.createGain()
+                gainNode.gain.value = v
+                this._nodes.set("gain", gainNode)
+            }
         }
-        this._gainNode.gain.value = v
         return this
     }
 
-    delay(delay, maxDelayTime = 5){
-        if(!this._validate("delay", delay, [0, 180])){
-            return this
+    delay(delay){
+        if(this._validate("delay", delay, [0, 179])){
+            const delayNode =  this._audioContext.createDelay(delay)
+            delayNode.delayTime.value = delay
+            this._nodes.set("delay", delayNode)
         }
-        if(isNaN(maxDelayTime)){
-            console.warn(`maxDelayTime should evaluate to number`)
-            maxDelayTime = 5
-        }
-        maxDelayTime = maxDelayTime < delay ? delay : maxDelayTime > 180 ? 180 : maxDelayTime
-        this._delayNode = this._audioContext.createDelay(maxDelayTime)
-        this._delayNode.delayTime.value  = delay
         return this
     }
 
@@ -78,7 +75,7 @@ export default class Audio {
         this._sourceNode = this._audioContext.createBufferSource()
         this._sourceNode.buffer = this._audioBuffers.get(this._identifier)
         if(this._loop){
-            this._sourceNode.loop = true
+            this._sourceNode.loop = this._loop
         }
     }
 
@@ -86,21 +83,19 @@ export default class Audio {
         try{
             this._createAudioSource()
             let finalNode = this._sourceNode
-            // To remove the delay node on resume connecting it
-            // between source node and gain node
-            if(this._delayNode){
-                finalNode.connect(this._delayNode)
-                finalNode = this._delayNode
-            }
-            finalNode.connect(this._gainNode)
-            finalNode = this._gainNode
 
-            if(this._convolverNode){
-                finalNode.connect(this._convolverNode)
-                finalNode = this._convolverNode
+            for(const node of this._nodes.values()){
+                if(node == null){
+                    continue
+                }
+                finalNode.connect(node)
+                finalNode = node
             }
             finalNode.connect(this._audioContext.destination)
-            this._startPlayback(this._origOffset)
+            this._startPlayback(this._initOffset)
+
+            this._isDelayNodeRemovedOnResume = false
+            this._isAudioGraphConstructed = true
         } catch(err){
             console.error(`Failed to start ${this._identifier} sound`)
         }
@@ -112,17 +107,34 @@ export default class Audio {
         this._playing = true
         this._sourceNode.onended = () => {
             this._playing = false
-            this._offset = this._origOffset //if resume invokes next
           }
     }
 
     resume(){
         if(!this._playing){
+            const nodeKeys = Array.from(this._nodes.keys())
+
+            if(this._nodes.get("delay") == null || this._isDelayNodeRemovedOnResume){
+                nodeKeys.splice(0, 1)
+            }
+            let nextNode
+            if(nodeKeys.length){
+                this._sourceNode.disconnect(this._nodes.get(nodeKeys[0]))
+                  // Bypassed the delay node if it exists, to remove delay on resume
+                if(nodeKeys.includes("delay")){
+                    nextNode = nodeKeys[1] ? this._nodes.get(nodeKeys[1]) : this._audioContext.destination
+                    this._nodes.get("delay").disconnect(nextNode)
+                    this._isDelayNodeRemovedOnResume = true
+                } else {
+                    nextNode = this._nodes.get(nodeKeys[0])
+                }``
+            } else {
+                this._sourceNode.disconnect(this._audioContext.destination)
+                nextNode = this._audioContext.destination
+            }
             this._createAudioSource()
-            // Todo
-            // Bypassed the delay node if it exists to remove delay on resume
-            this._sourceNode.connect(this._gainNode)
-            this._startPlayback(this._offset)
+            this._sourceNode.connect(nextNode)
+            this._startPlayback(this._currentOffset)
         } else {
             console.warn(`"${this._identifier}" audio is already playing`)
         }
@@ -136,16 +148,16 @@ export default class Audio {
                 const playedTime = parseFloat((pausedAt - this._lastStartedAt).toFixed(2))
                 let offset;
                 if(this._loop && playedTime > this._duration){
-                  const numOfLoops = Math.floor((playedTime + this._offset)/this._duration)
-                  offset = parseFloat(((playedTime + this._offset) - numOfLoops * this._duration).toFixed(2))
+                  const numOfLoops = Math.floor((playedTime + this._currentOffset)/this._duration)
+                  offset = parseFloat(((playedTime + this._currentOffset) - numOfLoops * this._duration).toFixed(2))
                 } else {
-                  offset = parseFloat((this._offset + playedTime).toFixed(2))
+                  offset = parseFloat((this._currentOffset + playedTime).toFixed(2))
                   if(this._loop &&  offset > this._duration){
                     offset = parseFloat((offset - this._duration).toFixed(2))
                   }
                 }
                 this._playing = false
-                this._offset = offset
+                this._currentOffset = offset
             } else {
                 console.warn(`"${this._identifier}" audio is not playing`)
             }
@@ -155,8 +167,56 @@ export default class Audio {
     }
 
     stop(){
-        this._sourceNode.stop()
+        if(this._sourceNode){
+            this._sourceNode.stop()
+        }
+        if(this._isAudioGraphConstructed){
+            this._removeAudioGraph()
+            this._isAudioGraphConstructed = false
+        }
         this._playing = false
+        this._currentOffset = this._initOffset
+    }
+
+    effect(effectIdentifier, normalize = true){
+        if(!this._effectsBuffers.has(effectIdentifier)){
+            console.warn(`"${effectIdentifier}" effect not found`)
+            return this
+        }
+        let convolverNode
+        if(this._nodes.has("convolver")){
+            convolverNode = this._nodes.get("convolver");
+            convolverNode.normalize = normalize
+            convolverNode.buffer = this._effectsBuffers.get(effectIdentifier)
+        } else {
+            convolverNode = this._audioContext.createConvolver()
+            convolverNode.normalize = normalize
+            convolverNode.buffer = this._effectsBuffers.get(effectIdentifier)
+            this._nodes.set("convolver", convolverNode)
+        }
+        return this
+    }
+
+    reset(){
+        this.stop()
+        this._initOffset = 0
+        this._currentOffset = 0
+        this._loop = false
+        this._nodes = new Map()
+        this._createEntryForDelayNode()
+        return this
+    }
+
+    _removeAudioGraph(){
+        let finalNode = this._sourceNode
+        for(const [id, node] of this._nodes.entries()){
+            if((id == "delay" && this._isDelayNodeRemovedOnResume) || node == null){
+                continue
+            }
+            finalNode.disconnect(node)
+            finalNode = node
+        }
+        finalNode.disconnect(this._audioContext.destination)
     }
 
     effect(effectIdentifier, normalize = true){
