@@ -61,7 +61,7 @@ import { RoutedApp } from './base'
 /*
 rouThor ==[x]
  */
-let navigateQueue = new Map()
+export let navigateQueue = new Map()
 let forcedHash = ''
 let resumeHash = ''
 

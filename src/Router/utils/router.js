@@ -26,7 +26,7 @@ import {
   isPage,
   symbols,
 } from './helpers'
-import { navigate, step } from '../index'
+import { step, navigateQueue } from '../index'
 import { createRoute, getOption } from './route'
 import { createComponent } from './components'
 import Log from '../../Log'
@@ -320,6 +320,7 @@ export const onRequestResolved = request => {
     cleanUp(activePage, request)
   }
 
+  // provide history object to active page
   if (register.get(symbols.historyState) && isFunction(page.historyState)) {
     page.historyState(register.get(symbols.historyState))
   }
@@ -328,6 +329,13 @@ export const onRequestResolved = request => {
 
   activeHash = request.hash
   activeRoute = route.path
+
+  // cleanup all cancelled requests
+  for (let request of navigateQueue.values()) {
+    if (request.isCancelled && request.hash) {
+      navigateQueue.delete(request.hash)
+    }
+  }
 
   afterEachRoute(request).then(() => {
     // silent
