@@ -365,8 +365,12 @@ const resume = () => {
   if (isString(resumeHash)) {
     navigate(resumeHash, false)
   } else if (isFunction(resumeHash)) {
-    resumeHash().then(url => {
-      navigate(url, false)
+    resumeHash().then(res => {
+      if (isObject(res)) {
+        navigate(res.path, res.params)
+      } else {
+        navigate(res)
+      }
     })
   } else {
     console.warn('[Router]: resume() called but no hash found')
