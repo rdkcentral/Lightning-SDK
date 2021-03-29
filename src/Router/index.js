@@ -90,7 +90,7 @@ const start = () => {
 
     if (routeExists(bootKey)) {
       resumeHash = isDirectLoad ? rootHash : hash || rootHash
-      navigate(bootKey)
+      navigate(bootKey, { resume: resumeHash }, false)
     } else if (!hash && rootHash) {
       if (isString(rootHash)) {
         navigate(rootHash)

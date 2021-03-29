@@ -249,6 +249,9 @@ const init = config => {
       config.routes.push({
         path: '@router-boot-page',
         component: config.bootComponent,
+        options: {
+          preventStorage: true,
+        },
       })
     } else {
       console.error(`[Router]: ${config.bootComponent} is not a valid boot component`)
