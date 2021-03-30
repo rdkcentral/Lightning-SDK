@@ -19,6 +19,7 @@
 
 import { isBoolean, isObject, symbols } from '../utils/helpers'
 import { createRegister } from '../utils/register'
+import Log from '../../Log'
 
 export default class Request {
   constructor(hash, navArgs, storeCaller = true) {
@@ -45,7 +46,7 @@ export default class Request {
   }
 
   cancel() {
-    console.log('cancelled:', this._hash)
+    Log.debug('[router]:', `cancelled ${this._hash}`)
     this._cancelled = true
   }
 
