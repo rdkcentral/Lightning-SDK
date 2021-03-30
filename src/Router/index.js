@@ -55,7 +55,7 @@ import {
   getHashByName,
 } from './utils/route'
 import { load } from './utils/loader'
-import { stripRegex } from './utils/regex'
+import { stripRegex, isWildcard } from './utils/regex'
 import { RoutedApp } from './base'
 
 /*
@@ -77,12 +77,17 @@ const startRouter = (config, instance) => {
 
 // start translating url
 const start = () => {
+  let hash = (getHash() || '').replace(/^#/, '')
   const bootKey = '@router-boot-page'
-  const hash = (getHash() || '').replace(/^#/, '')
   const params = getQueryStringParams(hash)
   const bootRequest = getBootRequest()
   const rootHash = getRootHash()
   const isDirectLoad = hash.indexOf(bootKey) !== -1
+
+  // prevent direct reload of wildcard routes
+  if (hash && isWildcard.test(hash)) {
+    hash = ''
+  }
 
   // store resume point for manual resume
   resumeHash = isDirectLoad ? rootHash : hash || rootHash
