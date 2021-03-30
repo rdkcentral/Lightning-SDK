@@ -167,7 +167,9 @@ const loader = async request => {
       if (hash !== getLastHash()) {
         return false
       } else {
-        emit(request.page, 'dataProvided')
+        if (request.providerType !== 'after') {
+          emit(request.page, 'dataProvided')
+        }
         // resolve promise
         return request
       }

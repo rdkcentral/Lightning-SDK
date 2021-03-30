@@ -249,6 +249,9 @@ const init = config => {
       config.routes.push({
         path: '@router-boot-page',
         component: config.bootComponent,
+        // we try to assign the bootRequest as after data-provider
+        // so it will behave as any other component
+        after: bootRequest || null,
         options: {
           preventStorage: true,
         },

@@ -81,17 +81,14 @@ const start = () => {
   const hash = (getHash() || '').replace(/^#/, '')
   const params = getQueryStringParams(hash)
   const bootRequest = getBootRequest()
-
-  // if we refreshed the boot-page we don't want to
-  // redirect to this page so we force rootHash load
+  const rootHash = getRootHash()
   const isDirectLoad = hash.indexOf(bootKey) !== -1
-  const ready = () => {
-    const rootHash = getRootHash()
 
-    if (routeExists(bootKey)) {
-      resumeHash = isDirectLoad ? rootHash : hash || rootHash
-      navigate(bootKey, { resume: resumeHash }, false)
-    } else if (!hash && rootHash) {
+  // store resume point for manual resume
+  resumeHash = isDirectLoad ? rootHash : hash || rootHash
+
+  const ready = () => {
+    if (!hash && rootHash) {
       if (isString(rootHash)) {
         navigate(rootHash)
       } else if (isFunction(rootHash)) {
@@ -105,25 +102,42 @@ const start = () => {
       }
     } else {
       queue(hash)
-      handleHashChange().then(() => {
-        app._refocus()
-      })
+      handleHashChange()
+        .then(() => {
+          app._refocus()
+        })
+        .catch(e => {
+          console.error(e)
+        })
     }
   }
-  if (isFunction(bootRequest)) {
+
+  if (routeExists(bootKey)) {
+    navigate(
+      bootKey,
+      {
+        resume: resumeHash,
+      },
+      false
+    )
+  } else if (isFunction(bootRequest)) {
     bootRequest(params)
       .then(() => {
         ready()
       })
       .catch(e => {
-        if (routeExists('!')) {
-          navigate('!', { request: { error: e } })
-        } else {
-          console.error(e)
-        }
+        handleBootError(e)
       })
   } else {
     ready()
+  }
+}
+
+const handleBootError = e => {
+  if (routeExists('!')) {
+    navigate('!', { request: { error: e } })
+  } else {
+    console.error(e)
   }
 }
 
