@@ -117,6 +117,7 @@ const start = () => {
       bootKey,
       {
         resume: resumeHash,
+        reload: bootKey === hash,
       },
       false
     )
