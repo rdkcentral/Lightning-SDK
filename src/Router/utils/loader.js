@@ -27,6 +27,7 @@ import {
   getPreviousState,
   getActivePage,
   routerConfig,
+  routeExists,
 } from './router'
 
 import Log from '../../Log'
@@ -190,7 +191,7 @@ const handleError = request => {
     Log.error(request)
   }
 
-  if (request.page) {
+  if (request.page && routeExists('!')) {
     navigate('!', { request }, false)
   }
 }
