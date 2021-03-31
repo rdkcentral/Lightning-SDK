@@ -104,13 +104,11 @@ export let beforeEachRoute = async (from, to)=>{
 }
 
 /**
- * Will be called after a navigate successfully resolved,
+ *  * Will be called after a navigate successfully resolved,
  * can be overridden via routes config
- * @param request - request object
+ * @param request
  */
-export let afterEachRoute = async request => {
-  return true
-}
+export let afterEachRoute = request => {}
 
 /**
  * All configured routes
@@ -343,9 +341,7 @@ export const onRequestResolved = request => {
     }
   }
 
-  afterEachRoute(request).then(() => {
-    // silent
-  })
+  afterEachRoute(request)
 
   Log.info('[route]:', route.path)
   Log.info('[hash]:', hash)
