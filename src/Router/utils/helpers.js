@@ -121,10 +121,12 @@ export const getQueryStringParams = hash => {
       // remove the leading ? to create a
       // valid string
       hashParams = hashParams.replace(/^\?/, '')
+      // we parse hash params last so they we can always
+      // override search params with hash params
+      parse = `${parse}&${hashParams}`
+    } else {
+      parse = hashParams
     }
-    // we parse hash params last so they we can always
-    // override search params with hash params
-    parse = `${parse}&${hashParams}`
   }
 
   if (parse) {
