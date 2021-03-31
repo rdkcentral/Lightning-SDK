@@ -142,4 +142,5 @@ export const symbols = {
   resume: Symbol('resume'),
   backtrack: Symbol('backtrack'),
   historyState: Symbol('historyState'),
+  queryParams: Symbol('queryParams'),
 }

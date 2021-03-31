@@ -64,14 +64,16 @@ export const addPersistData = ({ page, route, hash, register = new Map() }) => {
   const urlValues = getValuesFromHash(hash, route.path)
   const queryParams = getQueryStringParams(hash)
   const pageData = new Map([...urlValues, ...register])
-  const params = queryParams || {}
+  const params = {}
 
   // make dynamic url data available to the page
   // as instance properties
   for (let [name, value] of pageData) {
-    // @todo: show page prop deprecation in changelog
-    // page[name] = value;
     params[name] = value
+  }
+
+  if (queryParams) {
+    params[symbols.queryParams] = queryParams
   }
 
   // check navigation register for persistent data
