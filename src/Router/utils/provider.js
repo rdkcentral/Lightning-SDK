@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-import { symbols } from './helpers'
+import { symbols, getQueryStringParams } from './helpers'
 import { app, routes, routeExists } from './router'
 import { getValuesFromHash } from './route'
 import emit from './emit'
@@ -59,8 +59,9 @@ const execProvider = request => {
 
 export const addPersistData = ({ page, route, hash, register = new Map() }) => {
   const urlValues = getValuesFromHash(hash, route.path)
+  const queryParams = getQueryStringParams(hash)
   const pageData = new Map([...urlValues, ...register])
-  const params = {}
+  const params = queryParams || {}
 
   // make dynamic url data available to the page
   // as instance properties
