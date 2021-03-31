@@ -173,6 +173,21 @@ Or return an `object` if you want to send parameters along.
 
 The parameters will be made available to the page as described in [Navigation](navigation.md)
 
+## afterEachRoute
+
+Is a global hook that will be called after every succesfull `navigate()` request. The parameter is the resolved
+request object.
+
+```js
+{   
+    ...
+    routes:[...],
+    afterEachRoute:  (request)=>{
+        updateAnalytics("loaded", request.hash)
+    }   
+}
+```
+
 ### Dynamic routes
 
 So far we have only specified static route paths (i.e. `home/browse/adventure`). But the Router plugin also supports _dynamic_ routes.
