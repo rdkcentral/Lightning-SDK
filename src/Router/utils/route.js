@@ -192,10 +192,10 @@ export const createRequest = (url, args, store) => {
 }
 
 export const getHashByName = obj => {
-  if (!obj.name) {
+  if (!obj.to && !obj.name) {
     return false
   }
-  const route = getRouteByName(obj.name)
+  const route = getRouteByName(obj.to || obj.name)
   const hasDynamicGroup = /\/:([\w-]+)\/?/
   let hash = route
 
