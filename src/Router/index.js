@@ -72,6 +72,7 @@ let resumeHash = ''
  */
 const startRouter = (config, instance) => {
   bootRouter(config, instance)
+  registerListener()
   start()
 }
 
@@ -447,11 +448,17 @@ export const initRouter = config => {
 /**
  * On hash change we start processing
  */
-window.addEventListener('hashchange', async () => {
-  if (mustUpdateLocationHash()) {
-    await handleHashChange()
-  }
-})
+const registerListener = () => {
+  window.addEventListener('hashchange', async () => {
+    if (mustUpdateLocationHash()) {
+      try {
+        await handleHashChange()
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  })
+}
 
 // export API
 export default {

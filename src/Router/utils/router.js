@@ -278,6 +278,9 @@ export const getComponent = route => {
  * @returns {boolean}
  */
 export const mustUpdateLocationHash = () => {
+  if (!routerConfig || !routerConfig.size) {
+    return false
+  }
   // we need support to either turn change hash off
   // per platform or per app
   const updateConfig = routerConfig.get('updateHash')
