@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.2.2
+
+*6 april 2021*
+
+- Fixed hashchange event listener only for routed apps
+
 ## v4.2.1
 
 *9 march 2021*
