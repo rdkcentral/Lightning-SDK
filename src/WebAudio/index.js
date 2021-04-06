@@ -1,6 +1,7 @@
 import loader from './loader'
-import { isFunction, isObject, isArray } from './utils'
+import { isFunction, isObject, isArray, filters } from './utils'
 import Audio from './audio'
+import {CompressorParams, FilterParams} from './audioParams'
 
 let AudioCtx
 let ctx
@@ -253,5 +254,7 @@ export default {
   stop,
   remove,
   loadEffects,
-  removeEffects
+  removeEffects,
+  CompressorParams,
+  FilterParams
 }

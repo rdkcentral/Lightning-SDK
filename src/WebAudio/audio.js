@@ -1,4 +1,4 @@
-
+import {CompressorParams, FilterParams} from './audioParams'
 
 /**
  * @class Audio representing audio processing APIs
@@ -255,6 +255,54 @@ export default class Audio {
         return this
     }
 
+    /**
+     * Create dynamic compressor node and set the parameters
+     * @param {Object} compressorParams The dynamic compressor node parameter
+     */
+    compress(compressorParams){
+        if( !compressorParams || !( compressorParams instanceof CompressorParams)){
+            console.error("The argument must be instance of CompressorParams")
+            return this
+        }
+
+        const compressor = this._nodes.has("compressor") ? this._nodes.get("compressor") : this._audioContext.createDynamicsCompressor()
+
+        compressorParams.params.forEach( (key) => {
+            if(compressorParams[key]){
+                compressor[key].value = compressorParams[key]
+            }
+        })
+        if(!this._nodes.has("compressor")){
+            this._nodes.set("compressor", compressor)
+        }
+        return this
+    }
+
+    /**
+     * Create Biquad filter node and set the parameters
+     * @param {Object} filterParams The biquad filter node parameters
+     */
+    filter(filterParams){
+        if( !filterParams || !(filterParams instanceof FilterParams)){
+            console.error("The argument must be instance of FilterParams")
+            return this
+        }
+        const filter = this._nodes.has("filter") ? this._nodes.get("filter") : this._audioContext.createBiquadFilter()
+
+        filterParams.params.forEach( (key) => {
+            if(filterParams[key]){
+                if("type" == key){
+                    filter[key]= filterParams[key]
+                    return
+                }
+                filter[key].value = filterParams[key]
+            }
+        })
+        if(!this._nodes.has("filter")){
+            this._nodes.set("filter", filter)
+        }
+        return this
+    }
 
     /**
      * Reset to default state
