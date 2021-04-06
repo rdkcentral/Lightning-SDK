@@ -130,6 +130,10 @@ const createAudioSource = (identifier) => {
   return source
 }
 
+/**
+ * Create instance of Audio and return it
+ * @param {string} identifier
+ */
 const getAudio = (identifier) => {
   if(allAudioInstances.has(identifier)){
     return allAudioInstances.get(identifier)
@@ -145,6 +149,10 @@ const getAudio = (identifier) => {
   }
 }
 
+/**
+ * Play all the loaded audios
+ * @param {Object} config The audio params configuration object
+ */
 const play =  async (config) => {
  for(let key of buffers.keys()){
    const audio = getAudio(key)
@@ -160,24 +168,37 @@ const play =  async (config) => {
  }
 }
 
+/**
+ * Stop the all playing audios
+ */
 const stop = async () => {
   for(const audio of allAudioInstances.values()){
     audio.stop()
   }
 }
 
+/**
+ * Pause all playing audios
+ */
 const pause = async () => {
   for( const audio of allAudioInstances.values()){
     audio.pause()
   }
 }
 
+/**
+ * Resume the audios from paused state
+ */
 const resume = async() => {
   for (const audio of allAudioInstances.values()){
     audio.resume()
   }
 }
 
+/**
+ * Remove the buffers and audio instances of specified identifier or all
+ * @param {Array} identifiers The array of identifiers
+ */
 const remove = async(identifiers) => {
   if(identifiers){
     if(!isArray(identifiers)){
@@ -197,6 +218,10 @@ const remove = async(identifiers) => {
   }
 }
 
+/**
+ * Remove the effect buffers of given identifiers or all
+ * @param {Array} identifiers The array of identifiers
+ */
 const removeEffects = async(identifiers) => {
   let keys
   if(identifiers){
