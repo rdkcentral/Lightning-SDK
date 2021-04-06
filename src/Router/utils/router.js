@@ -82,7 +82,7 @@ let rootHash
  * can be used to execute some global logic
  * and can be configured
  */
-let bootRequest
+export let bootRequest
 
 /**
  * Flag if we need to update the browser location hash.
@@ -243,9 +243,15 @@ const init = config => {
     afterEachRoute = config.afterEachRoute
   }
   if (config.bootComponent) {
+    console.warn(
+      '[Router]: Boot Component is now available as a special router: https://rdkcentral.github.io/Lightning-SDK/#/plugins/router/configuration?id=special-routes'
+    )
+    console.warn(
+      '[Router]: setting { bootComponent } property will be deprecated in a future release'
+    )
     if (isPage(config.bootComponent)) {
       config.routes.push({
-        path: '@router-boot-page',
+        path: '$',
         component: config.bootComponent,
         // we try to assign the bootRequest as after data-provider
         // so it will behave as any other component

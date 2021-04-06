@@ -79,14 +79,15 @@ const startRouter = (config, instance) => {
 // start translating url
 const start = () => {
   let hash = (getHash() || '').replace(/^#/, '')
-  const bootKey = '@router-boot-page'
+  const bootKey = '$'
   const params = getQueryStringParams(hash)
   const bootRequest = getBootRequest()
   const rootHash = getRootHash()
   const isDirectLoad = hash.indexOf(bootKey) !== -1
 
   // prevent direct reload of wildcard routes
-  if (hash && isWildcard.test(hash)) {
+  // expect bootComponent
+  if (isWildcard.test(hash) && hash !== bootKey) {
     hash = ''
   }
 
