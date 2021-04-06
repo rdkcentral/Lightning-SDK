@@ -121,7 +121,7 @@ const getSettings = () => {
               canvas.remove()
             }
             // detach app bundle from window scope
-            window[appMetadata.id] = null
+            window[appMetadata.safeId] = null
 
             // remove script tag
             removeJS('appbundle')
