@@ -22,7 +22,7 @@ import { createRegister } from '../utils/register'
 import Log from '../../Log'
 
 export default class Request {
-  constructor(hash, navArgs, storeCaller = true) {
+  constructor(hash, navArgs, storeCaller) {
     this._hash = hash
     this._storeCaller = storeCaller
     this._register = new Map()
@@ -34,11 +34,8 @@ export default class Request {
     // we store them in new request
     if (isObject(navArgs)) {
       this._register = createRegister(navArgs)
-    } else if (isBoolean(navArgs) && !navArgs) {
-      // if second navigate() argument is explicitly
-      // set to false we prevent the calling page
-      // from ending up in history
-      this._storeCaller = false
+    } else if (isBoolean(navArgs)) {
+      this._storeCaller = navArgs
     }
     // @todo: remove because we can simply check
     // ._storeCaller property

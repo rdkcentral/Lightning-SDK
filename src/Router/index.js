@@ -156,7 +156,7 @@ const handleBootError = e => {
  * @param args
  * @param store
  */
-export const navigate = (url, args = {}, store = true) => {
+export const navigate = (url, args = {}, store) => {
   if (isObject(url)) {
     url = getHashByName(url)
     if (!url) {
@@ -197,7 +197,7 @@ export const navigate = (url, args = {}, store = true) => {
   }
 }
 
-const queue = (hash, args = {}, store = true) => {
+const queue = (hash, args = {}, store) => {
   hash = hash.replace(/^#/, '')
   if (!navigateQueue.has(hash)) {
     for (let request of navigateQueue.values()) {
