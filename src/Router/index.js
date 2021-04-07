@@ -57,6 +57,7 @@ import {
 import { load } from './utils/loader'
 import { stripRegex, isWildcard } from './utils/regex'
 import { RoutedApp } from './base'
+import Registry from '../Registry'
 
 /*
 rouThor ==[x]
@@ -450,7 +451,7 @@ export const initRouter = config => {
  * On hash change we start processing
  */
 const registerListener = () => {
-  window.addEventListener('hashchange', async () => {
+  Registry.addEventListener(window, 'hashchange', async () => {
     if (mustUpdateLocationHash()) {
       try {
         await handleHashChange()
