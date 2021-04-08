@@ -19,6 +19,7 @@
 
 import Metrics from '../Metrics'
 import Log from '../Log'
+import Ads from '../Ads'
 
 import events from './events'
 import autoSetupMixin from '../helpers/autoSetupMixin'
@@ -34,7 +35,6 @@ let metrics
 let consumer
 let precision = 1
 let textureMode = false
-let Ads
 
 export const initVideoPlayer = config => {
   if (config.mediaUrl) {
@@ -225,7 +225,7 @@ const videoPlayerPlugin = {
 
     if (this.src == url) {
       this.clear().then(this.open(url, config))
-    } else if (Ads) {
+    } else {
       const adConfig = { enabled: state.adsEnabled, duration: 300 }
       if (config.videoId) {
         adConfig.caid = config.videoId
@@ -240,13 +240,6 @@ const videoPlayerPlugin = {
             this.play()
           })
         })
-      })
-    } else {
-      // duplication! refactor later
-      loader(url, videoEl, config).then(() => {
-        registerEventListeners()
-        this.show()
-        this.play()
       })
     }
   },
@@ -355,11 +348,6 @@ const videoPlayerPlugin = {
 
   enableAds(enabled = true) {
     state.adsEnabled = enabled
-  },
-
-  ads(advertisingPlugin) {
-    Ads = advertisingPlugin.adsHandler
-    this.enableAds()
   },
 
   /* Public getters */
