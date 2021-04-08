@@ -16,23 +16,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+let metadata = {}
 
-import { getLocale, getLanguage, getCountryCode, getLatLon } from './helpers'
+export const initMetadata = metadataObj => {
+  metadata = metadataObj
+}
 
-export const defaultProfile = {
-  ageRating: 'adult',
-  city: 'New York',
-  zipCode: '27505',
-  countryCode: () => getCountryCode('US'),
-  ip: '127.0.0.1',
-  household: 'b2244e9d4c04826ccd5a7b2c2a50e7d4',
-  language: () => getLanguage('en'),
-  latlon: () => getLatLon([40.7128, 74.006]),
-  locale: () => getLocale('en-US'),
-  mac: '00:00:00:00:00:00',
-  operator: 'metrological',
-  platform: 'metrological',
-  packages: [],
-  uid: 'ee6723b8-7ab3-462c-8d93-dbf61227998e',
-  stbType: 'metrological',
+export default {
+  get(key, fallback = undefined) {
+    return key in metadata ? metadata[key] : fallback
+  },
+  appId() {
+    return this.get('id')
+  },
+  safeAppId() {
+    return this.get('id').replace(/[^0-9a-zA-Z_$]/g, '_')
+  },
+  appName() {
+    return this.get('name')
+  },
+  appVersion() {
+    return (this.get('version') || '').split('-').shift()
+  },
+  appIcon() {
+    return this.get('icon')
+  },
+  // Version from app store (with commit hash)
+  appFullVersion() {
+    return this.get('version')
+  },
 }

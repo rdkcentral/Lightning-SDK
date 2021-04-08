@@ -31,6 +31,8 @@ import { initTV } from '../TV'
 import { initUtils } from '../Utils'
 import { initVideoPlayer } from '../VideoPlayer'
 
+import { initPurchase } from '../Purchase'
+import { initMetadata } from '../Metadata'
 import Application from '../Application'
 import isProbablyLightningComponent from '../helpers/isProbablyLightningComponent'
 
@@ -38,10 +40,10 @@ export let ApplicationInstance
 
 export default (App, appSettings, platformSettings, appData) => {
   initSettings(appSettings, platformSettings)
+  initMetadata(appSettings)
   initUtils(platformSettings)
   initLifecycle((platformSettings.plugins && platformSettings.plugins.events) || {})
   initStorage()
-
   // Initialize plugins
   if (platformSettings.plugins) {
     platformSettings.plugins.profile && initProfile(platformSettings.plugins.profile)
@@ -53,6 +55,7 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.router && initRouter(platformSettings.plugins.router)
     platformSettings.plugins.tv && initTV(platformSettings.plugins.tv)
     platformSettings.plugins.events && initEvents(platformSettings.plugins.events)
+    platformSettings.plugins.purchase && initPurchase(platformSettings.plugins.purchase)
   }
 
   if (isProbablyLightningComponent(App)) {

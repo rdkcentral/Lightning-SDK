@@ -70,7 +70,7 @@ class MyApp extends Router.App{
 ```
 ## Widget Events ##
 
-### _activated(page)
+### _onActivated(page)
 
 This is an event where your `Widgets` can listen to, it will be called at the moment
 that Router changes the visiblity to `true`. The `page` parameter is the reference to the instance

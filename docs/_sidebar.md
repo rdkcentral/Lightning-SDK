@@ -7,7 +7,9 @@
   - [Log](/plugins/log.md)
   - [Metrics](/plugins/metrics.md)
   - [Platform](/plugins/platform.md)
-  <!-- - [Purchase](/plugins/purchase.md) -->
+  - [Metadata](/plugins/metadata.md)
+  - [Profile](/plugins/profile.md)
+  - [Purchase](/plugins/purchase.md)
   - [Language](/plugins/language.md)
   - [Lightning](/plugins/lightning.md)
   - [Router](/plugins/router/index.md)
@@ -15,11 +17,12 @@
     - [Navigation](/plugins/router/navigation.md)
     - [Data providing](/plugins/router/dataproviding.md)
     - [Router events](/plugins/router/events.md)
+    - [History](/plugins/router/history.md)
     - [Page transitions](/plugins/router/pagetransitions.md)
     - [Widgets](/plugins/router/widgets.md)
     - [Settings](/plugins/router/settings.md)
-    - [Deeplinking & History](/plugins/router/deeplinking.md)
-
+    - [Deeplinking](/plugins/router/deeplinking.md)
+    - [Public methods](/plugins/router/methods.md)
   <!-- - [Keyboard](/plugins/keyboard.md) -->
   - [VideoPlayer](/plugins/videoplayer.md)
   <!-- - [Audio Player](/plugins/audioplayer.md) -->
