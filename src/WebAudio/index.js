@@ -1,7 +1,7 @@
 import loader from './loader'
 import { isFunction, isObject, isArray, filters } from './utils'
-import Audio from './audio'
-import {CompressorParams, FilterParams} from './audioParams'
+import { WebAudio, HTMLAudio } from './audio'
+import { CompressorParams, FilterParams} from './audioParams'
 
 let AudioCtx
 let ctx
@@ -9,6 +9,11 @@ let buffers = new Map()
 let initialized = false
 let allAudioInstances = new Map()
 let effectsBuffers = new Map()
+let isAudioContextAvailable = false
+
+if(window.AudioContext || window.webkitAudioContext){
+  isAudioContextAvailable = true
+}
 
 /**
  * Platform can override AudioContext constructor
@@ -40,7 +45,7 @@ const load = async (config = {}) => {
   if (config.audioContext) {
     ctx = config.audioContext
   }
-  if (!initialized) {
+  if (!initialized && isAudioContextAvailable) {
     init()
   }
   if (config.sounds) {
@@ -67,7 +72,7 @@ const processSounds = async sounds => {
 
       for (let i = 0; i < n; i += 2) {
         const identifier = sounds[i]
-        if (!list.has(identifier) && !buffers.get(identifier)) {
+        if (!list.has(identifier) && !allAudioInstances.has(identifier)) {
           list.set(sounds[i], sounds[i + 1])
         } else {
           console.error(`Duplicate sounds: ${identifier}`)
@@ -79,7 +84,7 @@ const processSounds = async sounds => {
         return
       }
       const identifier = Object.keys(sound)[0]
-      if (!list.has(identifier) && !buffers.has(identifier)) {
+      if (!list.has(identifier) && !allAudioInstances.has(identifier)) {
         list.set(identifier, sound[identifier])
       } else {
         console.error(`Duplicate sounds: ${identifier}`)
@@ -87,12 +92,24 @@ const processSounds = async sounds => {
     })
   }
 
-  const bufferList = await loader(ctx, list)
-
-  if (bufferList.size) {
-    buffers = new Map([...bufferList, ...buffers])
+  if(isAudioContextAvailable){
+    const bufferList = await loader(ctx, list)
+    if (bufferList.size) {
+      buffers = new Map([...bufferList, ...buffers])
+    }
+    WebAudio.prototype._audioBuffers = buffers
   }
-  Audio.prototype._audioBuffers = buffers
+
+  for(const [identifier, url] of list.entries()){
+    let audio;
+    if(isAudioContextAvailable && buffers.has(identifier)){
+      audio = new WebAudio(identifier)
+      audio.duration = parseFloat(buffers.get(identifier).duration.toFixed(2))
+    } else {
+      audio = new HTMLAudio(identifier, url)
+    }
+    allAudioInstances.set(identifier, audio)
+  }
 }
 
 /**
@@ -100,7 +117,10 @@ const processSounds = async sounds => {
  * @param  effects
  */
 const loadEffects = async (effects) => {
-
+    if(!isAudioContextAvailable){
+      console.warn('load effects not supported')
+      return
+    }
     if(!isArray(effects)){
       console.error('Effects must be an array')
     }
@@ -122,14 +142,8 @@ const loadEffects = async (effects) => {
     if (bufferList.size) {
       effectsBuffers = new Map([...bufferList, ...effectsBuffers])
     }
-    Audio.prototype._effectsBuffers = effectsBuffers
+    WebAudio.prototype._effectsBuffers = effectsBuffers
   }
-
-const createAudioSource = (identifier) => {
-  const source = ctx.createBufferSource()
-  source.buffer = buffers.get(identifier)
-  return source
-}
 
 /**
  * Create instance of Audio and return it
@@ -139,14 +153,7 @@ const getAudio = (identifier) => {
   if(allAudioInstances.has(identifier)){
     return allAudioInstances.get(identifier)
   } else {
-    if(buffers.has(identifier)){
-      const audio = new Audio(identifier)
-      audio.duration = parseFloat(buffers.get(identifier).duration.toFixed(2))
-      allAudioInstances.set(identifier, audio)
-      return audio
-    } else {
-      console.error(`fx: ${identifier} not found`)
-    }
+    console.error(`fx: ${identifier} audio not found`)
   }
 }
 
@@ -155,8 +162,7 @@ const getAudio = (identifier) => {
  * @param {Object} config The audio params configuration object
  */
 const play =  async (config) => {
- for(let key of buffers.keys()){
-   const audio = getAudio(key)
+ for(const audio of allAudioInstances.values()){
    if(audio){
       audio.reset()
       if(config && isObject(config)){
@@ -225,6 +231,9 @@ const remove = async(identifiers) => {
  */
 const removeEffects = async(identifiers) => {
   let keys
+  if(!effectsBuffers.length){
+    return
+  }
   if(identifiers){
     if(!isArray(identifiers)){
       console.error('Identifiers must be an array')
@@ -256,5 +265,5 @@ export default {
   loadEffects,
   removeEffects,
   CompressorParams,
-  FilterParams
+  FilterParams,
 }

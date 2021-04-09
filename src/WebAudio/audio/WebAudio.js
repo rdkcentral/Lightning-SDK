@@ -1,15 +1,17 @@
-import {CompressorParams, FilterParams} from './audioParams'
+import BaseAudio from './BaseAudio'
+import {CompressorParams, FilterParams} from './../audioParams'
 
 /**
  * @class Audio representing audio processing APIs
  */
-export default class Audio {
+export default class WebAudio extends BaseAudio {
 
     /**
      * Create a Audio
      * @param {string} identifier The unique identifier for audio
      */
     constructor(identifier) {
+        super()
         this._identifier = identifier
         this._initOffset = 0
         this._currentOffset = 0
@@ -42,27 +44,6 @@ export default class Audio {
             this._currentOffset = v
         }
         return this
-    }
-
-    /**
-     * Validate the audio parameter value
-     * @param {string} mName The name of the audio parameter or normal param
-     * @param {any} v The value of parameter
-     * @param {Array} range The range of the parameter value
-     * @return {Boolean} Valid value or not
-     */
-    _validate(mName, v, range){
-        if(isNaN(v)){
-            console.error(`${mName} must be a number`)
-            return false
-        }
-        if(range){
-            if(v < range[0] || v > range[1]){
-                console.warn(`${mName} must be in range (${range})`)
-                return false
-            }
-        }
-        return true
     }
 
     /**
