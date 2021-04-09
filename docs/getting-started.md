@@ -34,38 +34,33 @@ Whenever you want to review this documentation, you can run `lng docs` in the ro
 
 ## Fonts
 
-Lightning application can setup the fonts used across the application by implementing getFonts() method inside Application main component and returning the array of fonts to be used.
-
-Example:
+Within a Lightning App you can use custom fonts. Custom fonts will automatically be loaded if you implement a `getFonts()` method on the main Application-class (in `App.js`), which returns an array of fonts.
 
 ```js
     getFonts() {
         return [
             {family: 'Roboto', url: Utils.asset('fonts/Roboto-Regular.ttf'), descriptors: {}},
-            {family: 'Roboto', url: Utils.asset('fonts/Roboto-Bold.ttf'), descriptors: {weight: 'bold'}}
+            {family: 'Roboto', url: Utils.asset('fonts/Roboto-Bold.ttf'), descriptors: { weight: 'bold' }}
+            {family: 'ComicSans', url: Utils.asset('fonts/comi.ttf'), descriptors: { weight: 'bold' }}
         ]
     }
-
 ```
-We can also setup the fallback font files in case if the provided primary font files are not available. This can be done by providing the array of fonts for each family.
 
-Example:
+Normally you would place fonts inside the `static` folder, and use the `Utils.asset` method to provide the correct reference to the font files.
+
+Optionally it's possible to specify multiple font files for the same font family, as a backup when the primary font file is not available or not supported on the platform, by using the `urls` key and assigning it an array of font files.
 
 ```js
 {
     family: 'ChunkFive',
     urls: [
+        // primary font file
         Utils.asset('fonts/ChunkFivePrint.ttf'),
-        Utils.asset('fonts/Pacifico.ttf'),
-        Utils.asset('fonts/GreatVibes-Regular.ttf'),
+        // secondary font file if previous not available / supported
+        Utils.asset('fonts/ChunkFivePrint.woff'),
+        // used if previous not available / supported
+        Utils.asset('fonts/Roboto.ttf'),
         ],
-    descriptors: { weight: 'bold' }
+    descriptors: {}
 },
 ```
-In the above example,
-
-* *ChunkFivePrint.ttf* will be loaded, if it is available.
-* *Pacifico.ttf* will be loaded, if *ChunkFivePrint.ttf* is not available.
-* *GreatVibes-Regular.ttf* will be loaded, if both *ChunkFivePrint.ttf* & *Pacifico.ttf* are not available.
-
-

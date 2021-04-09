@@ -159,14 +159,11 @@ export default function(App, appData, platformSettings) {
       return new Promise((resolve, reject) => {
         fonts
           .map(({ family, url, urls, descriptors }) => () => {
-            let src
-            if (url) {
-              src = 'url(' + url + ')'
-            } else if (urls) {
-              src = urls.map(url => {
-                return 'url(' + url + ')'
-              })
-            }
+            const src = urls
+              ? urls.map(url => {
+                  return 'url(' + url + ')'
+                })
+              : 'url(' + url + ')'
             const fontFace = new FontFace(family, src, descriptors || {})
             document.fonts.add(fontFace)
             return fontFace.load()
