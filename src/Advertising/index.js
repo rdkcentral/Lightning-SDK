@@ -1,5 +1,5 @@
 import Platform from '../Platform'
-import adsHandler from './adsHandler'
+//import adsHandler from './adsHandler'
 
 export default {
   config() {
@@ -20,11 +20,11 @@ export default {
   appStoreId() {
     return Platform.get('advertising.appStoreId')
   },
-  adsHandler,
-  set getAds(getAdsFn) {
+  //  adsHandler,
+  /*  set getAds(getAdsFn) {
     this.adsHandler &&
       this.adsHandler.setGetAds &&
       typeof this.adsHandler.setGetAds === 'function' &&
       this.adsHandler.setGetAds(this, getAdsFn)
-  },
+  },*/
 }

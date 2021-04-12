@@ -18,23 +18,13 @@
  */
 
 import Events, { emit } from '../Events'
+import Metrics from '../Metrics'
 import Log from '../Log'
-import Settings from '../Settings'
-import Registry from '../Registry'
 
-const supportedStates = [
-  'init',
-  'ready',
-  'active',
-  'pausing',
-  'paused',
-  'background',
-  'closing',
-  'closed',
-]
+const supportedStates = ['init', 'inactive', 'foreground', 'background', 'suspended', 'unloading']
 const store = {
   _previous: null,
-  _current: 'init',
+  _current: 'initializing',
   get current() {
     return this._current
   },
@@ -44,43 +34,45 @@ const store = {
       this._current = v
       Log.info('Lifecycle', 'State changed from ' + this._previous + ' to ' + this._current)
       emit('Lifecycle', this.current, {
-        from: this._previous,
-        to: this._current,
+        state: this._current,
+        previous: this._previous,
       })
     }
   },
 }
 
 export const initLifecycle = config => {
-  Events.listen('Lifecycle', 'close', () => {
-    Settings.clearSubscribers()
-    Registry.clear()
+  Events.listen('Lifecycle', 'unloading', () => {
     // maybe not needed?
     if (config.onClose && typeof config.onClose === 'function') {
       config.onClose()
     }
-  })
-
-  Events.listen('Lifecycle', 'closed', () => {
     Events.clear()
   })
 }
 
 // public API
 export default {
-  close() {
-    store.current = 'close'
-  },
-  ready() {
-    store.current = 'ready'
-  },
-  paused() {
-    store.current = 'paused'
-  },
-  closed() {
-    store.current = 'closed'
-  },
   state() {
     return store.current
+  },
+  ready() {
+    Metrics.app.ready()
+    store.current = 'inactive'
+    setTimeout(() => (store.current = 'foreground'), 100)
+  },
+  close(reason) {
+    if (reason === 'REMOTE_BUTTON') {
+      store.current = 'inactive'
+    } else {
+      store.current = 'unloading'
+      setTimeout(() => this.finished(), 2000)
+    }
+  },
+  finished() {
+    if (store.current === 'unloading') {
+      Metrics.app.close()
+      location.href = 'about:blank'
+    } else throw 'Cannot call finished() except when in the unloading transition'
   },
 }
