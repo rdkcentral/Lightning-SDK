@@ -76,6 +76,11 @@ export default class BaseAudio{
         return this
     }
 
+    IIRFilter(feedForward, feedBack){
+        console.warn("IIR filter feature not supported")
+        return this
+    }
+
     reset(){
         console.warn("reset feature not supported")
     }

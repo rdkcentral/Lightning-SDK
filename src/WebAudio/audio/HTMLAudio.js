@@ -3,7 +3,7 @@ import BaseAudio from './BaseAudio'
 /**
  *@class HTMLAudio representing audio processing APIs
  */
-export class  HTMLAudio extends BaseAudio{
+export default class  HTMLAudio extends BaseAudio{
     /**
      * Create a HTML Audio element
      * @param {string} identifier The unique identifier for audio

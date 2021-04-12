@@ -32,7 +32,7 @@ const init = () => {
     window.AudioContext = AudioCtx || window.AudioContext || window.webkitAudioContext
     ctx = new AudioContext()
   }
-  Audio.prototype._audioContext = ctx
+  WebAudio.prototype._audioContext = ctx
   initialized = true
 }
 

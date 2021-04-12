@@ -1,5 +1,6 @@
 import BaseAudio from './BaseAudio'
-import {CompressorParams, FilterParams} from './../audioParams'
+import { CompressorParams, FilterParams } from './../audioParams'
+import { isArray } from './../utils'
 
 /**
  * @class Audio representing audio processing APIs
@@ -283,6 +284,43 @@ export default class WebAudio extends BaseAudio {
             this._nodes.set("filter", filter)
         }
         return this
+    }
+
+    /**
+     *  Validator for filter coefficients
+     * @param {string} name The name of the control
+     * @param {Array} coefficients The coefficients array
+     * @return valid coefficients or not
+     */
+    _validateCoeff(name, coefficients){
+        if(!coefficients || !isArray(coefficients)){
+            console.error(`${name} coefficients must be an array`)
+            return false
+        }
+        if(coefficients.length < 1 ||  coefficients.length > 20 ){
+            console.error(`The number of ${name} coefficients provided (${coefficients.length}) is outside the range [1, 20].`)
+            return false
+        }
+        return true
+    }
+
+    /**
+     * Create Infinite impulse response node
+     * @param {Array} feedForward An array of coefficients
+     * @param {Array} feedBack An array of coefficients
+     */
+    IIRFilter(feedForward, feedBack){
+
+       if(!this._validateCoeff("feedForward", feedForward) || !this._validateCoeff("feedBack", feedBack)) return this
+
+        try{
+            const iirFilterNode = this._audioContext.createIIRFilter(feedForward, feedBack)
+            this._nodes.set("iirFilter", iirFilterNode)
+        } catch(error){
+            console.error(error.message)
+        } finally {
+            return this
+        }
     }
 
     /**
