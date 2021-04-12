@@ -10,7 +10,7 @@ the `Events` plugin.
 Whenever you need to change or consult the current Lifecycle state, import the `Lifecycle` plugin from the SDK.
 
 ```js
-import { Lifecycle } from '@lightningjs/sdk'
+import { Lifecycle } from '@fireboltjs/sdk'
 ```
 
 ## Available states
@@ -87,7 +87,7 @@ Note that the platform can decide to completely pause the App _before_ the `paus
 In order to listen for Lifecycle events, import the `Events` plugin from the SDK
 
 ```js
-import { Lifecycle } from '@lightningjs/sdk'
+import { Lifecycle } from '@fireboltjs/sdk'
 ```
 
 The _Lifecycle_ plugin will emit any change in state via the `Events` plugin under the _Lifecycle_ plugin namespace.

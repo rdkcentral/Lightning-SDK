@@ -2,7 +2,7 @@
 
 It's important to know how people use Apps, and we can do so by keeping track of a range of metrics and send them to a backend.
 
-Different operators might implement the tracking metrics in different ways. That's why the Lightning SDK offers a Metrics plugin, which is a generic interface for for developers, independent of the operator or platform.
+Different operators might implement the tracking metrics in different ways. That's why the Firebolt SDK offers a Metrics plugin, which is a generic interface for for developers, independent of the operator or platform.
 
 Some standard metrics are automatically implemented by the  SDK. Such as _app launched_, _app loaded_, _app closed_ and various media _player events_.
 
@@ -15,7 +15,7 @@ There are 4 categories for sending metrics. _App_, _Page_, _User_ and _Media_.
 In componenents where you want to track and send events, import the Metrics plugin.
 
 ```js
-import { Metrics } from '@lightningjs/sdk'
+import { Metrics } from '@fireboltjs/sdk'
 ```
 
 ## Available methods

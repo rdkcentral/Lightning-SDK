@@ -2,7 +2,7 @@
 
 Sometimes your App might need to interact with the Platform it's running on. For example to retrieve information about the current profile, localization, the capabilities of the device or global accessibility settings.
 
-Getting access to this information requires to connect to lower level APIs made available by the platform. Since implementations differ between operators and platforms, the Lightning-SDK offers a Platform plugin, that exposes a generic, agnostic interface to the developer.
+Getting access to this information requires to connect to lower level APIs made available by the platform. Since implementations differ between operators and platforms, the Firebolt-SDK offers a Platform plugin, that exposes a generic, agnostic interface to the developer.
 
 Under the hood, an underlaying transport layer will then take care of calling the right APIs for the actual platform implementation that your App is running on.
 
@@ -17,10 +17,10 @@ The Platform plugin is divided into 4 different sections / namespaces:
 
 ## Usage
 
-Whenever you need to interact with the Platform, import the Platform plugin from the Lightning SDK
+Whenever you need to interact with the Platform, import the Platform plugin from the Firebolt SDK
 
 ```js
-import { Platform } from '@lightningjs/sdk'
+import { Platform } from '@fireboltjs/sdk'
 ```
 
 All methods on the Platform plugin can act as a getter and a setter (when permitted by the platform).

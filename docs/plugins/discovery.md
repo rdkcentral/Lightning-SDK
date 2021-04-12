@@ -1,7 +1,7 @@
 # Discovery
 Your App likely wants to integrate with the Platform's discovery capabilities. For example to add a "Watch Next" tile that links to your app from platform home screen.
 
-Getting access to this information requires to connect to lower level APIs made available by the platform. Since implementations differ between operators and platforms, the Lightning-SDK offers a Discovery plugin, that exposes a generic, agnostic interface to the developer.
+Getting access to this information requires to connect to lower level APIs made available by the platform. Since implementations differ between operators and platforms, the Firebolt SDK offers a Discovery plugin, that exposes a generic, agnostic interface to the developer.
 
 Under the hood, an underlaying transport layer will then take care of calling the right APIs for the actual platform implementation that your App is running on.
 
@@ -9,10 +9,10 @@ The Discovery plugin is used to _send_ information to the Platform.
 
 ## Usage
 
-Whenever you need to interact with the Discovery, import the Discovery plugin from the Lightning SDK
+Whenever you need to interact with the Discovery, import the Discovery plugin from the Firebolt SDK
 
 ```js
-import { Discovery } from '@lightningjs/sdk'
+import { Discovery } from '@fireboltjs/sdk'
 ```
 
 ## Available methods

@@ -8,10 +8,10 @@ Instead of using console.log (or debug, error, warn) it is recommended to use th
 
 ## Usage
 
-In order to use the Log plugin, import it from the Lightning SDK.
+In order to use the Log plugin, import it from the Firebolt SDK.
 
 ```js
-import { Log } from '@lightningjs/sdk'
+import { Log } from '@fireboltjs/sdk'
 ```
 
 ## Available methods

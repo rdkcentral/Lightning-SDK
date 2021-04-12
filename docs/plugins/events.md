@@ -10,10 +10,10 @@ Events plugin is used to listen to events emitted from:
 
 ## Usage
 
-In order to use the Events plugin, import it from the Lightning SDK.
+In order to use the Events plugin, import it from the Firebolt SDK.
 
 ```js
-import { Events } from '@lightningjs/sdk'
+import { Events } from '@fireboltjs/sdk'
 ```
 
 ## Available methods
