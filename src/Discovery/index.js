@@ -24,9 +24,13 @@ let entitlements = function(items) {
 }
 
 let watched = function(watchedItems) {
-  watchedItems.reduce((items, item) => {
+  if (watchedItems && watchedItems.isArray && watchedItems.isArray())
+    watchedItems.reduce((items, item) => {
+      Log.info('Added ' + item.watchedOn + ': ' + item.contentId)
+    })
+  else if (typeof watchedItems === 'object')
     Log.info('Added ' + watchedItems.watchedOn + ': ' + watchedItems.contentId)
-  })
+
   return Promise.resolve(true)
 }
 
