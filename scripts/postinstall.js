@@ -20,8 +20,6 @@
 const shell = require('shelljs')
 const path = require('path')
 const process = require('process')
-const replaceInFile = require('replace-in-file')
-const yesno = require('yesno')
 
 const nodeModulesFolder = path.join(
   process.cwd(),
@@ -92,36 +90,3 @@ if (
 }
 
 console.log('\x1b[0m')
-
-yesno({
-  question:
-    'Do you want us to automatically check for old Lightning-SDK imports and update them in your project files? (y/n)',
-  defaultValue: null,
-})
-  .then(ok => {
-    ok &&
-      replaceInFile({
-        allowEmptyPaths: true,
-        files: process.env.INIT_CWD + '/src/**/*',
-        // eslint-disable-next-line
-        from: /(?:[^\/]*?)\s+from\s+(["'])(wpe-lightning-sdk)(["']);?/gi,
-        to: match => {
-          return match.replace('wpe-lightning-sdk', '@lightningjs/sdk')
-        },
-      })
-        .then(result => {
-          const changedFiles = result
-            .filter(item => item.hasChanged === true)
-            .map(item => '- ' + item.file.replace(process.env.INIT_CWD, ''))
-
-          if (changedFiles.length) {
-            console.log('\x1b[32m')
-            console.log('\n\nThe following files have been automatically updated for you:\n\n')
-            console.log('\x1b[0m')
-            console.log(changedFiles.join('\n'))
-            console.log('\n\n')
-          }
-        })
-        .catch(console.error)
-  })
-  .catch(console.error)

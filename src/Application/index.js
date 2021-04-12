@@ -28,6 +28,7 @@ import Settings from '../Settings'
 import { initLanguage } from '../Language'
 import Utils from '../Utils'
 import Registry from '../Registry'
+import { initColors } from '../Colors'
 
 import { version as sdkVersion } from '../../package.json'
 
@@ -82,6 +83,7 @@ export default function(App, appData, platformSettings) {
         // to be deprecated
         Locale.load((App.config && App.config.locale) || (App.getLocale && App.getLocale())),
         App.language && this.loadLanguage(App.language()),
+        App.colors && this.loadColors(App.colors()),
       ])
         .then(() => {
           Metrics.app.loaded()
@@ -179,6 +181,14 @@ export default function(App, appData, platformSettings) {
       }
 
       return initLanguage(file, language)
+    }
+
+    loadColors(config) {
+      let file = Utils.asset('colors.json')
+      if (config && (typeof config === 'string' || typeof config === 'object')) {
+        file = config
+      }
+      return initColors(file)
     }
 
     set focus(v) {

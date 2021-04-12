@@ -17,8 +17,8 @@
  * limitations under the License.
  */
 
-import Lightning from '../Lightning'
-import Settings from '../Settings'
+import Lightning from '../../Lightning'
+import Settings from '../../Settings'
 
 export const isFunction = v => {
   return typeof v === 'function'
@@ -55,7 +55,7 @@ export const isString = v => {
   return typeof v === 'string'
 }
 
-export const isPromise = (method, args) => {
+export const isPromise = method => {
   let result
   if (isFunction(method)) {
     try {
@@ -119,6 +119,20 @@ export const getQueryStringParams = hash => {
   return false
 }
 
+export const objectToQueryString = obj => {
+  if (!isObject(obj)) {
+    return ''
+  }
+  return (
+    '?' +
+    Object.keys(obj)
+      .map(key => {
+        return `${key}=${obj[key]}`
+      })
+      .join('&')
+  )
+}
+
 export const symbols = {
   route: Symbol('route'),
   hash: Symbol('hash'),
@@ -127,4 +141,5 @@ export const symbols = {
   expires: Symbol('expires'),
   resume: Symbol('resume'),
   backtrack: Symbol('backtrack'),
+  historyState: Symbol('historyState'),
 }

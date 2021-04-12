@@ -1,5 +1,75 @@
 # Changelog
 
+## v4.2.2
+
+*6 april 2021*
+
+- Fixed hashchange event listener only for routed apps
+
+## v4.2.1
+
+*9 march 2021*
+
+- Fixed Router `navigate()` always adding new queue entry
+
+## v4.2.0
+
+*9 march 2021*
+
+- Router updates
+    - Root function can now resolve object
+    - Fixed `preventStorage` setting
+    - Fixed page cache
+    - `location.hash` now gets set on `hashchange` disabled
+    - Added support to prevent auto widget focus restore
+    - Added `afterEachRoute()` support
+    - Improved error notification
+    - Exposed internal Symbols mapping
+- Added Metadata plugin
+- Added Colors plugin
+- Added `loader` and `unloader` functionality to the VideoPlayer plugin
+
+## v4.1.1
+
+*3 march 2021*
+
+- Fixed bug in Registry plugin (removing interval from reference list after first invocation)
+
+## v4.1.0
+
+*26 jan 2021*
+
+- Added Purchase plugin
+
+## v4.0.0
+
+*22 jan 2021*
+
+- Removed deprecated Image plugin methods
+- Fixed Storage plugin to compile with webpack and esbuild
+- Added support for experimental esbuild support
+- Router Plugin refactor
+  - Breaking changes
+    - `page.dynamicRouteProperty = hashValue;` is no longer being set, now use `_onUrlParams(args)`. In the previous release on route: `home/browse/:section` and a `navigate()` to: `home/browse/adventure` the Router would set the page prop `page['section'] = 'adventure'` but this could lead to unwanted and error prone behaviour. This undocumented feature has now been removed.
+  - New features
+    - Added test Router.isNavigating()
+    - Added Router history interaction
+    - Added Router.getHistory()
+    - Added Router.replaceHistoryState()
+    - Added Router.getHistoryState()
+    - Added hash reload support
+    - Added named navigation support
+    - Added error handling in bootRequest
+  - Fixes
+    - Fixed Page overlap when on navigate starts before transition finish
+    - Fixed _onActivated() widget event documentation
+    - Fixed navigating to same hash when navigating
+    - Deprecated Router.setupRoutes() - method
+  - Deprecations
+    - Deprecated calling on() | before() | after() directly - data providers must be defined in route object: https://rdkcentral.github.io/Lightning-SDK/#/plugins/router/dataproviding
+    - Deprecated duplicate route definitions
+- Removed SDK namespace replacement functionality from postinstall script
+
 ## v3.2.1
 
 *14 dec 2020*

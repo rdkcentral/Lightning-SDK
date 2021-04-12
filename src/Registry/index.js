@@ -62,7 +62,7 @@ export default {
   setInterval(cb, interval, ...params) {
     const intervalId = setInterval(
       () => {
-        registry.intervals = registry.intervals.filter(id => id !== intervalId)
+        registry.intervals.filter(id => id !== intervalId)
         cb.apply(null, params)
       },
       interval,
@@ -92,7 +92,7 @@ export default {
   // Event listeners
   addEventListener(target, event, handler) {
     target.addEventListener(event, handler)
-    let targetIndex =
+    const targetIndex =
       registry.targets.indexOf(target) > -1
         ? registry.targets.indexOf(target)
         : registry.targets.push(target) - 1
