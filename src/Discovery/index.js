@@ -35,7 +35,7 @@ let watchNext = function(title, linkUrl, expires, contentId, images) {
   return Promise.resolve(true)
 }
 
-export const initAdvertising = config => {
+export const initDiscovery = config => {
   entitlements = config.entitlements
   watched = config.watched
   watchNext = config.watchNext
