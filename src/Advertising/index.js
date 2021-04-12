@@ -7,11 +7,8 @@ export default {
   policy() {
     return Platform.get('advertising.policy')
   },
-  advertisingId(reset = false) {
-    return reset
-      ? Platform.get('advertising.advertisingId')
-      : // 'set null' means 'recreate new id'
-        Platform.set('advertising.advertisingId', null)
+  advertisingId() {
+    return Platform.get('advertising.advertisingId')
   },
   deviceAttributes() {
     return Platform.get('advertising.deviceAttributes')

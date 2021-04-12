@@ -83,4 +83,17 @@ export const defaultPlatform = {
       speed: 5,
     },
   },
+  advertising: {
+    config: {
+      siteSection: '96746720',
+      profile: '47883199',
+    },
+    policy: {
+      adSkipTier: 'NOSKIP_NORMAL_SPEED',
+      adSkipGracePeriodSeconds: 60,
+    },
+    advertisingId: 'oxPUKaCAtlyfy5ieomFw',
+    deviceAttributes: {},
+    appStoreId: '...',
+  },
 }
