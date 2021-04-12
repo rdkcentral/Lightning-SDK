@@ -1,5 +1,16 @@
-# Lightning SDK
+# Firebolt SDK
 
-The Lightning-SDK helps you build great Lightning-based TV apps!
+The Firebolt SDK provides platform APIs that your app will likely need in order to provide a fully integrated experience.
 
-It contains [Lightning](https://github.com/rdkcentral/Lightning) and several useful plugins for App development, such as a MediaPlayer and Image, Locale and Utility helpers.
+- [Getting started](/getting-started.md)
+
+- Plugins
+  - [Advertising](/plugins/advertising.md)
+  - [Authentication](/plugins/authentication.md)
+  - [Discovery](/plugins/discovery.md)
+  - [Events](/plugins/events.md)
+  - [Lifecycle](/plugins/lifecycle.md)
+  - [Log](/plugins/log.md)
+  - [Metrics](/plugins/metrics.md)
+  - [Platform](/plugins/platform.md)
+- [Changelog](/changelog.md)
