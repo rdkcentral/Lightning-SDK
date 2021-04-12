@@ -150,7 +150,7 @@ export default {
       return getOrSet('accessibility', 'closedCaptions', params)
     },
     voiceGuidance(params) {
-      return getOrSet('acessibility', 'voiceGuidance', params)
+      return getOrSet('accessibility', 'voiceGuidance', params)
     },
   },
   get(namespacedKeyOrKeys = []) {
