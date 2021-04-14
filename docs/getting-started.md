@@ -60,7 +60,7 @@ Optionally it's possible to specify multiple font files for the same font family
         Utils.asset('fonts/ChunkFivePrint.woff'),
         // used if previous not available / supported
         Utils.asset('fonts/Roboto.ttf'),
-        ],
+    ],
     descriptors: {}
 },
 ```
