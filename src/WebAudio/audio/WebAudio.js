@@ -1,5 +1,6 @@
 import BaseAudio from './BaseAudio'
 import { CompressorParams, FilterParams } from './../audioParams'
+import { creatDistortionCurve, validateCoeff } from './audioUtils'
 import { isArray } from './../utils'
 
 /**
@@ -269,7 +270,8 @@ export default class WebAudio extends BaseAudio {
             console.error("The argument must be instance of FilterParams")
             return this
         }
-        const filter = this._nodes.has("filter") ? this._nodes.get("filter") : this._audioContext.createBiquadFilter()
+        const key = "filter_" + filterParams.type
+        const filter = this._nodes.has(key) ? this._nodes.get(key) : this._audioContext.createBiquadFilter()
 
         filterParams.params.forEach( (key) => {
             if(filterParams[key]){
@@ -280,28 +282,10 @@ export default class WebAudio extends BaseAudio {
                 filter[key].value = filterParams[key]
             }
         })
-        if(!this._nodes.has("filter")){
-            this._nodes.set("filter", filter)
+        if(!this._nodes.has(key)){
+            this._nodes.set(key, filter)
         }
         return this
-    }
-
-    /**
-     *  Validator for filter coefficients
-     * @param {string} name The name of the control
-     * @param {Array} coefficients The coefficients array
-     * @return valid coefficients or not
-     */
-    _validateCoeff(name, coefficients){
-        if(!coefficients || !isArray(coefficients)){
-            console.error(`${name} coefficients must be an array`)
-            return false
-        }
-        if(coefficients.length < 1 ||  coefficients.length > 20 ){
-            console.error(`The number of ${name} coefficients provided (${coefficients.length}) is outside the range [1, 20].`)
-            return false
-        }
-        return true
     }
 
     /**
@@ -311,7 +295,7 @@ export default class WebAudio extends BaseAudio {
      */
     IIRFilter(feedForward, feedBack){
 
-       if(!this._validateCoeff("feedForward", feedForward) || !this._validateCoeff("feedBack", feedBack)) return this
+       if(!validateCoeff("feedForward", feedForward) || !validateCoeff("feedBack", feedBack)) return this
 
         try{
             const iirFilterNode = this._audioContext.createIIRFilter(feedForward, feedBack)
@@ -321,6 +305,32 @@ export default class WebAudio extends BaseAudio {
         } finally {
             return this
         }
+    }
+
+    /**
+     * Create distortion node
+     * @param {number} amount The amount of distortion
+     * @param {string} oversample The type of over sample
+     */
+    distortion(amount, oversample){
+        if(this._validate("distortion amount", amount, [0, 1])){
+
+            const distortionNode = this._nodes.has('distortion') ? this._nodes.get('distortion') : this._audioContext.createWaveShaper()
+            const sampleRate = this._audioBuffers.get(this._identifier).sampleRate
+            distortionNode.curve = creatDistortionCurve(amount * 100, sampleRate)
+
+            if(oversample){
+                if(oversample == '2x' || oversample == '4x'){
+                    distortionNode.oversample = oversample
+                } else {
+                    console.warn('The over sample type must be either "2x" or "4x".')
+                }
+            }
+            if(!this._nodes.has("distortion")){
+                this._nodes.set("distortion", distortionNode)
+            }
+        }
+        return this
     }
 
     /**

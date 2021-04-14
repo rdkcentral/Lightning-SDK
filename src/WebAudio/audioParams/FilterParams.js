@@ -5,7 +5,8 @@ export default class FilterParams {
         this._type = {
             name: "type",
             validator: ["isString", "isValidFilterType"],
-            filters : Object.values(FilterParams.TYPE)
+            filters : Object.values(FilterParams.TYPE),
+            value: FilterParams.TYPE.LOWPASS
         }
 
         this._frequency = {
