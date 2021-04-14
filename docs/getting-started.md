@@ -40,7 +40,7 @@ Within a Lightning App you can use custom fonts. Custom fonts will automatically
     getFonts() {
         return [
             {family: 'Roboto', url: Utils.asset('fonts/Roboto-Regular.ttf'), descriptors: {}},
-            {family: 'Roboto', url: Utils.asset('fonts/Roboto-Bold.ttf'), descriptors: { weight: 'bold' }}
+            {family: 'Roboto', url: Utils.asset('fonts/Roboto-Bold.ttf'), descriptors: { weight: 'bold' }},
             {family: 'ComicSans', url: Utils.asset('fonts/comi.ttf'), descriptors: { weight: 'bold' }}
         ]
     }
