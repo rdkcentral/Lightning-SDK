@@ -7,6 +7,7 @@
 - Fixed cross origin issue in VideoPlayer plugin
 - Added support for multiple font types per font-family (addresses #185)
 - Fix in cleanup sequence in starApp.js
+- Fixed potential memory leak in Registry plugin (only when devtools are open)
 - Router updates
     - Added `afterEachRoute` hook
     - Added support to hook into route error
