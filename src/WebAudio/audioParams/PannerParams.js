@@ -3,20 +3,15 @@ export default class PannerParams extends BasePanner {
     constructor(){
         super()
 
-        this._readOnlyParams = [ 'orientationX',  'orientationY', 'orientationZ',
-                                'positionX', 'positionY', 'positionZ']
-
-        this._params = [ ...this._readOnlyParams, 'coneInnerAngle',  'coneOuterAngle', 'coneOuterGain',
-                        'distanceModel', 'maxDistance', 'panningModel', 'refDistance', 'rolloffFactor'
+        this._params = ['orientationX',  'orientationY', 'orientationZ',
+                        'positionX', 'positionY', 'positionZ', 'coneInnerAngle',
+                        'coneOuterAngle', 'coneOuterGain', 'distanceModel', 'maxDistance',
+                        'panningModel', 'refDistance', 'rolloffFactor'
                         ]
     }
 
     get params(){
         return this._params
-    }
-
-    get readOnlyParams(){
-        return this._readOnlyParams
     }
 
     set coneInnerAngle(v){
@@ -143,5 +138,9 @@ export default class PannerParams extends BasePanner {
     }
     get rolloffFactor(){
         return this._rolloffFactor.value
+    }
+
+    isReadonly(param){
+        return this[`_${param}`].readOnly
     }
 }

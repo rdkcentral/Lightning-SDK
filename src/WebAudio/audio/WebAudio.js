@@ -1,6 +1,6 @@
 import BaseAudio from './BaseAudio'
 import { CompressorParams, FilterParams, PannerParams, PannerNodeWrapper } from './../audioParams'
-import { creatDistortionCurve, validateCoeff, nodeParamsSetter } from './audioUtils'
+import { creatDistortionCurve, validateCoeff, setNodeParams } from './audioUtils'
 import { isArray } from './../utils'
 
 /**
@@ -250,7 +250,7 @@ export default class WebAudio extends BaseAudio {
 
         const compressor = this._nodes.has("compressor") ? this._nodes.get("compressor") : this._audioContext.createDynamicsCompressor()
 
-        nodeParamsSetter(compressor, compressorParams)
+        setNodeParams(compressor, compressorParams)
 
         if(!this._nodes.has("compressor")){
             this._nodes.set("compressor", compressor)
@@ -270,7 +270,7 @@ export default class WebAudio extends BaseAudio {
         const key = "filter_" + filterParams.type
         const filter = this._nodes.has(key) ? this._nodes.get(key) : this._audioContext.createBiquadFilter()
 
-        nodeParamsSetter(filter, filterParams)
+        setNodeParams(filter, filterParams)
 
         if(!this._nodes.has(key)){
             this._nodes.set(key, filter)
@@ -333,12 +333,12 @@ export default class WebAudio extends BaseAudio {
             return this
         }
         const key = 'panner'
-        const panner = this._nodes.has(key) ? this._nodes.get(key) : this._audioContext.createPanner()
+        const pannerNode = this._nodes.has(key) ? this._nodes.get(key) : this._audioContext.createPanner()
 
-        nodeParamsSetter(panner, pannerParams)
+        setNodeParams(pannerNode, pannerParams)
 
         if(!this._nodes.has(key)){
-            this._nodes.set(key, panner)
+            this._nodes.set(key, pannerNode)
         }
         return this
     }
@@ -351,12 +351,10 @@ export default class WebAudio extends BaseAudio {
      */
     getPanner(){
         if(this._nodes.has('panner')){
-            if(!this._pannerNode){
-                console.log("first time create panner node")
-                this._pannerNode = new PannerNodeWrapper(this._nodes.get('panner'))
+            if(!this._pannerNodeWrapper){
+                this._pannerNodeWrapper = new PannerNodeWrapper(this._nodes.get('panner'))
             }
-            console.log('Returning the panner node')
-            return this._pannerNode
+            return this._pannerNodeWrapper
         } else {
             console.warn(`panner node not configured`)
         }
@@ -386,13 +384,13 @@ export default class WebAudio extends BaseAudio {
         this._currentOffset = 0
         this._loop = false
         this._nodes = new Map()
-        this._pannerNode = undefined
+        this._pannerNodeWrapper = undefined
         this._createEntryForDelayNode()
         return this
     }
 
     /**
-     *  Remove the connected audio graph by disconnecting nodes
+     * Remove the connected audio graph by disconnecting nodes
      */
     _removeAudioGraph(){
         let finalNode = this._sourceNode

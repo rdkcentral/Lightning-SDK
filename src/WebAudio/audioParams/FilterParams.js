@@ -6,42 +6,42 @@ export default class FilterParams {
             name: "type",
             validator: ["isString", "isExists"],
             possibleValues : Object.values(FilterParams.TYPE),
-            value: FilterParams.TYPE.LOWPASS
+            value: FilterParams.TYPE.LOWPASS,
+            readOnly: false
         }
 
         this._frequency = {
             name: "frequency",
-            validator : commonValidators
+            validator : commonValidators,
+            readOnly: true
         }
 
         this._detune = {
             name: "detune",
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: true
         }
 
         this._gain = {
             name: "gain",
             validator: [...commonValidators, "range"],
-            range: [-40, 40]
+            range: [-40, 40],
+            readOnly: true
         }
 
         this._Q = {
             name: "quality factor",
             validator: [...commonValidators, "range"],
-            range: [0.0001, 1000]
+            range: [0.0001, 1000],
+            readOnly: true
         }
 
         this._validator = new Validator()
-        this._readOnlyParams = ["frequency", "Q", "gain"]
-        this._params = ["type", ...this._readOnlyParams]
+        this._params = ["type", "frequency", "Q", "gain"]
     }
 
     get params(){
         return this._params
-    }
-
-    get readOnlyParams(){
-        return this._readOnlyParams
     }
 
     set type(v){
@@ -54,7 +54,6 @@ export default class FilterParams {
     }
 
     set frequency(v){
-        console.log(this._frequency)
         if(this._validator.validate(this._frequency, v)){
             this._frequency.value = v
         }
@@ -89,6 +88,11 @@ export default class FilterParams {
     get Q(){
         return this._Q.value
     }
+
+    isReadonly(param){
+        return this[`_${param}`].readOnly
+    }
+
 }
 
 FilterParams.TYPE  = {

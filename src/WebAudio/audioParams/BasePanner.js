@@ -6,74 +6,88 @@ export default class BasePanner {
 
         this._coneInnerAngle = {
             name: 'coneInnerAngle',
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: false
         }
 
         this._coneOuterAngle = {
             name: 'coneOuterAngle',
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: false
         }
 
         this._coneOuterGain = {
             name: 'coneOuterGain',
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: false
         }
 
         this._distanceModel = {
             name: 'distanceModel',
             validator: ['isString', 'isExists'],
-            possibleValues: ['linear', 'inverse', 'exponential']
+            possibleValues: ['linear', 'inverse', 'exponential'],
+            readOnly: false
         }
 
         this._maxDistance = {
             name: 'maxDistance',
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: false
         }
 
         this._orientationX = {
             name: 'orientationX',
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: true
         }
 
         this._orientationY = {
             name: 'orientationY',
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: true
         }
 
         this._orientationZ = {
             name: 'orientationZ',
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: true
         }
 
         this._panningModel = {
             name: 'panningModel',
             validator: ['isString', 'isExists'],
-            possibleValues: ['equalpower', 'HRTF']
+            possibleValues: ['equalpower', 'HRTF'],
+            readOnly: false
         }
 
         this._positionX = {
             name: 'positionX',
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: true
         }
 
         this._positionY = {
             name: 'positionY',
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: true
         }
 
         this._positionZ = {
             name: 'positionZ',
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: true
         }
 
         this._refDistance = {
             name: 'refDistance',
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: false
         }
 
         this._rolloffFactor = {
             name: 'rolloffFactor',
-            validator: commonValidators
+            validator: commonValidators,
+            readOnly: false
         }
 
         this._validator = new Validator()

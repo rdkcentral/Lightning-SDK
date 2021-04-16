@@ -12,45 +12,45 @@ export default class CompressorParams {
        this._threshold = {
             name: "threshold",
             validator: commonValidators,
-            range:[-100, 0]
+            range:[-100, 0],
+            readOnly: true
        }
 
        this._knee = {
            name: "knee",
            validator: commonValidators,
-           range: [0, 40]
+           range: [0, 40],
+           readOnly: true
        }
 
        this._ratio = {
            name: "ratio",
            validator: commonValidators,
-           range: [1, 20]
+           range: [1, 20],
+           readOnly: true
        }
 
        this._attack = {
            name: "attack",
            validator: commonValidators,
            range: [0, 1],
+           readOnly: true
        }
 
        this._release = {
            name: "release",
            validator: commonValidators,
-           range: [0, 1]
+           range: [0, 1],
+           readOnly: true
        }
 
        this._validator = new Validator()
 
        this._params = ["threshold", "knee", "ratio", "attack", "release"]
-       this._readOnlyParams = this._params
     }
 
     get params(){
         return this._params
-    }
-
-    get readOnlyParams(){
-        return this._readOnlyParams
     }
 
     set threshold(v){
@@ -101,5 +101,9 @@ export default class CompressorParams {
 
     get release(){
         return this._release.value
+    }
+
+    isReadonly(param){
+        return this[`_${param}`].readOnly
     }
 }

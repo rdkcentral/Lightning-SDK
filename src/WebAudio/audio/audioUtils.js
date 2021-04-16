@@ -38,11 +38,10 @@ export const validateCoeff = (name, coefficients) => {
  * @param {AudioNode} node The AudioNode
  * @param {Object} nodeParams The node parameters instance
  */
-export const nodeParamsSetter = (node, nodeParams) => {
-    const readOnlyParams = nodeParams.readOnlyParams
+export const setNodeParams = (node, nodeParams) => {
     nodeParams.params.forEach( (param) => {
         if(nodeParams[param]){
-            if(readOnlyParams.includes(param)){
+            if(nodeParams.isReadonly(param)){
                 node[param].value = nodeParams[param]
             } else {
                 node[param] =  nodeParams[param]
