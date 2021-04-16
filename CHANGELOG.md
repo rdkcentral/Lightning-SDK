@@ -15,6 +15,13 @@
     - Fixed `bootComponent` now showing before `bootRequest`
     - Fixed always adding `request` object in queue
 
+## v4.2.2
+
+*6 april 2021*
+
+- Fixed hashchange event listener only for routed apps
+- Fixed referece to app id in closing sequence startApp.js
+
 ## v4.2.1
 
 *9 march 2021*
