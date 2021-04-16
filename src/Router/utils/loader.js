@@ -27,6 +27,7 @@ import {
   getPreviousState,
   getActivePage,
   routerConfig,
+  routeExists,
 } from './router'
 
 import Log from '../../Log'
@@ -167,7 +168,9 @@ const loader = async request => {
       if (hash !== getLastHash()) {
         return false
       } else {
-        emit(request.page, 'dataProvided')
+        if (request.providerType !== 'after') {
+          emit(request.page, 'dataProvided')
+        }
         // resolve promise
         return request
       }
@@ -188,7 +191,7 @@ const handleError = request => {
     Log.error(request)
   }
 
-  if (request.page) {
+  if (request.page && routeExists('!')) {
     navigate('!', { request }, false)
   }
 }
