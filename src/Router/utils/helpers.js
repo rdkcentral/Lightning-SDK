@@ -105,18 +105,39 @@ export const incorrectParams = (cb, route) => {
 }
 
 export const getQueryStringParams = hash => {
+  let parse = ''
   const getQuery = /([?&].*)/
   const matches = getQuery.exec(hash)
   const params = {}
 
+  if (document.location && document.location.search) {
+    parse = document.location.search
+  }
+
   if (matches && matches.length) {
-    const urlParams = new URLSearchParams(matches[1])
+    let hashParams = matches[1]
+    if (parse) {
+      // if location.search is not empty we
+      // remove the leading ? to create a
+      // valid string
+      hashParams = hashParams.replace(/^\?/, '')
+      // we parse hash params last so they we can always
+      // override search params with hash params
+      parse = `${parse}&${hashParams}`
+    } else {
+      parse = hashParams
+    }
+  }
+
+  if (parse) {
+    const urlParams = new URLSearchParams(parse)
     for (const [key, value] of urlParams.entries()) {
       params[key] = value
     }
     return params
+  } else {
+    return false
   }
-  return false
 }
 
 export const objectToQueryString = obj => {
@@ -142,4 +163,5 @@ export const symbols = {
   resume: Symbol('resume'),
   backtrack: Symbol('backtrack'),
   historyState: Symbol('historyState'),
+  queryParams: Symbol('queryParams'),
 }

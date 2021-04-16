@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-import { symbols } from './helpers'
+import { symbols, getQueryStringParams } from './helpers'
 import { app, routes, routeExists } from './router'
 import { getValuesFromHash } from './route'
 import emit from './emit'
@@ -35,7 +35,7 @@ export const types = {
   },
   after: request => {
     try {
-      execProvider(request)
+      execProvider(request, true)
     } catch (e) {
       // for now we fail silently
     }
@@ -47,27 +47,33 @@ export const types = {
   },
 }
 
-const execProvider = request => {
+const execProvider = (request, emitProvided) => {
   const route = request.route
   const provider = route.provider
   const expires = route.cache ? route.cache * 1000 : 0
   const params = addPersistData(request)
   return provider.request(request.page, { ...params }).then(() => {
     request.page[symbols.expires] = Date.now() + expires
+    if (emitProvided) {
+      emit(request.page, 'dataProvided')
+    }
   })
 }
 
 export const addPersistData = ({ page, route, hash, register = new Map() }) => {
   const urlValues = getValuesFromHash(hash, route.path)
+  const queryParams = getQueryStringParams(hash)
   const pageData = new Map([...urlValues, ...register])
   const params = {}
 
   // make dynamic url data available to the page
   // as instance properties
   for (let [name, value] of pageData) {
-    // @todo: show page prop deprecation in changelog
-    // page[name] = value;
     params[name] = value
+  }
+
+  if (queryParams) {
+    params[symbols.queryParams] = queryParams
   }
 
   // check navigation register for persistent data
