@@ -4,8 +4,8 @@ export default class FilterParams {
         const commonValidators = ["isNumber"]
         this._type = {
             name: "type",
-            validator: ["isString", "isValidFilterType"],
-            filters : Object.values(FilterParams.TYPE),
+            validator: ["isString", "isExists"],
+            possibleValues : Object.values(FilterParams.TYPE),
             value: FilterParams.TYPE.LOWPASS
         }
 
@@ -32,11 +32,16 @@ export default class FilterParams {
         }
 
         this._validator = new Validator()
-        this._params = ["type", "frequency", "Q", "gain"]
+        this._readOnlyParams = ["frequency", "Q", "gain"]
+        this._params = ["type", ...this._readOnlyParams]
     }
 
     get params(){
         return this._params
+    }
+
+    get readOnlyParams(){
+        return this._readOnlyParams
     }
 
     set type(v){

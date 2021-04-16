@@ -23,14 +23,14 @@ export default class Validator {
      */
     isNumber(param, val){
         if(isNaN(val)){
-            console.error(console.error(`${param.name} must be a number`))
+            console.error(`${param.name} must be a number`)
             return false
         }
         return true
     }
 
     /**
-     * Check the given value is withing the audio parameter range or not
+     * Check the given value is within the audio parameter range or not
      */
     range(param, val){
         if(val < param.range[0] || val > param.range[1]){
@@ -56,6 +56,17 @@ export default class Validator {
             return true
         }
         console.error(`${param.name} is not a valid filter type`)
+        return false
+    }
+
+    /**
+     * Check given value is available in possible values array
+     */
+    isExists(param, val){
+        if(param.possibleValues.includes(val)){
+            return true
+        }
+        console.error(`${param.name} is not a valid value. possible values are ${param.possibleValues}`)
         return false
     }
 }

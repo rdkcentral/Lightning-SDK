@@ -1,6 +1,6 @@
 import BaseAudio from './BaseAudio'
-import { CompressorParams, FilterParams } from './../audioParams'
-import { creatDistortionCurve, validateCoeff } from './audioUtils'
+import { CompressorParams, FilterParams, PannerParams, PannerNodeWrapper } from './../audioParams'
+import { creatDistortionCurve, validateCoeff, nodeParamsSetter } from './audioUtils'
 import { isArray } from './../utils'
 
 /**
@@ -250,11 +250,8 @@ export default class WebAudio extends BaseAudio {
 
         const compressor = this._nodes.has("compressor") ? this._nodes.get("compressor") : this._audioContext.createDynamicsCompressor()
 
-        compressorParams.params.forEach( (key) => {
-            if(compressorParams[key]){
-                compressor[key].value = compressorParams[key]
-            }
-        })
+        nodeParamsSetter(compressor, compressorParams)
+
         if(!this._nodes.has("compressor")){
             this._nodes.set("compressor", compressor)
         }
@@ -273,15 +270,8 @@ export default class WebAudio extends BaseAudio {
         const key = "filter_" + filterParams.type
         const filter = this._nodes.has(key) ? this._nodes.get(key) : this._audioContext.createBiquadFilter()
 
-        filterParams.params.forEach( (key) => {
-            if(filterParams[key]){
-                if("type" == key){
-                    filter[key]= filterParams[key]
-                    return
-                }
-                filter[key].value = filterParams[key]
-            }
-        })
+        nodeParamsSetter(filter, filterParams)
+
         if(!this._nodes.has(key)){
             this._nodes.set(key, filter)
         }
@@ -334,6 +324,45 @@ export default class WebAudio extends BaseAudio {
     }
 
     /**
+     * Create a panner node by setting all the configured panner parameters
+     * @param {Object} pannerParams The panner node parameters
+     */
+    panner(pannerParams){
+        if( !pannerParams || !(pannerParams instanceof PannerParams)){
+            console.error("The argument must be instance of PannerParams")
+            return this
+        }
+        const key = 'panner'
+        const panner = this._nodes.has(key) ? this._nodes.get(key) : this._audioContext.createPanner()
+
+        nodeParamsSetter(panner, pannerParams)
+
+        if(!this._nodes.has(key)){
+            this._nodes.set(key, panner)
+        }
+        return this
+    }
+
+    /**
+     * Create panner node wrapper on top on connected panner node.
+     * The wrapper enable provision to directly update the panner node parameters.
+     * As panner node is mainly used in spatialization user may change the
+     * position and orientation of audio source more frequently based on moment of objects
+     */
+    getPanner(){
+        if(this._nodes.has('panner')){
+            if(!this._pannerNode){
+                console.log("first time create panner node")
+                this._pannerNode = new PannerNodeWrapper(this._nodes.get('panner'))
+            }
+            console.log('Returning the panner node')
+            return this._pannerNode
+        } else {
+            console.warn(`panner node not configured`)
+        }
+    }
+
+    /**
      * Reset to default state
      */
     reset(){
@@ -342,6 +371,7 @@ export default class WebAudio extends BaseAudio {
         this._currentOffset = 0
         this._loop = false
         this._nodes = new Map()
+        this._pannerNode = undefined
         this._createEntryForDelayNode()
         return this
     }

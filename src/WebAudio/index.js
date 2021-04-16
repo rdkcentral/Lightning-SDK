@@ -1,7 +1,8 @@
 import loader from './loader'
-import { isFunction, isObject, isArray, filters } from './utils'
+import { isFunction, isObject, isArray} from './utils'
 import { WebAudio, HTMLAudio } from './audio'
-import { CompressorParams, FilterParams} from './audioParams'
+import { CompressorParams, FilterParams, PannerParams} from './audioParams'
+import WebAudioListener from './WebAudioListener'
 
 let AudioCtx
 let ctx
@@ -10,6 +11,7 @@ let initialized = false
 let allAudioInstances = new Map()
 let effectsBuffers = new Map()
 let isAudioContextAvailable = false
+let listener
 
 if(window.AudioContext || window.webkitAudioContext){
   isAudioContextAvailable = true
@@ -247,6 +249,16 @@ const removeEffects = async(identifiers) => {
   })
 }
 
+const getListener = () => {
+  if(isAudioContextAvailable){
+    if(!listener){
+      listener = new WebAudioListener(ctx)
+    }
+    return listener
+  }
+  console.warn('Audio context not available')
+}
+
 export default {
   initWebAudio,
   load,
@@ -266,4 +278,6 @@ export default {
   removeEffects,
   CompressorParams,
   FilterParams,
+  PannerParams,
+  getListener
 }

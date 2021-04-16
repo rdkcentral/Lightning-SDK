@@ -42,10 +42,15 @@ export default class CompressorParams {
        this._validator = new Validator()
 
        this._params = ["threshold", "knee", "ratio", "attack", "release"]
+       this._readOnlyParams = this._params
     }
 
     get params(){
         return this._params
+    }
+
+    get readOnlyParams(){
+        return this._readOnlyParams
     }
 
     set threshold(v){

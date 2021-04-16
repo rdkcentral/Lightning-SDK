@@ -32,3 +32,21 @@ export const validateCoeff = (name, coefficients) => {
     }
     return true
 }
+
+/**
+ * Used to set the parameters on given node
+ * @param {AudioNode} node The AudioNode
+ * @param {Object} nodeParams The node parameters instance
+ */
+export const nodeParamsSetter = (node, nodeParams) => {
+    const readOnlyParams = nodeParams.readOnlyParams
+    nodeParams.params.forEach( (param) => {
+        if(nodeParams[param]){
+            if(readOnlyParams.includes(param)){
+                node[param].value = nodeParams[param]
+            } else {
+                node[param] =  nodeParams[param]
+            }
+        }
+    })
+}
