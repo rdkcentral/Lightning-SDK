@@ -14,9 +14,7 @@ export default class WebAudioListener {
 
     set positionX(v){
         if(this._validate("positionX", v)){
-            console.log("position x value setting")
             this._audioContext.listener.positionX.value = v
-            console.log(this._audioContext.listener.positionX)
         }
     }
     get positionX(){
