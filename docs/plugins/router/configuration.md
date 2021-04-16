@@ -207,7 +207,7 @@ This route will now match for example `localhost:8080#player/27/286`. It will al
 ### Accessing data from route components
 
 If you [navigate](#navigation-helper) to: `127.0.0.1:8080/#player/14728/38101`
-the router will add the properties `.assetId = 14728` and `.playlistId = 38101` to the instance of the *Player* `Component`
+the router will add the properties `.assetId = 14728` and `.playlistId = 38101` to the params property of the instance of the *Player* `Component`
 
 You can also use [setters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic
 when the properties are being set.
@@ -217,11 +217,8 @@ class Player extends Lightning.Component {
     static _template(){
         return {...}
     }
-    set assetId(v){
-        // v === 14728
-    }
-    set playlistId(v){
-        // v === 38101
+    set params(args){
+        // args.assetId === 14728 && args.playlistId === 38101
     }
 }
 ```

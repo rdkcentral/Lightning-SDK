@@ -461,7 +461,6 @@ const registerListener = () => {
     }
   })
 }
-
 // export API
 export default {
   startRouter,
