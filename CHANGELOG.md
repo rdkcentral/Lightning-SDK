@@ -1,7 +1,12 @@
 # Changelog
 
-## v4.x.x
+## v4.3.0
 
+*16 april 2021*
+
+- Fixed cross origin issue in VideoPlayer plugin
+- Added support for multiple font types per font-family (addresses #185)
+- Fix in cleanup sequence in starApp.js
 - Router updates
     - Added `afterEachRoute` hook
     - Added support to hook into route error
