@@ -363,6 +363,21 @@ export default class WebAudio extends BaseAudio {
     }
 
     /**
+     * This is used to pan an audio stream left or right
+     * @param {number} pan The pan value to adjust stream between left and right
+     */
+    stereoPanner(pan){
+        if(this._validate('pan', pan, [-1, 1])){
+            const stereoPannerNode = this._nodes.has('stereoPanner') ? this._nodes.get('stereoPanner') : this._audioContext.createStereoPanner()
+            stereoPannerNode.pan.value = pan
+            if(!this._nodes.has('stereoPanner')){
+                this._nodes.set('stereoPanner', stereoPannerNode)
+            }
+        }
+        return this
+    }
+
+    /**
      * Reset to default state
      */
     reset(){

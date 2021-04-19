@@ -81,6 +81,21 @@ export default class BaseAudio{
         return this
     }
 
+    distortion(amount, oversample){
+        console.warn("distortion feature not supported")
+        return this
+    }
+
+    panner(pannerParams){
+        console.warn("panner feature not supported")
+        return this
+    }
+
+    stereoPanner(pan){
+        console.warn("stereo panner feature not supported")
+        return this
+    }
+
     reset(){
         console.warn("reset feature not supported")
     }
