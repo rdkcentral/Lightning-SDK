@@ -18,10 +18,10 @@
  */
 
 import { hasRegex, hasLookupId, isNamedGroup, stripRegex } from './regex'
-import { routes, routeExists } from './router'
+import { routes, routeExists, bootRequest } from './router'
 import Request from '../model/Request'
 import Route from '../model/Route'
-import { objectToQueryString } from './helpers'
+import { objectToQueryString, isObject } from './helpers'
 
 /**
  * Simple route length calculation
@@ -178,8 +178,28 @@ export const getOption = (stack, prop) => {
  * @param config
  */
 export const createRoute = config => {
+  // we need to provide a bit of additional logic
+  // for the bootComponent
+  if (config.path === '$') {
+    let options = {
+      preventStorage: true,
+    }
+    if (isObject(config.options)) {
+      options = {
+        ...config.options,
+        ...options,
+      }
+    }
+    config.options = options
+    // if configured add reference to bootRequest
+    // as router after provider
+    if (bootRequest) {
+      config.after = bootRequest
+    }
+  }
   return new Route(config)
 }
+
 /**
  * Create a new Router request object
  * @param url
@@ -192,10 +212,10 @@ export const createRequest = (url, args, store) => {
 }
 
 export const getHashByName = obj => {
-  if (!obj.name) {
+  if (!obj.to && !obj.name) {
     return false
   }
-  const route = getRouteByName(obj.name)
+  const route = getRouteByName(obj.to || obj.name)
   const hasDynamicGroup = /\/:([\w-]+)\/?/
   let hash = route
 

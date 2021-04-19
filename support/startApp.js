@@ -199,7 +199,7 @@ var getSettings = function getSettings() {
           } // detach app bundle from window scope
 
 
-          window[appMetadata.id] = null; // remove script tag
+          window[appMetadata.safeId] = null; // remove script tag
 
           removeJS('appbundle'); // reset vars
 

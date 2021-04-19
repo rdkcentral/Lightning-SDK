@@ -55,13 +55,14 @@ import {
   getHashByName,
 } from './utils/route'
 import { load } from './utils/loader'
-import { stripRegex } from './utils/regex'
+import { stripRegex, isWildcard } from './utils/regex'
 import { RoutedApp } from './base'
+import Registry from '../Registry'
 
 /*
 rouThor ==[x]
  */
-let navigateQueue = new Map()
+export let navigateQueue = new Map()
 let forcedHash = ''
 let resumeHash = ''
 
@@ -78,21 +79,24 @@ const startRouter = (config, instance) => {
 
 // start translating url
 const start = () => {
-  const bootKey = '@router-boot-page'
-  const hash = (getHash() || '').replace(/^#/, '')
+  let hash = (getHash() || '').replace(/^#/, '')
+  const bootKey = '$'
   const params = getQueryStringParams(hash)
   const bootRequest = getBootRequest()
-
-  // if we refreshed the boot-page we don't want to
-  // redirect to this page so we force rootHash load
+  const rootHash = getRootHash()
   const isDirectLoad = hash.indexOf(bootKey) !== -1
-  const ready = () => {
-    const rootHash = getRootHash()
 
-    if (routeExists(bootKey)) {
-      resumeHash = isDirectLoad ? rootHash : hash || rootHash
-      navigate(bootKey)
-    } else if (!hash && rootHash) {
+  // prevent direct reload of wildcard routes
+  // expect bootComponent
+  if (isWildcard.test(hash) && hash !== bootKey) {
+    hash = ''
+  }
+
+  // store resume point for manual resume
+  resumeHash = isDirectLoad ? rootHash : hash || rootHash
+
+  const ready = () => {
+    if (!hash && rootHash) {
       if (isString(rootHash)) {
         navigate(rootHash)
       } else if (isFunction(rootHash)) {
@@ -106,25 +110,43 @@ const start = () => {
       }
     } else {
       queue(hash)
-      handleHashChange().then(() => {
-        app._refocus()
-      })
+      handleHashChange()
+        .then(() => {
+          app._refocus()
+        })
+        .catch(e => {
+          console.error(e)
+        })
     }
   }
-  if (isFunction(bootRequest)) {
+
+  if (routeExists(bootKey)) {
+    navigate(
+      bootKey,
+      {
+        resume: resumeHash,
+        reload: bootKey === hash,
+      },
+      false
+    )
+  } else if (isFunction(bootRequest)) {
     bootRequest(params)
       .then(() => {
         ready()
       })
       .catch(e => {
-        if (routeExists('!')) {
-          navigate('!', { request: { error: e } })
-        } else {
-          console.error(e)
-        }
+        handleBootError(e)
       })
   } else {
     ready()
+  }
+}
+
+const handleBootError = e => {
+  if (routeExists('!')) {
+    navigate('!', { request: { error: e } })
+  } else {
+    console.error(e)
   }
 }
 
@@ -134,7 +156,7 @@ const start = () => {
  * @param args
  * @param store
  */
-export const navigate = (url, args = {}, store = true) => {
+export const navigate = (url, args = {}, store) => {
   if (isObject(url)) {
     url = getHashByName(url)
     if (!url) {
@@ -175,7 +197,7 @@ export const navigate = (url, args = {}, store = true) => {
   }
 }
 
-const queue = (hash, args = {}, store = true) => {
+const queue = (hash, args = {}, store) => {
   hash = hash.replace(/^#/, '')
   if (!navigateQueue.has(hash)) {
     for (let request of navigateQueue.values()) {
@@ -366,8 +388,12 @@ const resume = () => {
   if (isString(resumeHash)) {
     navigate(resumeHash, false)
   } else if (isFunction(resumeHash)) {
-    resumeHash().then(url => {
-      navigate(url, false)
+    resumeHash().then(res => {
+      if (isObject(res)) {
+        navigate(res.path, res.params)
+      } else {
+        navigate(res)
+      }
     })
   } else {
     console.warn('[Router]: resume() called but no hash found')
@@ -425,7 +451,7 @@ export const initRouter = config => {
  * On hash change we start processing
  */
 const registerListener = () => {
-  window.addEventListener('hashchange', async () => {
+  Registry.addEventListener(window, 'hashchange', async () => {
     if (mustUpdateLocationHash()) {
       try {
         await handleHashChange()
