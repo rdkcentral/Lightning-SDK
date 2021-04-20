@@ -49,7 +49,7 @@ export const updateHistory = request => {
   if (store) {
     const toStore = hash.replace(/^\//, '')
     const location = locationInHistory(toStore)
-    const stateObject = getStateObject(getActivePage())
+    const stateObject = getStateObject(getActivePage(), request)
     const routerConfig = getRouterConfig()
 
     // store hash if it's not a part of history or flag for
@@ -102,8 +102,14 @@ export const replaceHistoryState = (state = null, hash) => {
   }
 }
 
-const getStateObject = page => {
-  if (page && isFunction(page.historyState)) {
+const getStateObject = (page, request) => {
+  // if the new request shared instance with the
+  // previous request we used the copied state object
+  if (request.isSharedInstance) {
+    if (request.copiedHistoryState) {
+      return request.copiedHistoryState
+    }
+  } else if (page && isFunction(page.historyState)) {
     return page.historyState()
   }
   return null

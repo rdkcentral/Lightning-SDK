@@ -31,7 +31,7 @@ import {
 } from './router'
 
 import Log from '../../Log'
-import { isBoolean, isComponentConstructor, symbols } from './helpers'
+import { isBoolean, isComponentConstructor, isFunction, symbols } from './helpers'
 import { getProvider, hasProvider, isPageExpired, types, addPersistData } from './provider'
 import { createComponent } from './components'
 import { executeTransition } from './transition'
@@ -120,7 +120,7 @@ const loader = async request => {
     }
   }
 
-  // If type is not a constructor
+  // If page is Lightning Component instance
   if (!isConstruct) {
     request.page = type
     // if we have have a data route for current page
@@ -136,6 +136,12 @@ const loader = async request => {
     // and check platform settings in we want to re-use instance
     if (route.path === currentRoute) {
       request.isSharedInstance = true
+      // since we're re-using the instance we must attach
+      // historyState to the request to prevent it from
+      // being overridden.
+      if (isFunction(request.page.historyState)) {
+        request.copiedHistoryState = request.page.historyState()
+      }
     }
   } else {
     request.page = createComponent(stage, type)
