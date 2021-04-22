@@ -5,7 +5,7 @@ You use the *Registry* plugin to globally register and unregister *event listene
 The plugin primarily serves as a proxy for the standard HTML5 Web APIs for setting and clearing listeners, intervals and timeouts
 (for example, `window.setTimeout()` and `element.addEventListener()`).
 
-An additional benefit of the *Registry* plugin is that any running timers, intervals and event listeners are
+The added benefit of the *Registry* plugin is that any running timers, intervals and event listeners are
 automatically cleaned up when your App is closed.
 
 > It is recommended to *always* use the Registry plugin (instead of the HTML5 Web APIs) because memory leaks are often caused by listeners and intervals that are not properly cleaned up.
@@ -124,13 +124,10 @@ Registery.removeEventListener(target, event, cb)
 
 Removes *multiple* registered event listeners all at once.
 
-The `removeEventListeners` method accepts two optional arguments, `target` and `event`. It handles the arguments as follows:
-
-* If *no* arguments are passed, *all* previously registered listeners are removed.
-
-* If *only* a `target` argument is passed, all event listeners for the specified *target* are unregistered.
-
-* If a `target`*and* an `event` argument are passed, all listeners for that specific *event* on that *target* are removed.
+The `removeEventListeners` method accepts two optional arguments, `target` and `event`:
+- If *no* arguments are passed, *all* previously registered listeners will be removed.
+- If *only* a `target` argument is passed, all event listeners for the specified *target* will be unregistered.
+- If a `target`*and* an `event` argument are passed, all listeners for that specific *event* on that *target* will be removed.
 
 Summarizing:
 

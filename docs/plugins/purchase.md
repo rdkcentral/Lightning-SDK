@@ -51,7 +51,7 @@ The `setup` method accepts a *configuration object* as its only argument. The ob
 * `cspUrl`: specifies the *base URL* of the backend of the CSP (Content Service Provider).
 * `endPoints`: can be used to customize those API endpoints that differ from the default specification (as outlined below). For each *endpoint* that differs from the default, you specify the *URI* (which will be appended to the `cspUrl`, unless specified as a fully qualified domain) and the REST *method* to use.
 
-If needed, you an also specify an object with custom `headers` that will be merged with the default headers (`{ Accept: 'application/json', 'Content-Type': 'application/json' }`).
+If needed, you can also specify an object with custom `headers` that will be merged with the default headers (`{ Accept: 'application/json', 'Content-Type': 'application/json' }`).
 
 ```js
 {
@@ -101,9 +101,34 @@ Purchase.setup('http://csp-backend.com/api', {
 
 In some cases, the setup of the CSP backend differs too much from the default specification and it becomes too difficult to configure the enpoint URIs. In those cases, you can specify a *callback* instead, and handle the request to the CSP backend entirely yourself.
 
-The callback function will receive 2 arguments: *params* and *data*. It should always return a Promise which resolves with the result (or rejects with an error in case of a failure).
+The callback function will receive 2 arguments: `params` and `data`. It should always return a Promise which resolves with the result (or rejects with an error in case of a failure).
 
 > When a callback is specified, all other keys in the endpoint configuration are ignored.
+
+```js
+Purchase.setup('http://csp-backend.com/api', {
+  asset: {
+    callback(params, data) {
+      return Promise((resolve, reject) => {
+        Api.getAssetDetails(params.id)
+          .then(resolve)
+          .catch(reject)
+      }
+    }
+  },
+  signature: {
+    callback(params, data) {
+      return fetch('http://csp-backend.com/api/' + data.household + '?productId=' + params.id, {
+        headers: {
+          'Accept': 'application/json',
+				  'Content-Type': 'application/json'
+        }),
+        method: 'POST',
+      })
+    }
+  },
+})
+```
 
 ### assets
 
@@ -123,9 +148,9 @@ Purchase.assets().then(assets => {
 
 The `asset` method returns a Promise with the result of the request to the CSP to retrieve details for a specific asset.
 
-The `household` is automatically sent as a `query param` in the request. This allows to return information on whether the assets were purchased by the current household or not.
+The `household` is automatically sent as a `query param` in the request. This allows to return information on whether the asset was purchased by the current household or not.
 
-The `asset` method is an *optional* convenience method provided by the Purchase plugin. Depending on the CSP's API integration, the functionality to retrieve assets can be fully custom-implemented in your App.
+The `asset` method is an *optional* convenience method provided by the Purchase plugin. Depending on the CSP's API integration, the functionality to retrieve an asset can be fully custom-implemented in your App.
 
 ```js
 const assetId = '123abc'

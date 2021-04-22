@@ -3,7 +3,7 @@
 The *TV* plugin serves as an abstraction layer to the *live TV* functionality of an STB. The interface gives access to the current channel
 and program information, and allows you to change the TV channel from *inside* an App (if your App is *whitelisted* for that purpose).
 
-You can use the TV plugin to adapt your App contextually to what the user is currently watching on TV.
+One of the things you can do with the TV plugin, is adapting your App contextually to what the user is currently watching on TV.
 
 ## Usage
 
@@ -25,7 +25,7 @@ Either *[retrieves](#retrieve-current-channel)* information about the TV channel
 TV.channel().then(channel => console.log(channel))
 ```
 
-The `channel` method returns a *Promise* that returns the channel information as an object.
+The `channel` method returns a *Promise* that returns the channel information as an object. The Promise is *rejected* if an error occurred or if the App is not allowed to retrieve the information.
 
 During *development*, the `channel` method returns a *random mocked channel*. Optionally, you can [overwrite](#overwriting-default-values) the default values by editing the **settings.json** file. For example:
 
@@ -46,7 +46,7 @@ TV.channel(channelNumber).then(channel => console.log(channel))
 ```
 
 If a `channelNumber` is passed as an argument, the `channel` method attempts to change the TV channel.
-It returns a *Promise* that returns the channel information as an object.
+It returns a *Promise* that returns the channel information as an object. The Promise is *rejected* if an error occurred or if the App is not allowed to set the channel.
 
 During *development*, you can pass either 1, 2 or 3 as the `channelNumber`, so that one of the default mocked channels can be selected.
 

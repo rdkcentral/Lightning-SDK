@@ -1,6 +1,6 @@
 # Settings
 
-An App that is created with the Lightning SDK, can be configured with various options. These options can be grouped into [App settings](#app-settings) and [Platform settings](#platform-settings).
+An App that is created with the Lightning SDK, can be configured with various options. These options are grouped into [App settings](#app-settings) and [Platform settings](#platform-settings).
 
 During development, you can configure your own settings in **settings.json**  to simulate different environments. For example:
 
@@ -57,6 +57,8 @@ Sets a key for *a user-defined setting* where  `value` is of type `user`.
 Settings.set(key, value)
 ```
 
+> The `set` method cannot overwrite App or Platform Settings.
+
 ### has
 
 Returns `true` or `false`, depending on whether a setting is defined or not.
@@ -67,7 +69,7 @@ Settings.has(type, key)
 
 ### subscribe
 
-Adds a callback to the notification stack. The callback is notified when the value of a `user` key has changed. You can add multiple callbacks for the same key.
+Adds a callback to the notification stack. The callback is triggered when the value of a `user` key has changed. You can add multiple callbacks for the same key.
 
 ```js
 Settings.subscribe(key, callback)
@@ -91,8 +93,9 @@ If the optional `callback` parameter is omitted, the method pops *all* callbacks
 
 Clears *all* subscribers that are listening for `user` key changes.
 
-`Settings.clearSubscribers()
-`
+```js
+Settings.clearSubscribers()
+```
 
 This method is automatically called when the App is closed, to prevent *memory leaks*.
 

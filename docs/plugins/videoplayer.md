@@ -2,18 +2,16 @@
 
 A common feature of TV Apps is to play videos.
 
-The *VideoPlayer* plugin offers a convenient interface
-for interacting with the video player of the STB. You can use it to open and play / pause videos. Additionally, it provides APIs that you can use to, for example, control the size of the video player.
+The *VideoPlayer* plugin offers a convenient interface for interacting with the video player of the STB. You can use it to open and play / pause videos. Additionally, it provides APIs that you can use to, for example, control the size of the video player.
 
-The VideoPlayer plugin has a built-in integration with the [Metrics](metrics.md) plugin. It automatically sends statistics for
-various [media events](#events) (for example: canplay, play, pause, seeking, seeked).
+The VideoPlayer plugin has a built-in integration with the [Metrics](metrics.md) plugin. It automatically sends statistics for various [media events](#events) (for example: canplay, play, pause, seeking, seeked).
 
 > Although it is possible to implement a fully custom video playback solution, the use of the VideoPlayer plugin from
 the SDK is highly recommended.
 
 ## Usage
 
-In the Lightning components that require video playback capabilities (i.e., Player components), you can import the
+In the Lightning components that require video playback capabilities (i.e., a Player component), you can import the
 VideoPlayer plugin from the Lightning SDK:
 
 ```js
@@ -48,8 +46,6 @@ Sets the x and y position of the video player.
 
 The `position` method accepts 2 arguments: `top` and `left`. Both values must be positive or negative absolute numbers. They both default to 0 (zero).
 
-For example:
-
 ```js
 // move VideoPlayer 100 pixels down and 200 pixels to the right
 VideoPlayer.position(100, 200)
@@ -73,8 +69,7 @@ VideoPlayer.size(960, 540)
 
 Sets the x and y position *and* the size of the video player at the same time.
 
-The `area` method accepts 4 arguments: `top`, `right`, `bottom` and `left`. The value
-of each argument corresponds with the *margin* that is calculated from the edge of the screen to each side
+The `area` method accepts 4 arguments: `top`, `right`, `bottom` and `left`. The value of each argument corresponds with the *margin* that is calculated from the edge of the screen to each side
 of the video player.
 
 ```js
@@ -91,8 +86,6 @@ screen (i.e., `bottom = 1080` and `right = 1920`).
 ### open
 
 Opens a video (specified as a URL) and starts playing it as soon as the video player has buffered enough to begin.
-
-For example:
 
 ```js
 const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
@@ -163,8 +156,7 @@ VideoPlayer.playPause()
 
 Mutes or unmutes the video player, depending on its current state.
 
-The `mute` method accepts a Boolean as its single argument. When passed `true` (or when omitted), it mutes the video player.
-When passed `false`, it sets the video player to unmuted.
+The `mute` method accepts a Boolean as its single argument. When passed `true` (or when omitted), it mutes the video player. When passed `false`, it sets the video player to unmuted.
 
 ```js
 // mute a video
@@ -192,11 +184,9 @@ VideoPlayer.loop(false)
 
 Sets the current time of the video player to the specified time in seconds.
 
-The `seek` method accepts the *time in seconds* as its single argument. Negative numbers
-are automatically rounded up to 0.
+The `seek` method accepts the *time in seconds* as its single argument. Negative numbers are automatically rounded up to 0.
 
-If the value *exceeds* the duration
-of the video, it rounds the value down and jumps straight to the end of the video.
+If the value *exceeds* the duration of the video, it rounds the value down and jumps straight to the end of the video.
 
 ```js
 // seek to 20 seconds
@@ -211,11 +201,9 @@ VideoPlayer.seek(1000)
 
 Jumps a specified number of seconds forward or backward from the video's current time.
 
-The `skip` method accepts the *number of seconds to jump* as its single argument. A positive value will have it jump forwards,
-a negative value will have it jump backward.
+The `skip` method accepts the *number of seconds to jump* as its single argument. A positive value will have it jump forwards, a negative value will have it jump backward.
 
-If a jump backward would result in a value below 0 (for example, jump -20 seconds when the video is only still at 10 seconds),
-the `skip` method automatically rounds up to 0.
+If a jump backward would result in a value below 0 (for example, jump -20 seconds when the video is only still at 10 seconds), the `skip` method automatically rounds up to 0.
 
 Similarly, if you jump further than the duration of the video, the `skip` method rounds down the value and goes straight to the end of the video.
 
@@ -285,7 +273,7 @@ VideoPlayer.looped // false
 
 ### src
 
-Getter that retrieves the video player's current source (src).
+Getter that retrieves the video player's current source (`src`).
 
 ```js
 const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
@@ -374,11 +362,9 @@ VideoPlayer.visible // false
 
 ## Events
 
-The VideoPlayer plugin emits a number of [media events](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events) to its
-*consumer* (which is specified in the [`VideoPlayer.consumer()`](#consumer) method).
+The VideoPlayer plugin emits a number of [media events](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events) to its *consumer* (specified via the [`VideoPlayer.consumer()`](#consumer) method).
 
-The *consuming* component can hook into these events by specifying methods on the Class in the format: `$videoPlayer{Eventname}`, where
-`Eventname` refers to the media event to respond to.
+The *consuming* component can hook into these events by specifying methods on the Class in the format: `$videoPlayer{Eventname}`, where `Eventname` refers to the media event to respond to.
 
 These *event hook methods* will receive an Object containing a reference to the *video element* and the *html5 event* (if available) as the *first* argument.
 
@@ -391,8 +377,6 @@ Alternatively, the method `$videoPlayerEvent(eventName)` can be used as a *catch
 The second argument of a catch-all hook is the (already mentioned) Object containing a reference to the *video element* reference and the *html5 event*.
 
 The third argument is the `currentTime` of the video.
-
-For example:
 
 $videoPlayerEvent(eventName, videoElement, currentTime) {
   console.log(eventname, videoElement, currentTime)}### Event Overview

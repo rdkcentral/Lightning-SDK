@@ -26,9 +26,9 @@ Saves a key-value combination in storage.
 Storage.set(key, value)
 ```
 
-The `key` can be of type String (which is usually the case), Object, Boolean or Array.
+The key is expected to be a `String`. The value can be a `String`, `Object`, `Boolean` or `Array`.
 
-When saved, the `value` is automatically converted to a JSON object, so you do not have to call `JSON.stringify()` on objects.
+When saved, the value is automatically converted to a JSON object, so you do not have to call `JSON.stringify()` on objects yourself.
 
 ### get
 
@@ -38,7 +38,7 @@ Retrieves previously stored data from storage.
 Storage.get(key)
 ```
 
-If you stored an Object, the data is automatically converted back to an Object, soyou do not have to call  `JSON.parse()`.
+If you stored an `Object`, the data is automatically converted back to an Object, so you do not have to call `JSON.parse()` yourself.
 
 ### remove
 
@@ -50,7 +50,7 @@ Storage.remove(key)
 
 ### clear
 
-Removes *all* data from localStorage.
+Removes *all* data from storage.
 
 ```js
 Storage.clear()
