@@ -74,6 +74,7 @@ export default class VideoTexture extends Lightning.Component {
 
   start() {
     const stage = this.stage
+    this._lastTime = 0
     if (!this._updateVideoTexture) {
       this._updateVideoTexture = () => {
         if (this.videoTexture.options.source && this.videoEl.videoWidth && this.active) {
