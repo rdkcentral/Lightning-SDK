@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -158,8 +158,13 @@ export default function(App, appData, platformSettings) {
     loadFonts(fonts) {
       return new Promise((resolve, reject) => {
         fonts
-          .map(({ family, url, descriptors }) => () => {
-            const fontFace = new FontFace(family, 'url(' + url + ')', descriptors || {})
+          .map(({ family, url, urls, descriptors }) => () => {
+            const src = urls
+              ? urls.map(url => {
+                  return 'url(' + url + ')'
+                })
+              : 'url(' + url + ')'
+            const fontFace = new FontFace(family, src, descriptors || {})
             document.fonts.add(fontFace)
             return fontFace.load()
           })

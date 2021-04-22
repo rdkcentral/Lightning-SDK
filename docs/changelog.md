@@ -1,5 +1,38 @@
 # Changelog
 
+## v4.3.0
+
+*16 april 2021*
+
+- Fixed cross origin issue in VideoPlayer plugin
+- Added support for multiple font types per font-family (addresses #185)
+- Fix in cleanup sequence in starApp.js
+- Fixed potential memory leak in Registry plugin (only when devtools are open)
+- Router updates
+    - Added `afterEachRoute` hook
+    - Added support to hook into route error
+    - Added `bootComponent` as special route
+    - Added `location.search` to query params object
+    - Added query parameters to page `params()`
+    - Added named navigation to the docs
+    - Fixed reload of special routes, reload will now return to `root` page
+    - Fixed trying to navigate to `Error` component while it's not configured
+    - Fixed navigating to `bootComponent` hash directly
+    - Fixed `bootComponent` now showing before `bootRequest`
+    - Fixed always adding `request` object in queue
+
+## v4.2.2
+
+*6 april 2021*
+
+- Fixed hashchange event listener only for routed apps
+
+## v4.2.1
+
+*9 march 2021*
+
+- Fixed Router `navigate()` always adding new queue entry
+
 ## v4.2.0
 
 *9 march 2021*

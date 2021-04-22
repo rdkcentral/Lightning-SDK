@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,14 @@ export default {
     registry.eventListeners[targetIndex] = registry.eventListeners[targetIndex] || {}
     registry.eventListeners[targetIndex][event] = registry.eventListeners[targetIndex][event] || []
     registry.eventListeners[targetIndex][event].push(handler)
-    Log.info('Add eventListener', 'Target:', target, 'Event: ' + event, 'Handler:', handler)
+    Log.info(
+      'Add eventListener',
+      'Target:',
+      target,
+      'Event: ' + event,
+      'Handler:',
+      handler.toString()
+    )
   },
 
   removeEventListener(target, event, handler) {
@@ -114,7 +121,14 @@ export default {
       registry.eventListeners[targetIndex][event] = registry.eventListeners[targetIndex][
         event
       ].filter(fn => fn !== handler)
-      Log.info('Remove eventListener', 'Target:', target, 'Event: ' + event, 'Handler:', handler)
+      Log.info(
+        'Remove eventListener',
+        'Target:',
+        target,
+        'Event: ' + event,
+        'Handler:',
+        handler.toString()
+      )
       target.removeEventListener(event, handler)
     } else {
       Log.error(
@@ -124,7 +138,7 @@ export default {
         target,
         'Event: ' + event,
         'Handler',
-        handler
+        handler.toString()
       )
     }
   },

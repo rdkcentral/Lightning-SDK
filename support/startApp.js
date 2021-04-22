@@ -12,7 +12,7 @@ var _this = undefined;
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -199,7 +199,7 @@ var getSettings = function getSettings() {
           } // detach app bundle from window scope
 
 
-          window[appMetadata.id] = null; // remove script tag
+          window[appMetadata.safeId] = null; // remove script tag
 
           removeJS('appbundle'); // reset vars
 

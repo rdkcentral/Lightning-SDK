@@ -70,8 +70,32 @@ In some cases you might want to keep that page around, in order to go back to it
 Router.navigate('player/1638', {keepAlive: true, a:1, b:2})
 ```
 
-Next:
-[Data providing](dataproviding.md)
+## Named routes
+
+Instead of constructing the hash you want to navigate to yourself it's also possible to let the Router construct the hash. 
+You do this by adding a `name` property a `route` object.
+
+```js
+{
+  path: 'player/:assetId/:playlistId',
+  component: Player,
+  name: 'player'
+}
+```
+
+And to `navigate()` to it: 
+
+```js
+Router.navigate({
+     to:"player",
+     params:{
+         assetId:12, playlistId:44
+     }
+})
+```
+
+This results in: `#player/12/44`
+
 
 ### isNavigating()
 
@@ -82,3 +106,7 @@ Router.isNavigating()
 ```
 
 This will return a `boolean`
+
+Next:
+[Data providing](dataproviding.md)
+

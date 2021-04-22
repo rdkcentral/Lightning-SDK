@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import {
   isPage,
   symbols,
 } from './helpers'
-import { navigate, step } from '../index'
+import { step, navigateQueue } from '../index'
 import { createRoute, getOption } from './route'
 import { createComponent } from './components'
 import Log from '../../Log'
@@ -82,7 +82,7 @@ let rootHash
  * can be used to execute some global logic
  * and can be configured
  */
-let bootRequest
+export let bootRequest
 
 /**
  * Flag if we need to update the browser location hash.
@@ -104,13 +104,11 @@ export let beforeEachRoute = async (from, to)=>{
 }
 
 /**
- * Will be called after a navigate successfully resolved,
+ *  * Will be called after a navigate successfully resolved,
  * can be overridden via routes config
- * @param request - request object
+ * @param request
  */
-export let afterEachRoute = async request => {
-  return true
-}
+export let afterEachRoute = request => {}
 
 /**
  * All configured routes
@@ -245,10 +243,22 @@ const init = config => {
     afterEachRoute = config.afterEachRoute
   }
   if (config.bootComponent) {
+    console.warn(
+      '[Router]: Boot Component is now available as a special router: https://rdkcentral.github.io/Lightning-SDK/#/plugins/router/configuration?id=special-routes'
+    )
+    console.warn(
+      '[Router]: setting { bootComponent } property will be deprecated in a future release'
+    )
     if (isPage(config.bootComponent)) {
       config.routes.push({
-        path: '@router-boot-page',
+        path: '$',
         component: config.bootComponent,
+        // we try to assign the bootRequest as after data-provider
+        // so it will behave as any other component
+        after: bootRequest || null,
+        options: {
+          preventStorage: true,
+        },
       })
     } else {
       console.error(`[Router]: ${config.bootComponent} is not a valid boot component`)
@@ -274,6 +284,9 @@ export const getComponent = route => {
  * @returns {boolean}
  */
 export const mustUpdateLocationHash = () => {
+  if (!routerConfig || !routerConfig.size) {
+    return false
+  }
   // we need support to either turn change hash off
   // per platform or per app
   const updateConfig = routerConfig.get('updateHash')
@@ -320,6 +333,7 @@ export const onRequestResolved = request => {
     cleanUp(activePage, request)
   }
 
+  // provide history object to active page
   if (register.get(symbols.historyState) && isFunction(page.historyState)) {
     page.historyState(register.get(symbols.historyState))
   }
@@ -329,9 +343,14 @@ export const onRequestResolved = request => {
   activeHash = request.hash
   activeRoute = route.path
 
-  afterEachRoute(request).then(() => {
-    // silent
-  })
+  // cleanup all cancelled requests
+  for (let request of navigateQueue.values()) {
+    if (request.isCancelled && request.hash) {
+      navigateQueue.delete(request.hash)
+    }
+  }
+
+  afterEachRoute(request)
 
   Log.info('[route]:', route.path)
   Log.info('[hash]:', hash)

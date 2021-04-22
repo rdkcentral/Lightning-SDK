@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -125,7 +125,6 @@ export const setupVideoTag = () => {
     videoEl.setAttribute('id', 'video-player')
     videoEl.setAttribute('width', withPrecision(1920))
     videoEl.setAttribute('height', withPrecision(1080))
-    videoEl.setAttribute('crossorigin', 'anonymous')
     videoEl.style.position = 'absolute'
     videoEl.style.zIndex = '1'
     videoEl.style.display = 'none'
@@ -438,6 +437,7 @@ export default autoSetupMixin(videoPlayerPlugin, () => {
 
   textureMode = Settings.get('platform', 'textureMode', false)
   if (textureMode === true) {
+    videoEl.setAttribute('crossorigin', 'anonymous')
     videoTexture = setUpVideoTexture()
   }
 })

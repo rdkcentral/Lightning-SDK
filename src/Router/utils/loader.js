@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import {
   getPreviousState,
   getActivePage,
   routerConfig,
+  routeExists,
 } from './router'
 
 import Log from '../../Log'
@@ -167,7 +168,9 @@ const loader = async request => {
       if (hash !== getLastHash()) {
         return false
       } else {
-        emit(request.page, 'dataProvided')
+        if (request.providerType !== 'after') {
+          emit(request.page, 'dataProvided')
+        }
         // resolve promise
         return request
       }
@@ -188,7 +191,7 @@ const handleError = request => {
     Log.error(request)
   }
 
-  if (request.page) {
+  if (request.page && routeExists('!')) {
     navigate('!', { request }, false)
   }
 }
