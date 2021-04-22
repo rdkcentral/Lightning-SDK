@@ -41,6 +41,21 @@ export const defaultPlatform = {
     uid: 'ee6723b8-7ab3-462c-8d93-dbf61227998e',
     type: 'STB',
     model: 'Metrological',
+    version: {
+      sdk: {
+        major: 0,
+        minor: 1,
+        patch: 0,
+        readable: 'Firebolt JS SDK v0.1.0',
+      },
+      os: {
+        major: 0,
+        minor: 1,
+        patch: 0,
+        readable: 'Firebolt OS v0.1.0',
+      },
+      debug: '',
+    },
     hdcp: { 'hdcp1.4': true, 'hdcp2.2': false },
     hdr: {
       hdr10: true,

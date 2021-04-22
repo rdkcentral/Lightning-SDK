@@ -59,6 +59,17 @@ let hasProperty = (namespace, key) => {
   return Promise.resolve(platform[namespace] && key in platform[namespace])
 }
 
+function getVersion() {
+  let ver = platform['device']['version']
+  console.log(ver)
+  ver.debug = 'Operator - Platform\n'
+  ver.debug += new Date().toISOString() + '\n'
+  ver.debug += ver.sdk.readable + '\n'
+  ver.debug += ver.os.readable + '\n'
+  ver.debug += 'Example Component - v1.0.0'
+  return Promise.resolve(ver)
+}
+
 export const initPlatform = config => {
   getProperty = config.getProperty
   setProperty = config.setProperty
@@ -122,6 +133,9 @@ export default {
     },
     model(params) {
       return getOrSet('device', 'model', params)
+    },
+    version() {
+      return getVersion()
     },
     hdcp(params) {
       return getOrSet('device', 'hdcp', params)
