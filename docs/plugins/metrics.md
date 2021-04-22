@@ -217,7 +217,7 @@ Metrics.user.event(name, params)
 
 ### Media events
 
-The `Metrics.user` namespace is used for tracking media events.
+The `Metrics.media` namespace is used for tracking media events.
 
 The [VideoPlayer plugin](/plugins/videoplayer) automatically tracks and sends Metrics for the following media related events:
 
