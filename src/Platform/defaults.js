@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2021 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,21 @@ export const defaultPlatform = {
     uid: 'ee6723b8-7ab3-462c-8d93-dbf61227998e',
     type: 'STB',
     model: 'Metrological',
+    version: {
+      sdk: {
+        major: 0,
+        minor: 1,
+        patch: 0,
+        readable: 'Firebolt JS SDK v0.1.0',
+      },
+      os: {
+        major: 0,
+        minor: 1,
+        patch: 0,
+        readable: 'Firebolt OS v0.1.0',
+      },
+      debug: '',
+    },
     hdcp: { 'hdcp1.4': true, 'hdcp2.2': false },
     hdr: {
       hdr10: true,

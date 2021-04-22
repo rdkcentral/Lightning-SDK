@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2021 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,17 @@ let setProperty = (namespace, key, params) => {
 let hasProperty = (namespace, key) => {
   platform = Deepmerge(defaultPlatform, Settings.get('platform', 'platform', {}), platform)
   return Promise.resolve(platform[namespace] && key in platform[namespace])
+}
+
+function getVersion() {
+  let ver = platform['device']['version']
+  console.log(ver)
+  ver.debug = 'Operator - Platform\n'
+  ver.debug += new Date().toISOString() + '\n'
+  ver.debug += ver.sdk.readable + '\n'
+  ver.debug += ver.os.readable + '\n'
+  ver.debug += 'Example Component - v1.0.0'
+  return Promise.resolve(ver)
 }
 
 export const initPlatform = config => {
@@ -122,6 +133,9 @@ export default {
     },
     model(params) {
       return getOrSet('device', 'model', params)
+    },
+    version() {
+      return getVersion()
     },
     hdcp(params) {
       return getOrSet('device', 'hdcp', params)
