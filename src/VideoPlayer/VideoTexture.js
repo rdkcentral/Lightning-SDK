@@ -85,7 +85,7 @@ export default class VideoTexture extends Lightning.Component {
 
           // When BR2_PACKAGE_GST1_PLUGINS_BAD_PLUGIN_DEBUGUTILS is not set in WPE, webkitDecodedFrameCount will not be available.
           // We'll fallback to fixed 30fps in this case.
-          // As 'webkitDecodedFrameCount' is deprecated check for the 'totalVideoFrames'
+          // As 'webkitDecodedFrameCount' is about to deprecate, check for the 'totalVideoFrames'
           const frameCount = getVideoPlaybackQuality
             ? getVideoPlaybackQuality.totalVideoFrames
             : this.videoEl.webkitDecodedFrameCount
