@@ -19,7 +19,7 @@
 
 import { getLocale, getLanguage, getCountryCode, getLatLon } from './helpers'
 
-export const defaultPlatform = {
+export default {
   localization: {
     city: 'New York',
     zipCode: '27505',
@@ -41,20 +41,28 @@ export const defaultPlatform = {
     uid: 'ee6723b8-7ab3-462c-8d93-dbf61227998e',
     type: 'STB',
     model: 'Metrological',
-    version: {
-      sdk: {
-        major: 0,
-        minor: 1,
-        patch: 0,
-        readable: 'Firebolt JS SDK v0.1.0',
-      },
-      os: {
-        major: 0,
-        minor: 1,
-        patch: 0,
-        readable: 'Firebolt OS v0.1.0',
-      },
-      debug: '',
+    version: function() {
+      let ver = {
+        sdk: {
+          major: 0,
+          minor: 1,
+          patch: 0,
+          readable: 'Firebolt JS SDK v0.1.0',
+        },
+        os: {
+          major: 0,
+          minor: 1,
+          patch: 0,
+          readable: 'Firebolt OS v0.1.0',
+        },
+        debug: '',
+      }
+      ver.debug = 'Operator - Platform\n'
+      ver.debug += new Date().toISOString() + '\n'
+      ver.debug += ver.sdk.readable + '\n'
+      ver.debug += ver.os.readable + '\n'
+      ver.debug += 'Example Component - v1.0.0'
+      return ver
     },
     hdcp: { 'hdcp1.4': true, 'hdcp2.2': false },
     hdr: {
@@ -97,18 +105,5 @@ export const defaultPlatform = {
       enabled: true,
       speed: 5,
     },
-  },
-  advertising: {
-    config: {
-      siteSection: '96746720',
-      profile: '47883199',
-    },
-    policy: {
-      adSkipTier: 'NOSKIP_NORMAL_SPEED',
-      adSkipGracePeriodSeconds: 60,
-    },
-    advertisingId: 'oxPUKaCAtlyfy5ieomFw',
-    deviceAttributes: {},
-    appStoreId: '...',
   },
 }

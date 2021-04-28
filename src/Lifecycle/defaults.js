@@ -17,22 +17,29 @@
  * limitations under the License.
  */
 
-import Transport from '../Transport'
+import { store } from './index'
+
+let finished = function() {
+  if (store.current === 'unloading') {
+    location.href = 'about:blank'
+  }
+}
 
 export default {
-  config() {
-    return Transport.send('advertising', 'config')
+  ready: function() {
+    store.current = 'inactive'
+    setTimeout(() => (store.current = 'foreground'), 100)
   },
-  policy() {
-    return Transport.send('advertising', 'policy')
+  close: function(params) {
+    let reason = params.reason
+    if (reason === 'REMOTE_BUTTON') {
+      store.current = 'inactive'
+      setTimeout(() => (store.current = 'foreground'), 2000)
+    } else {
+      store.current = 'inactive'
+      setTimeout(() => (store.current = 'unloading'), 500)
+      setTimeout(() => finished(), 2500)
+    }
   },
-  advertisingId() {
-    return Transport.send('advertising', 'advertisingId')
-  },
-  deviceAttributes() {
-    return Transport.send('advertising', 'deviceAttributes')
-  },
-  appStoreId() {
-    return Transport.send('advertising', 'appStoreId')
-  },
+  finished: finished,
 }

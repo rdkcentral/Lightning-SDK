@@ -17,22 +17,16 @@
  * limitations under the License.
  */
 
-import Transport from '../Transport'
-
 export default {
-  config() {
-    return Transport.send('advertising', 'config')
+  config: {
+    siteSection: '96746720',
+    profile: '47883199',
   },
-  policy() {
-    return Transport.send('advertising', 'policy')
+  policy: {
+    adSkipTier: 'NOSKIP_NORMAL_SPEED',
+    adSkipGracePeriodSeconds: 60,
   },
-  advertisingId() {
-    return Transport.send('advertising', 'advertisingId')
-  },
-  deviceAttributes() {
-    return Transport.send('advertising', 'deviceAttributes')
-  },
-  appStoreId() {
-    return Transport.send('advertising', 'appStoreId')
-  },
+  advertisingId: 'oxPUKaCAtlyfy5ieomFw',
+  deviceAttributes: {},
+  appStoreId: '...',
 }

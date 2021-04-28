@@ -17,22 +17,11 @@
  * limitations under the License.
  */
 
-import Transport from '../Transport'
-
 export default {
-  config() {
-    return Transport.send('advertising', 'config')
-  },
-  policy() {
-    return Transport.send('advertising', 'policy')
-  },
-  advertisingId() {
-    return Transport.send('advertising', 'advertisingId')
-  },
-  deviceAttributes() {
-    return Transport.send('advertising', 'deviceAttributes')
-  },
-  appStoreId() {
-    return Transport.send('advertising', 'appStoreId')
+  token: {
+    value:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+    expires: '2022-04-23T18:25:43.511Z',
+    type: 'Example',
   },
 }
