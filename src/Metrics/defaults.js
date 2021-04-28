@@ -17,22 +17,14 @@
  * limitations under the License.
  */
 
-import Transport from '../Transport'
+import Log from '../Log'
 
 export default {
-  config() {
-    return Transport.send('advertising', 'config')
-  },
-  policy() {
-    return Transport.send('advertising', 'policy')
-  },
-  advertisingId() {
-    return Transport.send('advertising', 'advertisingId')
-  },
-  deviceAttributes() {
-    return Transport.send('advertising', 'deviceAttributes')
-  },
-  appStoreId() {
-    return Transport.send('advertising', 'appStoreId')
+  sendMetric: function(params) {
+    let type = params.type
+    let event = params.event
+    params = params.params
+
+    Log.info('Sending metric', type, event, params)
   },
 }

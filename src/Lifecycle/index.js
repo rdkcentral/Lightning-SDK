@@ -21,9 +21,18 @@ import Events, { emit } from '../Events'
 import Metrics from '../Metrics'
 import Settings from '../Settings'
 import Log from '../Log'
+import Transport from '../Transport'
 
-const supportedStates = ['init', 'inactive', 'foreground', 'background', 'suspended', 'unloading']
-const store = {
+const supportedStates = [
+  'initializing',
+  'inactive',
+  'foreground',
+  'background',
+  'suspended',
+  'unloading',
+]
+
+export const store = {
   _previous: null,
   _current: 'initializing',
   get current() {
@@ -60,21 +69,16 @@ export default {
   },
   ready() {
     Metrics.app.ready()
-    store.current = 'inactive'
-    setTimeout(() => (store.current = 'foreground'), 100)
+    return Transport.send('lifecycle', 'ready')
   },
   close(reason) {
-    if (reason === 'REMOTE_BUTTON') {
-      store.current = 'inactive'
-    } else {
-      store.current = 'unloading'
-      setTimeout(() => this.finished(), 2000)
-    }
+    return Transport.send('lifecycle', 'close', { reason: reason })
   },
   finished() {
     if (store.current === 'unloading') {
       Metrics.app.close()
-      location.href = 'about:blank'
     } else throw 'Cannot call finished() except when in the unloading transition'
+
+    return Transport.send('lifecycle', 'finished')
   },
 }

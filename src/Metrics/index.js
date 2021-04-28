@@ -17,15 +17,7 @@
  * limitations under the License.
  */
 
-import Log from '../Log'
-
-let sendMetric = (type, event, params) => {
-  Log.info('Sending metric', type, event, params)
-}
-
-export const initMetrics = config => {
-  sendMetric = config.sendMetric
-}
+import Transport from '../Transport'
 
 // available metric per category
 const metrics = {
@@ -51,10 +43,14 @@ const metrics = {
   ],
 }
 
+const sendMetric = (type, event, params = {}) => {
+  Transport.send('metrics', 'sendMetric', { type: type, event: event, params: params })
+}
+
 // error metric function (added to each category)
 const errorMetric = (type, message, code, visible, params = {}) => {
   params = { params, ...{ message, code, visible } }
-  sendMetric(type, 'error', params)
+  Transport.send('metrics', 'sendMetric', { type: type, event: 'error', params: params })
 }
 
 const Metric = (type, events, options = {}) => {

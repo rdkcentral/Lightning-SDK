@@ -17,32 +17,24 @@
  * limitations under the License.
  */
 
-import Log from '../Log'
+import Transport from '../Transport'
 
-let entitlements = function(items) {
-  return Promise.resolve(true)
+let entitlements = function(entitlements) {
+  return Transport.send('discovery', 'entitlements', { entitlements: entitlements })
 }
 
 let watched = function(watchedItems) {
-  if (watchedItems && watchedItems.isArray && watchedItems.isArray())
-    watchedItems.reduce((items, item) => {
-      Log.info('Added ' + item.watchedOn + ': ' + item.contentId)
-    })
-  else if (typeof watchedItems === 'object')
-    Log.info('Added ' + watchedItems.watchedOn + ': ' + watchedItems.contentId)
-
-  return Promise.resolve(true)
+  return Transport.send('discovery', 'watched', { watchedItems: watchedItems })
 }
 
 let watchNext = function(title, linkUrl, expires, contentId, images) {
-  Log.info('Added to Dashboard: ' + title + ', ' + linkUrl)
-  return Promise.resolve(true)
-}
-
-export const initDiscovery = config => {
-  entitlements = config.entitlements
-  watched = config.watched
-  watchNext = config.watchNext
+  return Transport.send('discovery', 'watchNext', {
+    title: title,
+    linkUrl: linkUrl,
+    expires: expires,
+    contentId: contentId,
+    images: images,
+  })
 }
 
 export default {

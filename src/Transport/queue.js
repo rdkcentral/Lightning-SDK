@@ -17,22 +17,24 @@
  * limitations under the License.
  */
 
-import Transport from '../Transport'
+let callback
+let queue = []
+
+function send(json) {
+  queue.push(json)
+}
+
+function receive(_callback) {
+  callback = _callback
+}
+
+function flush(transport) {
+  transport.receive(callback)
+  queue.forEach(item => transport.send(item))
+}
 
 export default {
-  config() {
-    return Transport.send('advertising', 'config')
-  },
-  policy() {
-    return Transport.send('advertising', 'policy')
-  },
-  advertisingId() {
-    return Transport.send('advertising', 'advertisingId')
-  },
-  deviceAttributes() {
-    return Transport.send('advertising', 'deviceAttributes')
-  },
-  appStoreId() {
-    return Transport.send('advertising', 'appStoreId')
-  },
+  send: send,
+  receive: receive,
+  flush: flush,
 }
