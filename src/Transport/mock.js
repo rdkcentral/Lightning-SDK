@@ -17,12 +17,6 @@
  * limitations under the License.
  */
 
-// export { default as advertising } from './src/Advertising/defaults'
-// export { default as authentication } from './src/Authentication/defaults'
-// export { default as discovery } from './src/Discovery/defaults'
-// export { default as log } from './src/Log/defaults'
-// export { default as lifecycle } from './src/Lifecycle/defaults'
-// export { default as metrics } from './src/Metrics/defaults'
 import { default as advertising } from '../Advertising/defaults'
 import { default as authentication } from '../Authentication/defaults'
 import { default as discovery, events as discovery_events } from '../Discovery/defaults'
@@ -30,7 +24,7 @@ import { default as lifecycle } from '../Lifecycle/defaults'
 import { default as metrics } from '../Metrics/defaults'
 import { default as platform } from '../Platform/defaults'
 
-import Events, { emit } from '../Events'
+import { emit } from '../Events'
 
 let mock = {
   advertising: advertising,

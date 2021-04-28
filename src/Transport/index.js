@@ -24,8 +24,8 @@ import { initSettings } from '../Settings'
 // TODO need to spec Firebolt Settings
 initSettings({}, { log: true })
 
+const promises = []
 let transport
-let promises = []
 let id = 0
 let transport_service_name = 'com.comcast.BridgeObject_1'
 let timeout
@@ -50,8 +50,7 @@ const getTransportLayer = () => {
     transport = queue
     // get the default bridge service, and flush the queue
     window.ServiceManager.getServiceForJavaScript(transport_service_name, service => {
-      transport = service
-      queue.flush(service)
+      setTransportLayer(service)
     })
   } else {
     // Check for custom, or fall back to mock
