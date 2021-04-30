@@ -35,7 +35,8 @@ const dotGrab = (obj = {}, key) => {
   for (let i = 0; i < keys.length; i++) {
     obj = obj[keys[i]] = obj[keys[i]] !== undefined ? obj[keys[i]] : {}
   }
-  return typeof obj === 'object' ? (Object.keys(obj).length ? obj : undefined) : obj
+  const isObj = typeof obj === 'object' && obj !== null
+  return isObj ? (Object.keys(obj).length ? obj : undefined) : obj
 }
 
 export default {
