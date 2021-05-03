@@ -221,10 +221,6 @@ export default class WebAudio extends BaseAudio {
                 }
                 this._playing = false
                 this._currentOffset = offset
-
-                setTimeout(() => {
-                    this._isEnded = false
-                }, 100);
             } else {
                 console.warn(`"${this._identifier}" audio is not playing`)
             }
