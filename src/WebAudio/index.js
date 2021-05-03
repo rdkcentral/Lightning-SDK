@@ -31,6 +31,7 @@ let allAudioInstances = new Map()
 let effectsBuffers = new Map()
 let isAudioContextAvailable = false
 let listener
+let selectedAudios
 
 if(window.AudioContext || window.webkitAudioContext){
   isAudioContextAvailable = true
@@ -131,6 +132,7 @@ const processSounds = async sounds => {
     }
     allAudioInstances.set(identifier, audio)
   }
+  selectedAudios = new Map(allAudioInstances)
 }
 
 /**
@@ -179,39 +181,46 @@ const getAudio = (identifier) => {
 }
 
 /**
- * Play all the loaded audios
- * @param {Object} config The audio params configuration object
+ * Set the settings on each audio
+ * @param {Object} config The settings config
+ * @param {Array} identifiers The list of audio identifiers
  */
-const play =  async (config, identifiers) => {
-  let audioInstances = new Map(allAudioInstances);
+const setSettings = (config, identifiers) => {
+
+  selectedAudios = new Map(allAudioInstances)
+
   if(identifiers){
-    if(!isArray(identifiers)){
-      console.error('Identifiers must be an array')
+    if(!isArray(identifiers) || !identifiers.length){
+      console.warn('Identifiers must be an array')
     } else {
-      if(identifiers.length){
-        audioInstances = new Map()
-        for(const key of allAudioInstances.keys()){
-          if(identifiers.indexOf(key) !== -1){
-            audioInstances.set(key, allAudioInstances.get(key))
-          }
+      selectedAudios = new Map()
+      for(const [key, value] of allAudioInstances.entries()){
+        if(identifiers.indexOf(key) !== -1){
+          selectedAudios.set(key, value)
         }
       }
     }
   }
- for(const audio of allAudioInstances.values()){
-   if(audio){
-      audio.reset()
-      if(config && isObject(config)){
-        for(let prop in config){
-          if(isArray(config[prop])){
-            audio[prop](...config[prop])
-            continue
-          }
-          audio[prop](config[prop])
-        }
-      }
-      audio.play()
-   }
+
+  for(const audio of selectedAudios.values()){
+    if(audio){
+       audio.reset()
+       if(config && isObject(config)){
+         for(let prop in config){
+          isArray(config[prop]) ? audio[prop](...config[prop]) : audio[prop](config[prop])
+         }
+       }
+    }
+  }
+}
+
+/**
+ * Play the selected audios
+ */
+const play =  async () => {
+
+ for(const audio of selectedAudios.values()){
+   audio.play()
  }
 }
 
@@ -219,7 +228,7 @@ const play =  async (config, identifiers) => {
  * Stop the all playing audios
  */
 const stop = async () => {
-  for(const audio of allAudioInstances.values()){
+  for(const audio of selectedAudios.values()){
     audio.stop()
   }
 }
@@ -228,7 +237,7 @@ const stop = async () => {
  * Pause all playing audios
  */
 const pause = async () => {
-  for( const audio of allAudioInstances.values()){
+  for( const audio of selectedAudios.values()){
     audio.pause()
   }
 }
@@ -237,9 +246,19 @@ const pause = async () => {
  * Resume the audios from paused state
  */
 const resume = async() => {
-  for (const audio of allAudioInstances.values()){
+  for (const audio of selectedAudios.values()){
     audio.resume()
   }
+}
+
+/**
+ * Reset the audios to initial state
+ */
+const reset = async () => {
+  for (const audio of selectedAudios.values()){
+    audio.reset()
+  }
+  selectedAudios = new Map(allAudioInstances)
 }
 
 /**
@@ -301,6 +320,7 @@ export default {
   initWebAudio,
   load,
   getAudio,
+  setSettings,
   play,
   getBuffers: () => {
     return new Map(buffers)
@@ -311,6 +331,7 @@ export default {
   pause,
   resume,
   stop,
+  reset,
   remove,
   loadEffects,
   removeEffects,

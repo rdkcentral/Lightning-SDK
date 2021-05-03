@@ -38,7 +38,8 @@ export default class WebAudio extends BaseAudio {
         this._currentOffset = 0
         this._nodes = new Map()
         this._createEntryForDelayNode()
-        this._isEnded = true
+        this._isInProgress = false
+        this._isAudioPaused = false
     }
 
     /**
@@ -123,7 +124,7 @@ export default class WebAudio extends BaseAudio {
     * source node and destination node then start playing the audio
     */
     play(){
-        if(!this._isEnded){
+        if(this._isInProgress){
             this.resume()
             return
         }
@@ -156,9 +157,10 @@ export default class WebAudio extends BaseAudio {
         this._sourceNode.start(0, offset)
         this._lastStartedAt = parseFloat((this._audioContext.currentTime).toFixed(2))
         this._playing = true
-        this._isEnded = false
+        this._isInProgress = true
+        this._isAudioPaused = false
         this._sourceNode.onended = () => {
-            this._isEnded = true
+            this._isInProgress = this._isAudioPaused  ?  true : false
             this._playing = false
           }
     }
@@ -202,6 +204,8 @@ export default class WebAudio extends BaseAudio {
     pause(){
         try{
             if(this._playing){
+                this._isAudioPaused = true
+                this._isInProgress = true
                 this._sourceNode.stop()
                 const pausedAt =  parseFloat(this._audioContext.currentTime.toFixed(2));
                 const playedTime = parseFloat((pausedAt - this._lastStartedAt).toFixed(2))
@@ -233,6 +237,7 @@ export default class WebAudio extends BaseAudio {
      * Stop the playing audio and remove the constructed audio graph
      */
     stop(){
+        this._isAudioPaused = false
         if(this._sourceNode){
             this._sourceNode.stop()
         }
@@ -241,7 +246,7 @@ export default class WebAudio extends BaseAudio {
             this._isAudioGraphConstructed = false
         }
         this._playing = false
-        this._isEnded = true
+        this._isInProgress = false
         this._currentOffset = this._initOffset
     }
 
@@ -414,7 +419,8 @@ export default class WebAudio extends BaseAudio {
         this._initOffset = 0
         this._currentOffset = 0
         this._loop = false
-        this._isEnded = true
+        this._isInProgress = false
+        this._isAudioPaused = false
         this._nodes = new Map()
         this._pannerNodeWrapper = undefined
         this._createEntryForDelayNode()
