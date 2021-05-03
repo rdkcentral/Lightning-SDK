@@ -182,12 +182,31 @@ const getAudio = (identifier) => {
  * Play all the loaded audios
  * @param {Object} config The audio params configuration object
  */
-const play =  async (config) => {
+const play =  async (config, identifiers) => {
+  let audioInstances = new Map(allAudioInstances);
+  if(identifiers){
+    if(!isArray(identifiers)){
+      console.error('Identifiers must be an array')
+    } else {
+      if(identifiers.length){
+        audioInstances = new Map()
+        for(const key of allAudioInstances.keys()){
+          if(identifiers.indexOf(key) !== -1){
+            audioInstances.set(key, allAudioInstances.get(key))
+          }
+        }
+      }
+    }
+  }
  for(const audio of allAudioInstances.values()){
    if(audio){
       audio.reset()
       if(config && isObject(config)){
         for(let prop in config){
+          if(isArray(config[prop])){
+            audio[prop](...config[prop])
+            continue
+          }
           audio[prop](config[prop])
         }
       }

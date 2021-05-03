@@ -38,6 +38,7 @@ export default class WebAudio extends BaseAudio {
         this._currentOffset = 0
         this._nodes = new Map()
         this._createEntryForDelayNode()
+        this._isEnded = true
     }
 
     /**
@@ -122,6 +123,10 @@ export default class WebAudio extends BaseAudio {
     * source node and destination node then start playing the audio
     */
     play(){
+        if(!this._isEnded){
+            this.resume()
+            return
+        }
         try{
             this._createAudioSource()
             let finalNode = this._sourceNode
@@ -151,7 +156,9 @@ export default class WebAudio extends BaseAudio {
         this._sourceNode.start(0, offset)
         this._lastStartedAt = parseFloat((this._audioContext.currentTime).toFixed(2))
         this._playing = true
+        this._isEnded = false
         this._sourceNode.onended = () => {
+            this._isEnded = true
             this._playing = false
           }
     }
@@ -210,6 +217,10 @@ export default class WebAudio extends BaseAudio {
                 }
                 this._playing = false
                 this._currentOffset = offset
+
+                setTimeout(() => {
+                    this._isEnded = false
+                }, 100);
             } else {
                 console.warn(`"${this._identifier}" audio is not playing`)
             }
@@ -230,6 +241,7 @@ export default class WebAudio extends BaseAudio {
             this._isAudioGraphConstructed = false
         }
         this._playing = false
+        this._isEnded = true
         this._currentOffset = this._initOffset
     }
 
@@ -402,6 +414,7 @@ export default class WebAudio extends BaseAudio {
         this._initOffset = 0
         this._currentOffset = 0
         this._loop = false
+        this._isEnded = true
         this._nodes = new Map()
         this._pannerNodeWrapper = undefined
         this._createEntryForDelayNode()
