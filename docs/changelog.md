@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.3.2
+
+*5 may 2021*
+
+- Fixed error with `null`-values in Settings
+
 ## v4.3.1
 
 *26 april 2021*
