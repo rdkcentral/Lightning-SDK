@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.3.3
+
+*7 may 2021*
+
+- Removed Error being thrown in Language plugin when using default language as a fallback
 ## v4.3.2
 
 *5 may 2021*
