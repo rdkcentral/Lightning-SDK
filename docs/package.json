@@ -1,6 +1,6 @@
 {
   "name": "@lightningjs/sdk",
-  "version": "4.3.2",
+  "version": "4.3.3",
   "license": "Apache-2.0",
   "scripts": {
     "postinstall": "node ./scripts/postinstall.js",
