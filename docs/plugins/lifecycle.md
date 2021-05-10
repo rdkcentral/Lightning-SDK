@@ -80,7 +80,7 @@ Note that the App can also be put in the `unloading` state by the platform itsel
 In order to listen for Lifecycle events, import the `Events` plugin from the SDK
 
 ```js
-import { Lifecycle } from '@fireboltjs/sdk'
+import { Events } from '@fireboltjs/sdk'
 ```
 
 The _Lifecycle_ plugin will emit any change in state via the `Events` plugin under the _Lifecycle_ plugin namespace.
