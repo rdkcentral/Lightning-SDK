@@ -2,13 +2,14 @@
 
 The Router plugin can be configured by passing a *configuration object* to the `Router.startRouter()` method. This method is typically called in the `_setup`[lifecycle event](../../../lightning-core-reference/Components/LifecycleEvents.md)  in **App.js**.
 
-The configuration object can contain five different
+The configuration object can contain six different
 *keys*, each of which is described below:
 
 * [root](#root)
 * [boot](#boot)
 * [bootComponent](#bootcomponent)
 * [beforeEachRoute](#beforeeachroute)
+* [afterEachRoute](#aftereachroute)
 * [routes](#routes)
 
 > It is recommended to specify the Router configuration in a separate file: **src/routes.js**.
@@ -131,7 +132,7 @@ The hook must resolve to a *Promise*. If it resolves to `true`, the Router conti
     routes:[...],
     beforeEachRoute: (from, to)=>{
         return new Promise((resolve)=>{
-             if(to === "home/account" &amp;&amp; auth){
+             if(to === "home/account" && auth){
                  resolve(true)
              }
         })
@@ -146,7 +147,7 @@ You can also redirect the `navigate` by returning a *String*. The Router will th
     ...
     routes:[...],
     beforeEachRoute:  async (from, to)=>{
-        if(to === "play/live/123" &amp;&amp; !auth){
+        if(to === "play/live/123" && !auth){
             return "account/create";
         }
     }
@@ -160,7 +161,7 @@ If you want to pass parameters, the hook must return an *object*:
     ...
     routes:[...],
     beforeEachRoute:  async (from, to)=>{
-        if(to === "play/live/123" &amp;&amp; !auth){
+        if(to === "play/live/123" && !auth){
             return {
                 path:"account/create",
                 params:{
@@ -174,6 +175,22 @@ If you want to pass parameters, the hook must return an *object*:
 ```
 
 > See [Navigation](navigation.md) for more information about the parameters that are passed to the page.
+
+
+## afterEachRoute
+
+Is a global hook that will be called after every successfull `navigate()` request. The parameter is the resolved
+request object.
+
+```js
+{   
+    ...
+    routes:[...],
+    afterEachRoute:  (request)=>{
+        updateAnalytics("loaded", request.hash)
+    }   
+}
+```
 
 ### routes
 
@@ -217,22 +234,19 @@ For example, this route now matches  `localhost:8080#player/27/286`. It also pro
 
 ## Accessing Data From Route Components
 
-If you navigate to: `127.0.0.1:8080/#player/14728/38101`,
-the Router adds the properties `.assetId = 14728` and `.playlistId = 38101` to the instance of the *Player component*.
+If you [navigate](#navigation-helper) to: `127.0.0.1:8080/#player/14728/38101`
+the router will add the properties `.assetId = 14728` and `.playlistId = 38101` to the params property of the instance of the *Player* `Component`
 
 You can also use [setters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic
-when the applicable properties are set. For example:
+when the properties are being set.
 
 ```js
 class Player extends Lightning.Component {
     static _template(){
         return {...}
     }
-    set assetId(v){
-        // v === 14728
-    }
-    set playlistId(v){
-        // v === 38101
+    set params(args){
+        // args.assetId === 14728 && args.playlistId === 38101
     }
 }
 ```

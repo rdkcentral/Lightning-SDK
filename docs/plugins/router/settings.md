@@ -20,8 +20,7 @@ For example:
           "gcOnUnload": true,
           "backtracking": true,
           "reuseInstance": false,
-          "destroyOnHistoryBack": false,
-          "stats": false
+          "destroyOnHistoryBack": false
         }
     }
 }
@@ -63,11 +62,6 @@ If you navigate to a new hash that shares the same route and the previous `setti
 share the blueprint `settings/hotspot/:id`, the Router *reuses* the current Page instance by default.
 
 If you want to prevent this, you can set `reuseInstance: false`. This can be overridden per route via the [Route Options](configuration.md#route-options).
-
-### stats
-
-If you enable `stats `(it is *disabled* by default), the Router tracks page view information and add this to a global
-statistics report.
 
 #### NEXT:
 [Deeplinking](deeplinking.md)
