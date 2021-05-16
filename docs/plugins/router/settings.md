@@ -58,8 +58,7 @@ If you do *not* want the Router to update the hash on a `navigate`, you can set 
 
 ### reuseInstance
 
-If you navigate to a new hash that shares the same route and the previous `settings/hotspot/12` and `settings/hotspot/22`
-share the blueprint `settings/hotspot/:id`, the Router *reuses* the current Page instance by default.
+If you navigate to a new hash that shares the same route and the previous `settings/hotspot/12` and `settings/hotspot/22`, share the blueprint `settings/hotspot/:id`, the Router *reuses* the current Page instance by default.
 
 If you want to prevent this, you can set `reuseInstance: false`. This can be overridden per route via the [Route Options](configuration.md#route-options).
 

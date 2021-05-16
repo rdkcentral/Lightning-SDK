@@ -2,9 +2,9 @@
 
 The *Router* plugin provides an easy-to-use API that helps you create a *URL-driven, routed* Lightning App.
 
-The Router is typically used to navigate between *Page components*, which are effectively *Lightning Components* (that is, class that extends `Lightning.Component`).
+The Router is typically used to navigate between *Page components*, which are effectively *Lightning Components* (that is, a class that extends `Lightning.Component`).
 
-Besides taking away a lot of boilerplate code, the Router plugin can be beneficial for *memory management* as well, due to it's configurable [lazy creation](settings.md#lazyCreate) and [lazy destroy](settings.md#lazyDestroy) functionality. This is especially helpful when deploying an App on low-end devices with less memory (RAM / VRAM)
+Besides taking away a lot of boilerplate code, the Router plugin can be beneficial for *memory management* as well, due to its configurable [lazy creation](settings.md#lazyCreate) and [lazy destroy](settings.md#lazyDestroy) functionality. This is especially helpful when deploying an App on low-end devices with less memory (RAM / VRAM).
 
 > As this plugin requires a specific *chronological reading order*, each topic concludes with a reference to the next topic.
 

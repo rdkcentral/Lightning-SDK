@@ -1,7 +1,6 @@
 # Page Transitions
 
-If you navigate from one page to another, the default behavior is that the `[visibility](../../../lightning-core-reference/RenderEngine/Elements/Rendering.md#Visibility)` property of the
-new (incoming) Page is set to `true` and that this same property of the old (outgoing) Page is set to `false`.
+If you navigate from one page to another, the default behavior is that the `[visibility](../../../lightning-core-reference/RenderEngine/Elements/Rendering.md#Visibility)` property of the new (incoming) Page is set to `true` and that this same property of the old (outgoing) Page is set to `false`.
 
 You can *override* this simple 'hide and show' behavior using the Router plugin. By adding a `pageTransition` method to your Page component, you can apply [default](#Default-Page-Transitions) or [custom](#Custom-Page-Transitions) page transitions.
 

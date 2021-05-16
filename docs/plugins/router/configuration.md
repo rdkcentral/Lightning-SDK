@@ -2,8 +2,7 @@
 
 The Router plugin can be configured by passing a *configuration object* to the `Router.startRouter()` method. This method is typically called in the `_setup`[lifecycle event](../../../lightning-core-reference/Components/LifecycleEvents.md)  in **App.js**.
 
-The configuration object can contain six different
-*keys*, each of which is described below:
+The configuration object can contain six different *keys*, each of which is described below:
 
 * [root](#root)
 * [boot](#boot)
@@ -56,8 +55,7 @@ export default {
 }
 ```
 
-In the examples above, if you open your App, the Router plugin navigates to  `localhost:8080#splash` (where the port '8080' serves as an example) and subsequently displays
-the **Splash** page.
+In the examples above, if you open your App, the Router plugin navigates to  `localhost:8080#splash` (where the port '8080' serves as an example) and subsequently displays the **Splash** page.
 
 ### boot
 
@@ -179,16 +177,15 @@ If you want to pass parameters, the hook must return an *object*:
 
 ## afterEachRoute
 
-Is a global hook that will be called after every successfull `navigate()` request. The parameter is the resolved
-request object.
+The `afterEachRoute` key is a global hook that will be called after every successful `navigate()` request. The parameter is the resolved request object.
 
 ```js
-{   
+{
     ...
     routes:[...],
     afterEachRoute:  (request)=>{
         updateAnalytics("loaded", request.hash)
-    }   
+    }
 }
 ```
 
@@ -235,10 +232,9 @@ For example, this route now matches  `localhost:8080#player/27/286`. It also pro
 ## Accessing Data From Route Components
 
 If you [navigate](#navigation-helper) to: `127.0.0.1:8080/#player/14728/38101`
-the router will add the properties `.assetId = 14728` and `.playlistId = 38101` to the params property of the instance of the *Player* `Component`
+the router will add the properties `.assetId = 14728` and `.playlistId = 38101` to the params property of the instance of the *Player* `Component`.
 
-You can also use [setters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic
-when the properties are being set.
+You can also use [setters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic when the properties are being set.
 
 ```js
 class Player extends Lightning.Component {
@@ -253,8 +249,7 @@ class Player extends Lightning.Component {
 
 ## Using Regular Expressions in Routes
 
-The Router plugin has built-in *regular expression support*, so you can add patterns to your route to have it matched with certain
-combinations of characters.
+The Router plugin has built-in *regular expression support*, so you can add patterns to your route to have it matched with certain combinations of characters.
 
 You do this by adding `${PATTERN/MODIFIERS}` after the dynamic name. For example:
 
@@ -269,8 +264,7 @@ You do this by adding `${PATTERN/MODIFIERS}` after the dynamic name. For example
 
 ## Component Property
 
-The `component` property can be a *Lightning Component* (i.e., a class that extends the `Lightning.Component`) or a *function*
-that returns a [dynamic import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Dynamic_Imports). For example:
+The `component` property can be a *Lightning Component* (i.e., a class that extends the `Lightning.Component`) or a *function* that returns a [dynamic import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Dynamic_Imports). For example:
 
 ```js
 // component
@@ -292,8 +286,7 @@ that returns a [dynamic import](https://developer.mozilla.org/en-US/docs/Web/Jav
 
 ## Router Hooks
 
-Besides specifying which component (for example, a page component) must be loaded for each route, you can also bind a *callback function* to a route
-via the `hook` function. This function is executed when the specific route is hit.
+Besides specifying which component (for example, a page component) must be loaded for each route, you can also bind a *callback function* to a route via the `hook` function. This function is executed when the specific route is hit.
 
 The *first* argument of the `hook` function is a reference to the `application`.
 

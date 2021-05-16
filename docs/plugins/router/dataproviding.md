@@ -92,8 +92,7 @@ The Router plugin performs the following actions:
 
 ### `cache` Property
 
-By specifying a `cache` property in the route definition, you can control how long the provided date stays valid if the same page is visited twice. If the same route is hit within the specified cache time, the page is loaded with the cached data. Otherwise, a
-new request will be made.
+By specifying a `cache` property in the route definition, you can control how long the provided date stays valid if the same page is visited twice. If the same route is hit within the specified cache time, the page is loaded with the cached data. Otherwise, a new request will be made.
 
 > This only applies if the page still exists in memory.
 

@@ -4,8 +4,7 @@ The Router maintains its own history and does not rely on a browser web API.
 
 Generally, all the routes to which you have navigated, can be added to history. However, route duplicates are *not* added, so `#home/player/145` will only be added to history *once* (even if you have navigated to it multiple times).
 
-On the other hand, similar route blueprints with different values *are* added, for example: `home/player/178` and `home/player/91737`
-or `browse/genre/action/50` and `browse/genre/popular/50`.
+On the other hand, similar route blueprints with different values *are* added, for example: `home/player/178` and `home/player/91737` or `browse/genre/action/50` and `browse/genre/popular/50`.
 
 ## Navigating Through History
 

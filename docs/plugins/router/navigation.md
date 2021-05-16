@@ -15,8 +15,7 @@ Router.navigate(path, params, store)
 
 ### **path**
 
-For example, if you call `Router.navigate('player/1638/17421')` anywhere in your App, the Router starts loading the Player
-component. It updates the browser location hash accordingly, assuming that the following route is configured:
+For example, if you call `Router.navigate('player/1638/17421')` anywhere in your App, the Router starts loading the Player component. It updates the browser location hash accordingly, assuming that the following route is configured:
 
 ```js
 {
@@ -27,15 +26,13 @@ component. It updates the browser location hash accordingly, assuming that the f
 
 ### params
 
-If you want to pass *additional data* to the page to which you are navigating, you can supply a *data object*
-as the second argument of the `navigate` method. For example:
+If you want to pass *additional data* to the page to which you are navigating, you can supply a *data object* as the second argument of the `navigate` method. For example:
 
 ```js
 Router.navigate('player/1638', { a: 1, b: 2, from: this } )
 ```
 
-This loads the Page that is associated with the specified route path, and provides the additional data inside
-a `params` property on the instance of that Component. For example:
+This loads the Page that is associated with the specified route path, and provides the additional data inside a `params` property on the instance of that Component. For example:
 
 ```js
 class Player extends Lightning.Component{
@@ -49,8 +46,7 @@ class Player extends Lightning.Component{
 
 By default, all visited routes are added to the history stack (unless this feature is disabled in a route's [configuraton object](configuration.md#preventstorage)).
 
-To prevent the `navigate` method from adding a Page to the history stack, you pass
-`false` as a *second* argument:
+To prevent the `navigate` method from adding a Page to the history stack, you pass `false` as a *second* argument:
 
 ```js
 Router.navigate("player/1638", false)

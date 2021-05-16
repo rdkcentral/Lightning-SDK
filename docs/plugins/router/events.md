@@ -54,8 +54,7 @@ class Account extends Lightning.Component{
 
 When the Router's history is empty, the SDK will continue to handle the **Back** key and close the App.
 
-You can prevent this by adding `_handleAppClose()` to your App class, for instance to show
-an **Exit** dialog:
+You can prevent this by adding `_handleAppClose()` to your App class, for instance to show an **Exit** dialog:
 
 ```js
 class MyApp extends Router.App{

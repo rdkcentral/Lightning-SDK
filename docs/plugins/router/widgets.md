@@ -50,8 +50,7 @@ If you apply  `Router.navigate('discover/player/998/29174')`, the `visible` prop
 
 In Lightning, key presses are handled by the component that has the *focus* (see [Key Handling](../../../lightning-core-reference/RemoteControl/KeyHandling.md) for more information).
 
-In a routed App, the focus is by default on the currently active page. To move the focus to an
-active widget, you can use the `focusWidget` method which is provided by the Router plugin. With this method, you can pass the *reference* to the widget to which you want to give the focus.
+In a routed App, the focus is by default on the currently active page. To move the focus to an active widget, you can use the `focusWidget` method which is provided by the Router plugin. With this method, you can pass the *reference* to the widget to which you want to give the focus.
 
 ```js
 class SearchPage extends Lightning.Component {
