@@ -5,6 +5,7 @@
   - [Storage](/plugins/storage.md)
   - [Settings](/plugins/settings.md)
   - [Log](/plugins/log.md)
+  - [Metadata](/plugins/metadata.md)
   - [Metrics](/plugins/metrics.md)
   - [Profile](/plugins/profile.md)
   - [Purchase](/plugins/purchase.md)
