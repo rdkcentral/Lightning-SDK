@@ -13,7 +13,7 @@ The Router plugin provides a `navigate` method which accepts three arguments: `
 Router.navigate(path, params, store)
 ```
 
-### **path**
+### path
 
 For example, if you call `Router.navigate('player/1638/17421')` anywhere in your App, the Router starts loading the Player component. It updates the browser location hash accordingly, assuming that the following route is configured:
 
@@ -44,7 +44,7 @@ class Player extends Lightning.Component{
 
 ### store
 
-By default, all visited routes are added to the history stack (unless this feature is disabled in a route's [configuraton object](configuration.md#preventstorage)).
+By default, all visited routes are added to the history stack (unless this feature is disabled in a route's [configuration object](configuration.md#preventstorage)).
 
 To prevent the `navigate` method from adding a Page to the history stack, you pass `false` as a *second* argument:
 
@@ -58,11 +58,11 @@ Or, if your second argument is a data object, as a *third* argument:
 Router.navigate("player/1638", {a:1, b:2}, false)
 ```
 
-### KeepAlive Parameter
+### keepAlive
 
 If you are navigating from one page to another while the [lazy destroy](settings.md#lazyDestroy) feature is configured, the page from which you navigate is removed from the history stack.
 
-Sometimes, you might want to keep the current page from which you are navigating alive, to go back to it's original state when necessary. To accomplish this, you insert the data parameter `keepAlive: true` in the data object of the `navigate` function. As a result, the current page from which you are navigating  remains in the history stack.
+Sometimes, you might want to keep the current page from which you are navigating alive, to go back to it's original state when necessary. To accomplish this, you insert the data parameter `keepAlive: true` in the data object of the `navigate` function. As a result, the current page from which you are navigating remains in the history stack.
 
 For example:
 
@@ -70,13 +70,40 @@ For example:
 Router.navigate('player/1638', {keepAlive: true, a:1, b:2})
 ```
 
-## isNavigating
+## Named Routes
 
-At some point, you might want to check if the Router is busy processing a request. You can use the `isNavigating` method for that purpose. This method returns a `boolean`.
+Instead of constructing the hash that you want to navigate to, yourself, it's also possible to let the Router construct the hash.
+You do this by adding a `name` property to a `route` object.
+
+```js
+{
+  path: 'player/:assetId/:playlistId',
+  component: Player,
+  name: 'player'
+}
+```
+
+And to `navigate()` to it:
+
+```js
+Router.navigate({
+     to:"player",
+     params:{
+         assetId:12, playlistId:44
+     }
+})
+```
+
+This results in: `#player/12/44`.
+
+## isNavigating Method
+
+ You can use the `isNavigating` method to check if the Router is busy processing a request:
 
 ```js
 Router.isNavigating()
 ```
+This will return a `boolean`.
 
 #### NEXT:
 [Data Providing](dataproviding.md)
