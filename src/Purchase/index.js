@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -172,8 +172,14 @@ export default {
   },
   payment(signature = {}, type = 'in-app') {
     return new Promise((resolve, reject) => {
-      Promise.all([Profile.household(), Profile.countryCode(), Profile.operator(), Profile.mac()])
-        .then(([household, country, operator, mac]) => {
+      Promise.all([
+        Profile.household(),
+        Profile.countryCode(),
+        Profile.operator(),
+        Profile.mac(),
+        Profile.uid(),
+      ])
+        .then(([household, country, operator, mac, uid]) => {
           billingRequest('/', {
             purchase: signature,
             identifier: Settings.get('app', 'id'),
@@ -182,6 +188,7 @@ export default {
             country,
             operator,
             mac,
+            uid,
             type,
           })
             .then(resolve)
