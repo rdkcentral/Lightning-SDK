@@ -122,6 +122,12 @@ const start = () => {
   }
 
   if (routeExists(bootKey)) {
+    if (hash && !isDirectLoad) {
+      if (!getRouteByHash(hash)) {
+        navigate('*', { failedHash: hash })
+        return
+      }
+    }
     navigate(
       bootKey,
       {
