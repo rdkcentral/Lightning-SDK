@@ -32,7 +32,7 @@ import {
 
 import Log from '../../Log'
 import { isBoolean, isComponentConstructor, isFunction, symbols } from './helpers'
-import { getProvider, hasProvider, isPageExpired, types, addPersistData } from './provider'
+import { getProvider, hasProvider, isPageExpired, dataHooks, addPersistData } from './provider'
 import { createComponent } from './components'
 import { executeTransition } from './transition'
 import { getActiveWidget } from './widgets'
@@ -168,7 +168,7 @@ const loader = async request => {
       request.provider = provider
       request.providerType = loadType
 
-      await types[request.isSharedInstance ? 'shared' : loadType](request)
+      await dataHooks[loadType](request)
 
       // we early exit if the current request is expired
       if (hash !== getLastHash()) {
