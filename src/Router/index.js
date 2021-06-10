@@ -25,6 +25,7 @@ import {
   isString,
   getQueryStringParams,
   symbols,
+  cleanHash,
 } from './utils/helpers'
 
 import {
@@ -198,7 +199,7 @@ export const navigate = (url, args = {}, store) => {
 }
 
 const queue = (hash, args = {}, store) => {
-  hash = hash.replace(/^#/, '')
+  hash = cleanHash(hash)
   if (!navigateQueue.has(hash)) {
     for (let request of navigateQueue.values()) {
       request.cancel()
@@ -217,7 +218,7 @@ const queue = (hash, args = {}, store) => {
  * @returns {Promise<void>}
  */
 const handleHashChange = async override => {
-  const hash = (override || getHash()).replace(/^#/, '')
+  const hash = cleanHash(override || getHash())
   const queueId = decodeURIComponent(hash)
   let request = navigateQueue.get(queueId)
 

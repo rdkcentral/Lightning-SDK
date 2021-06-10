@@ -25,6 +25,7 @@ import {
   isFunction,
   isPage,
   symbols,
+  cleanHash,
 } from './helpers'
 import { step, navigateQueue } from '../index'
 import { createRoute, getOption } from './route'
@@ -204,8 +205,7 @@ const setup = config => {
     init(config)
   }
   config.routes.forEach(r => {
-    // strip leading slash
-    const path = r.path.replace(/\/+$/, '')
+    const path = cleanHash(r.path)
     if (!routeExists(path)) {
       const route = createRoute(r)
       routes.set(path, route)
