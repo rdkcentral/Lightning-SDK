@@ -1,5 +1,16 @@
 # Changelog
 
+## v4.x.x
+
+
+- Router updates
+    - Added showing loading page between shared instances with `on()` provider
+    - Fixed wrong historyState object on shared instance
+    - Fixed hash to route mismatch on hash with trailing slash
+    - Fixed showing bootPage before unknown hash
+    - Fixed focus issues with shared state on routes with same page type
+   
+    
 ## v4.3.3
 
 *7 may 2021*
