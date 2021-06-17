@@ -1,7 +1,8 @@
 # Changelog
 
-## v4.x.x
+## v4.4.0
 
+*18 june 2021*
 
 - Router updates
     - Added showing loading page between shared instances with `on()` provider
