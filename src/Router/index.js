@@ -306,6 +306,13 @@ const resolveHashChange = request => {
     }
     // if there is a component attached to the route
     if (component) {
+      // to prevent shared state issues between same routes
+      // we force page to root state
+      const activePage = getActivePage()
+      if (activePage) {
+        activePage._setState('')
+      }
+
       if (isPage(component, stage)) {
         load(request).then(() => {
           app._refocus()
