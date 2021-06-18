@@ -105,6 +105,7 @@ The custom loader function receives three arguments:
 - A reference to the video tag
 - An optional configuration object (passed as the second argument of the [`open()`](#open) method)
 
+
 ```js
 const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
 
@@ -138,6 +139,7 @@ For example, you might want to make sure that an instance of HLS.js is properly 
 The `unloader` method accepts a custom unloader function as its only argument. The custom unloader function is invoked every time the `VideoPlayer.clear()` or `VideoPlayer.close()` method is called.
 
 The custom unloader function has to return a Promise that is resolved as soon as the video player is properly cleaned up. The custom unloader function receives a reference to the video tag as its only argument.
+
 
 ```js
 // Note: this is in fact the default unloader function

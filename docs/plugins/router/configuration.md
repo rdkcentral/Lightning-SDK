@@ -174,18 +174,18 @@ If you want to pass parameters, the hook must return an *object*:
 
 > See [Navigation](navigation.md) for more information about the parameters that are passed to the page.
 
-
 ## afterEachRoute
 
-The `afterEachRoute` key is a global hook that will be called after every successful `navigate()` request. The parameter is the resolved request object.
+Is a global hook that will be called after every succesfull `navigate()` request. The parameter is the resolved
+request object.
 
 ```js
-{
+{   
     ...
     routes:[...],
     afterEachRoute:  (request)=>{
         updateAnalytics("loaded", request.hash)
-    }
+    }   
 }
 ```
 
@@ -232,6 +232,7 @@ For example, this route now matches  `localhost:8080#player/27/286`. It also pro
 ## Accessing Data From Route Components
 
 If you [navigate](#navigation-helper) to: `127.0.0.1:8080/#player/14728/38101`
+
 the router will add the properties `.assetId = 14728` and `.playlistId = 38101` to the params property of the instance of the *Player* `Component`.
 
 You can also use [setters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set) to execute logic when the properties are being set.
