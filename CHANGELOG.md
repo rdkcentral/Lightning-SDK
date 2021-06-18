@@ -5,7 +5,6 @@
 *7 may 2021*
 
 - Removed Error being thrown in Language plugin when using default language as a fallback
-
 ## v4.3.2
 
 *5 may 2021*
@@ -17,7 +16,6 @@
 *26 april 2021*
 
 - Added uid to payload to billing server in Purchase plugin
-
 ## v4.3.0
 
 *16 april 2021*
@@ -105,9 +103,7 @@
     - Fixed navigating to same hash when navigating
     - Deprecated Router.setupRoutes() - method
   - Deprecations
-    - Deprecated Router.on() - data providing must be defined in route object
-    - Deprecated Router.before()
-    - Deprecated Router.after()
+    - Deprecated calling on() | before() | after() directly - data providers must be defined in route object: https://rdkcentral.github.io/Lightning-SDK/#/plugins/router/dataproviding
     - Deprecated duplicate route definitions
 - Removed SDK namespace replacement functionality from postinstall script
 

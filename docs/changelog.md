@@ -1,5 +1,77 @@
 # Changelog
 
+## v4.3.3
+
+*7 may 2021*
+
+- Removed Error being thrown in Language plugin when using default language as a fallback
+## v4.3.2
+
+*5 may 2021*
+
+- Fixed error with `null`-values in Settings
+
+## v4.3.1
+
+*26 april 2021*
+
+- Added uid to payload to billing server in Purchase plugin
+## v4.3.0
+
+*16 april 2021*
+
+- Fixed cross origin issue in VideoPlayer plugin
+- Added support for multiple font types per font-family (addresses #185)
+- Fix in cleanup sequence in starApp.js
+- Fixed potential memory leak in Registry plugin (only when devtools are open)
+- Router updates
+    - Added `afterEachRoute` hook
+    - Added support to hook into route error
+    - Added `bootComponent` as special route
+    - Added `location.search` to query params object
+    - Added query parameters to page `params()`
+    - Added named navigation to the docs
+    - Fixed reload of special routes, reload will now return to `root` page
+    - Fixed trying to navigate to `Error` component while it's not configured
+    - Fixed navigating to `bootComponent` hash directly
+    - Fixed `bootComponent` now showing before `bootRequest`
+    - Fixed always adding `request` object in queue
+
+## v4.2.2
+
+*6 april 2021*
+
+- Fixed hashchange event listener only for routed apps
+
+## v4.2.1
+
+*9 march 2021*
+
+- Fixed Router `navigate()` always adding new queue entry
+
+## v4.2.0
+
+*9 march 2021*
+
+- Router updates
+    - Root function can now resolve object
+    - Fixed `preventStorage` setting
+    - Fixed page cache
+    - `location.hash` now gets set on `hashchange` disabled
+    - Added support to prevent auto widget focus restore
+    - Added `afterEachRoute()` support
+    - Improved error notification
+    - Exposed internal Symbols mapping
+- Added Metadata plugin
+- Added Colors plugin
+- Added `loader` and `unloader` functionality to the VideoPlayer plugin
+
+## v4.1.1
+
+*3 march 2021*
+
+- Fixed bug in Registry plugin (removing interval from reference list after first invocation)
+
 ## v4.1.0
 
 *26 jan 2021*
@@ -31,9 +103,7 @@
     - Fixed navigating to same hash when navigating
     - Deprecated Router.setupRoutes() - method
   - Deprecations
-    - Deprecated Router.on() - data providing must be defined in route object
-    - Deprecated Router.before()
-    - Deprecated Router.after()
+    - Deprecated calling on() | before() | after() directly - data providers must be defined in route object: https://rdkcentral.github.io/Lightning-SDK/#/plugins/router/dataproviding
     - Deprecated duplicate route definitions
 - Removed SDK namespace replacement functionality from postinstall script
 

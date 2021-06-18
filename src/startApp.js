@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -49,15 +49,19 @@ const startApp = () => {
           )
         : Promise.resolve(),
     () => {
-      let bundle = window[appMetadata.id]
+      let bundle = window[appMetadata.safeId]
       // support rollup and esbuild
       if (typeof bundle !== 'function') {
         bundle = bundle.default
       }
 
       console.time('app2')
-      settings.appSettings.version = appMetadata.version
+      //Adding complete metadata info to app settings
+      Object.assign(settings.appSettings, appMetadata)
+      //To align with the production response, adding the 'identifier' as 'id'
       settings.appSettings.id = appMetadata.identifier
+      //Deleting the identifier as it is no longer required
+      delete settings.appSettings.identifier
       app = bundle(settings.appSettings, settings.platformSettings, settings.appData)
       canvas = app.stage.getCanvas()
       document.body.appendChild(canvas)
@@ -67,7 +71,7 @@ const startApp = () => {
 
 const getAppMetadata = () => {
   return fetchJson('./metadata.json').then(metadata => {
-    metadata.id = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
+    metadata.safeId = `APP_${metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_')}`
     return metadata
   })
 }
@@ -117,7 +121,7 @@ const getSettings = () => {
               canvas.remove()
             }
             // detach app bundle from window scope
-            window[appMetadata.id] = null
+            window[appMetadata.safeId] = null
 
             // remove script tag
             removeJS('appbundle')

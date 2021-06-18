@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -92,6 +92,30 @@ const fireHook = (event, args) => {
   hooks[event] && typeof hooks[event] === 'function' && hooks[event].call(null, event, args)
 }
 
+let customLoader = null
+let customUnloader = null
+
+const loader = (url, videoEl, config) => {
+  return customLoader && typeof customLoader === 'function'
+    ? customLoader(url, videoEl, config)
+    : new Promise(resolve => {
+        url = mediaUrl(url)
+        videoEl.setAttribute('src', url)
+        videoEl.load()
+        resolve()
+      })
+}
+
+const unloader = videoEl => {
+  return customUnloader && typeof customUnloader === 'function'
+    ? customUnloader(videoEl)
+    : new Promise(resolve => {
+        videoEl.removeAttribute('src')
+        videoEl.load()
+        resolve()
+      })
+}
+
 export const setupVideoTag = () => {
   const videoEls = document.getElementsByTagName('video')
   if (videoEls && videoEls.length) {
@@ -101,7 +125,6 @@ export const setupVideoTag = () => {
     videoEl.setAttribute('id', 'video-player')
     videoEl.setAttribute('width', withPrecision(1920))
     videoEl.setAttribute('height', withPrecision(1080))
-    videoEl.setAttribute('crossorigin', 'anonymous')
     videoEl.style.position = 'absolute'
     videoEl.style.zIndex = '1'
     videoEl.style.display = 'none'
@@ -161,6 +184,14 @@ const videoPlayerPlugin = {
     consumer = component
   },
 
+  loader(loaderFn) {
+    customLoader = loaderFn
+  },
+
+  unloader(unloaderFn) {
+    customUnloader = unloaderFn
+  },
+
   position(top = 0, left = 0) {
     videoEl.style.left = withPrecision(left)
     videoEl.style.top = withPrecision(top)
@@ -184,49 +215,32 @@ const videoPlayerPlugin = {
     this.size(right - left, bottom - top)
   },
 
-  open(url, details = {}) {
+  open(url, config = {}) {
     if (!this.canInteract) return
     metrics = Metrics.media(url)
-    // prep the media url to play depending on platform
-    url = mediaUrl(url)
-
-    // if url is same as current clear (which is effectively a reload)
-    if (this.src == url) {
-      this.clear()
-    }
 
     this.hide()
     deregisterEventListeners()
 
-    // preload the video to get duration (for ads)
-    //.. currently actually not working because loadedmetadata didn't work reliably on Sky boxes
-    videoEl.setAttribute('src', url)
-    videoEl.load()
-
-    // const onLoadedMetadata = () => {
-    // videoEl.removeEventListener('loadedmetadata', onLoadedMetadata)
-    const config = { enabled: state.adsEnabled, duration: 300 } // this.duration ||
-    if (details.videoId) {
-      config.caid = details.videoId
-    }
-    Ads.get(config, consumer).then(ads => {
-      state.playingAds = true
-      ads.prerolls().then(() => {
-        state.playingAds = false
-        registerEventListeners()
-        if (this.src !== url) {
-          videoEl.setAttribute('src', url)
-          videoEl.load()
-        }
-        this.show()
-        setTimeout(() => {
-          this.play()
+    if (this.src == url) {
+      this.clear().then(this.open(url, config))
+    } else {
+      const adConfig = { enabled: state.adsEnabled, duration: 300 }
+      if (config.videoId) {
+        adConfig.caid = config.videoId
+      }
+      Ads.get(adConfig, consumer).then(ads => {
+        state.playingAds = true
+        ads.prerolls().then(() => {
+          state.playingAds = false
+          loader(url, videoEl, config).then(() => {
+            registerEventListeners()
+            this.show()
+            this.play()
+          })
         })
       })
-    })
-    // }
-
-    // videoEl.addEventListener('loadedmetadata', onLoadedMetadata)
+    }
   },
 
   reload() {
@@ -257,9 +271,9 @@ const videoPlayerPlugin = {
     // pause the video first to disable sound
     this.pause()
     if (textureMode === true) videoTexture.stop()
-    fireOnConsumer('Clear', { videoElement: videoEl })
-    videoEl.removeAttribute('src')
-    videoEl.load()
+    return unloader(videoEl).then(() => {
+      fireOnConsumer('Clear', { videoElement: videoEl })
+    })
   },
 
   play() {
@@ -423,6 +437,7 @@ export default autoSetupMixin(videoPlayerPlugin, () => {
 
   textureMode = Settings.get('platform', 'textureMode', false)
   if (textureMode === true) {
+    videoEl.setAttribute('crossorigin', 'anonymous')
     videoTexture = setUpVideoTexture()
   }
 })

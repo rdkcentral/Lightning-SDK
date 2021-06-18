@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
  */
 
 import { getActiveHash, getActivePage } from './router'
-import { getOption } from './route'
-import { isBoolean, isFunction, isObject, isArray, symbols } from './helpers'
+import { getOption, getRouteByHash } from './route'
+import { isFunction, isObject, isArray, isBoolean, symbols } from './helpers'
 import { getRouterConfig } from './router'
 
 /**
@@ -31,28 +31,26 @@ let history = []
 
 export const updateHistory = request => {
   const hash = getActiveHash()
-
   if (!hash) {
     return
   }
 
-  const route = request.route
+  // navigate storage flag
   const register = request.register
-  const storeHash = getOption(route.options, 'store')
-  const regStore = register.get(symbols.store)
-  const routerConfig = getRouterConfig()
+  const forceNavigateStore = register.get(symbols.store)
 
-  let configPrevent = getOption(route.options, 'preventStorage')
-  let configStore = true
+  // test preventStorage on route configuration
+  const activeRoute = getRouteByHash(hash)
+  const preventStorage = getOption(activeRoute.options, 'preventStorage')
 
-  if ((isBoolean(storeHash) && storeHash === false) || configPrevent) {
-    configStore = false
-  }
+  // we give prio to navigate storage flag
+  let store = isBoolean(forceNavigateStore) ? forceNavigateStore : !preventStorage
 
-  if (regStore && configStore) {
+  if (store) {
     const toStore = hash.replace(/^\//, '')
     const location = locationInHistory(toStore)
     const stateObject = getStateObject(getActivePage())
+    const routerConfig = getRouterConfig()
 
     // store hash if it's not a part of history or flag for
     // storage of same hash is true

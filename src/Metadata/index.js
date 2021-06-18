@@ -16,28 +16,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+let metadata = {}
 
-import Lightning from '../Lightning'
+export const initMetadata = metadataObj => {
+  metadata = metadataObj
+}
 
-export default class ScaledImageTexture extends Lightning.textures.ImageTexture {
-  constructor(stage) {
-    super(stage)
-    this._scalingOptions = undefined
-  }
-
-  set options(options) {
-    this.resizeMode = this._scalingOptions = options
-  }
-
-  _getLookupId() {
-    return `${this._src}-${this._scalingOptions.type}-${this._scalingOptions.w}-${this._scalingOptions.h}`
-  }
-
-  getNonDefaults() {
-    const obj = super.getNonDefaults()
-    if (this._src) {
-      obj.src = this._src
-    }
-    return obj
-  }
+export default {
+  get(key, fallback = undefined) {
+    return key in metadata ? metadata[key] : fallback
+  },
+  appId() {
+    return this.get('id')
+  },
+  safeAppId() {
+    return this.get('id').replace(/[^0-9a-zA-Z_$]/g, '_')
+  },
+  appName() {
+    return this.get('name')
+  },
+  appVersion() {
+    return (this.get('version') || '').split('-').shift()
+  },
+  appIcon() {
+    return this.get('icon')
+  },
+  // Version from app store (with commit hash)
+  appFullVersion() {
+    return this.get('version')
+  },
 }
