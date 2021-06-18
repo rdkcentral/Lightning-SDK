@@ -1,7 +1,7 @@
-# Version label
+# VersionLabel
 
-During debug and QA it's important to know the _exact_ version of the App that's being tested.
+During debugging and QA, it is important to know the *exact* version of the App that is being tested.
 
-To facilitate this the SDK contains a built-in **Version Label** that can be turned on or off via the [Platform Setting](/plugins/settings?id=platform) `showVersion` in `settings.json`.
+The SDK contains a built-in *VersionLabel* which can be enabled or disabled via the [Platform Setting ](settings.md#platform-settings)`showVersion` in **settings.json**.
 
-When enabled an unubtrusive label with the App version as specified in `metadata.json` and the Lightning-SDK version will be displayed as an overlay in the bottom right corner of the App.
+If `showVersion` is enabled, a subtle label containing the App version (as specified in **metadata.json**) and the Lightning SDK version is displayed as an overlay in the bottom right corner of the App.
