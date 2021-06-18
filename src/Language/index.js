@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -78,14 +78,13 @@ const setLanguage = lng => {
       if ('map' in meta && lng in meta.map && meta.map[lng] in translations) {
         language = meta.map[lng]
       } else if ('default' in meta && meta.default in translations) {
-        language = meta.default
         const error =
           'Translations for Language ' +
           language +
           ' not found. Using default language ' +
           meta.default
         Log.warn(error)
-        reject(error)
+        language = meta.default
       } else {
         const error = 'Translations for Language ' + language + ' not found.'
         Log.error(error)

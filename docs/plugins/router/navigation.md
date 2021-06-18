@@ -94,7 +94,8 @@ Router.navigate({
 })
 ```
 
-This results in: `#player/12/44`.
+This results in: `#player/12/44`
+
 
 ## isNavigating Method
 

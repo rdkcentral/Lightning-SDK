@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,14 @@ import { initAds } from '../Ads'
 import { initRouter } from '../Router'
 import { initTV } from '../TV'
 import { initPurchase } from '../Purchase'
+import { initMetadata } from '../Metadata'
 import Application from '../Application'
 
 export let ApplicationInstance
 
 export default (App, appSettings, platformSettings, appData) => {
   initSettings(appSettings, platformSettings)
+  initMetadata(appSettings)
 
   initUtils(platformSettings)
   initStorage()

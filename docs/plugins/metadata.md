@@ -25,13 +25,12 @@ Returns the key value of the metadata.
 ```js
 Metadata.get(key, [fallback])
 ```
-The value of `key` can be either `icon`, `id`, `safeId`, `version`, `name`, `description`, `type`, `url` or `artwork`.
-
-Optionally, you can specify a `fallback` value to be used if the metadata is not defined.
+Key can be either `icon`, `id`, `safeId`, `version`, `name`, `description`, `type`, `url` or `artwork` .
+Optionally you can specify a `fallback`-value for when the Metadata is not defined.
 
 ### AppId
 
-Returns the ID of your App (e.g., "com.metrological.app.myApp").
+Gets Application id from Metadata
 
 ```js
 Metadata.appId()
