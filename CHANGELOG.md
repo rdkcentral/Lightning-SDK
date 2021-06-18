@@ -10,6 +10,7 @@
     - Fixed hash to route mismatch on hash with trailing slash
     - Fixed showing bootPage before unknown hash
     - Fixed focus issues with shared state on routes with same page type
+    - Fixed memoryleak on shared routes with lazyCreate disabled
    
     
 ## v4.3.3
