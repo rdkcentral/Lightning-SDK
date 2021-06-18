@@ -69,6 +69,10 @@ export const isPromise = method => {
   return isObject(result) && isFunction(result.then)
 }
 
+export const cleanHash = (hash = '') => {
+  return hash.replace(/^#/, '').replace(/\/+$/, '')
+}
+
 export const getConfigMap = () => {
   const routerSettings = Settings.get('platform', 'router')
   const isObj = isObject(routerSettings)

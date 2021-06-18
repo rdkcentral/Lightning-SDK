@@ -24,7 +24,7 @@ import emit from './emit'
 
 export let previousState
 
-export const types = {
+export const dataHooks = {
   on: request => {
     previousState = app.state || ''
     app._setState('Loading')
@@ -40,10 +40,6 @@ export const types = {
       // for now we fail silently
     }
     return Promise.resolve()
-  },
-  // on route share instance
-  shared: request => {
-    return execProvider(request)
   },
 }
 
