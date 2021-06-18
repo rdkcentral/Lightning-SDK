@@ -366,9 +366,21 @@ const cleanUp = (page, request) => {
 
   let doCleanup = false
 
+  // if this request is executed due to a step back in history
+  // and we have configured to destroy active page when we go back
+  // in history or lazyDestory is enabled
   if (isFromHistory && (destroyOnBack || lazyDestroy)) {
     doCleanup = true
-  } else if (lazyDestroy && !keepAlive) {
+  }
+
+  // clean up if lazyDestroy is enabled and the keepAlive flag
+  // in navigation register is false
+  if (lazyDestroy && !keepAlive) {
+    doCleanup = true
+  }
+
+  // if the current and new request share the same route blueprint
+  if (activeRoute === request.route.path) {
     doCleanup = true
   }
 
