@@ -5,7 +5,7 @@ This keeps memory usage to a minimum, which can be beneficial for performance on
 
 To decrease the memory footprint even further, you can configure specific Router settings per platform.
 
-> Within the context of the [Metrological Dashboard](http://dashboard.metrological.com/), these settings are defined as Platform Settings *outside* the App's control. However, during local development, you can experiment with them using the **settings.json** file. All Router-related settings are grouped in a `Router` key within `platformSettings`.
+> Within the context of the [Metrological Dashboard](http://dashboard.metrological.com/), these settings are defined as Platform Settings *outside* the App's control. However, during local development, you can experiment with them using the **settings.json** file. All Router-related settings are grouped in a `router` key within `platformSettings`.
 
 For example:
 
@@ -14,7 +14,7 @@ For example:
     "appSettings": {
     },
     "platformSettings": {
-        "Router": {
+        "router": {
           "lazyCreate": true,
           "lazyDestroy": true,
           "gcOnUnload": true,
