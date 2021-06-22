@@ -12,7 +12,7 @@ The Lightning CLI provides a set of development tools, that enable you to:
 
 Install the Lightning-CLI (globally):
 
-```
+```js
 npm install -g @lightningjs/cli
 ```
 
