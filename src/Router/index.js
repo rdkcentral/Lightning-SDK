@@ -25,6 +25,7 @@ import {
   isString,
   getQueryStringParams,
   symbols,
+  cleanHash,
 } from './utils/helpers'
 
 import {
@@ -121,6 +122,12 @@ const start = () => {
   }
 
   if (routeExists(bootKey)) {
+    if (hash && !isDirectLoad) {
+      if (!getRouteByHash(hash)) {
+        navigate('*', { failedHash: hash })
+        return
+      }
+    }
     navigate(
       bootKey,
       {
@@ -198,7 +205,7 @@ export const navigate = (url, args = {}, store) => {
 }
 
 const queue = (hash, args = {}, store) => {
-  hash = hash.replace(/^#/, '')
+  hash = cleanHash(hash)
   if (!navigateQueue.has(hash)) {
     for (let request of navigateQueue.values()) {
       request.cancel()
@@ -217,7 +224,7 @@ const queue = (hash, args = {}, store) => {
  * @returns {Promise<void>}
  */
 const handleHashChange = async override => {
-  const hash = (override || getHash()).replace(/^#/, '')
+  const hash = cleanHash(override || getHash())
   const queueId = decodeURIComponent(hash)
   let request = navigateQueue.get(queueId)
 
@@ -299,6 +306,13 @@ const resolveHashChange = request => {
     }
     // if there is a component attached to the route
     if (component) {
+      // to prevent shared state issues between same routes
+      // we force page to root state
+      const activePage = getActivePage()
+      if (activePage) {
+        activePage._setState('')
+      }
+
       if (isPage(component, stage)) {
         load(request).then(() => {
           app._refocus()
