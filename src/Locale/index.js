@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,20 @@
  */
 
 import Log from '../Log'
+
+let warned = false
+const deprecated = (force = false) => {
+  if (force === true || warned === false) {
+    console.warn(
+      [
+        "The 'Locale'-plugin in the Lightning-SDK is deprecated and will be removed in future releases.",
+        "Please consider using the new 'Language'-plugin instead.",
+        'https://rdkcentral.github.io/Lightning-SDK/#/plugins/language',
+      ].join('\n\n')
+    )
+  }
+  warned = true
+}
 class Locale {
   constructor() {
     this.__enabled = false
@@ -85,6 +99,7 @@ class Locale {
    * @param {String} lang
    */
   setLanguage(lang) {
+    deprecated()
     this.__enabled = true
     this.language = lang
   }
@@ -95,6 +110,7 @@ class Locale {
    * @return {Object}
    */
   get tr() {
+    deprecated(true)
     return this.__trObj[this.language]
   }
 
@@ -104,6 +120,7 @@ class Locale {
    * @param {Object} trObj
    */
   loadFromObject(trObj) {
+    deprecated()
     const fallbackLanguage = 'en'
     if (Object.keys(trObj).indexOf(this.language) === -1) {
       Log.warn('No translations found for: ' + this.language)

@@ -1,22 +1,21 @@
-# Router
+# Deeplinking
 
-## Deeplinking
+The Router plugin has built-in support for *deeplinking*, which means that your App can be opened at a *specific* route.
 
-The Router plugin has built-in support for deeplinking, which means that your App can be opened at a specific route. This is an important feature, because it allows external sources (such as an operator) to jump straight into the Player Page of your App, for example.
+Deeplinking is an important feature, because:
 
-The Lazy creation support in the page router enables to only load what is needed and keep memory usage to a minimum. Also in case of a deeplink, regular dataproviding for a specific route is still executed.
-
-On top of that there is exists the [boot](configuration?id=boot) function that can
-handle any general operations that has need to be executed for you App to functon properly.
+* It allows external sources (such as operator) to go directly to your App's *Player* page (for example).
+* The [lazy creation](settings.md#lazyCreate) support in the page Router enables you to *only* load what is needed and keep memory usage to a minimum.
+* Regular data providing for a specific route is still executed.
+* The configuration object's [boot](configuration.md#boot) key handles any general operations to be executed for a proper functioning of your App.
 
 ## Backtracking
 
-When a user enters your App via a deeplink, there is technically no history available. By default this would mean that a back key press will lead to an exit of the app.
+When a user enters your App via a deeplink, there is technically *no* history available. By default, this would mean that a **Back** key press leads to exiting the App.
 
-On some platforms this is not the expected behaviour. For that reason the Router plugin supports _backtracking_ functionality. When enabled (via the platform setting `router.backtracking`), upon a backpress the router will _recursively_ remove the last part of the hash, until it finds a valid path to navigate to.
+On some platforms, this is not the desired behavior. For that reason, the Router plugin supports the *[backtracking](settings.md#backtracking)* functionality.
 
-## History management
+When this feature is enabled (via the Platform Setting  `Router.backtracking`) and the **Back** key is pressed, the Router will *recursively* remove the last part of the hash, until it finds a valid path to navigate to.
 
-The router maintains it’s own history and does not rely on a browser web API. All the routes we have navigated to can end up in history. We don’t keep route duplicates in history, so `#home/player/145` will only be in history once (even if the user navigated to it multiple times) but same route blueprints with different values can live in history, `home/player/178` and `home/player/91737` or `browse/genre/action/50` and `browse/genre/popular/50`
-
-Remote control backpress will check if there are routes in history, pop the last off navigate to that route (invoking the page loading process as discussed before)
+#### NEXT:
+[History](history.md)

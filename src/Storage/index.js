@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@
  */
 
 import Settings from '../Settings'
-import localCookie from 'localCookie'
+import localCookie from 'localCookie/module/localCookie.js'
 
 let namespace
 let lc
 
 export const initStorage = () => {
-  namespace = Settings.get('platform', 'appId')
+  namespace = Settings.get('platform', 'id')
   // todo: pass options (for example to force the use of cookies)
   lc = new localCookie()
 }

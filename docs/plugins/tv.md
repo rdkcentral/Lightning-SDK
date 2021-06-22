@@ -1,35 +1,35 @@
 # TV
 
-The TV plugin serves as an abstraction layer to the _live TV_ functionality of a STB. The interface gives you access to the current channel
-and program information, and allows you to change the TV channel from inside an App (if your app is _whitelisted_ to do so).
+The *TV* plugin serves as an abstraction layer to the *live TV* functionality of an STB. The interface gives access to the current channel
+and program information, and allows you to change the TV channel from *inside* an App (if your App is *whitelisted* for that purpose).
 
-With the TV plugin you can adapt your App _contextually_ to what the user is currently watching on TV.
+One of the things you can do with the TV plugin, is adapting your App contextually to what the user is currently watching on TV.
 
 ## Usage
 
-In order to use the TV plugin, import it from the Lightning SDK.
+If you want to use the TV plugin, import it from the Lightning SDK:
 
 ```js
-import { TV } from 'wpe-lightning-sdk'
+import { TV } from '@lightningjs/sdk'
 ```
 
 ## Available methods
 
-### Channel
+### channel
 
-Either _retrieves_ information about the TV channel that is _currently_ being watched or _changes_ the current TV channel.
+Either *[retrieves](#retrieve-current-channel)* information about the TV channel that is currently being watched, or *[changes](#change-current-channel)* the current TV channel.
 
-#### Retrieve current Channel
+#### Retrieve Current Channel
 
 ```js
 TV.channel().then(channel => console.log(channel))
 ```
 
-The `channel`-method returns a _promise_ which returns the channel information as an object.
+The `channel` method returns a *Promise* that returns the channel information as an object. The Promise is *rejected* if an error occurred or if the App is not allowed to retrieve the information.
 
-During _development_ the `channel`-method returns a random mocked channel. Optionally you can [overwrite](#overwriting-default-values) the default values.
+During *development*, the `channel` method returns a *random mocked channel*. Optionally, you can [overwrite](#overwriting-default-values) the default values by editing the **settings.json** file. For example:
 
-```js
+```json
 {
   number: 1,
   name: 'Metro News 1',
@@ -38,34 +38,34 @@ During _development_ the `channel`-method returns a random mocked channel. Optio
 }
 ```
 
-#### Change current channel
+#### Change Current Channel
 
 ```js
 const channelNumber = 2
 TV.channel(channelNumber).then(channel => console.log(channel))
 ```
 
-When a channelNumber is passed as an argument to the `channel`-method it will try to change the TV channel.
-It will return a _promise_ which returns the channel information as an object.
+If a `channelNumber` is passed as an argument, the `channel` method attempts to change the TV channel.
+It returns a *Promise* that returns the channel information as an object. The Promise is *rejected* if an error occurred or if the App is not allowed to set the channel.
 
-During _development_ you can pass either `1`, `2`, or `3` as a `channelNumber`, to select one of the default mocked channels.
+During *development*, you can pass either 1, 2 or 3 as the `channelNumber`, so that one of the default mocked channels can be selected.
 
-Please note, that in a _production_ setting most Apps will **not** be able to change the current Live TV Channel. The functionality is only
-made available to certain _whitelisted_ Apps.
+> In a *production* setting, most Apps are *not* able to change the currently live TV channel. The functionality is only
+made available to certain *whitelisted* Apps.
 
-### Program
+### program
 
-Retrieves the information about the TV program that is currently being watched.
+Retrieves information about the TV program that is currently being watched.
 
 ```js
 TV.program().then(program => console.log(program))
 ```
 
-The `program`-method returns a _promise_ which returns program information as an object.
+The `program` method returns a *Promise* that returns the program information as an object.
 
-During _development_ the `program`-method returns a mocked program, linked to a random mocked channel. Optionally you can [overwrite](#overwriting-default-values) the default values.
+During *development*, the `program` method returns a mocked program that is linked to a random mocked channel. Optionally, you can [overwrite](#overwriting-default-values) the default values by editing the **settings.json** file. For example:
 
-```js
+```json
 {
   title: 'The Tonight Show Starring Jimmy Fallon',
   description: 'Late-night talk show hosted by Jimmy Fallon on NBC',
@@ -75,21 +75,21 @@ During _development_ the `program`-method returns a mocked program, linked to a 
 }
 ```
 
-### Entitled
+### entitled
 
-Retrieves if the user is entitled to watch the current TV channel.
+Indicates whether the user is entitled to watch the current TV channel or not.
 
 ```js
 TV.entitled().then(entitled => console.log(entitled))
 ```
 
-The `entitled`-method returns a _promise_ which returns `true` when the user is entitled and `false` when not.
+The `entitled` method returns a *Promise* that returns `true` if the user is entitled and `false` if not.
 
-During _development_ the `entitled`-method returns the entitlement value of the random mocked channel. Optionally you can [overwrite](#overwriting-default-values) the default values.
+During *development*, the `entitled` method returns the entitlement value of the random mocked channel. Optionally, you can [overwrite](#overwriting-default-values) the default values by editing the **settings.json** file.
 
-### AddEventListener
+### addEventListener
 
-The `addEventListener`-method allows you to listen for TV events, and execute a callback when they happen.
+Allows you to listen for TV events and executes a callback if these events occur.
 
 ```js
 const event = 'channelChange'
@@ -98,12 +98,13 @@ const callback = (channel) => { console.log(channel) }
 TV.addEventListener(event, callback)
 ```
 
-Currently only 1 event is supported (`channelChange`). It will pass an object with the new `channel` information as an argument to the callback function.
-It's possible to register multiple callbacks for the same event.
+Currently, *only one* event is supported: `channelChange`. This passes an object with the new `channel` information as an argument to the callback function.
 
-### RemoveEventListener
+You can register *multiple* callbacks for the same event.
 
-The `removeEventListener`-method allows you to remove previously registerd callbacks for TV events (via the `addEventListener`-method).
+### removeEventListener
+
+Allows you to remove previously registered callbacks  (via the `addEventListener` method) for TV events.
 
 ```js
 const event = 'channelChange'
@@ -112,14 +113,13 @@ const callback = (channel) => { console.log(channel) }
 TV.removeEventListener(event, callback)
 ```
 
-When the `callback` argument is ommitted, all previously registered callbacks for that event will be removed.
+If the `callback` argument is omitted, *all* previously registered callbacks for that event are removed.
 
+## Overwriting Default Values
 
-## Overwriting default values
-
-During development you might want to test your App with different TV channels and / or programs.
-When you want to overwrite the default values, you can do so by editing the `settings.json` file.
-Add a `tv` key in `platformSettings` and supply it with an `Array` of channels in the following format:
+During development, you might want to test your App with different TV channels and / or programs.
+You can *overwrite* the default values by editing the **settings.json** file.
+Just add a `tv` key in `platformSettings` and supply it with an `Array` of channels in the following format:
 
 ```json
 {
@@ -142,4 +142,4 @@ Add a `tv` key in `platformSettings` and supply it with an `Array` of channels i
     ]
    }
 }
- ```
+```

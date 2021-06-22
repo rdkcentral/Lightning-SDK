@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,10 @@ import VersionLabel from '../VersionLabel'
 import FpsCounter from '../FpsCounter'
 import Log from '../Log'
 import Settings from '../Settings'
+import { initLanguage } from '../Language'
+import Utils from '../Utils'
+import Registry from '../Registry'
+import { initColors } from '../Colors'
 
 import { version as sdkVersion } from '../../package.json'
 
@@ -70,15 +74,16 @@ export default function(App, appData, platformSettings) {
       return {
         w: 1920,
         h: 1080,
-        rect: true,
-        color: 0x00000000,
       }
     }
 
     _setup() {
       Promise.all([
         this.loadFonts((App.config && App.config.fonts) || (App.getFonts && App.getFonts()) || []),
+        // to be deprecated
         Locale.load((App.config && App.config.locale) || (App.getLocale && App.getLocale())),
+        App.language && this.loadLanguage(App.language()),
+        App.colors && this.loadColors(App.colors()),
       ])
         .then(() => {
           Metrics.app.loaded()
@@ -88,6 +93,7 @@ export default function(App, appData, platformSettings) {
           AppInstance = this.stage.c({
             ref: 'App',
             type: App,
+            zIndex: 1,
             forceZIndexContext: !!platformSettings.showVersion || !!platformSettings.showFps,
           })
 
@@ -102,6 +108,7 @@ export default function(App, appData, platformSettings) {
               type: VersionLabel,
               version: this.config.version,
               sdkVersion: sdkVersion,
+              zIndex: 1,
             })
           }
 
@@ -109,6 +116,7 @@ export default function(App, appData, platformSettings) {
             this.childList.a({
               ref: 'FpsCounter',
               type: FpsCounter,
+              zIndex: 1,
             })
           }
 
@@ -129,9 +137,10 @@ export default function(App, appData, platformSettings) {
       Log.info('Closing App')
 
       Settings.clearSubscribers()
+      Registry.clear()
 
       if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
-        platformSettings.onClose()
+        platformSettings.onClose(...arguments)
       } else {
         this.close()
       }
@@ -149,8 +158,13 @@ export default function(App, appData, platformSettings) {
     loadFonts(fonts) {
       return new Promise((resolve, reject) => {
         fonts
-          .map(({ family, url, descriptors }) => () => {
-            const fontFace = new FontFace(family, 'url(' + url + ')', descriptors || {})
+          .map(({ family, url, urls, descriptors }) => () => {
+            const src = urls
+              ? urls.map(url => {
+                  return 'url(' + url + ')'
+                })
+              : 'url(' + url + ')'
+            const fontFace = new FontFace(family, src, descriptors || {})
             document.fonts.add(fontFace)
             return fontFace.load()
           })
@@ -162,8 +176,33 @@ export default function(App, appData, platformSettings) {
       })
     }
 
+    loadLanguage(config) {
+      let file = Utils.asset('translations.json')
+      let language = config
+
+      if (typeof language === 'object') {
+        language = config.language || null
+        file = config.file || file
+      }
+
+      return initLanguage(file, language)
+    }
+
+    loadColors(config) {
+      let file = Utils.asset('colors.json')
+      if (config && (typeof config === 'string' || typeof config === 'object')) {
+        file = config
+      }
+      return initColors(file)
+    }
+
+    set focus(v) {
+      this._focussed = v
+      this._refocus()
+    }
+
     _getFocused() {
-      return this.tag('App')
+      return this._focussed || this.tag('App')
     }
   }
 }

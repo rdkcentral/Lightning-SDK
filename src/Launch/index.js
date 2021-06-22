@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -22,26 +22,33 @@ import { initProfile } from '../Profile'
 import { initMetrics } from '../Metrics'
 import { initSettings } from '../Settings'
 import { initMediaPlayer } from '../MediaPlayer'
+import { initVideoPlayer } from '../VideoPlayer'
 import { initStorage } from '../Storage'
+import { initAds } from '../Ads'
 import { initRouter } from '../Router'
 import { initTV } from '../TV'
+import { initPurchase } from '../Purchase'
+import { initMetadata } from '../Metadata'
 import Application from '../Application'
 
 export let ApplicationInstance
 
 export default (App, appSettings, platformSettings, appData) => {
   initSettings(appSettings, platformSettings)
+  initMetadata(appSettings)
 
   initUtils(platformSettings)
   initStorage()
-
   // Initialize plugins
   if (platformSettings.plugins) {
     platformSettings.plugins.profile && initProfile(platformSettings.plugins.profile)
     platformSettings.plugins.metrics && initMetrics(platformSettings.plugins.metrics)
     platformSettings.plugins.mediaPlayer && initMediaPlayer(platformSettings.plugins.mediaPlayer)
+    platformSettings.plugins.mediaPlayer && initVideoPlayer(platformSettings.plugins.mediaPlayer)
+    platformSettings.plugins.ads && initAds(platformSettings.plugins.ads)
     platformSettings.plugins.router && initRouter(platformSettings.plugins.router)
     platformSettings.plugins.tv && initTV(platformSettings.plugins.tv)
+    platformSettings.plugins.purchase && initPurchase(platformSettings.plugins.purchase)
   }
 
   const app = Application(App, appData, platformSettings)

@@ -1,21 +1,19 @@
 # Lightning
 
-The Lightning SDK is built on top of Lightning, but it also exposes Lightning as a module that can be imported in your App. In other words, there is no need to install Lightning-core as a separate dependency.
+The Lightning SDK exposes Lightning as a module that can be imported in your App. In other words, there is no need to install Lightning Core as a separate dependency.
 
-You will use Lightning in almost every component, since components extend the Lightning component base class.
+You use Lightning in every component, since components extend the `Lightning component` base class.
 
-Apart from that you can also use it to take advantage of the default texture and tools made available by Lightning.
-
-See <a href="https://rdkcentral.github.io/Lightning/" target="_blank">Lightning documentation</a> for more information.
+Apart from that, you can use Lightning to take advantage of the default texture and tools made available by Lightning (see [Using Tools from Lightning](#using-tools-from-lightning) below).
 
 ## Usage
 
-### Extending a Lightning component
+### Extending the Lightning Component
 
-All components in your app (including the main App) are required to extend a Lightning component.
+It is required that *all* components in your App (including the main App) extend the Lightning component.
 
 ```js
-import { Lightning } from 'wpe-lightning-sdk'
+import { Lightning } from '@lightningjs/sdk'
 
 export default class MyComponent extends Lightning.Component {
   //
@@ -24,10 +22,10 @@ export default class MyComponent extends Lightning.Component {
 
 ### Using Tools from Lightning
 
-Lightning offers a set of tools that you can use in your App.
+Lightning provides a set of tools that you can use in your App. For example:
 
 ```js
-import { Lightning } from 'wpe-lightning-sdk'
+import { Lightning } from '@lightningjs/sdk'
 
 export default class MyComponent extends Lightning.Component {
   static _template() {
@@ -40,12 +38,12 @@ export default class MyComponent extends Lightning.Component {
 }
 ```
 
-See <a href="https://rdkcentral.github.io/Lightning/docs/textures/toolbox" target="_blank">Lightning documentation</a> for more information.
-
 ### Using Textures from Lightning
 
+You can use textures provided by Lightning as shown in the following example:
+
 ```js
-import { Lightning } from 'wpe-lightning-sdk'
+import { Lightning } from '@lightningjs/sdk'
 
 export default class MyComponent extends Lightning.Component {
   static _template() {
@@ -57,3 +55,5 @@ export default class MyComponent extends Lightning.Component {
   }
 }
 ```
+
+> See the [Lightning Core Reference](../../lightning-core-reference/index.md) documentation for more information.

@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -23,22 +23,24 @@ const process = require('process')
 
 const nodeModulesFolder = path.join(
   process.cwd(),
-  process.cwd().indexOf('node_modules') > -1 ? '..' : 'node_modules'
+  process.cwd().indexOf('node_modules') > -1 ? '../..' : 'node_modules'
 )
 
-// create support lib (should already exist)
+// create support lib
 const supportFolder = path.join(process.cwd(), '/support')
-shell.mkdir(supportFolder)
+!shell.test('-d', supportFolder) && shell.mkdir(supportFolder)
 
 // create support/lib and copy all required libraries from node_modules
 const supportLibFolder = path.join(supportFolder, '/lib')
-shell.mkdir(supportLibFolder)
-shell.cp('-R', path.join(nodeModulesFolder, '/wpe-lightning/devtools/*'), supportLibFolder)
-shell.cp('-R', path.join(nodeModulesFolder, '/wpe-lightning/dist/*'), supportLibFolder)
+!shell.test('-d', supportLibFolder) && shell.mkdir(supportLibFolder)
+
+shell.cp('-R', path.join(nodeModulesFolder, '@lightningjs/core/devtools/*'), supportLibFolder)
+shell.cp('-R', path.join(nodeModulesFolder, '@lightningjs/core/dist/*'), supportLibFolder)
 
 // create support/polyfills and copy all required polyfills from node_modules
 const supportPolyfillsFolder = path.join(supportFolder, '/polyfills')
-shell.mkdir(supportPolyfillsFolder)
+!shell.test('-d', supportPolyfillsFolder) && shell.mkdir(supportPolyfillsFolder)
+
 shell.cp(
   '-R',
   path.join(nodeModulesFolder, '/url-polyfill/url-polyfill.js'),
@@ -49,9 +51,42 @@ shell.cp(
   path.join(nodeModulesFolder + '/@babel/polyfill/dist/polyfill.js'),
   path.join(supportPolyfillsFolder, '/babel-polyfill.js')
 )
-
 shell.cp(
   '-R',
   path.join(nodeModulesFolder + '/whatwg-fetch/dist/fetch.umd.js'),
   path.join(supportPolyfillsFolder, '/fetch.js')
 )
+
+console.log('\x1b[32m')
+console.log('=============================================================================\n')
+console.log(
+  'The package name of the Lightning SDK has recently changed from "wpe-lightning-sdk"\nto "@lightningjs/sdk"'
+)
+console.log('Read more about it here: http://www.lightningjs.io/announcements/carbon-release')
+console.log('\n\nFrom now on you should import plugins from the Lightning SDK like this:')
+console.log("\n\nimport { Utils } from '@lightningjs/sdk'\n")
+console.log('=============================================================================')
+
+// check if there is a mismatch in the installation of the SDK
+if (
+  process.env.npm_package_name.includes('@lightningjs/sdk') && // installing @lightningjs/sdk packagename
+  process.cwd().includes('wpe-lightning-sdk') // in wpe-lightning-sdk folder
+) {
+  console.log('\x1b[31m')
+  console.log('=============================================================================\n')
+  console.log(
+    'It seems like you are installing the new version of the Lightning SDK under the old\npackage namespace.'
+  )
+  console.log(
+    'This may possibly result in unexpected errors in the rest of the postinstall script.\n\n'
+  )
+  console.log(
+    'Unless this is intentional, we recommend that you manually run the following commands'
+  )
+  console.log('in the root of your project to properly install the latest Lightning-SDK:\n')
+  console.log('npm uninstall wpe-lightning-sdk')
+  console.log('npm install @lightningjs/sdk\n')
+  console.log('=============================================================================')
+}
+
+console.log('\x1b[0m')

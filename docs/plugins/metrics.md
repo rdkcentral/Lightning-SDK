@@ -1,132 +1,137 @@
 # Metrics
 
-It's important to know how people use Apps, and we can do so by keeping track of a range of metrics and send them to a backend.
+It is important to know how people use Apps. We can acquire this information by keeping track of a range of *metrics* and send these to a backend.
 
-Different operators might implement the tracking metrics in different ways. That's why the Lightning SDK offers a Metrics plugin, which is a generic interface for for developers, independent of the operator or platform.
+Because each operator might implement these tracking metrics in a different way, the Lightning SDK provides the *Metrics* plugin. This plugin is a *generic* interface for developers, independent of any operator or platform.
 
-Some standard metrics are automatically implemented by the  SDK. Such as _app launched_, _app loaded_, _app closed_ and various media _player events_.
+Some *standard* metrics are automatically implemented by the  SDK, such as  App Launch, App Loaded, App Close and various video-related [media](#media) events.
 
-As a developer you can implement additional metrics in your App. For example when the app is _ready to use_ or specific user interactions, such as _clicking on a button_.
+You can implement additional metrics in your App. For example, when the App is 'Ready to use', or specific user interactions like 'Clicking on a button'.
 
-There are 4 categories for sending metrics. App, Page, User and Media.
+There are four event-related categories for sending metrics:
+
+* App
+* Page
+* User
+* Media
 
 ## Usage
 
-In componenents where you want to track and send events, import the Metrics plugin.
+Import the Metrics plugin in components where you want to track and send events:
 
 ```js
-import { Metrics } from 'wpe-lightning-sdk'
+import { Metrics } from '@lightningjs/sdk'
 ```
 
-## Available methods
+## Available Methods
 
-### App Launch
+### App.launch
 
-Send a metric that the App is launched (implemented automatcially by the SDK)
+Sends a metric that the App is launched (implemented automatically by the SDK).
 
 ```js
-Metrics.app.launch()
+Metrics.App.launch()
 ```
 
-### App Loaded
+### App.loaded
 
-Send a metric that the App is loaded (implemented automatcially by the SDK)
+Sends a metric that the App is loaded (implemented automatically by the SDK).
 
 ```js
-Metrics.app.loaded()
+Metrics.App.loaded()
 ```
 
-### App Ready
+### App.ready
 
-Send a metric that the App is ready to be used.
+Sends a metric that the App is ready to be used.
 
 ```js
-Metrics.app.ready()
+Metrics.App.ready()
 ```
 
-### App Close
+### App.close
 
-Send a metric that the App is closed (implemented automatcially by the SDK)
+Sends a metric that the App is closed (implemented automatically by the SDK).
 
 ```js
-Metrics.app.close()
+Metrics.App.close()
 ```
 
-### App Error
+### App.error
 
-Send a metric that an error has occured in the App.
+Sends a metric that an error has occurred in the App.
 
 ```js
-Metrics.app.close(message, code, params)
+Metrics.App.error(message, code, params)
 ```
 
-### App Event
+### App.event
 
-Send a custom metric related to an App event.
+Sends a custom metric that is related to an App event.
 
 ```js
-Metrics.app.event(name, params)
+Metrics.App.event(name, params)
 ```
 
-### Page View
+### Page.view
 
-Send a metric that a page has been viewed.
+Sends a metric that a page has been viewed.
 
 ```js
 Metrics.page.view(name, params)
 ```
 
-### Page Leave
+### Page.leave
 
-Send a metric that a page has been left.
+Sends a metric that a page has been left.
 
 ```js
 Metrics.page.leave(name, params)
 ```
 
-### Page Error
+### Page.error
 
-Send a metric that an error has occured accessing a page.
+Sends a metric that an error has occurred when accessing a page.
 
 ```js
 Metrics.page.error(message, code, params)
 ```
 
-### Page Event
+### Page.event
 
-Send a custom metric related to a Page event.
+Sends a custom metric that is related to a Page event.
 
 ```js
 Metrics.page.event(name, params)
 ```
 
-### User Click
+### User.click
 
-Send a metric that a user has clicked an element.
+Sends a metric that a user has clicked on an element.
 
 ```js
 Metrics.user.click(name, params)
 ```
 
-### User Input
+### User.input
 
-Send a metric that a user has supplied input.
+Sends a metric that a user has supplied input.
 
 ```js
 Metrics.user.input(name, params)
 ```
 
-### User Error
+### User.error
 
-Send a metric that an error has occured related to a user event.
+Sends a metric that an error has occurred that is related to a User event.
 
 ```js
 Metrics.user.error(message, code, params)
 ```
 
-### User Event
+### User.event
 
-Send a custom metric related to a User event.
+Sends a custom metric that is related to a User event.
 
 ```js
 Metrics.user.event(name, params)
@@ -134,28 +139,15 @@ Metrics.user.event(name, params)
 
 ### Media
 
-The Lightning SDK's [MediaPlayer plugin](/plugins/mediaplayer) automatically tracks and sends Media related metrics. Each metric receives the current video Url and the current video's progress.
+The [VideoPlayer](videoplayer.md) plugin automatically tracks and sends video-related metrics. Each metric receives the URL and progress of the current video. The Media events that are sent as metrics are:
 
-#### Media Abort
-
-#### Media CanPlay
-
-#### Media Ended
-
-#### Media Pause
-
-#### Media Play
-
-#### Media Suspend
-
-#### Media VOlumeChange
-
-#### Media  Waiting
-
-#### Media Seeking
-
-#### Media Seeked
-
-### Generic Error
-
-### Generic Event
+* Media Abort
+* Media CanPlay
+* Media Ended
+* Media Pause
+* Media Play
+* Media Suspend
+* Media VolumeChange
+* Media  Waiting
+* Media Seeking
+* Media Seeked

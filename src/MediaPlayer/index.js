@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,13 @@ export default class Mediaplayer extends Lightning.Component {
     this._metrics = null
     this._textureMode = Settings.get('platform', 'textureMode') || false
     Log.info('Texture mode: ' + this._textureMode)
+    console.warn(
+      [
+        "The 'MediaPlayer'-plugin in the Lightning-SDK is deprecated and will be removed in future releases.",
+        "Please consider using the new 'VideoPlayer'-plugin instead.",
+        'https://rdkcentral.github.io/Lightning-SDK/#/plugins/videoplayer',
+      ].join('\n\n')
+    )
   }
 
   static _template() {

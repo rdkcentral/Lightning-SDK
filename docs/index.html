@@ -2,7 +2,7 @@
  If not stated otherwise in this file or this component's LICENSE file the
  following copyright and licenses apply:
 
- Copyright 2020 RDK Management
+ Copyright 2020 Metrological
 
  Licensed under the Apache License, Version 2.0 (the License);
  you may not use this file except in compliance with the License.
@@ -42,8 +42,18 @@
         placeholder: 'Type to search',
         noData: 'No Results!',
         depth: 6,
-     }
+      },
+      plugins: [
+        function(hook, vm) {
+          hook.ready(function() {
+            fetch('./package.json')
+              .then(response => response.json())
+              .then(data => document.querySelector('.app-name-link').innerHTML += ' <small><a href="#/changelog" style="color: inherit"> ' + data.version + '</a></small>')
+          })
+        }
+      ]
     }
+
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0"></script>

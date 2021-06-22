@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,12 @@ const publish = (key, value) => {
 }
 
 const dotGrab = (obj = {}, key) => {
+  if (obj === null) return undefined
   const keys = key.split('.')
   for (let i = 0; i < keys.length; i++) {
     obj = obj[keys[i]] = obj[keys[i]] !== undefined ? obj[keys[i]] : {}
   }
-  return typeof obj === 'object' ? (Object.keys(obj).length ? obj : undefined) : obj
+  return typeof obj === 'object' && obj !== null ? (Object.keys(obj).length ? obj : undefined) : obj
 }
 
 export default {

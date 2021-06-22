@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
  * limitations under the License.
  */
 
-import Lightning from '../Lightning'
-import Settings from '../Settings'
+import Lightning from '../../Lightning'
+import Settings from '../../Settings'
 
 export const isFunction = v => {
   return typeof v === 'function'
@@ -33,13 +33,13 @@ export const isBoolean = v => {
 }
 
 export const isPage = v => {
-  if (v instanceof Lightning.Element || isLightningComponent(v)) {
+  if (v instanceof Lightning.Element || isComponentConstructor(v)) {
     return true
   }
   return false
 }
 
-export const isLightningComponent = type => {
+export const isComponentConstructor = type => {
   return type.prototype && 'isComponent' in type.prototype
 }
 
@@ -55,7 +55,7 @@ export const isString = v => {
   return typeof v === 'string'
 }
 
-export const isPromise = (method, args) => {
+export const isPromise = method => {
   let result
   if (isFunction(method)) {
     try {
@@ -67,6 +67,10 @@ export const isPromise = (method, args) => {
     result = method
   }
   return isObject(result) && isFunction(result.then)
+}
+
+export const cleanHash = (hash = '') => {
+  return hash.replace(/^#/, '').replace(/\/+$/, '')
 }
 
 export const getConfigMap = () => {
@@ -105,16 +109,63 @@ export const incorrectParams = (cb, route) => {
 }
 
 export const getQueryStringParams = hash => {
+  let parse = ''
   const getQuery = /([?&].*)/
   const matches = getQuery.exec(hash)
   const params = {}
 
+  if (document.location && document.location.search) {
+    parse = document.location.search
+  }
+
   if (matches && matches.length) {
-    const urlParams = new URLSearchParams(matches[1])
+    let hashParams = matches[1]
+    if (parse) {
+      // if location.search is not empty we
+      // remove the leading ? to create a
+      // valid string
+      hashParams = hashParams.replace(/^\?/, '')
+      // we parse hash params last so they we can always
+      // override search params with hash params
+      parse = `${parse}&${hashParams}`
+    } else {
+      parse = hashParams
+    }
+  }
+
+  if (parse) {
+    const urlParams = new URLSearchParams(parse)
     for (const [key, value] of urlParams.entries()) {
       params[key] = value
     }
     return params
+  } else {
+    return false
   }
-  return false
+}
+
+export const objectToQueryString = obj => {
+  if (!isObject(obj)) {
+    return ''
+  }
+  return (
+    '?' +
+    Object.keys(obj)
+      .map(key => {
+        return `${key}=${obj[key]}`
+      })
+      .join('&')
+  )
+}
+
+export const symbols = {
+  route: Symbol('route'),
+  hash: Symbol('hash'),
+  store: Symbol('store'),
+  fromHistory: Symbol('fromHistory'),
+  expires: Symbol('expires'),
+  resume: Symbol('resume'),
+  backtrack: Symbol('backtrack'),
+  historyState: Symbol('historyState'),
+  queryParams: Symbol('queryParams'),
 }

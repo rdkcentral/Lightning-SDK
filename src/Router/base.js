@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2020 RDK Management
+ * Copyright 2020 Metrological
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@
  */
 
 import Lightning from '../Lightning'
-import { getActivePage, restore } from './index'
+import { default as Router } from './index'
+import { routerConfig } from './utils/router.js'
+import { isBoolean } from './utils/helpers'
 
 export class RoutedApp extends Lightning.Component {
   static _template() {
@@ -84,7 +86,16 @@ export class RoutedApp extends Lightning.Component {
         }
 
         _handleKey() {
-          restore()
+          const restoreFocus = routerConfig.get('autoRestoreRemote')
+          /**
+           * The Router used to delegate focus back to the page instance on
+           * every unhandled key. This is barely usefull in any situation
+           * so for now we offer the option to explicity turn that behaviour off
+           * so we don't don't introduce a breaking change.
+           */
+          if (!isBoolean(restoreFocus) || restoreFocus === true) {
+            Router.focusPage()
+          }
         }
       },
     ]
@@ -112,16 +123,10 @@ export class RoutedApp extends Lightning.Component {
   _handleBack() {}
 
   /**
-   * we MUST register _captureKey for dev quick-navigation
-   * (via keyboard 1-9)
-   */
-  _captureKey() {}
-
-  /**
    * We MUST return Router.activePage() so the new Page
    * can listen to the remote-control.
    */
   _getFocused() {
-    return getActivePage()
+    return Router.getActivePage()
   }
 }
