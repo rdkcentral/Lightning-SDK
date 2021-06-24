@@ -309,7 +309,7 @@ const resolveHashChange = request => {
       // to prevent shared state issues between same routes
       // we force page to root state
       const activePage = getActivePage()
-      if (activePage) {
+      if (activePage && route.path === getActiveRoute()) {
         activePage._setState('')
       }
 
