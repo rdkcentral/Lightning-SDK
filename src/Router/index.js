@@ -498,6 +498,7 @@ export default {
   setHistory,
   getHistoryState,
   replaceHistoryState,
+  getQueryStringParams,
   symbols,
   App: RoutedApp,
   // keep backwards compatible
