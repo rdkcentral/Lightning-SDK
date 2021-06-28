@@ -112,6 +112,11 @@ export default class BaseAudio {
     return this
   }
 
+  equalizer() {
+    console.warn('stereo panner feature not supported')
+    return this
+  }
+
   reset() {
     console.warn('reset feature not supported')
   }

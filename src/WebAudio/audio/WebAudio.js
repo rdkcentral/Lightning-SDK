@@ -20,6 +20,8 @@
 import BaseAudio from './BaseAudio'
 import { CompressorParams, FilterParams, PannerParams, PannerNodeWrapper } from './../audioParams'
 import { creatDistortionCurve, validateCoeff, setNodeParams } from './audioUtils'
+import Equalizer from './Equalizer'
+import frequencyBands from './equalizerFrequencyBands'
 
 /**
  * @class Audio representing audio processing APIs
@@ -414,7 +416,28 @@ export default class WebAudio extends BaseAudio {
         this._nodes.set('stereoPanner', stereoPannerNode)
       }
     }
+  }
+  /**
+   * This method create an equalizer for this audio based on
+   * the configured frequency bands. User can adjust the gain on each frequency band
+   */
+  equalizer() {
+    if (!this._nodes.has(frequencyBands[0].name)) {
+      this._equalizer = new Equalizer(this._audioContext, frequencyBands)
+      this._nodes = new Map([...this._nodes, ...this._equalizer.bandNodes])
+    }
     return this
+  }
+
+  /**
+   * Apply the gain on given frequency band filter node
+   * @param {String} bandName The name of the frequency band
+   * @param {Number} gain The gain value to be applied
+   */
+  setGainOnBand(bandName, gain) {
+    this._nodes.has(bandName)
+      ? (this._nodes.get(bandName).gain.value = gain)
+      : console.error(`${bandName} frequency band not found`)
   }
 
   /**
