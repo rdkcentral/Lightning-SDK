@@ -259,7 +259,7 @@ export const keepActivePageAlive = (route, request) => {
 
   if (register.has('keepAlive')) {
     return register.get('keepAlive')
-  } else if (routeOptions.keepAlive) {
+  } else if (routeOptions && routeOptions.keepAlive) {
     return routeOptions.keepAlive
   }
 
