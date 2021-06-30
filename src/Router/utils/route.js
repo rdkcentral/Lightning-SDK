@@ -18,10 +18,10 @@
  */
 
 import { hasRegex, hasLookupId, isNamedGroup, stripRegex } from './regex'
-import { routes, routeExists, bootRequest } from './router'
+import { routes, routeExists, bootRequest, getRoutes } from './router'
 import Request from '../model/Request'
 import Route from '../model/Route'
-import { objectToQueryString, isObject } from './helpers'
+import { objectToQueryString, isObject, isString } from './helpers'
 
 /**
  * Simple route length calculation
@@ -241,5 +241,27 @@ const getRouteByName = name => {
       return path
     }
   }
+  return false
+}
+
+export const keepActivePageAlive = (route, request) => {
+  if (isString(route)) {
+    const routes = getRoutes()
+    if (routes.has(route)) {
+      route = routes.get(route)
+    } else {
+      return false
+    }
+  }
+
+  const register = request.register
+  const routeOptions = route.options
+
+  if (register.has('keepAlive')) {
+    return register.get('keepAlive')
+  } else if (routeOptions.keepAlive) {
+    return routeOptions.keepAlive
+  }
+
   return false
 }

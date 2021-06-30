@@ -54,6 +54,7 @@ import {
   getValuesFromHash,
   getFloor,
   getHashByName,
+  keepActivePageAlive,
 } from './utils/route'
 import { load } from './utils/loader'
 import { stripRegex, isWildcard } from './utils/regex'
@@ -306,11 +307,13 @@ const resolveHashChange = request => {
     }
     // if there is a component attached to the route
     if (component) {
-      // to prevent shared state issues between same routes
-      // we force page to root state
+      // force page to root state to prevent shared state issues
       const activePage = getActivePage()
-      if (activePage && route.path === getActiveRoute()) {
-        activePage._setState('')
+      if (activePage) {
+        const keepAlive = keepActivePageAlive(getActiveRoute(), request)
+        if (activePage && route.path === getActiveRoute() && !keepAlive) {
+          activePage._setState('')
+        }
       }
 
       if (isPage(component, stage)) {

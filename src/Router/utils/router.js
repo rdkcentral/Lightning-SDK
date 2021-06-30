@@ -107,9 +107,8 @@ export let beforeEachRoute = async (from, to)=>{
 /**
  *  * Will be called after a navigate successfully resolved,
  * can be overridden via routes config
- * @param request
  */
-export let afterEachRoute = request => {}
+export let afterEachRoute = () => {}
 
 /**
  * All configured routes
@@ -460,4 +459,8 @@ export const getBootRequest = () => {
 
 export const getRouterConfig = () => {
   return routerConfig
+}
+
+export const getRoutes = () => {
+  return routes
 }
