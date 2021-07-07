@@ -404,8 +404,10 @@ export const step = (level = 0) => {
 const resume = () => {
   if (isString(resumeHash)) {
     navigate(resumeHash, false)
+    resumeHash = ''
   } else if (isFunction(resumeHash)) {
     resumeHash().then(res => {
+      resumeHash = ''
       if (isObject(res)) {
         navigate(res.path, res.params)
       } else {
@@ -432,6 +434,10 @@ const isNavigating = () => {
     return isProcessing
   }
   return false
+}
+
+export const getResumeHash = () => {
+  return resumeHash
 }
 
 /**

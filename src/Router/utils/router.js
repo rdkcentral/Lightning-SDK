@@ -132,9 +132,8 @@ let initialised = false
  * Current page being rendered on screen
  * @type {null}
  */
-
-let activeHash
 let activePage = null
+let activeHash
 let activeRoute
 
 /**
