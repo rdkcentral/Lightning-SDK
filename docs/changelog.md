@@ -1,5 +1,17 @@
 # Changelog
 
+## v4.5.0
+
+*12 july 2021*
+
+- Router updates
+    - Added `getQueryStringParams()`-method to public api
+    - Fixed returning correct querystring params if bootcomponent is configured
+    - Fixed restoring state on pages flagged as keep alive
+- Fixed initialization of Pin plugin
+- Full rewrite of documentation 🎉
+- Updated several NPM dependencies with (security) patches
+
 ## v4.4.0
 
 *18 june 2021*

@@ -1,24 +1,26 @@
 # Metadata
 
-An App created with the SDK has a Metadata in it.
+If you create an App, you store the App's *metadata* (such as its name, version and icon) in the file **metadata.json**.
 
-Be aware that when your App is deployed to the App Store the Metadata is configured in the Store dashboard.
+The Metadata plugin enables you to use this metadata in your App. (For example, if you want to show the App's version number in an *About* window.)
+
+> If you deploy your App to the Metrological Store, the metadata is 'injected' into the App by the Metrological Store.
 
 ## Usage
 
-Sometimes you may want to access Metadata in your App code directly. In those cases you can import the _Metadata plugin_ from the Lightning SDK.
-
-The SDK automatically creates the `appMetadata`  from the Launch params.
+If you want to access metadata in your App code directly, import the *Metadata* plugin from the Lightning SDK:
 
 ```js
 import { Metadata } from '@lightningjs/sdk'
 ```
 
+The SDK automatically creates the `appMetadata`  from the Launch params.
+
 ## Available methods
 
 ### Get
 
-Returns a Metadata value.
+Returns the key value of the metadata.
 
 ```js
 Metadata.get(key, [fallback])
@@ -36,7 +38,7 @@ Metadata.appId()
 
 ### SafeAppId
 
-Gets safeAppId from the Metadata.
+Returns the *safe ID* of your App. This is actually the `AppId` without dots (and any other special characters) which are are not permitted in JS variables.
 
 ```js
 Metadata.safeAppId()
@@ -44,7 +46,7 @@ Metadata.safeAppId()
 
 ### AppName
 
-Gets Application name from the Metadata
+Returns the name of your App.
 
 ```js
 Metadata.appName()
@@ -52,7 +54,7 @@ Metadata.appName()
 
 ### AppVersion
 
-Gets Application Version from the Metadata (without commit hash)
+Returns the version of your App (without the GIT commit hash).
 
 ```js
 Metadata.appVersion()
@@ -60,7 +62,7 @@ Metadata.appVersion()
 
 ### AppIcon
 
-Gets Application icon from the Metadata
+Returns the icon of your App.
 
 ```js
 Metadata.appIcon()
@@ -68,7 +70,7 @@ Metadata.appIcon()
 
 ### AppFullVersion
 
-Gets Application full version from the Metadata.
+Returns the full version of your App.
 
 ```js
 Metadata.appFullVersion()

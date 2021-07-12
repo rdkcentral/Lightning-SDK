@@ -28,6 +28,7 @@ import { initAds } from '../Ads'
 import { initRouter } from '../Router'
 import { initTV } from '../TV'
 import { initPurchase } from '../Purchase'
+import { initPin } from '../Pin'
 import { initMetadata } from '../Metadata'
 import Application from '../Application'
 
@@ -49,6 +50,7 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.router && initRouter(platformSettings.plugins.router)
     platformSettings.plugins.tv && initTV(platformSettings.plugins.tv)
     platformSettings.plugins.purchase && initPurchase(platformSettings.plugins.purchase)
+    platformSettings.plugins.pin && initPin(platformSettings.plugins.pin)
   }
 
   const app = Application(App, appData, platformSettings)
