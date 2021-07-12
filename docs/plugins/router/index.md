@@ -149,6 +149,14 @@ Router.getHistoryState()
 
 > See [Router History](history.md#gethistorystate) for more information.
 
+### getQueryStringParams()
+
+```js
+Router.getQueryStringParams()
+```
+
+Returns an object with query parameters
+
 ### go
 
 ```js
