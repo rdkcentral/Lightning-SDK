@@ -28,6 +28,7 @@ import Settings from '../Settings'
 import { initLanguage } from '../Language'
 import Utils from '../Utils'
 import Registry from '../Registry'
+import Events from '../Events'
 import { initColors } from '../Colors'
 
 import { version as sdkVersion } from '../../package.json'
@@ -138,6 +139,7 @@ export default function(App, appData, platformSettings) {
 
       Settings.clearSubscribers()
       Registry.clear()
+      Events.clear()
 
       if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
         platformSettings.onClose(...arguments)
