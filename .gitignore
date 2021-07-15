@@ -3,3 +3,4 @@ node_modules
 .idea
 support/lib
 support/polyfills
+dist/
