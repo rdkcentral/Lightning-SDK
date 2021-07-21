@@ -1,53 +1,13 @@
-# Router
+# Router Settings
 
-## Settings
+When you configure routes, you always provide them with a *Page class* (extended from `Lightning.Component`) and a *Page instance*.
+This keeps memory usage to a minimum, which can be beneficial for performance on low-end devices.
 
-When you configure routes you always provide it with a Page Class (extended from `Lightning.Component`) and page instance.
-This keeps memory usage to a minimum, which can be really beneficial for performance on low-end devices).
+To decrease the memory footprint even further, you can configure specific Router settings per platform.
 
-Apart from that there are some Router settings that can be configured per platform to decrease the memory footprint even further.
+> Within the context of the [Metrological Dashboard](http://dashboard.metrological.com/), these settings are defined as Platform Settings *outside* the App's control. However, during local development, you can experiment with them using the **settings.json** file. All Router-related settings are grouped in a `router` key within `platformSettings`.
 
-Please note that within the context of the Metrological AppStore these setting are defined as a platform setting _outside_ of the control of the App. You can however experiment with this during local development via `settings.json`.
-
-All router related settings are grouped in a `router`-key within `platform`-settings.
-
-### Lazy creation
-
-When lazy creation is enabled (i.e. `lazyCreate: true`), Pages will not be created until you actually navigate to a route. By default lazy creation is set to `false`. This makes the navigation between pages faster, but takes up more memory.
-
-### Lazy destroy
-
-When lazy destroy is enabled (i.e. `lazyDestroy: true`), Pages will be removed from the render-tree (and thus from memory) when you navigate away from said Page. By default lazy destroy is set to `false`. This makes navigation back to a previous page faster, but takes up more memory.
-
-### Texture garbage collect
-
-To free up texture memory directly after the old page has been destroyed and not wait for Lightning to start collecting garbage (texture) you can set the flag `gcOnUnload: true`. This will force a texture directly after destroying the page.
-
-### Backtrack
-
-If you want to enable backtracking in your app.
-
-### Destroy on history back
-
-By settings `lazyDestroy: false`, and `destroyOnHistoryBack: true` you can make sure that a page 
-only gets destroyed when it gets unloaded via a step back in history.
-
-### updateHash
-
-By settings `updateHash: false` the Router will not update the hash on `navigate()`.
-
-### reuseInstance 
-
-When the new hash we navigate to shares the same route and the previous:  `settings/hotspot/12` && `settings/hotspot/22` 
-share: `settings/hotspot/:id` the Router will by default re-use the current Page instance. If you want to prevent this
-you set `resuseInstance: false`. This can be overriden per [route](configuration.md) via de options. 
-
-### stats
-
-With stats enabled (default: disabled) the Router will track page view information and add them to a global 
-statistics report.
-
-##### Settings.json 
+For example:
 
 ```json
 {
@@ -58,14 +18,49 @@ statistics report.
           "lazyCreate": true,
           "lazyDestroy": true,
           "gcOnUnload": true,
-          "backtrack": true,
+          "backtracking": true,
           "reuseInstance": false,
-          "destroyOnHistoryBack": false,
-          "stats": false
+          "destroyOnHistoryBack": false
         }
     }
 }
 ```
 
-Next:
-[Deeplinking & History](deeplinking.md)
+The settings are described below.
+
+### lazyCreate
+
+If you enable *Lazy Creation* by setting `lazyCreate` to `true`, pages are not created until you actually *navigate* to a route.
+
+By default, Lazy Creation is *disabled*. This results in faster navigation between pages, but is also more memory-consuming.
+
+### lazyDestroy
+
+If you enable *Lazy Destroy* by setting `lazyDestroy` to `true`, pages from which you navigate, are removed from the [Render Tree](../../../lightning-core-reference/RenderEngine/RenderTree.md) (and thus from memory).
+
+By default, Lazy Destroy is *disabled*. This results in faster navigating back to a previous page, but also is more memory-consuming.
+
+### gcOnUnload
+
+If you want to free up texture memory *directly* after a previous page has been destroyed and you do not want to wait for Lightning's (texture) garbage collection, you can set `gcOnUnload` to `true`. This forces a texture garbage collect directly after destroying the page.
+
+### backtracking
+
+If you want to enable *backtracking* in your app, you set `backtracking` to `true`.
+
+### destroyOnHistoryBack
+
+If you want to remove a page from memory *only* when it is unloaded after doing a step back in history  (see [Router History](history.md#back) for more information), you can set `lazyDestroy` to `false` and `destroyOnHistoryBack` to `true`.
+
+### updateHash
+
+If you do *not* want the Router to update the hash on a `navigate`, you can set `updateHash` to `false`.
+
+### reuseInstance
+
+If you navigate to a new hash that shares the same route and the previous `settings/hotspot/12` and `settings/hotspot/22`, share the blueprint `settings/hotspot/:id`, the Router *reuses* the current Page instance by default.
+
+If you want to prevent this, you can set `reuseInstance: false`. This can be overridden per route via the [Route Options](configuration.md#route-options).
+
+#### NEXT:
+[Deeplinking](deeplinking.md)

@@ -1,5 +1,30 @@
 # Changelog
 
+## v4.5.0
+
+*12 july 2021*
+
+- Router updates
+    - Added `getQueryStringParams()`-method to public api
+    - Fixed returning correct querystring params if bootcomponent is configured
+    - Fixed restoring state on pages flagged as keep alive
+- Fixed initialization of Pin plugin
+- Full rewrite of documentation 🎉
+- Updated several NPM dependencies with (security) patches
+
+## v4.4.0
+
+*18 june 2021*
+
+- Router updates
+    - Added showing loading page between shared instances with `on()` provider
+    - Fixed wrong historyState object on shared instance
+    - Fixed hash to route mismatch on hash with trailing slash
+    - Fixed showing bootPage before unknown hash
+    - Fixed focus issues with shared state on routes with same page type
+    - Fixed memoryleak on shared routes with lazyCreate disabled
+
+
 ## v4.3.3
 
 *7 may 2021*

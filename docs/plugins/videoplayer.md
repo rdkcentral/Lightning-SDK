@@ -1,31 +1,30 @@
-# VideoPlayer plugin
+# VideoPlayer
 
-A common feature of TV apps is to play videos. The VideoPlayer plugin offers a convenient interface
-to interact with the video player of the STB. You can use it to open and play / pause videos.
-But it also offers APIs to control the size of the video player, for example.
+A common feature of TV Apps is to play videos.
 
-The VideoPlayer plugin has a built-in integration with the Metrics plugin. It automatically sends statistics for
-various media events (for example: canplay, play, pause, seeking, seeked).
+The *VideoPlayer* plugin offers a convenient interface for interacting with the video player of the STB. You can use it to open and play / pause videos. Additionally, it provides APIs that you can use to, for example, control the size of the video player.
 
-Although it's possible to implement a fully custom video playback solution, the use of the VideoPlayer plugin from
+The VideoPlayer plugin has a built-in integration with the [Metrics](metrics.md) plugin. It automatically sends statistics for various [media events](#events) (for example: canplay, play, pause, seeking, seeked).
+
+> Although it is possible to implement a fully custom video playback solution, the use of the VideoPlayer plugin from
 the SDK is highly recommended.
 
 ## Usage
 
 In the Lightning components that require video playback capabilities (i.e., a Player component), you can import the
-VideoPlayer plugin from the Lightning SDK.
+VideoPlayer plugin from the Lightning SDK:
 
 ```js
-import { VideoPlayer } from '@lightningjs/sdk''
+import { VideoPlayer } from '@lightningjs/sdk'
 ```
 
-The first time that you interact with the VideoPlayer plugin, a `<video>`-tag is automatically created.
+The first time that you interact with the VideoPlayer plugin, a `<video>` tag is created automatically.
 
 ## Available methods
 
 ### consumer
 
-Defines which Lightning component is consuming media events that are emitted by the VideoPlayer plugin (see [Events](#events) for more information).
+Defines which Lightning component is consuming media [events](#events) that are emitted by the VideoPlayer plugin.
 
 ```js
 import { Lightning, VideoPlayer } from '@lightningjs/sdk''
@@ -37,30 +36,29 @@ class Player extends Lightning.Component {
 }
 ```
 
-In the `_firstActive` (or `_init`) lifecycle event, you can pass the reference to the component that should be set as the _consumer_.
+In the `_firstActive` (or `_init`) [lifecycle event](../../lightning-core-reference/Components/LifecycleEvents.md), you can pass a reference to the component that should be set as the *consumer*.
 
-Note that only one component at the same time can consume VideoPlayer events.
+> Only *one* component can consume VideoPlayer events at the same time.
 
 ### position
 
 Sets the x and y position of the video player.
 
-The `position` method accepts 2 arguments (`top` and `left`). Both values should be absolute numbers (either positive or negative).
-The default values for `top` and `left` are `0`.
+The `position` method accepts 2 arguments: `top` and `left`. Both values must be positive or negative absolute numbers. They both default to 0 (zero).
 
 ```js
 // move VideoPlayer 100 pixels down and 200 pixels to the right
 VideoPlayer.position(100, 200)
 ```
 
-Note that depending on the size of the video player, changing it's position, can move it (partially) out of view.
+> If you change the position of the video player, it can move (partially) out of view. This depends on the size of the video player.
 
 ### size
 
 Sets the size of the video player.
 
-The `size` method accepts 2 arguments (`width` and `height`). Both values should be absolute numbers (positive).
-The default `width` is set to `1920` and the default `height` is set to `1080`.
+The `size` method accepts 2 arguments: `width` and `height`. Both values must be positive absolute numbers.
+The default value for `width` is 1920, while `height`defaults to 1080.
 
 ```js
 // resize VideoPlayer to half its normal size
@@ -69,14 +67,10 @@ VideoPlayer.size(960, 540)
 
 ### area
 
-Sets the x and y position and the size of the video player at the same time.
+Sets the x and y position *and* the size of the video player at the same time.
 
-The `area` method accepts 4 arguments (`top`, `right`, `bottom` and `left`). The value
-of each argument corresponds with the _margin_ that is calculated from the edge of the screen to each side
+The `area` method accepts 4 arguments: `top`, `right`, `bottom` and `left`. The value of each argument corresponds with the *margin* that is calculated from the edge of the screen to each side
 of the video player.
-
-By default, the video player is located in the top left corner (i.e., `top = 0` and `left = 0`) and covers the full
-screen (i.e., `bottom = 1080` and `right = 1920`).
 
 ```js
 const top = 100
@@ -86,25 +80,31 @@ const left = 200
 VideoPlayer.area(top, right, bottom, left)
 ```
 
+By default, the video player is located in the *top left* corner (i.e., `top = 0` and `left = 0`) and covers the *full*
+screen (i.e., `bottom = 1080` and `right = 1920`).
+
 ### open
 
-Opens a video (specified as a url) and starts playing it as soon as the video player has buffered enough to begin.
+Opens a video (specified as a URL) and starts playing it as soon as the video player has buffered enough to begin.
 
 ```js
 const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
 VideoPlayer.open(videoUrl)
 ```
 
-### Loader
+### loader
 
-The default sequence for loading a new video in the VideoPlayer plugin, is to set the `src` of the Video tag and subsequently call `load()` on the Video tag.
+The default sequence for *loading* a new video in the VideoPlayer plugin is to set the `src` of the Video tag and subsequently call `load()` on the Video tag.
 
-When you want to have more control over the loading sequence, you can use the `VideoPlayer.loader()` function to override the default loading behaviour. This can be useful when you want to implement a custom video client library, such as HLS.js or ShakaPlayer, in combination with the SDK's VideoPlayer plugin.
+If you want to have more control over the loading sequence, you can use the `VideoPlayer.loader()` function to override the default loading behavior. This can be useful when you want to implement a custom video client library (such as HLS.js or ShakaPlayer) in combination with the SDK's VideoPlayer plugin.
 
-The `loader`-method accepts a custom loader function as it's only argument. The custom loader function is invoked every time a new
-video is opened (via `VideoPlayer.open()`). The custom loader function has to return a Promise that is resolved as soon as the
-Video tag is ready to receive a `play` event. The custom loader function receives 3 arguments: the url passed to the `open()`-method,
-a reference to the video tag and an optional configuration object (passed as the second argument of the `open`-method).
+The `loader` method accepts a custom loader function as its only argument. The custom loader function is invoked every time a new video is opened (via `VideoPlayer.open()`). The custom loader function has to return a Promise that is resolved as soon as the Video tag is ready to receive a `play` event.
+
+The custom loader function receives three arguments:
+- The url passed to the [`open()`](#open) method
+- A reference to the video tag
+- An optional configuration object (passed as the second argument of the [`open()`](#open) method)
+
 
 ```js
 const videoUrl = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
@@ -125,19 +125,21 @@ VideoPlayer.open(url)
 <!-- Todo: add hls.js example, or better: link to the video player reference app with example -->
 
 The loader function will stay configured between video opens, but you can reinstantiate it for every open if needed.
-If you want to unset the custom loader, simply call `VideoPlayer.loader()` without passing any argument.
+
+If you want to *unset* the custom loader, simply call `VideoPlayer.loader()` without passing any argument.
 
 
-### Unloader
+### unloader
 
-The default sequence for unloading a video in the VideoPlayer plugin, is to remove the `src` of the Video tag and subsequently call `load()` on the Video tag.
+The default sequence for *unloading* a video in the VideoPlayer plugin is to remove the `src` of the Video tag and subsequently call `load()` on the Video tag.
 
-When you want to have more control over the unloading sequence, you can use the `VideoPlayer.unloader()` function to override the default unloading behaviour. This can be useful when you've utilized the `loader` method to specify custom loading functionality.
-For example you could make sure that an instance of HLS.js is properly destroyed and cleaned up in the custom unloading function.
+If you want to have more control over the unloading sequence, you can use the `VideoPlayer.unloader()` function to override the default unloading behavior. This can be useful when you've utilized the `loader` method to specify custom loading functionality.
+For example, you might want to make sure that an instance of HLS.js is properly destroyed and cleaned up in the custom unloading function.
 
-The `unloader`-method accepts a custom unloading function as it's only argument. The custom unloader function is invoked every time the `VideoPlayer.clear()` or `VideoPlayer.close()` method is called.
+The `unloader` method accepts a custom unloader function as its only argument. The custom unloader function is invoked every time the `VideoPlayer.clear()` or `VideoPlayer.close()` method is called.
 
-The custom unloader function has to return a Promise that is resolved as soon as the video player is properly cleaned up. The custom unloader function receives a reference to the video tag as it's only argument.
+The custom unloader function has to return a Promise that is resolved as soon as the video player is properly cleaned up. The custom unloader function receives a reference to the video tag as its only argument.
+
 
 ```js
 // Note: this is in fact the default unloader function
@@ -156,11 +158,12 @@ VideoPlayer.open(url)
 <!-- Todo: add hls.js example, or better: link to the video player reference app with example -->
 
 The unloader function will stay configured between video opens, but you can reinstantiate it for every open if needed.
-If you want to unset the custom unloader, simply call `VideoPlayer.unloader()` without passing any argument.
+
+If you want to *unset* the custom unloader, simply call `VideoPlayer.unloader()` without passing any argument.
 
 ### reload
 
-Stops the current playing video and restarts it from the beginning.
+Stops the video that is currently playing, and restarts it from the beginning.
 
 ```js
 VideoPlayer.open(videoUrl)
@@ -169,7 +172,6 @@ VideoPlayer.open(videoUrl)
 setTimeout(() => {
   VideoPlayer.reload()
 }, 5000)
-
 ```
 
 ### close
@@ -190,7 +192,7 @@ VideoPlayer.clear()
 
 ### pause
 
-Pauses the video that is currently being played.
+Pauses the video that is currently playing.
 
 ```js
 VideoPlayer.open(videoUrl)
@@ -211,9 +213,9 @@ VideoPlayer.play(videoUrl)
 
 ### playPause
 
-Toggles the playing state of the video player.
+Pauses or plays the video player, depending on its current state.
 
-If a video is currently playing, it pauses it. And, vice versa, it plays a video that is currently paused.
+If a video is currently playing, the method pauses it. And, vice versa, it plays a video that is currently paused.
 
 ```js
 VideoPlayer.playPause()
@@ -221,10 +223,9 @@ VideoPlayer.playPause()
 
 ### mute
 
-Mutes or unmutes the video player.
+Mutes or unmutes the video player, depending on its current state.
 
-The `mute` method accepts a Boolean as its single argument. When passed `true` (or when omitted), it mutes the video player.
-When passed `false`, it sets the video player to unmuted.
+The `mute` method accepts a Boolean as its single argument. When passed `true` (or when omitted), it mutes the video player. When passed `false`, it sets the video player to unmuted.
 
 ```js
 // mute a video
@@ -235,11 +236,11 @@ VideoPlayer.mute(false)
 
 ### loop
 
-Sets the `loop` state of the video player.
+Sets the loop state of the video player.
 
 The `loop` method accepts a Boolean as its single argument. When passed `true` (or when omitted), it
 instructs the video player to loop (i.e., to restart the current video when it reaches the end). When
-passed `false`, it instructs the video player _not_ to loop the video.
+passed `false`, it instructs the video player to *not* loop the video.
 
 ```js
 // loop a video
@@ -252,9 +253,9 @@ VideoPlayer.loop(false)
 
 Sets the current time of the video player to the specified time in seconds.
 
-The `seek` method accepts the time in seconds as its single argument. Negative numbers
-are automatically rounded up to `0`. When the value in seconds exceeds the duration
-of the video, it rounds down the value and jumps straight to the end of the video.
+The `seek` method accepts the *time in seconds* as its single argument. Negative numbers are automatically rounded up to 0.
+
+If the value *exceeds* the duration of the video, it rounds the value down and jumps straight to the end of the video.
 
 ```js
 // seek to 20 seconds
@@ -269,13 +270,11 @@ VideoPlayer.seek(1000)
 
 Jumps a specified number of seconds forward or backward from the video's current time.
 
-The `skip` method accepts the number of seconds to jump as its single argument. A positive value will jump forwards,
-while a negative value will jump backward.
+The `skip` method accepts the *number of seconds to jump* as its single argument. A positive value will have it jump forwards, a negative value will have it jump backward.
 
-If a jump backward would result in a value below `0` (for example, jump `-20` seconds when the video is only at `10` seconds),
-the `skip` method automatically rounds up to `0`. Similarly if you skip further than the duration of the video,
-the `skip` method rounds down the value and goes straight to the end of the video.
+If a jump backward would result in a value below 0 (for example, jump -20 seconds when the video is only still at 10 seconds), the `skip` method automatically rounds up to 0.
 
+Similarly, if you jump further than the duration of the video, the `skip` method rounds down the value and goes straight to the end of the video.
 
 ```js
 // skip forward 20 seconds
@@ -319,7 +318,7 @@ VideoPlayer.currentTime // e.g. 20.01 (seconds)
 
 ### muted
 
-Getter that retrieves the mute state of the video player (`true` or `false`).
+Getter that retrieves the *mute state* of the video player (`true` or `false`).
 
 ```js
 VideoPlayer.mute()
@@ -331,7 +330,7 @@ VideoPlayer.muted // false
 
 ### looped
 
-Getter that retrieves the loop state of the video player (`true` or `false`).
+Getter that retrieves the *loop state* of the video player (`true` or `false`).
 
 ```js
 VideoPlayer.loop()
@@ -354,7 +353,7 @@ VideoPlayer.src // http://commondatastorage.googleapis.com/gtv-videos-bucket/sam
 
 ### playing
 
-Getter that retrieves if the video player is currently in a `playing` state (`true`) or a `paused` state (`false`).
+Getter that indicates whether the video player is currently in a *playing* state (`true`) or a *paused* state (`false`).
 
 ```js
 VideoPlayer.play()
@@ -364,16 +363,9 @@ VideoPlayer.pause()
 VideoPlayer.playing // false
 ```
 
-<!-- ### get playingAds() {
-leaving this undocumented for now -->
-
-<!-- ### get canInteract() {
-leaving this undocumented for now -->
-
-
 ### top
 
-Getter that retrieves the `top y` position of the video player.
+Getter that retrieves the *top y* position of the video player.
 
 ```js
 VideoPlayer.position(100, 200)
@@ -382,7 +374,7 @@ VideoPlayer.top // 100
 
 ### left
 
-Getter that retrieves the `left x` position of the video player.
+Getter that retrieves the *left x* position of the video player.
 
 ```js
 VideoPlayer.position(100, 200)
@@ -391,7 +383,7 @@ VideoPlayer.left // 200
 
 ### bottom
 
-Getter that retrieves the `bottom y` position of the video player.
+Getter that retrieves the *bottom y* position of the video player.
 
 ```js
 VideoPlayer.area(100, 200, 100, 200)
@@ -400,7 +392,7 @@ VideoPlayer.bottom // 100
 
 ### right
 
-Getter that retrieves the `right x` position of the video player.
+Getter that retrieves the *right x* position of the video player.
 
 ```js
 VideoPlayer.area(100, 200, 100, 200)
@@ -439,41 +431,48 @@ VideoPlayer.visible // false
 
 ## Events
 
-The VideoPlayer plugin emits a number of [media events](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events) to its
-consumer (as specified in [`VideoPlayer.consumer()`](#consumer)).
+The VideoPlayer plugin emits a number of [media events](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events) to its *consumer* (specified via the [`VideoPlayer.consumer()`](#consumer) method).
 
-The _consuming_ component can hook into these events by specifying methods on the Class in the following format: `$videoPlayer{Eventname}`, where
-_Eventname_ refers to the media event to respond to.
+The *consuming* component can hook into these events by specifying methods on the Class in the format: `$videoPlayer{Eventname}`, where `Eventname` refers to the media event to respond to.
 
-The event hook methods will receive an `Object` with a reference to the _video-element_ and the _html5 event_ (if available) as their first argument. The `currentTime` of the video will be passed as a second argument.
+These *event hook methods* will receive an Object containing a reference to the *video element* and the *html5 event* (if available) as the *first* argument.
 
-Alternatively `$videoPlayerEvent(eventName)` can be used as a _catch-all_, which receives the _eventName_ as it's first argument.
-For the catch-all hook, the second argument is be the beforementioned `Object` with _video-element_ reference and _html5 event_. The third argument is
-the `currentTime` of the video.
+The `currentTime` of the video is passed as the *second* argument.
+
+### Catch-all Hook
+
+Alternatively, the method `$videoPlayerEvent(eventName)` can be used as a *catch-all* hook. In that case, it receives the `eventName` as its first argument.
+
+The second argument of a catch-all hook is the (already mentioned) Object containing a reference to the *video element* reference and the *html5 event*.
+
+The third argument is the `currentTime` of the video.
+
+$videoPlayerEvent(eventName, videoElement, currentTime) {
+  console.log(eventname, videoElement, currentTime)}### Event Overview
 
 The available events are:
 
-- $videoPlayerAbort
-- $videoPlayerCanPlay
-- $videoPlayerCanPlayThrough
-- $videoPlayerDurationChange
-- $videoPlayerEmptied
-- $videoPlayerEncrypted
-- $videoPlayerEnded
-- $videoPlayerError
-- $videoPlayerInterruptBegin
-- $videoPlayerInterruptEnd
-- $videoPlayerLoadedData
-- $videoPlayerLoadedMetadata
-- $videoPlayerLoadStart
-- $videoPlayerPlay
-- $videoPlayerPlaying
-- $videoPlayerProgress
-- $videoPlayerRatechange
-- $videoPlayerSeeked
-- $videoPlayerSeeking
-- $videoPlayerStalled
-- $videoPlayerTimeUpdate
-- $videoPlayerVolumeChange
-- $videoPlayerWaiting
-- $videoPlayerClear
+* $videoPlayerAbort
+* $videoPlayerCanPlay
+* $videoPlayerCanPlayThrough
+* $videoPlayerDurationChange
+* $videoPlayerEmptied
+* $videoPlayerEncrypted
+* $videoPlayerEnded
+* $videoPlayerError
+* $videoPlayerInterruptBegin
+* $videoPlayerInterruptEnd
+* $videoPlayerLoadedData
+* $videoPlayerLoadedMetadata
+* $videoPlayerLoadStart
+* $videoPlayerPlay
+* $videoPlayerPlaying
+* $videoPlayerProgress
+* $videoPlayerRatechange
+* $videoPlayerSeeked
+* $videoPlayerSeeking
+* $videoPlayerStalled
+* $videoPlayerTimeUpdate
+* $videoPlayerVolumeChange
+* $videoPlayerWaiting
+* $videoPlayerClear

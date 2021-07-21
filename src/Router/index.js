@@ -25,6 +25,7 @@ import {
   isString,
   getQueryStringParams,
   symbols,
+  cleanHash,
 } from './utils/helpers'
 
 import {
@@ -53,6 +54,7 @@ import {
   getValuesFromHash,
   getFloor,
   getHashByName,
+  keepActivePageAlive,
 } from './utils/route'
 import { load } from './utils/loader'
 import { stripRegex, isWildcard } from './utils/regex'
@@ -121,6 +123,12 @@ const start = () => {
   }
 
   if (routeExists(bootKey)) {
+    if (hash && !isDirectLoad) {
+      if (!getRouteByHash(hash)) {
+        navigate('*', { failedHash: hash })
+        return
+      }
+    }
     navigate(
       bootKey,
       {
@@ -198,7 +206,7 @@ export const navigate = (url, args = {}, store) => {
 }
 
 const queue = (hash, args = {}, store) => {
-  hash = hash.replace(/^#/, '')
+  hash = cleanHash(hash)
   if (!navigateQueue.has(hash)) {
     for (let request of navigateQueue.values()) {
       request.cancel()
@@ -217,7 +225,7 @@ const queue = (hash, args = {}, store) => {
  * @returns {Promise<void>}
  */
 const handleHashChange = async override => {
-  const hash = (override || getHash()).replace(/^#/, '')
+  const hash = cleanHash(override || getHash())
   const queueId = decodeURIComponent(hash)
   let request = navigateQueue.get(queueId)
 
@@ -299,6 +307,15 @@ const resolveHashChange = request => {
     }
     // if there is a component attached to the route
     if (component) {
+      // force page to root state to prevent shared state issues
+      const activePage = getActivePage()
+      if (activePage) {
+        const keepAlive = keepActivePageAlive(getActiveRoute(), request)
+        if (activePage && route.path === getActiveRoute() && !keepAlive) {
+          activePage._setState('')
+        }
+      }
+
       if (isPage(component, stage)) {
         load(request).then(() => {
           app._refocus()
@@ -387,8 +404,10 @@ export const step = (level = 0) => {
 const resume = () => {
   if (isString(resumeHash)) {
     navigate(resumeHash, false)
+    resumeHash = ''
   } else if (isFunction(resumeHash)) {
     resumeHash().then(res => {
+      resumeHash = ''
       if (isObject(res)) {
         navigate(res.path, res.params)
       } else {
@@ -415,6 +434,10 @@ const isNavigating = () => {
     return isProcessing
   }
   return false
+}
+
+export const getResumeHash = () => {
+  return resumeHash
 }
 
 /**
@@ -484,6 +507,7 @@ export default {
   setHistory,
   getHistoryState,
   replaceHistoryState,
+  getQueryStringParams,
   symbols,
   App: RoutedApp,
   // keep backwards compatible

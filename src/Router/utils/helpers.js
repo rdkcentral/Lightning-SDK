@@ -19,6 +19,8 @@
 
 import Lightning from '../../Lightning'
 import Settings from '../../Settings'
+import { getActiveHash } from './router'
+import { getResumeHash } from '../index'
 
 export const isFunction = v => {
   return typeof v === 'function'
@@ -69,6 +71,10 @@ export const isPromise = method => {
   return isObject(result) && isFunction(result.then)
 }
 
+export const cleanHash = (hash = '') => {
+  return hash.replace(/^#/, '').replace(/\/+$/, '')
+}
+
 export const getConfigMap = () => {
   const routerSettings = Settings.get('platform', 'router')
   const isObj = isObject(routerSettings)
@@ -104,7 +110,14 @@ export const incorrectParams = (cb, route) => {
   return false
 }
 
-export const getQueryStringParams = hash => {
+export const getQueryStringParams = (hash = getActiveHash()) => {
+  const resumeHash = getResumeHash()
+  if (hash === '$' || resumeHash) {
+    if (isString(resumeHash)) {
+      hash = resumeHash
+    }
+  }
+
   let parse = ''
   const getQuery = /([?&].*)/
   const matches = getQuery.exec(hash)

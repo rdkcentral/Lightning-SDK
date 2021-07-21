@@ -22,19 +22,67 @@ import { createRegister } from '../utils/register'
 import Log from '../../Log'
 
 export default class Request {
-  constructor(hash, navArgs, storeCaller) {
+  constructor(hash = '', navArgs, storeCaller) {
+    /**
+     * Hash we navigate to
+     * @type {string}
+     * @private
+     */
     this._hash = hash
+
+    /**
+     * Do we store previous hash in history
+     * @type {boolean}
+     * @private
+     */
     this._storeCaller = storeCaller
+
+    /**
+     * Request and navigate data
+     * @type {Map}
+     * @private
+     */
     this._register = new Map()
+
+    /**
+     * Flag if the instance is created due to
+     * this request
+     * @type {boolean}
+     * @private
+     */
     this._isCreated = false
+
+    /**
+     * Flag if the instance is shared between
+     * previous and current request
+     * @type {boolean}
+     * @private
+     */
     this._isSharedInstance = false
+
+    /**
+     * Flag if the request has been cancelled
+     * @type {boolean}
+     * @private
+     */
     this._cancelled = false
+
+    /**
+     * if instance is shared between requests we copy state object
+     * from instance before the new request overrides state
+     * @type {null}
+     * @private
+     */
+    this._copiedHistoryState = null
 
     // if there are arguments attached to navigate()
     // we store them in new request
     if (isObject(navArgs)) {
       this._register = createRegister(navArgs)
     } else if (isBoolean(navArgs)) {
+      // if second navigate() argument is explicitly
+      // set to false we prevent the calling page
+      // from ending up in history
       this._storeCaller = navArgs
     }
     // @todo: remove because we can simply check
@@ -113,5 +161,13 @@ export default class Request {
 
   get isCancelled() {
     return this._cancelled
+  }
+
+  set copiedHistoryState(v) {
+    this._copiedHistoryState = v
+  }
+
+  get copiedHistoryState() {
+    return this._copiedHistoryState
   }
 }
