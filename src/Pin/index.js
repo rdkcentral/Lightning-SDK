@@ -23,21 +23,25 @@ import { ApplicationInstance } from '../Launch'
 
 // only used during local development
 let unlocked = false
+let contextItems = ['purchase', 'parental']
 
-let submit = pin => {
+let submit = (pin, context) => {
   return new Promise((resolve, reject) => {
-    if (pin.toString() === Settings.get('platform', 'pin', '0000').toString()) {
+    if (
+      pin.toString() === Settings.get('platform', 'pin', '0000').toString() &&
+      contextItems.includes(context)
+    ) {
       unlocked = true
       resolve(unlocked)
     } else {
-      reject('Incorrect pin')
+      reject('Incorrect pin or Incorrect context')
     }
   })
 }
 
-let check = () => {
-  return new Promise(resolve => {
-    resolve(unlocked)
+let check = context => {
+  return new Promise((resolve, reject) => {
+    contextItems.includes(context) ? resolve(unlocked) : reject('Incorrect Context')
   })
 }
 
@@ -73,10 +77,10 @@ export default {
     )
     pinDialog = null
   },
-  submit(pin) {
+  submit(pin, context) {
     return new Promise((resolve, reject) => {
       try {
-        submit(pin)
+        submit(pin, context)
           .then(resolve)
           .catch(reject)
       } catch (e) {
@@ -84,10 +88,10 @@ export default {
       }
     })
   },
-  unlocked() {
+  unlocked(context) {
     return new Promise((resolve, reject) => {
       try {
-        check()
+        check(context)
           .then(resolve)
           .catch(reject)
       } catch (e) {
@@ -95,10 +99,10 @@ export default {
       }
     })
   },
-  locked() {
+  locked(context) {
     return new Promise((resolve, reject) => {
       try {
-        check()
+        check(context)
           .then(unlocked => resolve(!!!unlocked))
           .catch(reject)
       } catch (e) {
