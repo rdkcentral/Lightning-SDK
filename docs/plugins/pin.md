@@ -36,7 +36,9 @@ Pin.hide()
 
 Sends a Pin code to the middleware layer for verification. If the code is correct, the STB will be unlocked.
 
-The `submit` method accepts `pin` and `context` as an arguments. Context should be either `parental` or `purchase`
+The `submit` method accepts `pin` and `context` as an arguments. Context should be either `parental` or `purchase`.
+
+``Note:`` `context` defaults to `purchase`, but recommended that developer should explicitly specify the context
 
 The `submit` method is automatically invoked when you are using the built-in **Pin** dialog. Use this method for sending the Pin code *only* if you are making a fully custom **Pin** dialog in your App.
 

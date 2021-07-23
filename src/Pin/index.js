@@ -77,7 +77,7 @@ export default {
     )
     pinDialog = null
   },
-  submit(pin, context) {
+  submit(pin, context = contextItems[0]) {
     return new Promise((resolve, reject) => {
       try {
         submit(pin, context)
@@ -88,7 +88,7 @@ export default {
       }
     })
   },
-  unlocked(context) {
+  unlocked(context = contextItems[0]) {
     return new Promise((resolve, reject) => {
       try {
         check(context)
@@ -99,7 +99,7 @@ export default {
       }
     })
   },
-  locked(context) {
+  locked(context = contextItems[0]) {
     return new Promise((resolve, reject) => {
       try {
         check(context)
