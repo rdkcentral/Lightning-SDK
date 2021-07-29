@@ -233,11 +233,15 @@ const videoPlayerPlugin = {
         state.playingAds = true
         ads.prerolls().then(() => {
           state.playingAds = false
-          loader(url, videoEl, config).then(() => {
-            registerEventListeners()
-            this.show()
-            this.play()
-          })
+          loader(url, videoEl, config)
+            .then(() => {
+              registerEventListeners()
+              this.show()
+              this.play()
+            })
+            .catch(e => {
+              fireOnConsumer('error', { videoElement: videoEl, event: e })
+            })
         })
       })
     }
@@ -279,7 +283,9 @@ const videoPlayerPlugin = {
   play() {
     if (!this.canInteract) return
     if (textureMode === true) videoTexture.start()
-    videoEl.play()
+    videoEl.play().catch(e => {
+      fireOnConsumer('error', { videoElement: videoEl, event: e })
+    })
   },
 
   pause() {
@@ -423,6 +429,10 @@ const videoPlayerPlugin = {
   // because it's not recommended to interact directly with the video element
   get _videoEl() {
     return videoEl
+  },
+
+  get _consumer() {
+    return consumer
   },
 }
 
