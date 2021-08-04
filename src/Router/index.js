@@ -54,6 +54,7 @@ import {
   getValuesFromHash,
   getFloor,
   getHashByName,
+  keepActivePageAlive,
 } from './utils/route'
 import { load } from './utils/loader'
 import { stripRegex, isWildcard } from './utils/regex'
@@ -306,11 +307,13 @@ const resolveHashChange = request => {
     }
     // if there is a component attached to the route
     if (component) {
-      // to prevent shared state issues between same routes
-      // we force page to root state
+      // force page to root state to prevent shared state issues
       const activePage = getActivePage()
       if (activePage) {
-        activePage._setState('')
+        const keepAlive = keepActivePageAlive(getActiveRoute(), request)
+        if (activePage && route.path === getActiveRoute() && !keepAlive) {
+          activePage._setState('')
+        }
       }
 
       if (isPage(component, stage)) {
@@ -401,8 +404,10 @@ export const step = (level = 0) => {
 const resume = () => {
   if (isString(resumeHash)) {
     navigate(resumeHash, false)
+    resumeHash = ''
   } else if (isFunction(resumeHash)) {
     resumeHash().then(res => {
+      resumeHash = ''
       if (isObject(res)) {
         navigate(res.path, res.params)
       } else {
@@ -429,6 +434,10 @@ const isNavigating = () => {
     return isProcessing
   }
   return false
+}
+
+export const getResumeHash = () => {
+  return resumeHash
 }
 
 /**
@@ -498,6 +507,7 @@ export default {
   setHistory,
   getHistoryState,
   replaceHistoryState,
+  getQueryStringParams,
   symbols,
   App: RoutedApp,
   // keep backwards compatible

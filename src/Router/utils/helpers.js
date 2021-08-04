@@ -20,6 +20,7 @@
 import Lightning from '../../Lightning'
 import Settings from '../../Settings'
 import { getActiveHash } from './router'
+import { getResumeHash } from '../index'
 
 export const isFunction = v => {
   return typeof v === 'function'
@@ -110,6 +111,13 @@ export const incorrectParams = (cb, route) => {
 }
 
 export const getQueryStringParams = (hash = getActiveHash()) => {
+  const resumeHash = getResumeHash()
+  if (hash === '$' || resumeHash) {
+    if (isString(resumeHash)) {
+      hash = resumeHash
+    }
+  }
+
   let parse = ''
   const getQuery = /([?&].*)/
   const matches = getQuery.exec(hash)
