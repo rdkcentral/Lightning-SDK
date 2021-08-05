@@ -62,6 +62,8 @@ if (window.innerHeight === 720) {
   defaultOptions.stage['precision'] = 0.6666666667
 }
 
+const customFontFaces = []
+
 export default function(App, appData, platformSettings) {
   return class Application extends Lightning.Application {
     constructor(options) {
@@ -149,7 +151,7 @@ export default function(App, appData, platformSettings) {
     close() {
       Log.info('Closing App')
       this.childList.remove(this.tag('App'))
-
+      this.cleanupFonts()
       // force texture garbage collect
       this.stage.gc()
       this.destroy()
@@ -165,6 +167,8 @@ export default function(App, appData, platformSettings) {
                 })
               : 'url(' + url + ')'
             const fontFace = new FontFace(family, src, descriptors || {})
+            customFontFaces.push(fontFace)
+            Log.info('Loading font', family)
             document.fonts.add(fontFace)
             return fontFace.load()
           })
@@ -174,6 +178,17 @@ export default function(App, appData, platformSettings) {
           .then(resolve)
           .catch(reject)
       })
+    }
+
+    cleanupFonts() {
+      if ('delete' in document.fonts) {
+        customFontFaces.forEach(fontFace => {
+          Log.info('Removing font', fontFace.family)
+          document.fonts.delete(fontFace)
+        })
+      } else {
+        Log.info('No support for removing manually-added fonts')
+      }
     }
 
     loadLanguage(config) {
