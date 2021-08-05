@@ -159,14 +159,20 @@ export default function(App, appData, platformSettings) {
       return new Promise((resolve, reject) => {
         fonts
           .map(({ family, url, urls, descriptors }) => () => {
-            const src = urls
-              ? urls.map(url => {
-                  return 'url(' + url + ')'
-                })
-              : 'url(' + url + ')'
-            const fontFace = new FontFace(family, src, descriptors || {})
-            document.fonts.add(fontFace)
-            return fontFace.load()
+            if (!document.fonts.check('1em ' + family)) {
+              const src = urls
+                ? urls.map(url => {
+                    return 'url(' + url + ')'
+                  })
+                : 'url(' + url + ')'
+              const fontFace = new FontFace(family, src, descriptors || {})
+              Log.info('Loading font', family)
+              document.fonts.add(fontFace)
+              return fontFace.load()
+            } else {
+              Log.info('Font ' + family + ' already present. Skipping ..')
+              return Promise.resolve()
+            }
           })
           .reduce((promise, method) => {
             return promise.then(() => method())
