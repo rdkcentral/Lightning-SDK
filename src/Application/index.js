@@ -101,6 +101,8 @@ export default function(App, appData, platformSettings) {
 
           this.childList.a(AppInstance)
 
+          this._refocus()
+
           Log.info('App version', this.config.version)
           Log.info('SDK version', sdkVersion)
 
