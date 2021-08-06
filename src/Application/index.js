@@ -64,6 +64,28 @@ if (window.innerHeight === 720) {
 
 const customFontFaces = []
 
+const fontLoader = (fonts, store) =>
+  new Promise((resolve, reject) => {
+    fonts
+      .map(({ family, url, urls, descriptors }) => () => {
+        const src = urls
+          ? urls.map(url => {
+              return 'url(' + url + ')'
+            })
+          : 'url(' + url + ')'
+        const fontFace = new FontFace(family, src, descriptors || {})
+        store.push(fontFace)
+        Log.info('Loading font', family)
+        document.fonts.add(fontFace)
+        return fontFace.load()
+      })
+      .reduce((promise, method) => {
+        return promise.then(() => method())
+      }, Promise.resolve(null))
+      .then(resolve)
+      .catch(reject)
+  })
+
 export default function(App, appData, platformSettings) {
   return class Application extends Lightning.Application {
     constructor(options) {
@@ -160,26 +182,9 @@ export default function(App, appData, platformSettings) {
     }
 
     loadFonts(fonts) {
-      return new Promise((resolve, reject) => {
-        fonts
-          .map(({ family, url, urls, descriptors }) => () => {
-            const src = urls
-              ? urls.map(url => {
-                  return 'url(' + url + ')'
-                })
-              : 'url(' + url + ')'
-            const fontFace = new FontFace(family, src, descriptors || {})
-            customFontFaces.push(fontFace)
-            Log.info('Loading font', family)
-            document.fonts.add(fontFace)
-            return fontFace.load()
-          })
-          .reduce((promise, method) => {
-            return promise.then(() => method())
-          }, Promise.resolve(null))
-          .then(resolve)
-          .catch(reject)
-      })
+      return platformSettings.fontLoader && typeof platformSettings.fontLoader === 'function'
+        ? platformSettings.fontLoader(fonts, customFontFaces)
+        : fontLoader(fonts, customFontFaces)
     }
 
     cleanupFonts() {
