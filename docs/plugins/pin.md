@@ -36,9 +36,7 @@ Pin.hide()
 
 Sends a Pin code to the middleware layer for verification. If the code is correct, the STB will be unlocked.
 
-The `submit` method accepts `pin` and `context` as an arguments. Context should be either `parental` or `purchase`.
-
-``Note:`` `context` defaults to `purchase`, but recommended that developer should explicitly specify the context
+The `submit` method accepts `pin` and `context` as it's arguments. The context argument indicates in with what purpsose the Pin dialog is being used. The accepted values van be either `parental` or `purchase`. `context` defaults to `purchase`, but it's recommended to explicitly specify the context
 
 The `submit` method is automatically invoked when you are using the built-in **Pin** dialog. Use this method for sending the Pin code *only* if you are making a fully custom **Pin** dialog in your App.
 
@@ -48,7 +46,7 @@ Pin.submit('0000', context)
   .catch(e => console.log('Pin error', e))
 ```
 
-The `submit` method returns a *Promise*. If the supplied Pin code and context is correct, the Promise resolves with `true` and the STB will be unlocked. If the Pin code or context is wrong, the Promise resolves with `false`.
+The `submit` method returns a *Promise*. If the supplied Pin code is correct (and context is valid), the Promise resolves with `true` and the STB will be unlocked. If the Pin code or context are wrong, the Promise resolves with `false`.
 
 If the middleware is unable to unlock the STB, the Promise is *rejected* (with an optional error message).
 
