@@ -55,11 +55,14 @@ export const initPin = config => {
 let pinDialog = null
 
 const contextCheck = context => {
-  if (!context) {
+  if (context === undefined) {
     Log.info('Please provide context explicitly')
     return contextItems[0]
+  } else if (!contextItems.includes(context)) {
+    Log.warn('Incorrect context provided')
+    return false
   }
-  return false
+  return context
 }
 
 // Public API
@@ -86,7 +89,8 @@ export default {
   submit(pin, context) {
     return new Promise((resolve, reject) => {
       try {
-        if (contextCheck(context) || contextItems.includes(context)) {
+        context = contextCheck(context)
+        if (context) {
           submit(pin, context)
             .then(resolve)
             .catch(reject)
@@ -101,7 +105,8 @@ export default {
   unlocked(context) {
     return new Promise((resolve, reject) => {
       try {
-        if (contextCheck(context) || contextItems.includes(context)) {
+        context = contextCheck(context)
+        if (context) {
           check(context)
             .then(resolve)
             .catch(reject)
@@ -116,7 +121,8 @@ export default {
   locked(context) {
     return new Promise((resolve, reject) => {
       try {
-        if (contextCheck(context) || contextItems.includes(context)) {
+        context = contextCheck(context)
+        if (context) {
           check(context)
             .then(unlocked => resolve(!!!unlocked))
             .catch(reject)
