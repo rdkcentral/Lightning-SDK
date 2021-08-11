@@ -36,15 +36,17 @@ Pin.hide()
 
 Sends a Pin code to the middleware layer for verification. If the code is correct, the STB will be unlocked.
 
+The `submit` method accepts `pin` and `context` as it's arguments. The context argument indicates in with what purpsose the Pin dialog is being used. The accepted values van be either `parental` or `purchase`. `context` defaults to `purchase`, but it's recommended to explicitly specify the context
+
 The `submit` method is automatically invoked when you are using the built-in **Pin** dialog. Use this method for sending the Pin code *only* if you are making a fully custom **Pin** dialog in your App.
 
 ```js
-Pin.submit('0000')
+Pin.submit('0000', context)
   .then(() => console.log('Unlocked!'))
   .catch(e => console.log('Pin error', e))
 ```
 
-The `submit` method returns a *Promise*. If the supplied Pin code is correct, the Promise resolves with `true` and the STB will be unlocked. If the Pin code is wrong, the Promise resolves with `false`.
+The `submit` method returns a *Promise*. If the supplied Pin code is correct (and context is valid), the Promise resolves with `true` and the STB will be unlocked. If the Pin code or context are wrong, the Promise resolves with `false`.
 
 If the middleware is unable to unlock the STB, the Promise is *rejected* (with an optional error message).
 
@@ -55,7 +57,7 @@ During development, the default Pin code is  `0000`. Optionally, you can overwri
 Checks if the STB is currently *unlocked*.
 
 ```js
-Pin.unlocked()
+Pin.unlocked(context)
   .then(
     unlocked => unlocked === true ?
       console.log('STB is unlocked') :
@@ -71,7 +73,7 @@ If the middleware is unable to retrieve the current state, the Promise is *rejec
 Checks if the STB is currently *locked*.
 
 ```js
-Pin.locked()
+Pin.locked(context)
   .then(
     locked => locked === true ?
       console.log('STB is locked') :
