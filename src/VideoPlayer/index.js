@@ -24,6 +24,7 @@ import Ads from '../Ads'
 import events from './events'
 import autoSetupMixin from '../helpers/autoSetupMixin'
 import easeExecution from '../helpers/easeExecution'
+import executeAsPromise from '../helpers/executeAsPromise'
 import { ApplicationInstance } from '../Launch'
 import Settings from '../Settings'
 import VideoTexture from './VideoTexture'
@@ -283,7 +284,7 @@ const videoPlayerPlugin = {
   play() {
     if (!this.canInteract) return
     if (textureMode === true) videoTexture.start()
-    videoEl.play().catch(e => {
+    executeAsPromise(videoEl.play).catch(e => {
       fireOnConsumer('error', { videoElement: videoEl, event: e })
     })
   },
