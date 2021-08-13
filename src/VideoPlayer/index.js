@@ -284,7 +284,7 @@ const videoPlayerPlugin = {
   play() {
     if (!this.canInteract) return
     if (textureMode === true) videoTexture.start()
-    executeAsPromise(videoEl.play).catch(e => {
+    executeAsPromise(videoEl.play, null, videoEl).catch(e => {
       fireOnConsumer('error', { videoElement: videoEl, event: e })
     })
   },
