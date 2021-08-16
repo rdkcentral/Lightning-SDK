@@ -20,11 +20,13 @@
 import Settings from '../Settings'
 import PinDialog from './dialog'
 import { ApplicationInstance } from '../Launch'
+import { Log } from '../../index'
 
 // only used during local development
 let unlocked = false
+const contextItems = ['purchase', 'parental']
 
-let submit = pin => {
+let submit = (pin, context) => {
   return new Promise((resolve, reject) => {
     if (pin.toString() === Settings.get('platform', 'pin', '0000').toString()) {
       unlocked = true
@@ -35,7 +37,7 @@ let submit = pin => {
   })
 }
 
-let check = () => {
+let check = context => {
   return new Promise(resolve => {
     resolve(unlocked)
   })
@@ -51,6 +53,17 @@ export const initPin = config => {
 }
 
 let pinDialog = null
+
+const contextCheck = context => {
+  if (context === undefined) {
+    Log.info('Please provide context explicitly')
+    return contextItems[0]
+  } else if (!contextItems.includes(context)) {
+    Log.warn('Incorrect context provided')
+    return false
+  }
+  return context
+}
 
 // Public API
 export default {
@@ -73,34 +86,49 @@ export default {
     )
     pinDialog = null
   },
-  submit(pin) {
+  submit(pin, context) {
     return new Promise((resolve, reject) => {
       try {
-        submit(pin)
-          .then(resolve)
-          .catch(reject)
+        context = contextCheck(context)
+        if (context) {
+          submit(pin, context)
+            .then(resolve)
+            .catch(reject)
+        } else {
+          reject('Incorrect Context provided')
+        }
       } catch (e) {
         reject(e)
       }
     })
   },
-  unlocked() {
+  unlocked(context) {
     return new Promise((resolve, reject) => {
       try {
-        check()
-          .then(resolve)
-          .catch(reject)
+        context = contextCheck(context)
+        if (context) {
+          check(context)
+            .then(resolve)
+            .catch(reject)
+        } else {
+          reject('Incorrect Context provided')
+        }
       } catch (e) {
         reject(e)
       }
     })
   },
-  locked() {
+  locked(context) {
     return new Promise((resolve, reject) => {
       try {
-        check()
-          .then(unlocked => resolve(!!!unlocked))
-          .catch(reject)
+        context = contextCheck(context)
+        if (context) {
+          check(context)
+            .then(unlocked => resolve(!!!unlocked))
+            .catch(reject)
+        } else {
+          reject('Incorrect Context provided')
+        }
       } catch (e) {
         reject(e)
       }

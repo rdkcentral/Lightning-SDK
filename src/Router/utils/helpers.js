@@ -88,6 +88,7 @@ export const getConfigMap = () => {
     'autoRestoreRemote',
     'numberNavigation',
     'updateHash',
+    'storeSameHash',
   ].reduce((config, key) => {
     config.set(key, isObj ? routerSettings[key] : Settings.get('platform', key))
     return config

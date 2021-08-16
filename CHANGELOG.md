@@ -1,5 +1,16 @@
 # Changelog
 
+## v4.6.0
+
+*16 aug 2021*
+
+- Added context to Pin plugin
+- Added option to overwrite the font loader from platform
+- Added cleanup of App fonts on app close
+- Fixed initial focus bug
+- Added storeSameHash flag to accepted config flags of Router
+- Fixed getQueryStringParams() using active hash in Router
+
 ## v4.5.0
 
 *12 july 2021*

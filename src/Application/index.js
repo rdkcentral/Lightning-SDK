@@ -62,6 +62,30 @@ if (window.innerHeight === 720) {
   defaultOptions.stage['precision'] = 0.6666666667
 }
 
+const customFontFaces = []
+
+const fontLoader = (fonts, store) =>
+  new Promise((resolve, reject) => {
+    fonts
+      .map(({ family, url, urls, descriptors }) => () => {
+        const src = urls
+          ? urls.map(url => {
+              return 'url(' + url + ')'
+            })
+          : 'url(' + url + ')'
+        const fontFace = new FontFace(family, src, descriptors || {})
+        store.push(fontFace)
+        Log.info('Loading font', family)
+        document.fonts.add(fontFace)
+        return fontFace.load()
+      })
+      .reduce((promise, method) => {
+        return promise.then(() => method())
+      }, Promise.resolve(null))
+      .then(resolve)
+      .catch(reject)
+  })
+
 export default function(App, appData, platformSettings) {
   return class Application extends Lightning.Application {
     constructor(options) {
@@ -98,6 +122,8 @@ export default function(App, appData, platformSettings) {
           })
 
           this.childList.a(AppInstance)
+
+          this._refocus()
 
           Log.info('App version', this.config.version)
           Log.info('SDK version', sdkVersion)
@@ -149,31 +175,27 @@ export default function(App, appData, platformSettings) {
     close() {
       Log.info('Closing App')
       this.childList.remove(this.tag('App'))
-
+      this.cleanupFonts()
       // force texture garbage collect
       this.stage.gc()
       this.destroy()
     }
 
     loadFonts(fonts) {
-      return new Promise((resolve, reject) => {
-        fonts
-          .map(({ family, url, urls, descriptors }) => () => {
-            const src = urls
-              ? urls.map(url => {
-                  return 'url(' + url + ')'
-                })
-              : 'url(' + url + ')'
-            const fontFace = new FontFace(family, src, descriptors || {})
-            document.fonts.add(fontFace)
-            return fontFace.load()
-          })
-          .reduce((promise, method) => {
-            return promise.then(() => method())
-          }, Promise.resolve(null))
-          .then(resolve)
-          .catch(reject)
-      })
+      return platformSettings.fontLoader && typeof platformSettings.fontLoader === 'function'
+        ? platformSettings.fontLoader(fonts, customFontFaces)
+        : fontLoader(fonts, customFontFaces)
+    }
+
+    cleanupFonts() {
+      if ('delete' in document.fonts) {
+        customFontFaces.forEach(fontFace => {
+          Log.info('Removing font', fontFace.family)
+          document.fonts.delete(fontFace)
+        })
+      } else {
+        Log.info('No support for removing manually-added fonts')
+      }
     }
 
     loadLanguage(config) {
