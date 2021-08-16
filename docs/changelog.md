@@ -9,6 +9,7 @@
 - Added cleanup of App fonts on app close
 - Fixed initial focus bug
 - Added storeSameHash flag to accepted config flags of Router
+- Fixed getQueryStringParams() using active hash in Router
 
 ## v4.5.0
 
