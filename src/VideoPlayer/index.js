@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+import executeAsPromise from '@michieljs/execute-as-promise'
+
 import Metrics from '../Metrics'
 import Log from '../Log'
 import Ads from '../Ads'
@@ -24,7 +26,6 @@ import Ads from '../Ads'
 import events from './events'
 import autoSetupMixin from '../helpers/autoSetupMixin'
 import easeExecution from '../helpers/easeExecution'
-import executeAsPromise from '@michieljs/execute-as-promise'
 import { ApplicationInstance } from '../Launch'
 import Settings from '../Settings'
 import VideoTexture from './VideoTexture'
