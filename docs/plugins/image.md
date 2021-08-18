@@ -1,30 +1,30 @@
 # Image
 
-The standard way of displaying images in Lightning is to just specify the `src`. This is the prefered way for your App's local assets (such as background, splash screen, logo and icons).
+The standard way of displaying images in Lightning is to just specify the `src`. This is the preferred way for local assets (such as background, splash screen, logo and icons) of Lightning Apps.
 
-It's adviced that you optimize an App's local assets, by resizing them to the exact size and quality you will be using them. This will be beneficial for the memory usage of your App.
+It is recommended that you *optimize* the local assets of your App by resizing them to the *exact* size and quality in which you will use them. This positively affects the memory usage of your App.
 
-However when you don't have control over the images you're displaying in your App (because they come from a remote API for example), you can use the Image plugin to resize and crop images.
+However, if you don't have control over the images to be displayed in your App (for example, because they originate from a remote API), you can use the *Image* plugin to resize and crop them.
 
 ## Usage
 
-Whenever you need to resize image, import the Image plugin from the Lightning SDK
+Import the Image plugin from the Lightning SDK in components where you want to resize an image.
 
 ```js
 import { Img } from '@lightningjs/sdk'
 ```
 
-## Available methods
+## Available Methods
 
-### Exact
+### exact
 
-Resizes the image to the exact dimensions, ignorning the ratio.
+Resizes the image to the exact dimensions, ignoring the ratio.
 
 ```js
 Img(url).exact(width, height)
 ```
 
-### Landscape
+### landscape
 
 Resizes the image by width, maintaining the ratio.
 
@@ -32,46 +32,49 @@ Resizes the image by width, maintaining the ratio.
 Img(url).landscape(width)
 ```
 
-### Portrait
+### portrait
 
-Resizes the image by height, maintaining the ratio
+Resizes the image by height, maintaining the ratio.
 
 ```js
 Img(url).portrait(height)
 ```
 
-### Cover
+### cover
 
-Resizes the image in such a way that it covers the entire area. Depending on the orientation (portrait or landscape) of the image it will resize the image by width or by height.
+Resizes the image in such a way that it covers the entire area. Depending on the orientation (portrait or landscape) of the source image and that of the desired output, it resizes the image by width or by height.
 
 ```js
 Img(url).cover(width, height)
 ```
 
-### Contain
+### contain
 
-Resizes the image in such a way that it is contained within the available area. Depending on the orientation (portrait or landscape) of the image it will resize the image by width or by height.
+Resizes the image in such a way that it is contained within the available area. Depending on the orientation (portrait or landscape) of the source image and that of the desired output, it resizes the image by width or by height.
 
 ```js
 Img(url).contain(width, height)
 ```
 
-### Original
+### original
 
-Generate an image without resizing it (i.e. use the original dimensions), while still passing it through the proxy (and taking advantage of caching).
+Generates the image without resizing it (that is, it uses the original dimensions), while still passing it through the proxy (and taking advantage of caching).
 
 ```js
 Img(url).original()
 ```
 
-## Image quality
+## Image Quality
 
-To increase performance on lower end boxes, especially those with limited GPU memory, there exists a `platform` setting to control the _image quality_.
-Depending on this setting the images returned by the image server will be _smaller_ than actually displayed on the screen.
-Lightning will then _stretch_ the images to fit the desired dimensions. This will save on used GPU memory, but off course impacts the visual quality of the images.
+To increase the performance on lower-end boxes –especially those with limited GPU memory– there is a [platform setting](settings.md) `image.quality` in **settings.json** which enables you to control the *image quality*.
 
-Please note that within the context of the Metrological AppStore this setting is defined as a platform setting _outside_ of the control of the App.
-You can however experiment with this during local development via `settings.json`:
+Depending on this setting, the images that are returned by the image server will be *smaller* than actually displayed on the screen.
+Lightning *stretches* the images to fit them within the desired dimensions.
+
+> Although this setting saves on used GPU memory, it also impacts the visual quality of the images.
+
+Within the context of the Metrological Application Platform, this setting is defined as a platform setting *outside* an App developer's control.
+However, you can experiment with this setting during local development via **settings.json** (located in the root of your project):
 
 ```json
 {
@@ -85,5 +88,6 @@ You can however experiment with this during local development via `settings.json
 }
 ```
 
-The platform setting `image.quality` can be a value between `1` and `100`, where 1 means low quality and 100 equals original image quality.
-If preferred this value can also be defined as a string with a percentage-sign appended (i.e. `"75%"`).
+The Platform Setting `image.quality` is a value between `1` and `100`, where 1 means low quality and 100 is the original image quality.
+
+If preferred, it can also be defined as a *string* with a percentage sign appended (for example, `"75%"`).

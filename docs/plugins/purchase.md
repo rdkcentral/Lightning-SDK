@@ -1,31 +1,33 @@
 # Purchase
 
-The Purchase plugin helps you build In App Purchases into your App, in combination with the Metrological Billing server.
+You can use the Purchase plugin to integrate *in-app purchases* in your App, in combination with the Metrological Billing Server. This way, you can let customers perform transactions in Apps, and the customers can pay for the transactions via the operator’s monthly bill.
 
 ## Usage
 
-Whenever you want to integrate purchases in your App, you can import the Purchase plugin from the Lightning SDK.
+If you want to integrate purchases in your App, import the Purchase plugin from the Lightning SDK:
 
 ```js
 import { Purchase } from '@lightningjs/sdk'
 ```
 
-## Available methods
+## Available Methods
 
-### Buy
+### buy
 
-The `buy` method is a method that will execute all the necesarry steps to do a full purchase of an asset. In a typical, default setup buying an asset with the SDK and the Metrological Billing Server should be as easy as calling `Purchase.buy()`, and no other calls should be necessary.
+The `buy` method executes all the required steps to do a full purchase of an asset.
 
-Sequentially it
+> If you use this method, it is required that you have *properly configured* the Purchase plugin via the `setup` method (see [below](#setup)).
 
-- _retrieves a signature_ for a gives asset
-- fires a _payment request_ to the Metrological Billing server
-- attempt to _register a successful purchase_ at the CSP backend
-- _confirms_ back to the Metrological Billing that the purchase has been registered by the CSP backend
+In a typical, default setup, buying an asset with the Lightning SDK and the Metrological Billing Server only requires calling `Purchase.buy()`. No other calls should be necessary.
 
-Using this method requires that the Purchase plugin is properly _configured_ via the `Purchase.setup()` method.
+The `buy` method performs the following actions:
 
-The `buy`-method accepts an assetId (as defined by the CSP) as it's first argument.
+* Retrieve a signature for a given asset
+* Fire a payment request to the Metrological Billing Server
+* Attempt to register a successful purchase at the CSP backend
+* Confirm back to the Metrological Billing Server that the purchase has been registered by the CSP backend
+
+The `buy` method accepts an `assetId `(as defined by the CSP) as its first argument. For example:
 
 ```js
 const assetId = '123abc'
@@ -36,22 +38,20 @@ Purchase.buy(assetId).then(() => {
 })
 ```
 
-In case the CSP back-end does _not_ completely follow the expected blueprint or can not be configured properly via `setup`, the steps in the `buy` method can also be implemented manually, via the other methods exposed by the Purchase plugin (`signature`, `payment`, `subscribe` and `confirm`).
+> If the CSP backend does *not* completely follow the expected blueprint, or can not be configured properly via the `setup` method, the steps in the `buy` method can also be implemented *manually*. In that case, you can use the Purchase plugin methods `signature`, `payment`, `subscribe` and `confirm` (see [below](#signature)).
 
+### setup
 
-### Setup
+You use the `setup` method to configure the Purchase plugin for matching with a specific CSP backend setup, which is used for providing available assets and storing purchased asset records.
 
-The `setup`-method is used to configure the Purchase plugin to match with a specific CSP backend setup used for providing available assets and storing purchased asset records.
+> The `setup` method should only be called *once*, before any other Purchase plugin method is called.
 
-The `setup`-method should be called once, before any other method on the Purchase plugin is called.
+The `setup` method accepts a *configuration object* as its only argument. The object can have *2 keys*:
 
-The method accepts a config `object` as its only argument. This object can have 2 keys: `cspUrl` and `endpoints`.
+* `cspUrl`: specifies the *base URL* of the backend of the CSP (Content Service Provider).
+* `endPoints`: can be used to customize those API endpoints that differ from the default specification (as outlined below). For each *endpoint* that differs from the default, you specify the *URI* (which will be appended to the `cspUrl`, unless specified as a fully qualified domain) and the REST *method* to use.
 
-`cspUrl` specifies the _base Url_ of the backend of the CSP.
-
-`endpoints` can be used to customize those API endpoints that differ from the default specification (as outlined below). For each _endpoint_ that deviates from the default, specify the _uri_ (which will be appended to the `cspUrl`, unless specified as a fully qualified domain) and the REST _method_ to use.
-
-If needed you can also specify an object with custom `headers` that will be merged in with the defaults headers (`{ Accept: 'application/json', 'Content-Type': 'application/json' }`)
+If needed, you can also specify an object with custom `headers` that will be merged with the default headers (`{ Accept: 'application/json', 'Content-Type': 'application/json' }`).
 
 ```js
 {
@@ -99,13 +99,11 @@ Purchase.setup('http://csp-backend.com/api', {
 })
 ```
 
-In some cases the CSP backend setup is too different from the default specification, that it becomes too difficult
-to configure the enpoint uri's. In those cases you can specify a `callback` instead, and handle the request to the
-CSP backend entirely yourself.
+In some cases, the setup of the CSP backend differs too much from the default specification and it becomes too difficult to configure the enpoint URIs. In those cases, you can specify a *callback* instead, and handle the request to the CSP backend entirely yourself.
 
-The callback function will receive 2 arguments: `params` and `data` and should _always_ return a `Promise` which resolves the result (or rejects an error in case of a failure). When a callback is specified, all other keys in that `endpoint` config
-are ignored.
+The callback function will receive 2 arguments: `params` and `data`. It should always return a Promise which resolves with the result (or rejects with an error in case of a failure).
 
+> When a callback is specified, all other keys in the endpoint configuration are ignored.
 
 ```js
 Purchase.setup('http://csp-backend.com/api', {
@@ -132,14 +130,13 @@ Purchase.setup('http://csp-backend.com/api', {
 })
 ```
 
-### Assets
+### assets
 
-The `assets` method returns a Promise with the result of the request to the CSP to retrieve assets available for purchase. In most cases it would return an `Array` of objects with information about the assets (i.e. _title_, _description_ and _price_).
+The `assets` method returns a *Promise* with the result of the request that is made to the CSP to retrieve available assets for purchase. Typically, it returns an Array of objects containing information about the assets (such as *title*, *description* and *price*).
 
-The `household` is automatically sent as a `query param` in the request, allowing to optionally return information on whether the asset has been _purchased_ by the current household.
+The `household` is automatically sent as a `query param` in the request. This allows to return information on whether the assets were purchased by the current household or not.
 
-The `assets` method is an _optional_ convenience method exposed by the Purchase plugin. Depending on the CSPs API integration, the functionality to retrieve assets can be implemented fully custom in an App.
-
+The `assets` method is an *optional* convenience method provided by the Purchase plugin. Depending on the CSP's API integration, the functionality to retrieve assets can be fully custom-implemented in your App.
 
 ```js
 Purchase.assets().then(assets => {
@@ -147,13 +144,13 @@ Purchase.assets().then(assets => {
 })
 ```
 
-### Asset
+### asset
 
 The `asset` method returns a Promise with the result of the request to the CSP to retrieve details for a specific asset.
 
-The `household` is automatically sent as a `query param` in the request, allowing to return information on whether the asset has been _purchased_ by the current household.
+The `household` is automatically sent as a `query param` in the request. This allows to return information on whether the asset was purchased by the current household or not.
 
-The `asset` method is an _optional_ convenience method exposed by the Purchase plugin. Depending on the CSPs API integration, the functionality to retrieve assets can be implemented fully custom in an App.
+The `asset` method is an *optional* convenience method provided by the Purchase plugin. Depending on the CSP's API integration, the functionality to retrieve an asset can be fully custom-implemented in your App.
 
 ```js
 const assetId = '123abc'
@@ -162,13 +159,15 @@ Purchase.asset(assetId).then(assets => {
 })
 ```
 
-### Signature
+### signature
 
-In order to make a payment request to the Metrological Billing server, the CSP needs to provide a signed signature.
+To make a payment request to the Metrological Billing Server, the CSP must provide a *signed signature*.
 
-The `signature` method returns a Promise with the result of the request to the CSP to retrieve that signature. The `signature`-method accepts the `id` of the asset to purchase as it's argument. The `household` will be automatically be added  as a `query param` in the request.
+The `signature` method returns a *Promise* with the result of the request made to the CSP to retrieve that signature. It accepts the `id` of the asset to purchase as its argument.
 
-The `asset` method is an _optional_ convenience method exposed by the Purchase plugin. Depending on the CSPs API integration, the functionality to generate a purchase signature can also be implemented fully custom in an App.
+The `household` value is automatically added as a `query param` in the request.
+
+The `signature` method is an *optional* convenience method provided by the Purchase plugin. Depending on the CSP's API integration, the functionality to generate a purchase signature can be fully custom-implemented in your App.
 
 ```js
 const assetId = '123abc'
@@ -177,11 +176,11 @@ Purchase.signature(assetId).then(signature => {
 })
 ```
 
-### Payment
+### payment
 
-The `payment`-method calls the Metrological Billing server to execute a purchase. It accepts a _valid signature_ (retrieved from the CSP) as it's argument.
+The `payment` method calls the Metrological Billing Server to execute a purchase. It accepts a *valid signature* (as retrieved from the CSP) as its argument.
 
-The method returns a Promise, which in the case of a success, resolves a transaction object (wich can be stored on the CSP side), or rejects with an error code in case of a failure.
+The method returns a *Promise*. If successful, the Promise resolves to a transaction object (that can be stored on the CSP side). If not, it rejects with an error code in case of a failure.
 
 ```js
 const signature = {} // received from Payment.signature()
@@ -189,13 +188,14 @@ Purchase.payment(signature).then(() => {
   // call Payment.subscribe()
 })
 ```
-### Subscribe
 
-After a successful transaction, the CSP should store the purchase on their system. Especially in the case of recurring subscriptions.
+### subscribe
 
-The `subscribe` method returns a Promise with the result of the request to the CSP to register the purchase. The `subscribe` method accepts the `id` of the purchased asset as it's first argument, and the `transaction` object as received from the Metrological Billing server (via `Purchase.payment()`) as a second argument.
+After a successful transaction, the CSP stores the purchase on their system. Especially in the case of recurring subscriptions, where storing the purchase is essential.
 
-The `subscribe` method is an _optional_ convenience method exposed by the Purchase plugin. Depending on the CSPs API integration, the functionality to register a purchase can be implemented fully custom in an App.
+The `subscribe` method returns a *Promise* with the result of the request made to the CSP to register the purchase. It accepts the `id` of the purchased asset as its first argument, and the `transaction` object as received from the Metrological Billing Server (via `Purchase.payment()`) as its second argument.
+
+The `subscribe` method is an *optional* convenience method provided by the Purchase plugin. Depending on the CSP's API integration, the functionality to register a purchase can be fully custom-implemented in your App.
 
 ```js
 const assetId = '123abc'
@@ -204,13 +204,14 @@ Purchase.subscribe(assetId, transaction).then(() => {
   // call Purchase.confirm()
 })
 ```
-### Confirm
 
-The `confirm`-method calls the Metrological Billing server to confirm a purchase. It accepts a `transactionId` (which is available inside the transaction object returned by a successful `payment`-request) as it's argument.
+### confirm
 
-Calling the method signals to the Billing server that the CSP has received and stored the purchase on their end.
+The `confirm` method calls the Metrological Billing Server to confirm a purchase. It accepts a `transactionId` (which is available inside the transaction object that is returned by a successful `payment` request) as its argument.
 
-The method returns a Promise which resolves in case of a successful confirmation. In case the transactionId is not valid, the Promise will be rejected.
+Calling the method notifies the Metrological Billing Server that the CSP has received *and* stored the purchase on the CSP's backend.
+
+The method returns a *Promise* which resolves in case of a successful confirmation. If the `transactionId` is not valid, the Promise is rejected.
 
 ```js
 const transaction = {} // received from Purchase.payment()
@@ -219,14 +220,13 @@ Purchase.subscribe(transaction.transactionId).then(() => {
 })
 ```
 
-### Unsubscribe
+### unsubscribe
 
-Since the CSP is responsible for renewing subscriptions in the context of the Metrological Billing server. The CSP should also be able to handle cancelations of recurring purchases.
+Since the CSP is responsible for renewing subscriptions in the context of the Metrological Billing Server, the CSP must be able to handle *cancellations of recurring purchases*.
 
-The `unsubscribe` method returns a Promise with the result of the request to the CSP to unsubscribe from a recurring purchase. The `unsubscribe` method accepts the `id` of the purchased asset as it's first argument.
+The `unsubscribe` method returns a *Promise* with the result of the request made to the CSP to unsubscribe from a recurring purchase. It accepts the `id` of the purchased asset as its first argument.
 
-The `unsubscribe` method is an _optional_ convenience method exposed by the Purchase plugin. Depending on the CSPs API integration, the functionality to cancel recurring purchases can be implemented fully custom in an App.
-
+The `unsubscribe` method is an *optional* convenience method provided by the Purchase plugin. Depending on the CSP's API integration, the functionality to cancel recurring purchases can be fully custom-implemented in your App.
 
 ```js
 const assetId = '123abc'

@@ -21,7 +21,7 @@ help you out on our [Discourse Forum](https://forum.lightningjs.io/) on [Lightni
 
 ## Contributing
 
-The Lightning-SDK is an open course project. If you want to contribute to it, please consider the following:
+The Lightning-SDK is an open source project. If you want to contribute to it, please consider the following:
 
 - the **master** branch is the latest stable release
 - the **dev** branch is used for upcoming releases

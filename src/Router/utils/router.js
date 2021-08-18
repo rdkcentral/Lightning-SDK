@@ -25,6 +25,7 @@ import {
   isFunction,
   isPage,
   symbols,
+  cleanHash,
 } from './helpers'
 import { step, navigateQueue } from '../index'
 import { createRoute, getOption } from './route'
@@ -106,9 +107,8 @@ export let beforeEachRoute = async (from, to)=>{
 /**
  *  * Will be called after a navigate successfully resolved,
  * can be overridden via routes config
- * @param request
  */
-export let afterEachRoute = request => {}
+export let afterEachRoute = () => {}
 
 /**
  * All configured routes
@@ -132,9 +132,8 @@ let initialised = false
  * Current page being rendered on screen
  * @type {null}
  */
-
-let activeHash
 let activePage = null
+let activeHash
 let activeRoute
 
 /**
@@ -204,8 +203,7 @@ const setup = config => {
     init(config)
   }
   config.routes.forEach(r => {
-    // strip leading slash
-    const path = r.path.replace(/\/+$/, '')
+    const path = cleanHash(r.path)
     if (!routeExists(path)) {
       const route = createRoute(r)
       routes.set(path, route)
@@ -366,9 +364,21 @@ const cleanUp = (page, request) => {
 
   let doCleanup = false
 
+  // if this request is executed due to a step back in history
+  // and we have configured to destroy active page when we go back
+  // in history or lazyDestory is enabled
   if (isFromHistory && (destroyOnBack || lazyDestroy)) {
     doCleanup = true
-  } else if (lazyDestroy && !keepAlive) {
+  }
+
+  // clean up if lazyDestroy is enabled and the keepAlive flag
+  // in navigation register is false
+  if (lazyDestroy && !keepAlive) {
+    doCleanup = true
+  }
+
+  // if the current and new request share the same route blueprint
+  if (activeRoute === request.route.path) {
     doCleanup = true
   }
 
@@ -448,4 +458,8 @@ export const getBootRequest = () => {
 
 export const getRouterConfig = () => {
   return routerConfig
+}
+
+export const getRoutes = () => {
+  return routes
 }
