@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.6.1
+
+*30 aug 2021*
+
+- Fixed cleanup after closing an App
 ## v4.6.0
 
 *16 aug 2021*
