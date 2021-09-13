@@ -160,10 +160,7 @@ export default function(App, appData, platformSettings) {
     }
 
     closeApp() {
-      Log.info('Closing App')
-
-      Settings.clearSubscribers()
-      Registry.clear()
+      Log.info('Signaling App Close')
 
       if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
         platformSettings.onClose(...arguments)
@@ -174,6 +171,10 @@ export default function(App, appData, platformSettings) {
 
     close() {
       Log.info('Closing App')
+
+      Settings.clearSubscribers()
+      Registry.clear()
+
       this.childList.remove(this.tag('App'))
       this.cleanupFonts()
       // force texture garbage collect

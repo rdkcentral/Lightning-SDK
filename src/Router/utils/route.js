@@ -150,7 +150,7 @@ export const getValuesFromHash = (hash = '', path) => {
   // we already did the matching part
   path = stripRegex(path, '')
 
-  const getUrlParts = /(\/?:?[\w%\s:-]+)/g
+  const getUrlParts = /(\/?:?[\w%\s:.-]+)/g
   const hashParts = hash.match(getUrlParts) || []
   const routeParts = path.match(getUrlParts) || []
   const getNamedGroup = /^\/:([\w-]+)\/?/
