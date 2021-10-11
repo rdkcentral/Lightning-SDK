@@ -28,7 +28,11 @@ let dictionary = null
 export const initLanguage = (file, language = null) => {
   return new Promise((resolve, reject) => {
     fetch(file)
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok === false)
+          throw new Error(`HTTP ${response.status}`)
+        return response.json()
+      })
       .then(json => {
         setTranslations(json)
         // set language (directly or in a promise)
@@ -47,8 +51,8 @@ export const initLanguage = (file, language = null) => {
               .then(resolve)
               .catch(reject)
       })
-      .catch(() => {
-        const error = 'Language file ' + file + ' not found'
+      .catch(e => {
+        const error = 'Language file ' + file + ' not found. ' + e
         Log.error(error)
         reject(error)
       })
