@@ -1,5 +1,14 @@
 # Changelog
 
+## v4.7.0
+
+*20 oct 2021*
+
+- Fixed issues with playing Video as a texture (#189)
+- Added (semi private) getter for consumer to VideoPlayer plugin
+- Added error handling (by firing an error to the consumer) when play() on the video tag returns an error (with a Promise wrapper fallback for older browsers)
+- Added fix that allows periods to be used in a Router hash
+
 ## v4.6.1
 
 *30 aug 2021*
