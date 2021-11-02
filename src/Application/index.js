@@ -30,7 +30,7 @@ import Utils from '../Utils'
 import Registry from '../Registry'
 import { initColors } from '../Colors'
 
-import { version as sdkVersion } from '../../package.json'
+import packageInfo from '../../package.json'
 
 export let AppInstance
 export let AppData
@@ -126,14 +126,14 @@ export default function(App, appData, platformSettings) {
           this._refocus()
 
           Log.info('App version', this.config.version)
-          Log.info('SDK version', sdkVersion)
+          Log.info('SDK version', packageInfo.version)
 
           if (platformSettings.showVersion) {
             this.childList.a({
               ref: 'VersionLabel',
               type: VersionLabel,
               version: this.config.version,
-              sdkVersion: sdkVersion,
+              sdkVersion: packageInfo.version,
               zIndex: 1,
             })
           }
