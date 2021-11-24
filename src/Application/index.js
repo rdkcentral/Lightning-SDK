@@ -90,6 +90,10 @@ export default function(App, appData, platformSettings) {
   return class Application extends Lightning.Application {
     constructor(options) {
       const config = Deepmerge(defaultOptions, options)
+      // Deepmerge breaks HTMLCanvasElement, so restore the passed in canvas.
+      if(options.stage.canvas) {
+        config.stage.canvas = options.stage.canvas
+      }
       super(config)
       this.config = config
     }
