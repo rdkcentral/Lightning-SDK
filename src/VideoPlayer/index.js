@@ -124,17 +124,23 @@ export const setupVideoTag = () => {
     return videoEls[0]
   } else {
     const videoEl = document.createElement('video')
+    const platformSettingsWidth = Settings.get('platform', 'width')
+      ? Settings.get('platform', 'width')
+      : 1920
+    const platformSettingsHeight = Settings.get('platform', 'height')
+      ? Settings.get('platform', 'height')
+      : 1080
     videoEl.setAttribute('id', 'video-player')
-    videoEl.setAttribute('width', withPrecision(1920))
-    videoEl.setAttribute('height', withPrecision(1080))
+    videoEl.setAttribute('width', withPrecision(platformSettingsWidth))
+    videoEl.setAttribute('height', withPrecision(platformSettingsHeight))
     videoEl.style.position = 'absolute'
     videoEl.style.zIndex = '1'
     videoEl.style.display = 'none'
     videoEl.style.visibility = 'hidden'
     videoEl.style.top = withPrecision(0)
     videoEl.style.left = withPrecision(0)
-    videoEl.style.width = withPrecision(1920)
-    videoEl.style.height = withPrecision(1080)
+    videoEl.style.width = withPrecision(platformSettingsWidth)
+    videoEl.style.height = withPrecision(platformSettingsHeight)
     document.body.appendChild(videoEl)
     return videoEl
   }
