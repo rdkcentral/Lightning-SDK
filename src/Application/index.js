@@ -56,12 +56,6 @@ const defaultOptions = {
   },
 }
 
-if (window.innerHeight === 720) {
-  defaultOptions.stage['w'] = 1280
-  defaultOptions.stage['h'] = 720
-  defaultOptions.stage['precision'] = 0.6666666667
-}
-
 const customFontFaces = []
 
 const fontLoader = (fonts, store) =>
@@ -87,6 +81,11 @@ const fontLoader = (fonts, store) =>
   })
 
 export default function(App, appData, platformSettings) {
+  defaultOptions.stage['w'] = platformSettings.width ? platformSettings.width : 1920
+  defaultOptions.stage['h'] = platformSettings.height ? platformSettings.height : 1080
+  defaultOptions.stage['precision'] =
+    (platformSettings.width ? platformSettings.width : 1920) / 1920
+
   return class Application extends Lightning.Application {
     constructor(options) {
       const config = Deepmerge(defaultOptions, options)
