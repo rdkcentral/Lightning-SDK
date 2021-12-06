@@ -30,7 +30,7 @@ import Utils from '../Utils'
 import Registry from '../Registry'
 import { initColors } from '../Colors'
 
-import { version as sdkVersion } from '../../package.json'
+import packageInfo from '../../package.json'
 
 export let AppInstance
 export let AppData
@@ -54,12 +54,6 @@ const defaultOptions = {
     191: 'Search', // Use "/" for keyboard
     409: 'Search',
   },
-}
-
-if (window.innerHeight === 720) {
-  defaultOptions.stage['w'] = 1280
-  defaultOptions.stage['h'] = 720
-  defaultOptions.stage['precision'] = 0.6666666667
 }
 
 const customFontFaces = []
@@ -87,9 +81,18 @@ const fontLoader = (fonts, store) =>
   })
 
 export default function(App, appData, platformSettings) {
+  defaultOptions.stage['w'] = platformSettings.width ? platformSettings.width : 1920
+  defaultOptions.stage['h'] = platformSettings.height ? platformSettings.height : 1080
+  defaultOptions.stage['precision'] =
+    (platformSettings.width ? platformSettings.width : 1920) / 1920
+
   return class Application extends Lightning.Application {
     constructor(options) {
       const config = Deepmerge(defaultOptions, options)
+      // Deepmerge breaks HTMLCanvasElement, so restore the passed in canvas.
+      if(options.stage.canvas) {
+        config.stage.canvas = options.stage.canvas
+      }
       super(config)
       this.config = config
     }
@@ -126,14 +129,14 @@ export default function(App, appData, platformSettings) {
           this._refocus()
 
           Log.info('App version', this.config.version)
-          Log.info('SDK version', sdkVersion)
+          Log.info('SDK version', packageInfo.version)
 
           if (platformSettings.showVersion) {
             this.childList.a({
               ref: 'VersionLabel',
               type: VersionLabel,
               version: this.config.version,
-              sdkVersion: sdkVersion,
+              sdkVersion: packageInfo.version,
               zIndex: 1,
             })
           }
@@ -160,10 +163,7 @@ export default function(App, appData, platformSettings) {
     }
 
     closeApp() {
-      Log.info('Closing App')
-
-      Settings.clearSubscribers()
-      Registry.clear()
+      Log.info('Signaling App Close')
 
       if (platformSettings.onClose && typeof platformSettings.onClose === 'function') {
         platformSettings.onClose(...arguments)
@@ -174,6 +174,10 @@ export default function(App, appData, platformSettings) {
 
     close() {
       Log.info('Closing App')
+
+      Settings.clearSubscribers()
+      Registry.clear()
+
       this.childList.remove(this.tag('App'))
       this.cleanupFonts()
       // force texture garbage collect

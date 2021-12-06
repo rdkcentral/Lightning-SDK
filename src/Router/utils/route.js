@@ -59,7 +59,7 @@ export const getRouteByHash = hash => {
   // @todo: clean up on handleHash
   hash = hash.replace(/^#/, '')
 
-  const getUrlParts = /(\/?:?[@!*\w%\s:-]+)/g
+  const getUrlParts = /(\/?:?[^/]+)/g
   // grab possible candidates from stored routes
   const candidates = getRoutesByFloor(getFloor(hash))
   // break hash down in chunks
@@ -150,7 +150,7 @@ export const getValuesFromHash = (hash = '', path) => {
   // we already did the matching part
   path = stripRegex(path, '')
 
-  const getUrlParts = /(\/?:?[\w%\s:-]+)/g
+  const getUrlParts = /(\/?:?[\w%\s:.-]+)/g
   const hashParts = hash.match(getUrlParts) || []
   const routeParts = path.match(getUrlParts) || []
   const getNamedGroup = /^\/:([\w-]+)\/?/

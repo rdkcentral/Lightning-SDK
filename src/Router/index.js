@@ -494,6 +494,25 @@ const registerListener = () => {
     }
   })
 }
+
+/**
+ * Navigate to root hash
+ */
+const root = () => {
+  const rootHash = getRootHash()
+  if (isString(rootHash)) {
+    navigate(rootHash)
+  } else if (isFunction(rootHash)) {
+    rootHash().then(res => {
+      if (isObject(res)) {
+        navigate(res.path, res.params)
+      } else {
+        navigate(res)
+      }
+    })
+  }
+}
+
 // export API
 export default {
   startRouter,
@@ -523,6 +542,7 @@ export default {
   App: RoutedApp,
   // keep backwards compatible
   focusPage: restoreFocus,
+  root: root,
   /**
    * Deprecated api methods
    */
