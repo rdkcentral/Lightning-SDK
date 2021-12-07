@@ -420,6 +420,16 @@ const resume = () => {
 }
 
 /**
+ * Force reload active hash
+ */
+const reload = () => {
+  if (!isNavigating()) {
+    const hash = getActiveHash()
+    navigate(hash, { reload: true }, false)
+  }
+}
+
+/**
  * Query if the Router is still processing a Request
  * @returns {boolean}
  */
@@ -527,6 +537,7 @@ export default {
   getHistoryState,
   replaceHistoryState,
   getQueryStringParams,
+  reload,
   symbols,
   App: RoutedApp,
   // keep backwards compatible
