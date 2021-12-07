@@ -420,6 +420,16 @@ const resume = () => {
 }
 
 /**
+ * Force reload active hash
+ */
+const reload = () => {
+  if (!isNavigating()) {
+    const hash = getActiveHash()
+    navigate(hash, { reload: true }, false)
+  }
+}
+
+/**
  * Query if the Router is still processing a Request
  * @returns {boolean}
  */
@@ -484,6 +494,25 @@ const registerListener = () => {
     }
   })
 }
+
+/**
+ * Navigate to root hash
+ */
+const root = () => {
+  const rootHash = getRootHash()
+  if (isString(rootHash)) {
+    navigate(rootHash)
+  } else if (isFunction(rootHash)) {
+    rootHash().then(res => {
+      if (isObject(res)) {
+        navigate(res.path, res.params)
+      } else {
+        navigate(res)
+      }
+    })
+  }
+}
+
 // export API
 export default {
   startRouter,
@@ -508,10 +537,12 @@ export default {
   getHistoryState,
   replaceHistoryState,
   getQueryStringParams,
+  reload,
   symbols,
   App: RoutedApp,
   // keep backwards compatible
   focusPage: restoreFocus,
+  root: root,
   /**
    * Deprecated api methods
    */
