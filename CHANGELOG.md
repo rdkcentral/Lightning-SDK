@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.8.1
+
+*13 dec 2021*
+
+- Fixed auto detect 720p resolution
+
+
 ## v4.8.0
 
 *7 dec 2021*
