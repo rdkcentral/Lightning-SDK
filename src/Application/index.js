@@ -81,16 +81,26 @@ const fontLoader = (fonts, store) =>
   })
 
 export default function(App, appData, platformSettings) {
-  defaultOptions.stage['w'] = platformSettings.width ? platformSettings.width : 1920
-  defaultOptions.stage['h'] = platformSettings.height ? platformSettings.height : 1080
-  defaultOptions.stage['precision'] =
-    (platformSettings.width ? platformSettings.width : 1920) / 1920
+  const { width, height } = platformSettings
+
+  if (width && height) {
+    defaultOptions.stage['w'] = width
+    defaultOptions.stage['h'] = height
+    defaultOptions.stage['precision'] = width / 1920
+  }
+
+  // support for 720p browser
+  if (!width && !height && window.innerHeight === 720) {
+    defaultOptions.stage['w'] = 1280
+    defaultOptions.stage['h'] = 720
+    defaultOptions.stage['precision'] = 1280 / 1920
+  }
 
   return class Application extends Lightning.Application {
     constructor(options) {
       const config = Deepmerge(defaultOptions, options)
       // Deepmerge breaks HTMLCanvasElement, so restore the passed in canvas.
-      if(options.stage.canvas) {
+      if (options.stage.canvas) {
         config.stage.canvas = options.stage.canvas
       }
       super(config)
