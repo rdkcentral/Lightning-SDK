@@ -90,7 +90,7 @@ export default function(App, appData, platformSettings) {
   }
 
   // support for 720p browser
-  if (window.innerHeight === 720) {
+  if (!width && !height && window.innerHeight === 720) {
     defaultOptions.stage['w'] = 1280
     defaultOptions.stage['h'] = 720
     defaultOptions.stage['precision'] = 1280 / 1920
