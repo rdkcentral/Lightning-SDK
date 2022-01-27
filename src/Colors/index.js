@@ -58,18 +58,18 @@ export const initColors = file => {
   return new Promise((resolve, reject) => {
     if (typeof file === 'object') {
       addColors(file)
-      resolve()
+      return resolve()
     }
     fetch(file)
       .then(response => response.json())
       .then(json => {
         addColors(json)
-        resolve()
+        return resolve()
       })
       .catch(() => {
         const error = 'Colors file ' + file + ' not found'
         Log.error(error)
-        reject(error)
+        return reject(error)
       })
   })
 }
