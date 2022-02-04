@@ -252,7 +252,7 @@ const handleHashChange = async override => {
   let result = await beforeEachRoute(getActiveHash(), request)
 
   // test if a local hook is configured for the route
-  if (route.beforeNavigate) {
+  if (result && route.beforeNavigate) {
     result = await route.beforeNavigate(getActiveHash(), request)
   }
 
