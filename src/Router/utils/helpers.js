@@ -113,7 +113,7 @@ export const incorrectParams = (cb, route) => {
 
 export const getQueryStringParams = (hash = getActiveHash()) => {
   const resumeHash = getResumeHash()
-  if (hash === '$' || resumeHash) {
+  if ((hash === '$' || !hash) && resumeHash) {
     if (isString(resumeHash)) {
       hash = resumeHash
     }

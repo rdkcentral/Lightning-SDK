@@ -56,12 +56,6 @@ const defaultOptions = {
   },
 }
 
-if (window.innerHeight === 720) {
-  defaultOptions.stage['w'] = 1280
-  defaultOptions.stage['h'] = 720
-  defaultOptions.stage['precision'] = 0.6666666667
-}
-
 const customFontFaces = []
 
 const fontLoader = (fonts, store) =>
@@ -87,9 +81,28 @@ const fontLoader = (fonts, store) =>
   })
 
 export default function(App, appData, platformSettings) {
+  const { width, height } = platformSettings
+
+  if (width && height) {
+    defaultOptions.stage['w'] = width
+    defaultOptions.stage['h'] = height
+    defaultOptions.stage['precision'] = width / 1920
+  }
+
+  // support for 720p browser
+  if (!width && !height && window.innerHeight === 720) {
+    defaultOptions.stage['w'] = 1280
+    defaultOptions.stage['h'] = 720
+    defaultOptions.stage['precision'] = 1280 / 1920
+  }
+
   return class Application extends Lightning.Application {
     constructor(options) {
       const config = Deepmerge(defaultOptions, options)
+      // Deepmerge breaks HTMLCanvasElement, so restore the passed in canvas.
+      if (options.stage.canvas) {
+        config.stage.canvas = options.stage.canvas
+      }
       super(config)
       this.config = config
     }

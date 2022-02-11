@@ -1,5 +1,22 @@
 # Changelog
 
+## v4.8.1
+
+*13 dec 2021*
+
+- Fixed auto detect 720p resolution
+
+## v4.8.0
+
+*7 dec 2021*
+
+
+- Fixed deepmerge breaking provided canvas
+- Fixed getting querystring parameters with boot component
+- Added dynamic canvas size support
+- Added support to accept all characters in hash
+- Added `Router.root()` support
+- Added `Router.reload()` support
 ## v4.7.0
 
 *20 oct 2021*
