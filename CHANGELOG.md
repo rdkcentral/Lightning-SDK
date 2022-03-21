@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.8.2
+
+*21 mar 2022*
+
+- Fixed bug in initialization of Colors plugin when receiving an object instead of a file path
+- Improved calculation of alpha values in Colors plugin
+- Fixed bug in beforeEachRoute of Router plugin
+
 ## v4.8.1
 
 *13 dec 2021*

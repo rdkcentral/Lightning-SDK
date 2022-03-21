@@ -1,6 +1,6 @@
 {
   "name": "@lightningjs/sdk",
-  "version": "4.8.1",
+  "version": "4.8.2",
   "license": "Apache-2.0",
   "scripts": {
     "postinstall": "node ./scripts/postinstall.js",
@@ -26,7 +26,7 @@
     "@michieljs/execute-as-promise": "^1.0.0",
     "deepmerge": "^4.2.2",
     "localCookie": "github:WebPlatformForEmbedded/localCookie",
-    "shelljs": "^0.8.4",
+    "shelljs": "^0.8.5",
     "url-polyfill": "^1.1.10",
     "whatwg-fetch": "^3.0.0"
   },
