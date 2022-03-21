@@ -63,7 +63,7 @@ export const calculateAlpha = (argb, p) => {
   let r = ((argb / 65536) | 0) % 256
   let g = ((argb / 256) | 0) % 256
   let b = argb % 256
-  return (r << 16) + (g << 8) + b + ((p * 255) | 0) * 16777216
+  return (r << 16) + (g << 8) + b + (Math.round(p * 255) | 0) * 16777216
 }
 
 export const mergeColorAlpha = (c, alpha) => {
