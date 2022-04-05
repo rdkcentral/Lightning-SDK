@@ -48,12 +48,18 @@ const execProvider = (request, emitProvided) => {
   const provider = route.provider
   const expires = route.cache ? route.cache * 1000 : 0
   const params = addPersistData(request)
-  return provider.request(request.page, { ...params }).then(() => {
-    request.page[symbols.expires] = Date.now() + expires
-    if (emitProvided) {
-      emit(request.page, 'dataProvided')
-    }
-  })
+  return provider
+    .request(request.page, { ...params })
+    .then(() => {
+      request.page[symbols.expires] = Date.now() + expires
+      if (emitProvided) {
+        emit(request.page, 'dataProvided')
+      }
+    })
+    .catch(e => {
+      request.page[symbols.expires] = Date.now()
+      throw e
+    })
 }
 
 export const addPersistData = ({ page, route, hash, register = new Map() }) => {
