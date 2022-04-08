@@ -29,7 +29,7 @@ import { initRouter } from '../Router'
 import { initTV } from '../TV'
 import { initPurchase } from '../Purchase'
 import { initPin } from '../Pin'
-import { initMetadata } from '../Metadata'
+import {initMetadata} from 'metro-sdk'
 import Application from '../Application'
 
 export let ApplicationInstance
