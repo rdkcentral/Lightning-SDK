@@ -346,7 +346,7 @@ const resolveHashChange = request => {
 
 /**
  * Directional step in history
- * @param direction
+ * @param level
  */
 export const step = (level = 0) => {
   if (!level || isNaN(level)) {
@@ -362,7 +362,7 @@ export const step = (level = 0) => {
     if (isFunction(app._handleAppClose)) {
       return app._handleAppClose()
     }
-    return false
+    return app.application.closeApp()
   } else if (history.length) {
     // for now we only support history back
     const route = history.splice(history.length - level, level)[0]
