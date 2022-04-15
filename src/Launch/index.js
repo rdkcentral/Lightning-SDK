@@ -18,8 +18,9 @@
  */
 
 import { initUtils } from '../Utils'
-import { initProfile } from '../Profile'
-import { initMetrics } from '../Metrics'
+import { initProfile } from 'metro-sdk'
+import { initMetrics } from 'metro-sdk'
+import { initSdkPlugin } from 'metro-sdk'
 import { initSettings } from '../Settings'
 import { initMediaPlayer } from '../MediaPlayer'
 import { initVideoPlayer } from '../VideoPlayer'
@@ -29,16 +30,17 @@ import { initRouter } from '../Router'
 import { initTV } from '../TV'
 import { initPurchase } from '../Purchase'
 import { initPin } from '../Pin'
-import {initMetadata} from 'metro-sdk'
+import { initMetadata } from 'metro-sdk'
 import Application from '../Application'
+import Settings from '../Settings'
+import Log from '../Log'
 
 export let ApplicationInstance
 
 export default (App, appSettings, platformSettings, appData) => {
   initSettings(appSettings, platformSettings)
-  initMetadata(appSettings)
-
   initUtils(platformSettings)
+  initMetadata(appSettings)
   initStorage()
   // Initialize plugins
   if (platformSettings.plugins) {
@@ -52,8 +54,8 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.purchase && initPurchase(platformSettings.plugins.purchase)
     platformSettings.plugins.pin && initPin(platformSettings.plugins.pin)
   }
-
   const app = Application(App, appData, platformSettings)
   ApplicationInstance = new app(appSettings)
+  initSdkPlugin(ApplicationInstance, Log, Settings)
   return ApplicationInstance
 }
