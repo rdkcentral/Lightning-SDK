@@ -23,7 +23,7 @@ import { initMetrics } from 'metro-sdk'
 import { initSdkPlugin } from 'metro-sdk'
 import { initSettings } from '../Settings'
 import { initMediaPlayer } from '../MediaPlayer'
-import { initVideoPlayer } from '../VideoPlayer'
+import { initVideoPlayer } from 'metro-sdk'
 import { initStorage } from '../Storage'
 import { initAds } from '../Ads'
 import { initRouter } from '../Router'
@@ -34,6 +34,7 @@ import { initMetadata } from 'metro-sdk'
 import Application from '../Application'
 import Settings from '../Settings'
 import Log from '../Log'
+import Ads from '../Ads'
 
 export let ApplicationInstance
 
@@ -56,6 +57,6 @@ export default (App, appSettings, platformSettings, appData) => {
   }
   const app = Application(App, appData, platformSettings)
   ApplicationInstance = new app(appSettings)
-  initSdkPlugin(ApplicationInstance, Log, Settings)
+  initSdkPlugin(ApplicationInstance, Log, Settings, Ads)
   return ApplicationInstance
 }
