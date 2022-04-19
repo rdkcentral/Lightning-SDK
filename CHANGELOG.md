@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.8.3
+
+*19 apr 2022*
+
+- Fixed bug in Router, app not closing when router history unavailable
+- Fixed bug in Router, router data hooks not always being called
+
 ## v4.8.2
 
 *21 mar 2022*
