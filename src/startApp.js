@@ -62,9 +62,12 @@ const startApp = () => {
       settings.appSettings.id = appMetadata.identifier
       //Deleting the identifier as it is no longer required
       delete settings.appSettings.identifier
-      app = bundle(settings.appSettings, settings.platformSettings, settings.appData)
-      canvas = app.stage.getCanvas()
-      document.body.appendChild(canvas)
+
+      Promise.resolve(bundle(settings.appSettings, settings.platformSettings, settings.appData)).then((appInstance) => {
+        app = appInstance
+        canvas = app.stage.getCanvas()
+        document.body.appendChild(canvas)
+      })
     },
   ])
 }

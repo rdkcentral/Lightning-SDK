@@ -97,6 +97,8 @@ var startApp = function startApp() {
       return window.attachInspector(window.lng);
     }.bind(this)) : Promise.resolve();
   }.bind(this), function () {
+    var _this7 = this;
+
     _newArrowCheck(this, _this2);
 
     var bundle = window[appMetadata.safeId]; // support rollup and esbuild
@@ -112,19 +114,23 @@ var startApp = function startApp() {
     settings.appSettings.id = appMetadata.identifier; //Deleting the identifier as it is no longer required
 
     delete settings.appSettings.identifier;
-    app = bundle(settings.appSettings, settings.platformSettings, settings.appData);
-    canvas = app.stage.getCanvas();
-    document.body.appendChild(canvas);
+    Promise.resolve(bundle(settings.appSettings, settings.platformSettings, settings.appData)).then(function (appInstance) {
+      _newArrowCheck(this, _this7);
+
+      app = appInstance;
+      canvas = app.stage.getCanvas();
+      document.body.appendChild(canvas);
+    }.bind(this));
   }.bind(this)]);
 }.bind(undefined);
 
 var getAppMetadata = function getAppMetadata() {
-  var _this7 = this;
+  var _this8 = this;
 
   _newArrowCheck(this, _this);
 
   return fetchJson('./metadata.json').then(function (metadata) {
-    _newArrowCheck(this, _this7);
+    _newArrowCheck(this, _this8);
 
     metadata.safeId = "APP_".concat(metadata.identifier.replace(/[^0-9a-zA-Z_$]/g, '_'));
     return metadata;
@@ -132,22 +138,22 @@ var getAppMetadata = function getAppMetadata() {
 }.bind(undefined);
 
 var getSettings = function getSettings() {
-  var _this8 = this;
+  var _this9 = this;
 
   _newArrowCheck(this, _this);
 
   return new Promise(function (resolve) {
-    var _this9 = this;
+    var _this10 = this;
 
-    _newArrowCheck(this, _this8);
+    _newArrowCheck(this, _this9);
 
     var settings;
     fetchJson('./settings.json').then(function (json) {
-      _newArrowCheck(this, _this9);
+      _newArrowCheck(this, _this10);
 
       return settings = json;
     }.bind(this)).catch(function () {
-      _newArrowCheck(this, _this9);
+      _newArrowCheck(this, _this10);
 
       console.warn('No settings.json found. Using defaults.');
       settings = {
@@ -158,16 +164,16 @@ var getSettings = function getSettings() {
         }
       };
     }.bind(this)).then(function () {
-      var _this10 = this;
+      var _this11 = this;
 
-      _newArrowCheck(this, _this9);
+      _newArrowCheck(this, _this10);
 
       settings.platformSettings = settings.platformSettings || {};
 
       settings.platformSettings.onClose = function () {
-        var _this11 = this;
+        var _this12 = this;
 
-        _newArrowCheck(this, _this10);
+        _newArrowCheck(this, _this11);
 
         // clean up video
         var videoElements = document.getElementsByTagName('video');
@@ -192,7 +198,7 @@ var getSettings = function getSettings() {
 
 
         setTimeout(function () {
-          _newArrowCheck(this, _this11);
+          _newArrowCheck(this, _this12);
 
           if (canvas) {
             canvas.remove();
@@ -240,22 +246,22 @@ var loadLightningInspect = function loadLightningInspect(esEnv) {
 }.bind(undefined);
 
 var loadPolyfills = function loadPolyfills(esEnv) {
-  var _this12 = this;
+  var _this13 = this;
 
   _newArrowCheck(this, _this);
 
   // load polyfills when esEnv is defined and it's not es6
   if (esEnv && esEnv !== 'es6') {
     return sequence([function () {
-      _newArrowCheck(this, _this12);
+      _newArrowCheck(this, _this13);
 
       return loadJS('./polyfills/babel-polyfill.js');
     }.bind(this), function () {
-      _newArrowCheck(this, _this12);
+      _newArrowCheck(this, _this13);
 
       return loadJS('./polyfills/url.js');
     }.bind(this), function () {
-      _newArrowCheck(this, _this12);
+      _newArrowCheck(this, _this13);
 
       return loadJS('./polyfills/fetch.js');
     }.bind(this)]);
@@ -265,12 +271,12 @@ var loadPolyfills = function loadPolyfills(esEnv) {
 }.bind(undefined);
 
 var loadJS = function loadJS(url, id) {
-  var _this13 = this;
+  var _this14 = this;
 
   _newArrowCheck(this, _this);
 
   return new Promise(function (resolve) {
-    _newArrowCheck(this, _this13);
+    _newArrowCheck(this, _this14);
 
     console.log('loadJS', url);
     var tag = document.createElement('script');
@@ -292,12 +298,12 @@ var removeJS = function removeJS(id) {
 }.bind(undefined);
 
 var fetchJson = function fetchJson(file) {
-  var _this14 = this;
+  var _this15 = this;
 
   _newArrowCheck(this, _this);
 
   return new Promise(function (resolve, reject) {
-    _newArrowCheck(this, _this14);
+    _newArrowCheck(this, _this15);
 
     var xhr = new XMLHttpRequest();
 
@@ -313,17 +319,17 @@ var fetchJson = function fetchJson(file) {
 }.bind(undefined);
 
 var sequence = function sequence(steps) {
-  var _this15 = this;
+  var _this16 = this;
 
   _newArrowCheck(this, _this);
 
   return steps.reduce(function (promise, method) {
-    var _this16 = this;
+    var _this17 = this;
 
-    _newArrowCheck(this, _this15);
+    _newArrowCheck(this, _this16);
 
     return promise.then(function () {
-      _newArrowCheck(this, _this16);
+      _newArrowCheck(this, _this17);
 
       return method();
     }.bind(this));
@@ -331,12 +337,12 @@ var sequence = function sequence(steps) {
 }.bind(undefined);
 
 var hasTextureMode = function hasTextureMode(platformSettings) {
-  var _this17 = this;
+  var _this18 = this;
 
   _newArrowCheck(this, _this);
 
   return new Promise(function (resolve) {
-    _newArrowCheck(this, _this17);
+    _newArrowCheck(this, _this18);
 
     if (platformSettings.textureMode === true) resolve(true); // yes, this could be a oneliner, but zebra es5 couldn't handle that (so 2 lines to be safe)
 
