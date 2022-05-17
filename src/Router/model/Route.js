@@ -39,6 +39,10 @@ export default class Route {
     return this._cfg.path
   }
 
+  get name() {
+    return this._cfg.name
+  }
+
   get component() {
     return this._cfg.component
   }
