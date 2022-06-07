@@ -447,8 +447,13 @@ The second argument of a catch-all hook is the (already mentioned) Object contai
 
 The third argument is the `currentTime` of the video.
 
+```js
 $videoPlayerEvent(eventName, videoElement, currentTime) {
-  console.log(eventname, videoElement, currentTime)}### Event Overview
+  console.log(eventname, videoElement, currentTime)
+}
+```
+
+### Event Overview
 
 The available events are:
 
