@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+export { default as Accessibility } from './src/Accessibility'
 export { default as Ads } from './src/Ads'
 export { AppData } from './src/Application'
 export { default as Application } from './src/Application'
