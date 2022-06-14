@@ -22,22 +22,22 @@ import ColorShift from './ColorShift'
 export default class TritanopiaShader extends ColorShift {}
 
 TritanopiaShader.fragmentShaderSource = `
-    ${ColorShift.before}
-    vec4 filter( vec4 color )
-    {
-        vec3 opponentColor = RGBtoOpponentMat * vec3(color.r, color.g, color.b);
-        opponentColor.x -= ((3.0 * opponentColor.z) - opponentColor.y) * 0.25;
-        vec3 rgbColor = OpponentToRGBMat * opponentColor;
-        return vec4(rgbColor.r, rgbColor.g, rgbColor.b, color.a);
-    }
-
+    ${ColorShift.before}    
     vec4 vision(vec4 color)
     {
         vec4 r = vec4( 0.97,  0.11, -0.08, 0.0 );
         vec4 g = vec4( 0.02,  0.82,  0.16, 0.0 );
         vec4 b = vec4(-0.06,  0.88,  0.18, 0.0 );
-
-        return vec4(dot(color, r), dot(color, g), dot(color, b), color.a);
-    }
-    ${ColorShift.after}
+       
+        return vec4(dot(color, r), dot(color, g), dot(color, b), color.a);	
+    }   
+    
+    vec4 filter( vec4 color )
+    {   
+        vec3 opponentColor = RGBtoOpponentMat * vec3(color.r, color.g, color.b);
+        opponentColor.x -= ((3.0 * opponentColor.z) - opponentColor.y) * 0.25;
+        vec3 rgbColor = OpponentToRGBMat * opponentColor;
+        return vision(vec4(rgbColor.r, rgbColor.g, rgbColor.b, color.a));
+    }   
+    ${ColorShift.after} 
 `

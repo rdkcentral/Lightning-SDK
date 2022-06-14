@@ -24,14 +24,9 @@ export default class MonochromacyShader extends ColorShift {}
 MonochromacyShader.fragmentShaderSource = `
     ${ColorShift.before}
     vec4 filter( vec4 color )
-    {
+    {   
         float grey = dot(color.rgb, vec3(0.299, 0.587, 0.114));
-        return vec4(vec3(grey, grey, grey), 1.0 );
-    }
-
-    vec4 vision(vec4 color)
-    {
-        return color;
+        return vec4(vec3(grey, grey, grey), 1.0 ); 
     }
     ${ColorShift.after}
 `

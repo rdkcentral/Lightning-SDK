@@ -22,22 +22,22 @@ import ColorShift from './ColorShift'
 export default class ProtanopiaShader extends ColorShift {}
 
 ProtanopiaShader.fragmentShaderSource = `
-    ${ColorShift.before}
-    vec4 filter( vec4 color )
-    {
-        vec3 opponentColor = RGBtoOpponentMat * vec3(color.r, color.g, color.b);
-        opponentColor.x -= opponentColor.y * 1.5;
-        vec3 rgbColor = OpponentToRGBMat * opponentColor;
-        return vec4(rgbColor.r, rgbColor.g, rgbColor.b, color.a);
-    }
-
+    ${ColorShift.before}    
     vec4 vision(vec4 color)
     {
         vec4 r = vec4( 0.20,  0.99, -0.19, 0.0);
         vec4 g = vec4( 0.16,  0.79,  0.04, 0.0);
         vec4 b = vec4( 0.01, -0.01,  1.00, 0.0);
-
-        return vec4(dot(color, r), dot(color, g), dot(color, b), color.a);
+       
+        return vec4(dot(color, r), dot(color, g), dot(color, b), color.a);	
     }
-    ${ColorShift.after}
+    
+    vec4 filter( vec4 color )
+    {   
+        vec3 opponentColor = RGBtoOpponentMat * vec3(color.r, color.g, color.b);
+        opponentColor.x -= opponentColor.y * 1.5; 
+        vec3 rgbColor = OpponentToRGBMat * opponentColor;
+        return vision(vec4(rgbColor.r, rgbColor.g, rgbColor.b, color.a));      
+    }    
+    ${ColorShift.after} 
 `

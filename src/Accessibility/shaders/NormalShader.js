@@ -27,10 +27,5 @@ NeutralShader.fragmentShaderSource = `
     {
         return color;
     }
-
-    vec4 vision(vec4 color)
-    {
-        return color;
-    }
     ${ColorShift.after}
 `
