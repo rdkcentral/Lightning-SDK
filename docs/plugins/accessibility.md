@@ -71,7 +71,7 @@ const element = this.tag('Logo')
 Accessibility.colorshift(element, type, config)
 ```
 
-Important to remember is that the element you apply the colorshift filter to shouldn't already have a shader applied to it, nor can it have `rtt` set to `true`. In these cases you could create a wrapper and apply the colorshift filter to the wrapper instead.
+Important to remember is that the element you apply the colorshift filter to shouldn't already have a _shader_ applied to it, nor can it have `rtt` set to `true`. In these cases you could create a wrapper and apply the colorshift filter to the wrapper instead.
 
 ### Colorshift configuration UX
 
