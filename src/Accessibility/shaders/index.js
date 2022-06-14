@@ -20,16 +20,16 @@
 import Protanopia from './ProtanopiaShader'
 import Deuteranopia from './DeuteranopiaShader'
 import Tritanopia from './TritanopiaShader'
-import Neutral from './NeutralShader'
+import Normal from './NormalShader'
 import Monochromacy from './MonochromacyShader'
 
 export const colorshiftShader = type => {
   const shadersMap = {
-    neutral: Neutral,
+    normal: Normal,
+    monochromacy: Monochromacy,
     deuteranopia: Deuteranopia,
     tritanopia: Tritanopia,
     protanopia: Protanopia,
-    monochromacy: Monochromacy,
   }
 
   type = (typeof type === 'string' && type.toLowerCase()) || null
