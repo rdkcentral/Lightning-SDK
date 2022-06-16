@@ -2,11 +2,10 @@
 
 The Router plugin can be configured by passing a *configuration object* to the `Router.startRouter()` method. This method is typically called in the `_setup`[lifecycle event](../../../lightning-core-reference/Components/LifecycleEvents.md)  in **App.js**.
 
-The configuration object can contain six different *keys*, each of which is described below:
+The configuration object can contain five different *keys*, each of which is described below:
 
 * [root](#root)
 * [boot](#boot)
-* [bootComponent](#bootcomponent)
 * [beforeEachRoute](#beforeeachroute)
 * [afterEachRoute](#aftereachroute)
 * [routes](#routes)
@@ -90,31 +89,6 @@ export default {
     }
 }
 ```
-
-### bootComponent
-
-If you want to display a **Splash** or **Loading** screen while the Router is booting (and *before* the actual routing process kicks in), you can specify a Lightning Component in the `bootComponent` key of the configuration object.
-
-The component is not only displayed when you open the root of your App, but also when you open a [deeplinked](deeplinking.md) location in the App.
-
-```js
-import { Splash } from './pages',
-
-export default {
-    boot: () => {
-        return new Promise(resolve => {
-            Api.getToken().then(() => {
-                resolve();
-            })
-        })
-    },
-    bootComponent: Splash,
-    routes:[...]
-}
-```
-
-> Since the `boot` component might show an animation that takes some time to finish, the Router plugin does not hide
-the `boot` component automatically. Instead, you have to *explicitly* call `Router.resume()` in your `boot` component to give control back to the Router plugin.
 
 ### beforeEachRoute
 
@@ -367,10 +341,33 @@ It follows the same rules as the [global ](#beforeeachroute) hook `beforeEachRou
 
 ## Special Routes
 
-There are two *special* routes that can be configured in the `routes` Array, and are *not* added to the history stack. These special routes are:
+There are three *special* routes that can be configured in the `routes` Array, and are *not* added to the history stack. These special routes are:
 
+
+
+
+* [BootPage](#bootpage)
 * [NotFoundPage](#notfoundpage)
 * [ErrorPage](#errorpage)
+
+### BootPage
+
+If you want to display a **Splash** or **Loading** screen while the Router is booting (and *before* the actual routing process kicks in), you can specify a Lightning Component in the `bootComponent` key of the configuration object.
+
+The component is not only displayed when you open the root of your App, but also when you open a [deeplinked](deeplinking.md) location in the App.
+
+```js
+{
+    path: '$',
+    component: BootPage
+}
+```
+
+
+> Since the `BootPage` might show an animation that takes some time to finish, the Router plugin does not hide
+the `BootPage` automatically. Instead, you have to *explicitly* call `Router.resume()` in your `BootPage` to give control back to the Router plugin.
+
+
 
 ### NotFoundPage
 
@@ -379,7 +376,7 @@ The `*` path indicates which Page component must be displayed when an *unknown* 
 ```js
 {
     path: '*',
-    component: NotFoundPage,
+    component: NotFoundPage
 }
 ```
 
