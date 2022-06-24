@@ -147,27 +147,23 @@ export default class VideoTexture extends Lightning.Component {
 
   position(top, left) {
     this.videoView.patch({
-      smooth: {
-        x: left,
-        y: top,
-      },
+      x: left,
+      y: top,
     })
   }
 
   size(width, height) {
     this.videoView.patch({
-      smooth: {
-        w: width,
-        h: height,
-      },
+      w: width,
+      h: height,
     })
   }
 
   show() {
-    this.videoView.setSmooth('alpha', 1)
+    this.videoView.alpha = 1
   }
 
   hide() {
-    this.videoView.setSmooth('alpha', 0)
+    this.videoView.alpha = 0
   }
 }
