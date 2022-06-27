@@ -159,6 +159,10 @@ export default function(App, appData, platformSettings) {
             })
           }
 
+          Registry.addEventListener(document, 'visibilitychange', () => {
+            document.visibilityState === 'visible' && this._refocus()
+          })
+
           super._setup()
         })
         .catch(console.error)
