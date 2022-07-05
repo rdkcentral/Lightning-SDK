@@ -248,7 +248,7 @@ const videoPlayerPlugin = {
               this.play()
             })
             .catch(e => {
-              fireOnConsumer('error', { videoElement: videoEl, event: e })
+              fireOnConsumer('Error', { videoElement: videoEl, event: e })
             })
         })
       })
@@ -292,7 +292,7 @@ const videoPlayerPlugin = {
     if (!this.canInteract) return
     if (textureMode === true) videoTexture.start()
     executeAsPromise(videoEl.play, null, videoEl).catch(e => {
-      fireOnConsumer('error', { videoElement: videoEl, event: e })
+      fireOnConsumer('Error', { videoElement: videoEl, event: e })
     })
   },
 
