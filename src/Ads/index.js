@@ -18,7 +18,7 @@
  */
 
 import Log from '../Log'
-import { mediaUrl } from '../VideoPlayer'
+import { mediaUrl } from 'metro-sdk'
 
 let consumer
 
