@@ -160,7 +160,10 @@ export default function(App, appData, platformSettings) {
           }
 
           Registry.addEventListener(document, 'visibilitychange', () => {
-            document.visibilityState === 'visible' && this._refocus()
+            if (document.visibilityState === 'visible') {
+              this.core.setHasRenderUpdates(2)
+              this.stage.drawFrame()
+            }
           })
 
           super._setup()
