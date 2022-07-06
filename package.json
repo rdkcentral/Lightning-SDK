@@ -29,7 +29,7 @@
     "shelljs": "^0.8.5",
     "url-polyfill": "^1.1.10",
     "whatwg-fetch": "^3.0.0",
-    "metro-sdk": "github:sandeep-vedam/sample-sdkm.git"
+    "metro-sdk": "git@github.com:michielvandergeest/metro-sdk.git"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
