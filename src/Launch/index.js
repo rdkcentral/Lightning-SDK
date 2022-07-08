@@ -20,7 +20,7 @@
 import { initUtils } from '../Utils'
 import { initProfile } from 'metro-sdk'
 import { initMetrics } from 'metro-sdk'
-import { initSdkPlugin } from 'metro-sdk'
+import { initLightningSdkPlugin } from 'metro-sdk'
 import { initSettings } from '../Settings'
 import { initMediaPlayer } from '../MediaPlayer'
 import { initVideoPlayer } from 'metro-sdk'
@@ -57,6 +57,6 @@ export default (App, appSettings, platformSettings, appData) => {
   }
   const app = Application(App, appData, platformSettings)
   ApplicationInstance = new app(appSettings)
-  initSdkPlugin(ApplicationInstance, Log, Settings, Ads)
+  initLightningSdkPlugin(ApplicationInstance, Log, Settings, Ads)
   return ApplicationInstance
 }
