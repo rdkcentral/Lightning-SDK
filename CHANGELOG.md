@@ -1,5 +1,16 @@
 # Changelog
 
+## v4.9.0
+
+*11 jul 2022*
+
+- Added base 64 image support for Image plugin
+- Fixed bug in Image plugin as Img cover stretches image
+- Fixed named route property not being accessed properly
+- Fixed typo in videoplayer documentation
+- Added/Updated Router available methods
+
+
 ## v4.8.3
 
 *19 apr 2022*

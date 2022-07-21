@@ -197,6 +197,22 @@ Router.resume()
 
 > See [Router Configuration](configuration.md#bootcomponent) for more information.
 
+### reload
+
+```js
+Router.reload()
+```
+
+Force reload the current hash
+
+### root
+
+```js
+Router.root()
+```
+
+Force the `Router` to navigate to the configured `root`
+
 ### startRouter
 
 ```js
