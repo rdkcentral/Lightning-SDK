@@ -2,6 +2,7 @@
   "name": "@lightningjs/sdk",
   "version": "5.0.1",
   "license": "Apache-2.0",
+  "types": "index.d.ts",
   "scripts": {
     "postinstall": "node ./scripts/postinstall.js",
     "lint": "eslint '**/*.js'",
