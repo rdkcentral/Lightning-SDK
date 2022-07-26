@@ -6,7 +6,7 @@
     "lib": ["ES2018", "DOM"],
     "outDir": "types",
     "sourceMap": true,
-    "module": "Node16",
+    "module": "CommonJS",
     "target": "ES2020",
     "moduleResolution": "node",
     "allowJs": true,

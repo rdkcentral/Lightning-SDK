@@ -6,7 +6,9 @@
   "scripts": {
     "postinstall": "node ./scripts/postinstall.js",
     "lint": "eslint '**/*.js'",
-    "release": "npm publish --access public"
+    "release": "npm publish --access public",
+    "typedoc": "typedoc --tsconfig tsconfig.typedoc.json",
+    "tsd": "tsd"
   },
   "lint-staged": {
     "*.js": [
@@ -45,7 +47,9 @@
     "lint-staged": "^10.4.0",
     "prettier": "^1.19.1",
     "rollup": "^1.32.1",
-    "rollup-plugin-babel": "^4.4.0"
+    "rollup-plugin-babel": "^4.4.0",
+    "tsd": "^0.22.0",
+    "typedoc": "^0.23.9"
   },
   "repository": {
     "type": "git",
