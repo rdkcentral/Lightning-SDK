@@ -1,9 +1,9 @@
 import { expectType, expectAssignable, expectNotAssignable, expectDeprecated, expectNotDeprecated } from 'tsd';
 import { Router, Lightning } from '../../index.js'
 
-function Router_RouteConfig_Tests() {
+function Router_Config_Tests() {
   /// Basic
-  expectAssignable<Router.RouteConfig>({
+  expectAssignable<Router.Config>({
     root: 'splash',
     routes: [
       {
@@ -16,22 +16,22 @@ function Router_RouteConfig_Tests() {
   });
 
   /// `root` and `routes` are required!
-  expectNotAssignable<Router.RouteConfig>({
+  expectNotAssignable<Router.Config>({
     root: 'splash',
   });
-  expectNotAssignable<Router.RouteConfig>({
+  expectNotAssignable<Router.Config>({
     routes: [],
   });
 
   /// `root` and `routes` type sanity check
-  expectNotAssignable<Router.RouteConfig>({
+  expectNotAssignable<Router.Config>({
     root: 123, // Must be a string!
     routes: [
       {} as Router.RouteDefinition
     ]
   });
 
-  expectNotAssignable<Router.RouteConfig>({
+  expectNotAssignable<Router.Config>({
     root: 'abc',
     routes: [
       {} // Must be RouteDefinition!
@@ -39,7 +39,7 @@ function Router_RouteConfig_Tests() {
   });
 
   /// `boot` and `root` as promise returning callbacks
-  expectAssignable<Router.RouteConfig>({
+  expectAssignable<Router.Config>({
     root: () => {
       return Promise.resolve('splash')
     },
@@ -52,21 +52,21 @@ function Router_RouteConfig_Tests() {
   });
 
   /// Supports custom `appInstance` any component
-  expectAssignable<Router.RouteConfig>({
+  expectAssignable<Router.Config>({
     root: 'splash',
     routes: [],
     appInstance: {} as Lightning.Component
   });
 
   /// `updateHash`
-  expectAssignable<Router.RouteConfig>({
+  expectAssignable<Router.Config>({
     root: 'splash',
     routes: [],
     updateHash: false
   });
 
   /// `beforeEachRoute`
-  expectAssignable<Router.RouteConfig>({
+  expectAssignable<Router.Config>({
     root: 'splash',
     routes: [],
     beforeEachRoute: async (from, to) => {
@@ -77,7 +77,7 @@ function Router_RouteConfig_Tests() {
   });
 
   /// `afterEachRoute`
-  expectAssignable<Router.RouteConfig>({
+  expectAssignable<Router.Config>({
     root: 'splash',
     routes: [],
     afterEachRoute: (request) => {
@@ -87,12 +87,12 @@ function Router_RouteConfig_Tests() {
   });
 
   /// `bootComponent` deprecated
-  const routeConfig = {} as Router.RouteConfig;
+  const routeConfig = {} as Router.Config;
   expectDeprecated(routeConfig.bootComponent);
 }
 
 function Router_startRouter_Tests() {
-  const routeConfig = {} as Router.RouteConfig;
+  const routeConfig = {} as Router.Config;
   /// Supports just passing a `config`
   expectType<void>(Router.startRouter(routeConfig));
   // @ts-expect-error `config` can't be a number

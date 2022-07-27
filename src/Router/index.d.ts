@@ -16,13 +16,121 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Lightning } from "../../index.js";
+import { Lightning, PlatformSettings } from "../../index.js";
 import { RoutedApp } from "./base";
+
+/**
+ * TODO: Type this
+ */
+type Request = any;
+
+
+export interface RouterPlatformSettings {
+  /**
+   * If set to `true`, pages are not created until you actually navigate to a route.
+   *
+   * @remarks
+   * See [Router Settings](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/settings?id=router-settings)
+   * for more information.
+   *
+   * @defaultValue `false`
+   */
+  lazyCreate?: boolean;
+
+  /**
+   * If set to `true`, pages from which you navigate are removed from the [Render Tree](https://lightningjs.io/docs/#/lightning-core-reference/RenderEngine/RenderTree)
+   * (and thus from memory).
+   *
+   * @remarks
+   * See [Router Settings](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/settings?id=router-settings)
+   * for more information.
+   *
+   * @defaultValue `false`
+   */
+  lazyDestroy?: boolean;
+
+  /**
+   * If set to `true`, forces a texture garbage collect directly after destroying the page.
+   *
+   * @remarks
+   * See [Router Settings](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/settings?id=router-settings)
+   * for more information.
+   *
+   * @defaultValue `false`
+   */
+  gcOnUnload?: boolean;
+
+  /**
+   * If set to `true`, when the Back key is pressed on a deeplinked route, the Router will recursively remove the last part
+   * of the hash, until it finds a valid path to navigate to.
+   *
+   * @remarks
+   * See [Router Settings](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/settings?id=router-settings)
+   * and [Deeplinking - Backtracking](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/deeplinking?id=backtracking)
+   * for more information.
+   *
+   * @defaultValue `false`
+   */
+  backtracking?: boolean;
+
+  /**
+   * If set to `true` (default), a navigation to a hash with the same route blueprint as the current hash will cause the
+   * current Page to be reused. Set to `false` to force a new Page to be created in this case.
+   *
+   * @remarks
+   * This can also be set locally on individual Routes {@link RouteOptions.reuseInstance}.
+
+   *
+   * See [Router Settings](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/settings?id=router-settings)
+   * for more information.
+   *
+   * @defaultValue `true`
+   */
+  reuseInstance?: boolean;
+
+  /**
+   * If set to `true` and {@link lazyDestroy} is set to `false`, a Page will only be removed from memory
+   * after doing a step Back in history.
+   *
+   * @remarks
+   * See [Router Settings](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/settings?id=router-settings)
+   * and [Router History](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/history?id=back)
+   * for more information.
+   *
+   * @defaultValue `false`
+   */
+  destroyOnHistoryBack?: boolean;
+
+  /**
+   * If you do not want the Router to update the hash on a navigate, you can set this to `false`.
+   *
+   * @remarks
+   * See [Router Settings](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/settings?id=router-settings)
+   * for more information.
+   *
+   * @defaultValue `true`
+   */
+  updateHash?: boolean;
+
+  /**
+   * If set to `true` (default), causes an unhandled key that is encountered while a Widget is in focus
+   * to automatically drop focus back to the underlying Page. Set this to `false` to disable this behavior.
+   *
+   * @remarks
+   * > The Router used to delegate focus back to the page instance on
+   * > every unhandled key. This is barely useful in any situation
+   * > so for now we offer the option to explicity turn that behaviour off
+   * > so we don't don't introduce a breaking change.
+   *
+   * @defaultValue `true`
+   */
+  autoRestoreRemote?: boolean;
+}
 
 /**
  * Router config
  */
-interface RouteConfig {
+interface Config {
   /**
    * The root key indicates which route path must be used as entry point of your App if no location hash is
    * specified in the URL.
@@ -69,16 +177,19 @@ interface RouteConfig {
    * Global hook that is invoked right after starting a navigate to a route.
    *
    * @remarks
-   * Based on the `from` and `to` parameters that are passed by the Router to the hook, you can decide
+   * Based on the `fromHash` and `toRequest` parameters that are passed by the Router to the hook, you can decide
    * to continue, stop or redirect the navigate.
    *
    * The hook must return a `Promise<boolean>`. If it resolves to `true`, the Router continues the process. If it
-   * resolves to false, the process is aborted.
+   * resolves to `false`, the process is aborted.
    *
    * See [Router Configuration - beforeEachRoute](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/configuration?id=beforeeachroute)
    * for more information.
+   *
+   * @param fromHash Hash navigating from
+   * @param toRequest Request navigating to
    */
-  beforeEachRoute?: ((from: string, to: string) => Promise<boolean>);
+  beforeEachRoute?(fromHash: string, toRequest: Request): Promise<boolean>;
 
   /**
    * Global hook that will be called after every succesful `navigate()` request.
@@ -89,7 +200,7 @@ interface RouteConfig {
    * See [Router Configuration - afterEachRoute](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/configuration?id=aftereachroute)
    * for more information.
    */
-  afterEachRoute?: ((request: any) => void); // TODO: Type request !!!
+  afterEachRoute?(request: Request): void;
 
   /**
    * @deprecated
@@ -190,6 +301,42 @@ interface NamedNavigationPath {
    * The hash `"#guide?filter=sports&sort=rating"` will be navigated to.
    */
   query?: Record<string, string | number | boolean>;
+}
+
+/**
+ * Route Options
+ *
+ * @remarks
+ * See [Route Options](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/configuration?id=route-options)
+ * for more information.
+ */
+interface RouteOptions {
+  /**
+   * Indicates whether or not to prevent the route from storage in history.
+   *
+   * @defaultValue `false`
+   */
+  preventStorage?: boolean;
+
+  /**
+   * Indicates whether or not to reset the history of a route when that route is visited.
+   *
+   * @defaultValue `false`
+   */
+  clearHistory?: boolean;
+
+  /**
+   * Indicates whether or not to reuse the current Page instance.
+   *
+   * @remarks
+   * This is the local version of the global platform setting {@link RouterPlatformSettings.reuseInstance}.
+   *
+   * See [Route Options - reuseInstance](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/configuration?id=reuseinstance)
+   * for more information.
+   *
+   * @defaultValue `true`
+   */
+  reuseInstance?: boolean;
 }
 
 interface RouteDefinition<Constructor extends Router.PageConstructor = Router.PageConstructor> {
@@ -295,6 +442,33 @@ interface RouteDefinition<Constructor extends Router.PageConstructor = Router.Pa
    * for more information.
    */
   widgets?: Array<keyof Router.WidgetContainer>;
+
+  /**
+   * Route Options
+   *
+   * @remarks
+   * See [Route Options](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/configuration?id=route-options)
+   * for more information.
+   */
+  options?: RouteOptions
+
+  /**
+   * Local hook that you can specify for this specific route, and is invoked right before the
+   * Router navigates to that route. It follows the same rules as the global hook
+   * {@link Router.Config.beforeEachRoute}.
+   *
+   * @param fromHash Hash navigating from
+   * @param toRequest Request navigating to
+   */
+  beforeNavigate?(fromHash: string, toRequest: Request): Promise<boolean>;
+
+  /**
+   * Local hook executed when the specific route is navigated to.
+   *
+   * @remarks
+   * This is called after the {@link beforeNavigate} hook, if its specified.
+   */
+  hook?(app: Router.App, params: Record<string, string | undefined>): void;
 }
 
 /**
@@ -443,8 +617,6 @@ declare module '../../index.js' {
        *
        * Added by [Lightning SDK Router](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/index)
        *
-       * disableTransitions !!! ???
-       *
        * @param pageIn Page being transitioned in
        * @param pageOut Page being transitioned out (may be null)
        */
@@ -582,7 +754,7 @@ declare namespace Router {
    * @param config
    * @param instance
    */
-  export function startRouter(config: RouteConfig, instance?: Lightning.Component): void;
+  export function startRouter(config: Config, instance?: Lightning.Component): void;
 
   export { navigate };
 
@@ -767,13 +939,14 @@ declare namespace Router {
   // Types
   //
   export {
-    RouteConfig,
+    Config,
     NavigateArgs,
     NamedNavigationPath,
+    RouteOptions,
     RouteDefinition,
     PageParams,
     QueryParams,
-    PageTransition
+    PageTransition,
   }
 
   /**

@@ -1,3 +1,5 @@
+import { RouterPlatformSettings } from './src/Router/index.js';
+
 /*
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
@@ -51,8 +53,15 @@ export interface PlatformSettings {
     metrics?: any;
     mediaPlayer?: any;
     ads?: any;
-    router?: any;
-    tv?: any
+    /**
+     * Router settings
+     *
+     * @remarks
+     * See [Router Settings](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/settings?id=router-settings)
+     * for more information.
+     */
+    router?: RouterPlatformSettings;
+    tv?: any;
     purchase?: any;
     pin?: any;
   };
