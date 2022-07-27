@@ -125,7 +125,7 @@ function Router_RouteDefinition_Tests() {
     component: Lightning.components.ListComponent as any
   });
 
-  /// Can assign on
+  /// Can assign `on`
   expectAssignable<Router.RouteDefinition>({
     path: 'myPath/:param1/:param2',
     component: MyPage,
@@ -135,6 +135,44 @@ function Router_RouteDefinition_Tests() {
       expectType<string | undefined>(param1);
       expectType<string | undefined>(param2);
     }
+  });
+
+  /// Can assign `before`
+  expectAssignable<Router.RouteDefinition>({
+    path: 'myPath/:param1/:param2',
+    component: MyPage,
+    async before(page, { param1, param2 }) {
+      expectType<Router.PageInstance>(page);
+      expectAssignable<MyPage>(page);
+      expectType<string | undefined>(param1);
+      expectType<string | undefined>(param2);
+    }
+  });
+
+  /// Can assign `after`
+  expectAssignable<Router.RouteDefinition>({
+    path: 'myPath/:param1/:param2',
+    component: MyPage,
+    async after(page, { param1, param2 }) {
+      expectType<Router.PageInstance>(page);
+      expectAssignable<MyPage>(page);
+      expectType<string | undefined>(param1);
+      expectType<string | undefined>(param2);
+    }
+  });
+
+  /// Can assign `cache`
+  expectAssignable<Router.RouteDefinition>({
+    path: 'myPath/:param1/:param2',
+    component: MyPage,
+    cache: 1000
+  });
+
+  /// Can assign `widgets`
+  expectAssignable<Router.RouteDefinition>({
+    path: 'myPath/:param1/:param2',
+    component: MyPage,
+    widgets: ['anotherwidget', 'myclockwidget', 'mymenuwidget', 'mywidget']
   });
 }
 
@@ -379,6 +417,23 @@ function Router_setHistory_Tests() {
   Router.setHistory();
   // @ts-expect-error
   Router.setHistory([], 'abc');
+}
+
+function Router_HistoryState_Tests() {
+  type HistState = {
+    myParam1: number,
+    myParam2: string
+  };
+  interface CustomTypeConfig extends Lightning.Component.TypeConfig {
+    HistoryStateType: HistState
+  }
+
+  /// Should be typed as `Record<string, unknown> | null | undefined` if no params are passed to it
+  expectType<Record<string, unknown> | null | undefined>({} as Router.HistoryState);
+  /// Should extract the `HistoryStateType` if a TypeConfig is passed
+  expectType<HistState | null | undefined>({} as Router.HistoryState<CustomTypeConfig>);
+  /// Otherwise, it should just pass through any other object type passed in
+  expectType<HistState | null | undefined>({} as Router.HistoryState<HistState>);
 }
 
 function Router_getHistoryState_Tests() {

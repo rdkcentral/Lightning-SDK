@@ -214,36 +214,85 @@ interface RouteDefinition<Constructor extends Router.PageConstructor = Router.Pa
   component: Constructor | (() => Promise<{ default: Constructor }>);
 
   /**
-   * ???
+   * "on" data provider callback
    *
-   * @param page
-   * @param params
+   * @remarks
+   * When implemented for a route and that route is navigated to the Router...
+   * 1. Hides the current page (and destroys it to free up memory, if so configured)
+   * 2. Sets the application component to the `"Loading"` state
+   * 3. Calls the data provider callback and waits for it to resolve
+   * 4. Shows the new Page attached to the route
+   *
+   * Note: This cannot be combined with the other data provider callbacks: {@link before}, {@link after}
+   *
+   * See [Data Providing - on](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/dataproviding?id=on)
+   * for more information.
+   *
+   * @param page Instance of the route's defined Page
+   * @param params Navigated page params
    */
   on?(page: InstanceType<Constructor>, params: PageParams): Promise<void>;
 
   /**
-   * ???
+   * "before" data provider callback
    *
-   * @param page
-   * @param params
+   * @remarks
+   * When implemented for a route and that route is navigated to the Router...
+   * 1. Calls the data provider callback
+   * 2. Keeps the current page visible
+   * 3. Waits for the callback to resolve
+   * 4. Shows the new Page attached to the route (and destroys the previous one to free up memory, if so configured)
+   *
+   * Note: This cannot be combined with the other data provider callbacks: {@link on}, {@link after}
+   *
+   * See [Data Providing - before](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/dataproviding?id=before)
+   * for more information.
+   *
+   * @param page Instance of the route's defined Page
+   * @param params Navigated page params
    */
   before?(page: InstanceType<Constructor>, params: PageParams): Promise<void>;
 
   /**
-   * ???
+   * "after" data provider callback
    *
-   * @param page
-   * @param params
+   * @remarks
+   * When implemented for a route and that route is navigated to the Router...
+   * 1. Calls the data provider callback
+   * 2. Keeps the current page visible
+   * 3. Waits for the callback to resolve
+   * 4. Shows the new Page attached to the route (and destroys the previous one to free up memory, if so configured)
+   *
+   * Note: This cannot be combined with the other data provider callbacks: {@link on}, {@link before}
+   *
+   * See [Data Providing - after](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/dataproviding?id=before)
+   * for more information.
+   *
+   * @param page Instance of the route's defined Page
+   * @param params Navigated page params
    */
   after?(page: InstanceType<Constructor>, params: PageParams): Promise<void>;
 
   /**
-   * ???
+   * Number of millseconds that provided data stays valid when the same Page is visited more than once.
+   *
+   * @remarks
+   * If the same route is hit within the specified cache time, the page is loaded with the cached data.
+   * Otherwise, a new request will be made.
+   *
+   * Note: This only applies if the page still exists in memory.
+   *
+   * See [Data Providing](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/dataproviding?id=data-providing)
+   * for more information.
    */
   cache?: number;
 
   /**
-   * ???
+   * An array of lower-cased widget refs that should appear when this route is navigated to.
+   *
+   * @remarks
+   * See [Router Widgets - Activating Widgets](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/widgets?id=activating-widgets)
+   * for more information.
    */
   widgets?: Array<keyof Router.WidgetContainer>;
 }
@@ -291,27 +340,52 @@ export function initRouter(config: {
   setHash?(hash: string): void
 }): void;
 
+type PageTransition = 'left' | 'right' | 'up' | 'down' | 'fade' | 'crossFade';
+
 /**
- * Augment Lightning to include `widgets` on all components
+ * Augment Lightning to add SDK specific things
  */
 declare module '../../index.js' {
   namespace Lightning {
     namespace Component {
       interface TypeConfig {
+        /**
+         * Set to `true` to mark the Component as a Lightning SDK Router Page
+         *
+         * @remarks
+         * Added by [Lightning SDK Router](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/index)
+         */
         IsPage: boolean;
+        /**
+         * Set to customize the type used to store History State for the Page (Lightning SDK Router Pages only)
+         *
+         * @remarks
+         * Note: This should only be set if {@link IsPage} is set to `true` for a Component.
+         *
+         * See [Router History - historyState](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/history?id=historystate)
+         * for more information.
+         *
+         * Added by [Lightning SDK Router](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/index)
+         */
+        HistoryStateType: Record<string, unknown>;
       }
     }
-
     interface Component<
       TemplateSpecType,
       TypeConfig
     > {
       /**
-       * Lightning SDK Router Widgets
+       * Lightning SDK Router Widgets (Lightning SDK Router Pages only)
        *
        * @remarks
        * Note: This structure is only available on Lightning SDK Router Pages.
        *
+       * See [Router Widgets - Interaction](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/widgets?id=interaction)
+       * for more information.
+       *
+       * Added by [Lightning SDK Router](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/index)
+       *
+       * @example
        * To declare a Lightning Component as a Router Page, you must set `IsPage` to `true` in the Component's
        * `TypeConfig`:
        *
@@ -326,22 +400,173 @@ declare module '../../index.js' {
        *   }
        * }
        * ```
-       *
-       * See [Router Widgets](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/widgets?id=handling-focus)
-       * for more information.
        */
-      widgets: [TypeConfig['IsPage']] extends [true] ? Router.WidgetContainer : undefined;
+      widgets: [TypeConfig['IsPage']] extends [true] ? Router.WidgetContainer : unknown;
 
       /**
-       * Overridable history state push/pop method
+       * Page Params (Lightning SDK Router Pages only)
        *
        * @remarks
+       * The same parameters passed to {@link _onUrlParams} but made available on the page.
+       *
+       * Added by [Lightning SDK Router](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/index)
+       */
+      params: [TypeConfig['IsPage']] extends [true] ? Router.PageParams | undefined : unknown;
+
+      /**
+       * Overridable method used to control how this Page transitions (Lightning SDK Router Pages only)
+       *
+       * @remarks
+       * - If this method returns a default {@link PageTransition} string value, that default transition behavior will be
+       *   used:
+       *   - `"left"`
+       *     - Put the new page on x:1920 and perform a transition to x:0. For the old page, perform a transition
+       *       to x:-1920.
+       *   - `"right"`
+       *     - Put the new page on x:-1920 and perform a transition to x:0. For the old page, perform a transition
+       *       to x:1920.
+       *   - `"up"`
+       *     - Put the new page on y:1080 and perform a transition to y:0. For the old page, perform a transition
+       *       to y:-1080.
+       *   - `"down"`
+       *     - Put the new page on y:-1080 and perform a transition to y:0. For the old page, perform a transition
+       *       to y:1080.
+       *   - `"fade"`
+       *     - For the new page, perform a transition from alpha:0 to alpha:1.
+       *   - `"crossFade"`
+       *     - For the new page, perform a transition from alpha:0 to alpha:1. For the old page, perform a transition from alpha:1 to alpha:0.
+       * - If this method returns `Promise<void>`:
+       *   - Executes a [Custom Page Transition](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/pagetransitions?id=custom-page-transitions)
+       *
+       * See [Page Transitions](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/pagetransitions)
+       * for more information
+       *
+       * Added by [Lightning SDK Router](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/index)
+       *
+       * disableTransitions !!! ???
+       *
+       * @param pageIn Page being transitioned in
+       * @param pageOut Page being transitioned out (may be null)
+       */
+      pageTransition?(pageIn: Router.PageInstance, pageOut: Router.PageInstance | null): PageTransition | Promise<void>;
+
+      /**
+       * Overridable history state push/pop method (Lightning SDK Router Pages only)
+       *
+       * @remarks
+       * Note: This method is only called if the Component is a Lightning SDK Router Page.
+       *
        * See [Router History - historyState](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/history?id=historystate)
        * for more information.
        *
+       * Added by [Lightning SDK Router](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/index)
+       *
+       * @example
+       * ```ts
+       * interface MyPageTypeConfig extends Lightning.Component.TypeConfig {
+       *   IsPage: true;
+       *   HistoryStateType: {
+       *     listIndex: number
+       *   }
+       * }
+       *
+       * class MyRouterClass extends Lightning.Component<MyPageTemplateSpec, MyPageTypeConfig> {
+       *   // ...
+       *   override historyState(params: Router.HistoryState<MyPageTypeConfig>): Router.HistoryState<MyPageTypeConfig> {
+       *     if (params) {
+       *       this.selectedList.index = params.listIndex;
+       *       this.selectedList.resetConfigIndex();
+       *     } else {
+       *       const list: InstanceType<ListBaseConstructor> | undefined = this.List.children[this._index] as InstanceType<ListBaseConstructor> | undefined;
+       *       if (list) {
+       *         return {listIndex: list.index}
+       *       }
+       *     }
+       *   }
+       * }
+       * ```
+       *
        * @param params If `params` are provided, this is a "pop" operation. Otherwise, it's a "push"
        */
-      historyState?(params?: Router.HistoryState | null): Router.HistoryState | null | undefined
+      historyState?(params: Router.HistoryState<TypeConfig>): Router.HistoryState<TypeConfig>;
+
+      /**
+       * Implementable Page `dataProvided` event handler (Lightning SDK Router Pages only)
+       *
+       * @remarks
+       * If you use [Data Providing](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/dataproviding?id=on-data-provided),
+       * this callback on, before or after data providing callback has resolved.
+       *
+       * Note: This method is only called if the Component is a Lightning SDK Router Page.
+       *
+       * See [Router Events](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/events?id=router-events)
+       * for more information.
+       *
+       * Added by [Lightning SDK Router](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/index)
+       */
+      _onDataProvided?(): void;
+
+      /**
+       * Implementable Page `mounted` event handler (Lightning SDK Router Pages only)
+       *
+       * @remarks
+       * Invoked when the Router creates and mounts a new Page component.
+       *
+       * Note: This method is only called if the Component is a Lightning SDK Router Page.
+       *
+       * See [Router Events](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/events?id=router-events)
+       * for more information.
+       *
+       * Added by [Lightning SDK Router](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/index)
+       */
+      _onMounted?(): void;
+
+      /**
+       * Implementable Page `changed` event handler (Lightning SDK Router Pages only)
+       *
+       * @remarks
+       * Invoked when an existing Page instance is reused in navigation.
+       *
+       * Note: This method is only called if the Component is a Lightning SDK Router Page.
+       *
+       * See [Router Events](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/events?id=router-events)
+       * for more information.
+       *
+       * Added by [Lightning SDK Router](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/index)
+       */
+      _onChanged?(): void;
+
+      /**
+       * Implementable Page `urlParams` event handler (Lightning SDK Router Pages only)
+       *
+       * @remarks
+       * Invoked when a Page receives new URL params. This will always execute before {@link _onDataProvided}.
+       *
+       * Note: This method is only called if the Component is a Lightning SDK Router Page.
+       *
+       * See [Router Events](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/events?id=router-events)
+       * for more information.
+       *
+       * Added by [Lightning SDK Router](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/index)
+       */
+      _onUrlParams?(params: Router.PageParams): void;
+
+      /**
+       * Implementable Widget `activated` event handler (Lightning SDK Router Widgets only)
+       *
+       * @remarks
+       * Invoked when the Router changes the visibility of this Widget to true.
+       *
+       * Note: This method is only called if the Component is a Lightning SDK Router Widget.
+       *
+       * See [Router Events - _onActivated](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/events?id=_onactivatedpage)
+       * for more information.
+       *
+       * Added by [Lightning SDK Router](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/index)
+       *
+       * @param page Instance of Page that activated this widget
+       */
+      _onActivated?(page: Router.PageInstance): void;
     }
   }
 }
@@ -470,7 +695,7 @@ declare namespace Router {
    *
    * @param hash Hash of history state to return. If not provided, the last history state object on the stack is returned.
    */
-  export function getHistoryState(hash?: string): HistoryState | null;
+  export function getHistoryState<CustomType extends object = Record<string, unknown>>(hash?: string): HistoryState<CustomType>;
 
   /**
    * Replaces the history state object of the last entry that was added to history. (if `hash` isn't provided)
@@ -484,7 +709,7 @@ declare namespace Router {
    * @param state State object to replace (Default: `null`)
    * @param hash Optional hash
    */
-  export function replaceHistoryState(state?: HistoryState | null, hash?: string): void;
+  export function replaceHistoryState(state?: HistoryState, hash?: string): void;
 
   /**
    * Returns an object with the current query parameters specified
@@ -547,7 +772,8 @@ declare namespace Router {
     NamedNavigationPath,
     RouteDefinition,
     PageParams,
-    QueryParams
+    QueryParams,
+    PageTransition
   }
 
   /**
@@ -557,7 +783,7 @@ declare namespace Router {
    * This interface is augmentable. Your application may add to it in order to
    * facilitate additional type safety in your code.
    *
-   * The keys are the PascalCase widget names. The values are the widget Component instance types.
+   * The keys are the PascalCase widget refs. The values are the widget Component instance types.
    *
    * Augmenting this will give the Router's widget APIs auto-complete and error checking.
    *
@@ -636,13 +862,20 @@ declare namespace Router {
   export type PageConstructor<T extends PageInstance = PageInstance> = new (...args: any[]) => T;
 
   /**
-   * History state object
+   * History state (including null/undefined types)
+   *
+   * @remarks
+   * If passed a Component TypeConfig, then the HistoryStateType will be pulled from it.
+   * Otherwise, the type passed to it is used directly as the history state type.
    *
    * @sealed
    */
-  export interface HistoryState extends Record<string, unknown> {
-    // Not to be augmented
-  }
+  export type HistoryState<CustomType extends object = Record<string, unknown>> =
+    [CustomType] extends [Lightning.Component.TypeConfig]
+      ?
+        CustomType['HistoryStateType'] | null | undefined
+      :
+        CustomType | null | undefined;
 }
 
 export default Router;
