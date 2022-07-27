@@ -16,14 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Lightning, PlatformSettings } from "../../index.js";
+import { Lightning } from "../../index.js";
 import { RoutedApp } from "./base";
-
-/**
- * TODO: Type this
- */
-type Request = any;
-
+import Request from "./model/Request";
 
 export interface RouterPlatformSettings {
   /**
@@ -481,7 +476,7 @@ type LowercaseString<PossibleString> =
     :
       PossibleString;
 
-export let navigateQueue: Map<string, any /*Request*/>;
+export let navigateQueue: Map<string, Request>;
 
 /**
  * Navigate to Page (adding page to history stack)
@@ -743,6 +738,11 @@ declare module '../../index.js' {
   }
 }
 
+interface HistoryEntry {
+  hash: string;
+  state: Router.HistoryState;
+}
+
 declare namespace Router {
   /**
    * Start the Router
@@ -838,11 +838,8 @@ declare namespace Router {
    * @remarks
    * See [Router History](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/history?id=router-history)
    * for more information.
-   *
-   * @privateRemarks
-   * TODO: Type the "history object"
    */
-  export function getHistory(): any;
+  export function getHistory(): HistoryEntry[];
 
   /**
    * Replaces the Router's current history stack with a new one
@@ -851,12 +848,9 @@ declare namespace Router {
    * See [Router History](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/history?id=router-history)
    * for more information.
    *
-   * @privateRemarks
-   * TODO: Type the "history object"
-   *
    * @param history
    */
-  export function setHistory(history: any[]): void;
+  export function setHistory(history: HistoryEntry[]): void;
 
   /**
    * Returns the history state object of a previous history stack entry
@@ -947,6 +941,7 @@ declare namespace Router {
     PageParams,
     QueryParams,
     PageTransition,
+    HistoryEntry
   }
 
   /**

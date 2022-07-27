@@ -1,5 +1,6 @@
 import { expectType, expectAssignable, expectNotAssignable, expectDeprecated, expectNotDeprecated } from 'tsd';
 import { Router, Lightning } from '../../index.js'
+import Request from '../../src/Router/model/Request.js';
 
 function Router_Config_Tests() {
   /// Basic
@@ -71,7 +72,7 @@ function Router_Config_Tests() {
     routes: [],
     beforeEachRoute: async (from, to) => {
       expectType<string>(from);
-      expectType<string>(to);
+      expectType<Request>(to);
       return true;
     }
   });
@@ -81,7 +82,7 @@ function Router_Config_Tests() {
     root: 'splash',
     routes: [],
     afterEachRoute: (request) => {
-      expectType<any>(request); // TODO: Type `request`
+      expectType<Request>(request);
       return true;
     }
   });
@@ -402,13 +403,13 @@ function Router_isNavigating_Tests() {
 }
 
 function Router_getHistory_Tests() {
-  /// Should return any (right now)
-  expectType<any>(Router.getHistory());
+  /// Should return an array of HistoryEntry[]
+  expectType<Router.HistoryEntry[]>(Router.getHistory());
 }
 
 function Router_setHistory_Tests() {
-  /// Should return void, accepts an array of any (right now)
-  expectType<void>(Router.setHistory([123, {}, 'abc']));
+  /// Should return void, accepts an array of history objects
+  expectType<void>(Router.setHistory([{ hash: '', state: {} }, { hash: '', state: {} }]));
 
   /// Should error if first param is not an array or if less than or more than one param is provided
   // @ts-expect-error
@@ -437,7 +438,7 @@ function Router_HistoryState_Tests() {
 }
 
 function Router_getHistoryState_Tests() {
-  /// Should return any (right now), and accept an optional `hash` string
+  /// Should return HistoryState | null, and accept an optional `hash` string
   expectType<Router.HistoryState | null>(Router.getHistoryState());
   expectType<Router.HistoryState | null>(Router.getHistoryState('abc'));
 
