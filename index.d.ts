@@ -94,5 +94,9 @@ export interface PlatformSettings {
      * for more information.
      */
     quality?: number
+    showFps?: boolean;
+    showVersion?: boolean;
+    log?: boolean;
+    path?: string;
   }
 }

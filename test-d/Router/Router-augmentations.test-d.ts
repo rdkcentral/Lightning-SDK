@@ -7,7 +7,7 @@ import { Lightning, Router } from "../../index.js";
 
 declare module '../../index.js' {
   namespace Router {
-    interface AppWidgets {
+    interface CustomWidgets {
       MyClockWidget: Lightning.components.BloomComponent
       MyMenuWidget: Lightning.components.ListComponent
     }

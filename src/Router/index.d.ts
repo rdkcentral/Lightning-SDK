@@ -960,7 +960,7 @@ declare namespace Router {
    * ```ts
    * declare module "@lightingjs/sdk" {
    *   namespace Router {
-   *     interface AppWidgets {
+   *     interface CustomWidgets {
    *       Menu: Menu;
    *       DetailsMenu: Menu;
    *       PeopleMenu: Menu;
@@ -968,33 +968,32 @@ declare namespace Router {
    *   }
    * }
    * ```
-   *
    */
-  export interface AppWidgets {
+  export interface CustomWidgets {
     // This interface is augmentable
   }
 
   /**
    * @hidden
    */
-  type IsAppWidgetsAugmented = {} extends AppWidgets ? false : true;
+  type IsCustomWidgetsAugmented = object extends Required<CustomWidgets> ? false : true;
 
   /**
    * @hidden
    */
-  type __Widgets = IsAppWidgetsAugmented extends true ? AppWidgets : { [s: string]: unknown };
+  type __Widgets = IsCustomWidgetsAugmented extends true ? CustomWidgets : { [s: string]: unknown };
 
   /**
    * Widgets structure
    *
    * @remarks
-   * If {@link AppWidgets} is not augmented, then this will be allowed to be keyed by any string with
+   * If {@link CustomWidgets} is not augmented, then this will be allowed to be keyed by any string with
    * any `unknown` value type.
    *
    * @sealed
    */
   export interface Widgets extends __Widgets {
-    // This interface is sealed. Augment `AppWidgets` if needed.
+    // This interface is sealed. Augment `CustomWidgets` if needed.
   }
 
   /**
@@ -1013,7 +1012,7 @@ declare namespace Router {
    * @sealed
    */
   export interface WidgetContainer extends LowercaseWidgets {
-    // This interface is sealed. Augment `AppWidgets` if needed.
+    // This interface is sealed. Augment `CustomWidgets` if needed.
   }
 
   /**

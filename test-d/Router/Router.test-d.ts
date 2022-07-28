@@ -351,7 +351,7 @@ function Router_getActiveHash_Tests() {
 
 declare module '../../index.js' {
   namespace Router {
-    interface AppWidgets {
+    interface CustomWidgets {
       MyWidget: Lightning.Component
       AnotherWidget: Lightning.Component
     }
@@ -359,7 +359,7 @@ declare module '../../index.js' {
 }
 
 function Router_focusWidget_Tests() {
-  /// Works with augmented `AppWidgets`
+  /// Works with augmented `CustomWidgets`
   expectType<void>(Router.focusWidget('MyWidget'));
   expectType<void>(Router.focusWidget('AnotherWidget'));
 
