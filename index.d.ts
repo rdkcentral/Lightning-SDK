@@ -1,5 +1,3 @@
-import { RouterPlatformSettings } from './src/Router/index.js';
-
 /*
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
@@ -18,8 +16,10 @@ import { RouterPlatformSettings } from './src/Router/index.js';
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { FontFaceDefinition } from './src/Application/index.js';
+import { RouterPlatformSettings } from './src/Router/index.js';
 export const Ads: any; // export { default as Ads } from './src/Ads'
-export type { AppData, FontFace } from './src/Application/index.js';
+export type { AppData, FontFaceDefinition } from './src/Application/index.js';
 export { default as Application } from './src/Application/index.js';
 export const AudioPlayer: any; // export { default as AudioPlayer } from './src/AudioPlayer'
 export const Colors: any; // export { default as Colors } from './src/Colors'
@@ -53,14 +53,7 @@ export interface PlatformSettings {
     metrics?: any;
     mediaPlayer?: any;
     ads?: any;
-    /**
-     * Router settings
-     *
-     * @remarks
-     * See [Router Settings](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/settings?id=router-settings)
-     * for more information.
-     */
-    router?: RouterPlatformSettings;
+    router?: any;
     tv?: any;
     purchase?: any;
     pin?: any;
@@ -69,15 +62,83 @@ export interface PlatformSettings {
    * The target ECMAScript environment for the App.
    */
   esEnv?: 'es5' | 'es6';
-  textureMode?: boolean;
   /**
-   * Indicates whether or not to initialize the Lightning Inspector
+   * If set to `true`, initializes the Lightning Inspector
    *
    * @remarks
    * The Lightning Inspector renders out a HTML structure inside the DOM to mimic the canvas.
+   *
+   * @defaultValue `false`
    */
   inspector?: boolean;
+
+  /**
+   * If set to `true`, shows a frames-per-second indicator on the top-left corner of the screen
+   *
+   * @defaultValue `false`
+   */
+  showFps?: boolean;
+  /**
+   * Custom font loader
+   *
+   * @param fontsToLoad
+   * @param store Add loaded [FontFace](https://developer.mozilla.org/en-US/docs/Web/API/FontFace) instances to this array
+   */
+  fontLoader?(fontsToLoad: FontFaceDefinition[], store: FontFace[]): void;
+  /**
+   * If set to `true`, shows the active versions of Lightning Core and SDK on the bottom-right corner of the screen
+   *
+   * @defaultValue `false`
+   */
+  showVersion?: boolean;
+
+  /**
+   * If set to `true`, enables console logging in the Log plugin
+   *
+   * @remarks
+   * See [Log](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/log)
+   * for more information.
+   *
+   */
+  log?: boolean;
+
   onClose?: any;
+
+  /**
+   * Indicates whether or not to render video as a texture on the active drawing
+   * canvas. Can also be set by adding a queryparam ?texture.
+   *
+   * @remarks
+   * Used by the [VideoPlayer](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/videoplayer?id=videoplayer)
+   * plugin.
+   *
+   * @defaultValue `false`
+   */
+  textureMode?: boolean;
+
+  /**
+   * Path to the folder where the assets of the App are located. The path
+   * is used by Utils.asset() to look up assets.
+   *
+   * @remarks
+   * See [Utils](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/utils?id=utils)
+   * for more information.
+   */
+  path?: string;
+  /**
+   * Router plugin settings
+   *
+   * @remarks
+   * See [Router Settings](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/settings?id=router-settings)
+   * for more information.
+   */
+  router?: RouterPlatformSettings;
+  /**
+   * Image plugin settings
+   *
+   * See [Image plugin](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/image?id=image)
+   * for more information.
+   */
   image?: {
     /**
      * Image plugin quality
@@ -94,9 +155,5 @@ export interface PlatformSettings {
      * for more information.
      */
     quality?: number
-    showFps?: boolean;
-    showVersion?: boolean;
-    log?: boolean;
-    path?: string;
   }
 }

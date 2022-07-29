@@ -43,10 +43,10 @@ export let AppData: AppData | undefined;
  *
  * @example
  * ```ts
- * import { Router, FontFace } from '@lightningjs/sdk';
+ * import { Router, FontFaceDefinition } from '@lightningjs/sdk';
  *
  * export default class App extends Router.App {
- *   static getFonts(): FontFace[] {
+ *   static getFonts(): FontFaceDefinition[] {
  *     return [
  *       {family: 'Light', url: Utils.asset('fonts/Inter-Light.ttf'), descriptors: {}},
  *       {family: 'Regular', url: Utils.asset('fonts/Inter-Regular.ttf'), descriptors: {}},
@@ -58,7 +58,7 @@ export let AppData: AppData | undefined;
  * }
  * ```
  */
-export interface FontFace {
+export interface FontFaceDefinition {
   /**
    * Font family
    */
