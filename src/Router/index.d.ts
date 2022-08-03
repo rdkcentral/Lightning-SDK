@@ -16,9 +16,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Lightning } from "../../index.js";
+import { Lightning, Utils } from "../../index.js";
 import { RoutedApp } from "./base";
 import Request from "./model/Request";
+import Route from "./model/Route.js";
 
 export interface RouterPlatformSettings {
   /**
@@ -365,7 +366,7 @@ interface RouteDefinition<Constructor extends Router.PageConstructor = Router.Pa
    * 3. Calls the data provider callback and waits for it to resolve
    * 4. Shows the new Page attached to the route
    *
-   * Note: This cannot be combined with the other data provider callbacks: {@link before}, {@link after}
+   * Note: This cannot be combined with the other data provider callbacks: {@link before}, {@link after}.
    *
    * See [Data Providing - on](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/dataproviding?id=on)
    * for more information.
@@ -385,7 +386,7 @@ interface RouteDefinition<Constructor extends Router.PageConstructor = Router.Pa
    * 3. Waits for the callback to resolve
    * 4. Shows the new Page attached to the route (and destroys the previous one to free up memory, if so configured)
    *
-   * Note: This cannot be combined with the other data provider callbacks: {@link on}, {@link after}
+   * Note: This cannot be combined with the other data provider callbacks: {@link on}, {@link after}.
    *
    * See [Data Providing - before](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/dataproviding?id=before)
    * for more information.
@@ -405,7 +406,7 @@ interface RouteDefinition<Constructor extends Router.PageConstructor = Router.Pa
    * 3. Waits for the callback to resolve
    * 4. Shows the new Page attached to the route (and destroys the previous one to free up memory, if so configured)
    *
-   * Note: This cannot be combined with the other data provider callbacks: {@link on}, {@link before}
+   * Note: This cannot be combined with the other data provider callbacks: {@link on}, {@link before}.
    *
    * See [Data Providing - after](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/dataproviding?id=before)
    * for more information.
@@ -734,6 +735,13 @@ declare module '../../index.js' {
        * @param page Instance of Page that activated this widget
        */
       _onActivated?(page: Router.PageInstance): void;
+
+      /**
+       * Hash of the page (if navigated)
+       */
+      [Router.symbols.hash]?: [TypeConfig['IsPage']] extends [true]  ? string : unknown;
+
+      [Router.symbols.route]?: [TypeConfig['IsPage']] extends [true] ? Route : unknown;
     }
   }
 }
@@ -961,9 +969,9 @@ declare namespace Router {
    * declare module "@lightingjs/sdk" {
    *   namespace Router {
    *     interface CustomWidgets {
-   *       Menu: Menu;
-   *       DetailsMenu: Menu;
-   *       PeopleMenu: Menu;
+   *       Menu: typeof Menu;
+   *       DetailsMenu: typeof Menu;
+   *       PeopleMenu: typeof Menu;
    *     }
    *   }
    * }
@@ -998,10 +1006,17 @@ declare namespace Router {
 
   /**
    * @privateRemarks
-   * Lower-cased key version of Widgets used for the WidgetContainer
+   * Lower-cased key instance version of Widgets used for the WidgetContainer
    * @hidden
    */
-  type LowercaseWidgets = { [Key in keyof Widgets as LowercaseString<Key>]: Widgets[Key] };
+  type __WidgetsContainer = {
+    [Key in keyof Widgets as LowercaseString<Key>]:
+      Widgets[Key] extends Lightning.Component.Constructor
+        ?
+          InstanceType<Widgets[Key]>
+        :
+          never;
+  };
 
   /**
    * Contains all the defined Widgets
@@ -1011,7 +1026,7 @@ declare namespace Router {
    *
    * @sealed
    */
-  export interface WidgetContainer extends LowercaseWidgets {
+  export interface WidgetContainer extends __WidgetsContainer {
     // This interface is sealed. Augment `CustomWidgets` if needed.
   }
 
