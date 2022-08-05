@@ -35,4 +35,5 @@ The available Lightning SDK plugins are, in alphabetical order:
 * [Utils](plugins/utils.md)
 * [VersionLabel](plugins/versionlabel.md)
 * [VideoPlayer](plugins/videoplayer.md)
+* [TypeScript Support](typescript.md)
 <!---TOC_end--->
