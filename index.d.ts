@@ -19,7 +19,7 @@
 import { FontFaceDefinition } from './src/Application/index.js';
 import { RouterPlatformSettings } from './src/Router/index.js';
 export const Ads: any; // export { default as Ads } from './src/Ads'
-export type { AppData, FontFaceDefinition } from './src/Application/index.js';
+export { AppData, FontFaceDefinition } from './src/Application/index.js';
 export { default as Application } from './src/Application/index.js';
 export const AudioPlayer: any; // export { default as AudioPlayer } from './src/AudioPlayer'
 export const Colors: any; // export { default as Colors } from './src/Colors'

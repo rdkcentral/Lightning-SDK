@@ -19,7 +19,7 @@
 import { Lightning } from "../../index.js";
 
 declare namespace RoutedApp {
-  export interface TemplateSpec extends Lightning.Component.TemplateSpecStrong {
+  export interface TemplateSpec extends Lightning.Component.TemplateSpec {
     // Provided empty for consistent convention and to to allow augmentation
     Pages: {},
     Loading: {
