@@ -6,7 +6,7 @@ Currently, Lightning SDK includes extensive type definitions for the following p
 - [Image](plugins/image.md)
 - [Router](plugins/router/index.md)
 - [Lightning](plugins/lightning.md)
-  - Requires Lightning Core version 2.8.0
+  - Requires Lightning Core version 2.7.0
 - [Utils](plugins/utils.md)
 
 All other plugins are stubbed out as the `any` type, so they will still work as they have been without type checking.
