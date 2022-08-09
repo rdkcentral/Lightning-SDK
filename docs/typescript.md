@@ -1,11 +1,12 @@
 # TypeScript Support
 
-As of version !!!, Lightning SDK comes bundled with type definitions and in-code documentation which allow you to build Lightning apps in [TypeScript](https://www.typescriptlang.org/). The following documentation assumes to an extent that you are already familiar with the basics of writting a Lightning app in JavaScript, but even if you have no experience at all with Lightning, you may find the tips below as well as the Lightning CLI `lng create` boilerplate (coming soon) and the types/documentation available now in your IDE by using TypeScript enough to get started.
+As of version 4.9.0, Lightning SDK comes bundled with type definitions and in-code documentation which allow you to build Lightning apps in [TypeScript](https://www.typescriptlang.org/). The following documentation assumes to an extent that you are already familiar with the basics of writting a Lightning app in JavaScript, but even if you have no experience at all with Lightning, you may find the tips below as well as the Lightning CLI `lng create` boilerplate (coming soon) and the types/documentation available now in your IDE by using TypeScript enough to get started.
 
 Currently, Lightning SDK includes extensive type definitions for the following plugins:
 - [Image](plugins/image.md)
 - [Router](plugins/router/index.md)
 - [Lightning](plugins/lightning.md)
+  - Requires Lightning Core version 2.8.0
 - [Utils](plugins/utils.md)
 
 All other plugins are stubbed out as the `any` type, so they will still work as they have been without type checking.
