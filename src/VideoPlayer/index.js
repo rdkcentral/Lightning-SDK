@@ -58,7 +58,7 @@ const state = {
   set playingAds(val) {
     if (this._playingAds !== val) {
       this._playingAds = val
-      fireOnConsumer(val === true ? 'AdStart' : 'AdEnd')
+      fireOnConsumer(events[val === true ? 'adstart' : 'adend'])
     }
   },
   skipTime: false,
@@ -248,7 +248,7 @@ const videoPlayerPlugin = {
               this.play()
             })
             .catch(e => {
-              fireOnConsumer('Error', { videoElement: videoEl, event: e })
+              fireOnConsumer(events['error'], { videoElement: videoEl, event: e })
             })
         })
       })
@@ -284,7 +284,7 @@ const videoPlayerPlugin = {
     this.pause()
     if (textureMode === true) videoTexture.stop()
     return unloader(videoEl).then(() => {
-      fireOnConsumer('Clear', { videoElement: videoEl })
+      fireOnConsumer(events['clear'], { videoElement: videoEl })
     })
   },
 
@@ -292,7 +292,7 @@ const videoPlayerPlugin = {
     if (!this.canInteract) return
     if (textureMode === true) videoTexture.start()
     executeAsPromise(videoEl.play, null, videoEl).catch(e => {
-      fireOnConsumer('Error', { videoElement: videoEl, event: e })
+      fireOnConsumer(events['error'], { videoElement: videoEl, event: e })
     })
   },
 
