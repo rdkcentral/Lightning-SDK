@@ -18,9 +18,12 @@
  */
 
 export default {
+  adstart: 'AdStart',
+  adend: 'AdEnd'
   abort: 'Abort',
   canplay: 'CanPlay',
   canplaythrough: 'CanPlayThrough',
+  clear: 'Clear',
   durationchange: 'DurationChange',
   emptied: 'Emptied',
   encrypted: 'Encrypted',
