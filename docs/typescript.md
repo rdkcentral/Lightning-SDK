@@ -11,7 +11,7 @@ Currently, Lightning SDK includes extensive type definitions for the following p
 
 All other plugins are stubbed out as the `any` type, so they will still work as they have been without type checking.
 
-If you haven't already, read the Lightning Core TypeScript documentation !!! for extensive use guidelines. The rest of this documentation page will focus solely on things you need to know to use the Lightning SDK with TypeScript.
+If you haven't already, read the [Lightning Core TypeScript Documentation](../lightning-core-reference/TypeScript/index.md) for extensive use guidelines. The rest of this documentation page will focus solely on things you need to know to use the Lightning SDK with TypeScript.
 
 TypeScript compilation is supported out of the box by Lightning CLI as of version [v2.8.0](https://github.com/rdkcentral/Lightning-CLI/blob/master/CHANGELOG.md#v280).
 
@@ -23,7 +23,7 @@ TypeScript compilation is supported out of the box by Lightning CLI as of versio
 
 ## Router Pages (IsPage)
 
-A Router Page can be any Lightning Component. But because there are some special properties / features (`widgets`, `params`, `pageTransition`, `historyState`, etc) available on Pages that aren't available on other Components, we need need a mechanism to tell TypeScript that a Component is a Router Page. The Lightning SDK adds a new property that can be configured in a Component's Type Config (!!! link to it in Core) called `IsPage`.
+A Router Page can be any Lightning Component. But because there are some special properties / features (`widgets`, `params`, `pageTransition`, `historyState`, etc) available on Pages that aren't available on other Components, we need need a mechanism to tell TypeScript that a Component is a Router Page. The Lightning SDK adds a new property that can be configured in a Component's [Type Config](../lightning-core-reference/TypeScript/TypeConfigs.md) called `IsPage`.
 
 ```ts
 interface MyPageTypeConfig extends Lightning.Component.TypeConfig {
