@@ -18,7 +18,7 @@
  */
 
 import Log from '../Log'
-import { mediaUrl } from 'metro-sdk'
+import { mediaUrl } from '@metrological/sdk'
 
 let consumer
 

@@ -17,6 +17,6 @@
  * limitations under the License.
  */
 
-import { Pin } from 'metro-sdk'
+import { Pin } from '@metrological/sdk'
 
 export default Pin

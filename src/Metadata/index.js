@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-import {Metadata} from 'metro-sdk'
+import { Metadata } from '@metrological/sdk'
 
 export default Metadata
-
-

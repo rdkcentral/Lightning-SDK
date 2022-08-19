@@ -17,6 +17,6 @@
  * limitations under the License.
  */
 
-import { Purchase } from 'metro-sdk'
+import { Purchase } from '@metrological/sdk'
 
 export default Purchase

@@ -17,6 +17,6 @@
  * limitations under the License.
  */
 
-import { Profile } from 'metro-sdk'
+import { Profile } from '@metrological/sdk'
 
 export default Profile

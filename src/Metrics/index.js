@@ -17,6 +17,6 @@
  * limitations under the License.
  */
 
-import { Metrics } from 'metro-sdk'
+import { Metrics } from '@metrological/sdk'
 
 export default Metrics

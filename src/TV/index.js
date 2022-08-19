@@ -17,6 +17,6 @@
  * limitations under the License.
  */
 
-import { TV } from 'metro-sdk'
+import { TV } from '@metrological/sdk'
 
 export default TV
