@@ -45,7 +45,7 @@ export default {
 }
 
 export const ensureUrlWithProtocol = url => {
-  if (/^\/[^\/]/i.test(url) && /^(?:file:)/i.test(window.location.protocol)) {
+  if (/^\/[^/]/i.test(url) && /^(?:file:)/i.test(window.location.protocol)) {
     return window.location.protocol + '//' + url
   }
   if (/^\/\//.test(url)) {

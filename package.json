@@ -23,6 +23,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.11.5",
     "@lightningjs/core": "*",
+    "@metrological/sdk": "github:metrological/metrological-sdk",
     "@michieljs/execute-as-promise": "^1.0.0",
     "deepmerge": "^4.2.2",
     "localCookie": "github:WebPlatformForEmbedded/localCookie",

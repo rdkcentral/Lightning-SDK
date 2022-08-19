@@ -39,7 +39,7 @@ export default (imageUrl, options) => {
       )
     } else {
       // Lightning will handle the resizing and has only 2 flavours (cover and contain)
-      if(options.type!=='cover') {
+      if (options.type !== 'cover') {
         if (options.type === 'crop') options.type = 'cover'
         else options.type = 'contain'
       }
