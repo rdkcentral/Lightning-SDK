@@ -17,30 +17,25 @@
  * limitations under the License.
  */
 
+import Log from '../Log'
+import { colorshiftShader } from './shaders'
+
 export default {
-  abort: 'Abort',
-  canplay: 'CanPlay',
-  canplaythrough: 'CanPlayThrough',
-  durationchange: 'DurationChange',
-  emptied: 'Emptied',
-  encrypted: 'Encrypted',
-  ended: 'Ended',
-  error: 'Error',
-  interruptbegin: 'InterruptBegin',
-  interruptend: 'InterruptEnd',
-  loadeddata: 'LoadedData',
-  loadedmetadata: 'LoadedMetadata',
-  loadstart: 'LoadStart',
-  pause: 'Pause',
-  play: 'Play',
-  playing: 'Playing',
-  progress: 'Progress',
-  ratechange: 'Ratechange',
-  seeked: 'Seeked',
-  seeking: 'Seeking',
-  stalled: 'Stalled',
-  // suspend: 'Suspend', // this one is called a looooot for some videos
-  timeupdate: 'TimeUpdate',
-  volumechange: 'VolumeChange',
-  waiting: 'Waiting',
+  colorshift(component, type = false, config = { brightness: 50, contrast: 50, gamma: 50 }) {
+    config = { ...{ brightness: 50, contrast: 50, gamma: 50 }, ...config }
+
+    const shader = type && colorshiftShader(type)
+    if (shader) {
+      Log.info('Accessibility Colorshift', type, config)
+      component.rtt = true
+      component.shader = {
+        type: shader,
+        ...config,
+      }
+    } else {
+      Log.info('Accessibility Colorshift', 'Disabled')
+      component.rtt = false
+      component.shader = null
+    }
+  },
 }

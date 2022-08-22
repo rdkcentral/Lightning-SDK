@@ -17,6 +17,22 @@
  * limitations under the License.
  */
 
-import { Purchase } from '@metrological/sdk'
+import Protanopia from './ProtanopiaShader'
+import Deuteranopia from './DeuteranopiaShader'
+import Tritanopia from './TritanopiaShader'
+import Normal from './NormalShader'
+import Monochromacy from './MonochromacyShader'
 
-export default Purchase
+export const colorshiftShader = type => {
+  const shadersMap = {
+    normal: Normal,
+    monochromacy: Monochromacy,
+    deuteranopia: Deuteranopia,
+    tritanopia: Tritanopia,
+    protanopia: Protanopia,
+  }
+
+  type = (typeof type === 'string' && type.toLowerCase()) || null
+
+  return Object.keys(shadersMap).indexOf(type) > -1 ? shadersMap[type] : false
+}

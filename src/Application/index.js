@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+import Accessibility from '../Accessibility'
 import Deepmerge from 'deepmerge'
 import Lightning from '../Lightning'
 import Locale from '../Locale'
@@ -112,6 +113,10 @@ export default function(App, appData, platformSettings) {
         w: 1920,
         h: 1080,
       }
+    }
+
+    colorshift(type = false, config = {}) {
+      Accessibility.colorshift(this, type, config)
     }
 
     _setup() {

@@ -30,7 +30,7 @@ Next you can run the `lng build` and `lng serve` commands to build the blueprint
 
 During development you might prefer using the `lng dev` command, which builds and launches your App, and then keeps watching for changes to automatically rebuild.
 
-Whenever you want to review this documentation, you can run `lng docs` in the root of a project. This will open up the documention for the Lightning-SDK version used in that project.
+Whenever you want to review this documentation, you can run `lng docs` in the root of a project. This will open up the documentation for the Lightning-SDK version used in that project.
 
 ## Fonts
 

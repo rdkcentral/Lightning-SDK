@@ -17,6 +17,15 @@
  * limitations under the License.
  */
 
-import { Purchase } from '@metrological/sdk'
+import ColorShift from './ColorShift'
 
-export default Purchase
+export default class NeutralShader extends ColorShift {}
+
+NeutralShader.fragmentShaderSource = `
+    ${ColorShift.before}
+    vec4 filter( vec4 color )
+    {
+        return color;
+    }
+    ${ColorShift.after}
+`

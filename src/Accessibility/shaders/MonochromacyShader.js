@@ -17,22 +17,16 @@
  * limitations under the License.
  */
 
-import { getLocale, getLanguage, getCountryCode, getLatLon } from './helpers'
+import ColorShift from './ColorShift'
 
-export const defaultProfile = {
-  ageRating: 'adult',
-  city: 'New York',
-  zipCode: '27505',
-  countryCode: () => getCountryCode('US'),
-  ip: '127.0.0.1',
-  household: 'b2244e9d4c04826ccd5a7b2c2a50e7d4',
-  language: () => getLanguage('en'),
-  latlon: () => getLatLon([40.7128, 74.006]),
-  locale: () => getLocale('en-US'),
-  mac: '00:00:00:00:00:00',
-  operator: 'metrological',
-  platform: 'metrological',
-  packages: [],
-  uid: 'ee6723b8-7ab3-462c-8d93-dbf61227998e',
-  stbType: 'metrological',
-}
+export default class MonochromacyShader extends ColorShift {}
+
+MonochromacyShader.fragmentShaderSource = `
+    ${ColorShift.before}
+    vec4 filter( vec4 color )
+    {   
+        float grey = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+        return vec4(vec3(grey, grey, grey), 1.0 ); 
+    }
+    ${ColorShift.after}
+`

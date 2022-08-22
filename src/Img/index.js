@@ -27,7 +27,7 @@ export default (imageUrl, options) => {
   // make and return ScaledImageTexture
   const make = options => {
     // local asset, wrap it in Utils.asset()
-    if (!/^(?:https?:)?\/\//i.test(imageUrl)) {
+    if (!/^(?:https?:)?\/\//i.test(imageUrl) && !imageUrl.includes('data:image/png;base64')) {
       imageUrl = Utils.asset(imageUrl)
     }
 
@@ -39,8 +39,10 @@ export default (imageUrl, options) => {
       )
     } else {
       // Lightning will handle the resizing and has only 2 flavours (cover and contain)
-      if (options.type === 'crop') options.type = 'cover'
-      else options.type = 'contain'
+      if (options.type !== 'cover') {
+        if (options.type === 'crop') options.type = 'cover'
+        else options.type = 'contain'
+      }
     }
 
     return {

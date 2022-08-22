@@ -59,7 +59,7 @@ You can prevent this by adding `_handleAppClose()` to your App class, for instan
 ```js
 class MyApp extends Router.App{
 
-  _handleAppClose(params){
+  _handleAppClose(){
       this.toggleExitDialog().then((confirmed)=>{
           // close the application
           if(confirmed){
