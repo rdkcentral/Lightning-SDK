@@ -1,6 +1,6 @@
 # Accessibility
 
-The Accessibility plugin provides functionality to easily make your App more accesible.
+The Accessibility plugin provides functionality to easily make your App more accessible.
 
 Currently it provides functionality to apply a **Colorshifting filter** to your App, helping people with different types of color blindness to properly use your App.
 
@@ -52,7 +52,7 @@ The `normal` type color filter should be used for cases where you only want to a
 
 ### Advanced use
 
-The typical use of the colorshift filter is to apply it over the entire app (using `this.appliction.coloshift()`). But there may also be cases where you want to apply it only to a single element (for demo purposes or during in-app configuration of the color settings, for example).
+The typical use of the colorshift filter is to apply it over the entire app (using `this.appliction.colorshift()`). But there may also be cases where you want to apply it only to a single element (for demo purposes or during in-app configuration of the color settings, for example).
 
 In this case you should import the `Accessibility` plugin into your component.
 
@@ -73,8 +73,13 @@ Accessibility.colorshift(element, type, config)
 
 Important to remember is that the element you apply the colorshift filter to shouldn't already have a _shader_ applied to it, nor can it have `rtt` set to `true`. In these cases you could create a wrapper and apply the colorshift filter to the wrapper instead.
 
+<!--
+Todo
+
 ### Colorshift configuration UX
 
 To make it as easy as possible to make your App colorblindness friendly, we have made available a standard importable [UI component](...) to set and configure the colorshift settings for your App.
 
 Feel free to use this UI component directly inside your App. Or use it as inspiration to build your own configuration screen.
+
+-->
