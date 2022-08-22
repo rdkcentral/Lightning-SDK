@@ -1,13 +1,13 @@
 # Changelog
 
-## v4.9.0
+## v5.0.0
 
-*11 jul 2022*
+*22 aug 2022*
 
+- Moved Metrological and Platform specific plugins to [metrological-sdk](https://github.com/Metrological/metrological-sdk) (Metedata, Metrics, Pin, Profile, Purchase, TV, VideoPlayer)
 - Added base 64 image support for Image plugin
 - Fixed bug in Image plugin as Img cover stretches image
 - Fixed named route property not being accessed properly
-- Fixed typo in videoplayer documentation
 - Added/Updated Router available methods
 
 
