@@ -116,7 +116,7 @@ export default function(App, appData, platformSettings) {
     }
 
     colorshift(type = false, config = {}) {
-      console.log('color shift', arguments)
+      Log.info('Accessibility - ColorShift', arguments)
       Accessibility.colorshift(this, type, config)
     }
 
