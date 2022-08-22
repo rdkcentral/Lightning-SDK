@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.1.0
+
+- Typescript support
+
 ## v5.0.1
 
 *22 aug 2022*
