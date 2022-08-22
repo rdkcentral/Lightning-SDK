@@ -18,27 +18,30 @@
  */
 
 import { initUtils } from '../Utils'
-import { initProfile } from '../Profile'
-import { initMetrics } from '../Metrics'
+import { initProfile } from '@metrological/sdk'
+import { initMetrics } from '@metrological/sdk'
+import { initLightningSdkPlugin } from '@metrological/sdk'
 import { initSettings } from '../Settings'
 import { initMediaPlayer } from '../MediaPlayer'
-import { initVideoPlayer } from '../VideoPlayer'
+import { initVideoPlayer } from '@metrological/sdk'
 import { initStorage } from '../Storage'
 import { initAds } from '../Ads'
 import { initRouter } from '../Router'
-import { initTV } from '../TV'
-import { initPurchase } from '../Purchase'
-import { initPin } from '../Pin'
-import { initMetadata } from '../Metadata'
+import { initTV } from '@metrological/sdk'
+import { initPurchase } from '@metrological/sdk'
+import { initPin } from '@metrological/sdk'
+import { initMetadata } from '@metrological/sdk'
 import Application from '../Application'
+import Settings from '../Settings'
+import Log from '../Log'
+import Ads from '../Ads'
 
 export let ApplicationInstance
 
 export default (App, appSettings, platformSettings, appData) => {
   initSettings(appSettings, platformSettings)
-  initMetadata(appSettings)
-
   initUtils(platformSettings)
+  initMetadata(appSettings)
   initStorage()
   // Initialize plugins
   if (platformSettings.plugins) {
@@ -52,8 +55,8 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.purchase && initPurchase(platformSettings.plugins.purchase)
     platformSettings.plugins.pin && initPin(platformSettings.plugins.pin)
   }
-
   const app = Application(App, appData, platformSettings)
   ApplicationInstance = new app(appSettings)
+  initLightningSdkPlugin(ApplicationInstance, Log, Settings, Ads)
   return ApplicationInstance
 }

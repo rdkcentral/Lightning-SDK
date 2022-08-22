@@ -8,7 +8,6 @@
   - [Log](/plugins/log.md)
   - [Metadata](/plugins/metadata.md)
   - [Metrics](/plugins/metrics.md)
-  - [Metadata](/plugins/metadata.md)
   - [Profile](/plugins/profile.md)
   - [Purchase](/plugins/purchase.md)
   - [Language](/plugins/language.md)
