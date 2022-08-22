@@ -150,16 +150,16 @@ If you want to pass parameters, the hook must return an *object*:
 
 ## afterEachRoute
 
-Is a global hook that will be called after every succesfull `navigate()` request. The parameter is the resolved
+Is a global hook that will be called after every successful `navigate()` request. The parameter is the resolved
 request object.
 
 ```js
-{   
+{
     ...
     routes:[...],
     afterEachRoute:  (request)=>{
         updateAnalytics("loaded", request.hash)
-    }   
+    }
 }
 ```
 

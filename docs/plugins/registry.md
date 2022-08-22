@@ -86,7 +86,7 @@ Registry.clearInterval(intervalId)
 
 ### clearIntervals
 
-Cancesl *all* running intervals and prevents them from being executed.
+Cancels *all* running intervals and prevents them from being executed.
 
 ```js
 Registry.clearIntervals()

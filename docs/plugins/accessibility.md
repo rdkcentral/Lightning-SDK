@@ -45,14 +45,14 @@ When passing `false` the entire colorshift filter is disabled.
 
 `config` is an object where the _brightness_, _contrast_ and _gamma_ of each color filter can be tweaked. The values are expected to be between `0` and `100`, and default to `50`.
 
-It's not required to pass in the entire object. Keys that are ommitted are automatically assumed to have the default value (of `50`).
+It's not required to pass in the entire object. Keys that are omitted are automatically assumed to have the default value (of `50`).
 
 The `normal` type color filter should be used for cases where you only want to adjust the brightness, contrast or gamma values, without applying any specific color blindness filter.
 
 
 ### Advanced use
 
-The typical use of the colorshift filter is to apply it over the entire app (using `this.appliction.colorshift()`). But there may also be cases where you want to apply it only to a single element (for demo purposes or during in-app configuration of the color settings, for example).
+The typical use of the colorshift filter is to apply it over the entire app (using `this.application.colorshift()`). But there may also be cases where you want to apply it only to a single element (for demo purposes or during in-app configuration of the color settings, for example).
 
 In this case you should import the `Accessibility` plugin into your component.
 
