@@ -9,6 +9,7 @@
 - Fixed bug in Image plugin as Img cover stretches image
 - Fixed named route property not being accessed properly
 - Added/Updated Router available methods
+- Added Accessibility plugin with support for ColorShifting (color blindness filter)
 
 
 ## v4.8.3
