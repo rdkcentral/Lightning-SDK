@@ -35,6 +35,7 @@ import Application from '../Application'
 import Settings from '../Settings'
 import Log from '../Log'
 import Ads from '../Ads'
+import Lightning from '../Lightning'
 
 export let ApplicationInstance
 
@@ -56,7 +57,15 @@ export default (App, appSettings, platformSettings, appData) => {
     platformSettings.plugins.pin && initPin(platformSettings.plugins.pin)
   }
   const app = Application(App, appData, platformSettings)
+
+  initLightningSdkPlugin.log = Log
+  initLightningSdkPlugin.settings = Settings
+  initLightningSdkPlugin.ads = Ads
+  initLightningSdkPlugin.lightning = Lightning
+
   ApplicationInstance = new app(appSettings)
-  initLightningSdkPlugin(ApplicationInstance, Log, Settings, Ads)
+
+  initLightningSdkPlugin.appInstance = ApplicationInstance
+
   return ApplicationInstance
 }

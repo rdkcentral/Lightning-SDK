@@ -1,5 +1,11 @@
 # Changelog
 
+## v5.0.1
+
+*22 aug 2022*
+
+- Fixed issue with metrological-sdk initialization sequence
+
 ## v5.0.0
 
 *22 aug 2022*
