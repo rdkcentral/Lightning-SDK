@@ -22,7 +22,7 @@ import Lightning from '../Lightning'
 export default class SubtitleComponent extends Lightning.Component {
   static _template() {
     return {
-      PositionWrap : {
+      PositionWrap: {
         Banner: {
           x: 960,
           y: 750,
@@ -32,12 +32,12 @@ export default class SubtitleComponent extends Lightning.Component {
             textColor: 0xff333333,
             fontSize: 20,
             wordWrapWidth: 500,
-            shadow : true,
+            shadow: true,
             shadowColor: 0xffffffff,
-            lineHeight: 30
+            lineHeight: 30,
           },
         },
-      }
+      },
     }
   }
 
@@ -57,4 +57,3 @@ export default class SubtitleComponent extends Lightning.Component {
     this.tag('Banner').mountX = options.mountX
   }
 }
-
