@@ -17,43 +17,67 @@
  * limitations under the License.
  */
 
-import Lightning from '../Lightning'
+import { ApplicationInstance } from '../Launch'
+import SubTitleDialog from './SubtitleDialog'
 
-export default class SubtitleComponent extends Lightning.Component {
-  static _template() {
-    return {
-      PositionWrap: {
-        Banner: {
-          x: 960,
-          y: 750,
-          mountX: 0.5,
-          text: {
-            text: '',
-            textColor: 0xff333333,
-            fontSize: 20,
-            wordWrapWidth: 500,
-            shadow: true,
-            shadowColor: 0xffffffff,
-            lineHeight: 30,
-          },
-        },
-      },
+let subTitleDialog = null
+
+// Public API
+export default {
+  /**
+   * Show - Shows the Subtitle dialog
+   * @returns {Promise<unknown>}
+   */
+  show() {
+    return new Promise((resolve, reject) => {
+      subTitleDialog = ApplicationInstance.stage.c({
+        ref: 'SubTitleDialog',
+        type: SubTitleDialog(),
+        resolve,
+        reject,
+      })
+      ApplicationInstance.childList.a(subTitleDialog)
+    })
+  },
+
+  /**
+   * Hide - Hides the subtitle dialog
+   */
+  hide() {
+    ApplicationInstance.focus = null
+    ApplicationInstance.children = ApplicationInstance.children.map(
+      child => child !== subTitleDialog && child
+    )
+    subTitleDialog = null
+  },
+
+  /**
+   * position - Positions the subtitle with x, y and mountX
+   * @param obj
+   */
+  position(obj) {
+    if (subTitleDialog !== null) {
+      subTitleDialog.subTitleTextPosition = obj
     }
-  }
+  },
 
-  set subtitleOptions(txtOption) {
-    this.tag('Banner').text.textColor = txtOption.textColor ? txtOption.textColor : 0xff333333
-    this.tag('Banner').text.wordWrapWidth = txtOption.wordWrapWidth ? txtOption.wordWrapWidth : 500
-    this.tag('Banner').text.fontSize = txtOption.fontSize ? txtOption.fontSize : 30
-    this.tag('Banner').text.lineHeight = txtOption.lineHeight ? txtOption.lineHeight : 30
-  }
-  set subTitleText(txt) {
-    console.log('Txt options are', txt)
-    this.tag('Banner').text.text = txt ? txt : ''
-  }
-  set subTitlePosition(options) {
-    this.tag('Banner').x = options.x
-    this.tag('Banner').y = options.y
-    this.tag('Banner').mountX = options.mountX
-  }
+  /**
+   * text - Subtitle text
+   * @param txt
+   */
+  text(txt) {
+    if (subTitleDialog !== null) {
+      subTitleDialog.subTitleText = txt
+    }
+  },
+
+  /**
+   * textProperties - Text Properties that are to be passed - textColor, wordWrapWidth, fontSize, lineHeight
+   * @param obj
+   */
+  textProperties(obj) {
+    if (subTitleDialog !== null) {
+      subTitleDialog.subTitleTextProperties = obj
+    }
+  },
 }
