@@ -182,9 +182,7 @@ export const navigate = (url, args = {}, store) => {
 
     if (mustUpdateLocationHash()) {
       setHash(url)
-    }
-
-    if (!mustUpdateLocationHash()) {
+    } else {
       forcedHash = url
       handleHashChange(url)
         .then(() => {
