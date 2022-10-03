@@ -180,7 +180,10 @@ export const navigate = (url, args = {}, store) => {
     // push request in the queue
     queue(url, args, store)
 
-    setHash(url)
+    if (mustUpdateLocationHash()) {
+      setHash(url)
+    }
+
     if (!mustUpdateLocationHash()) {
       forcedHash = url
       handleHashChange(url)
