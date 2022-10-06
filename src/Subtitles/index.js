@@ -80,4 +80,44 @@ export default {
       subTitleDialog.subTitleTextProperties = obj
     }
   },
+
+  /**
+   * color - Sets the color of the subtitle
+   * @param color
+   */
+  color(color) {
+    if (subTitleDialog !== null) {
+      subTitleDialog.subTitleColor = color
+    }
+  },
+
+  /**
+   * opacity - Sets the opacity of the subtitle
+   * @param opacity
+   */
+  opacity(opacity) {
+    if (subTitleDialog !== null) {
+      subTitleDialog.subTitleOpacity = opacity
+    }
+  },
+
+  /**
+   * txtSize - Sets the text size of the subtitle
+   * @param size
+   */
+  txtSize(size) {
+    if (subTitleDialog !== null) {
+      subTitleDialog.subTitleTextSize = size
+    }
+  },
+
+  /**
+   * font - Sets the fontFace of the subtitle
+   * @param family
+   */
+  font(family) {
+    if (subTitleDialog !== null) {
+      subTitleDialog.subTitleFontFamily = family
+    }
+  },
 }
