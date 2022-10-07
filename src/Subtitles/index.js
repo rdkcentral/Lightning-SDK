@@ -102,12 +102,42 @@ export default {
   },
 
   /**
+   * opacity - Sets the opacity of the subtitle container
+   * @param opacity
+   */
+  containerOpacity(opacity) {
+    if (subTitleDialog !== null) {
+      subTitleDialog.subTitleContainerOpacity = opacity
+    }
+  },
+
+  /**
    * txtSize - Sets the text size of the subtitle
    * @param size
    */
   txtSize(size) {
     if (subTitleDialog !== null) {
       subTitleDialog.subTitleTextSize = size
+    }
+  },
+
+  /**
+   * background - Sets the background color of the subtitle
+   * @param opacity
+   */
+  background(color) {
+    if (subTitleDialog !== null) {
+      subTitleDialog.subTitleBackground = color
+    }
+  },
+
+  /**
+   * shadow - Sets the shadow color for the subtitle text
+   * @param opacity
+   */
+  shadow(shadowColor) {
+    if (subTitleDialog !== null) {
+      subTitleDialog.subTitleTextShadowColor = shadowColor
     }
   },
 
