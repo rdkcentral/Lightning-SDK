@@ -123,7 +123,7 @@ export default {
 
   /**
    * background - Sets the background color of the subtitle
-   * @param opacity
+   * @param color
    */
   background(color) {
     if (subTitleDialog !== null) {
@@ -133,7 +133,7 @@ export default {
 
   /**
    * shadow - Sets the shadow color for the subtitle text
-   * @param opacity
+   * @param shadowColor
    */
   shadow(shadowColor) {
     if (subTitleDialog !== null) {
