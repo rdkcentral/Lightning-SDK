@@ -62,6 +62,8 @@ export const getRouteByHash = hash => {
   const getUrlParts = /(\/?:?[^/]+)/g
   // grab possible candidates from stored routes
   const candidates = getRoutesByFloor(getFloor(hash))
+  // split the hash from query params
+  hash = hash.split("?")[0]
   // break hash down in chunks
   const hashParts = hash.match(getUrlParts) || []
 
