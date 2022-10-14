@@ -1,5 +1,12 @@
 # Changelog
 
+## v5.1.1
+
+- Fixed issue related to Router can't find the route by hash with query (#355)
+- Added support for dynamic resolution (#352)
+- Fixed issue related to Router hash not working (#349)
+- Fixed a typo in router/pagetransitions.md documentation (#344)
+
 ## v5.1.0
 
 - Typescript support
