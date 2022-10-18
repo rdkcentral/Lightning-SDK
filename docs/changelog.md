@@ -1,8 +1,8 @@
 # Changelog
 
-## v5.1.1
+## v5.2.0
 
-*14 oct 2022*
+*18 oct 2022*
 
 - Fixed issue related to Router can't find the route by hash with query (#355)
 - Added support for dynamic resolution (#352)
