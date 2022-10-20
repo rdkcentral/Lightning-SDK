@@ -1,6 +1,16 @@
 # Changelog
 
+## v5.2.0
+
+*20 oct 2022*
+
+- Added support for dynamic screen resolutions (#352)
+- Fixed issue related to Router hash not working (#349)
+- Fixed a typo in router/pagetransitions.md documentation (#344)
+
 ## v5.1.0
+
+*30 aug 2022*
 
 - Typescript support
 
