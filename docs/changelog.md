@@ -2,10 +2,9 @@
 
 ## v5.2.0
 
-*18 oct 2022*
+*20 oct 2022*
 
-- Fixed issue related to Router can't find the route by hash with query (#355)
-- Added support for dynamic resolution (#352)
+- Added support for dynamic screen resolutions (#352)
 - Fixed issue related to Router hash not working (#349)
 - Fixed a typo in router/pagetransitions.md documentation (#344)
 
