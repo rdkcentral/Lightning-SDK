@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+import fetchJson from './helpers/fetchJson'
+
 const style = document.createElement('style')
 
 document.head.appendChild(style)
@@ -189,20 +191,6 @@ const removeJS = id => {
   if (scriptEl) {
     scriptEl.remove()
   }
-}
-
-const fetchJson = file => {
-  return new Promise((resolve, reject) => {
-    var xhr = new XMLHttpRequest()
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState == XMLHttpRequest.DONE) {
-        if (xhr.status === 200) resolve(JSON.parse(xhr.responseText))
-        else reject(xhr.statusText)
-      }
-    }
-    xhr.open('GET', file)
-    xhr.send(null)
-  })
 }
 
 const sequence = steps => {
