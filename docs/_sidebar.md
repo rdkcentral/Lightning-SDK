@@ -28,6 +28,7 @@
   - [VideoPlayer](/plugins/videoplayer.md)
   <!-- - [Audio Player](/plugins/audioplayer.md) -->
   - [Image](/plugins/image.md)
+  - [Keymap](/plugins/keymap.md)
   - [Pin](/plugins/pin.md)
   - [TV](/plugins/tv.md)
   - [Version Label](/plugins/versionlabel.md)
