@@ -63,7 +63,9 @@ const execProvider = (request, emitProvided) => {
 }
 
 export const addPersistData = ({ page, route, hash, register = new Map() }) => {
-  const urlValues = getValuesFromHash(hash, route.path)
+  let routerPath = route.path
+  if (routerPath.endsWith('?')) routerPath = routerPath.substring(0, routerPath.lastIndexOf('/'))
+  const urlValues = getValuesFromHash(hash, routerPath)
   const queryParams = getQueryStringParams(hash)
   const pageData = new Map([...urlValues, ...register])
   const params = {}
