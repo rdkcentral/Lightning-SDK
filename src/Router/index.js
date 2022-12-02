@@ -236,7 +236,6 @@ const handleHashChange = async override => {
 
   const route = getRouteByHash(hash)
 
-  console.log('ABCDE Route to be navigated =>', route)
   if (!route) {
     if (routeExists('*')) {
       navigate('*', { failedHash: hash })
@@ -250,20 +249,16 @@ const handleHashChange = async override => {
   request.hash = hash
   request.route = route
 
-  console.log('ABCDE request information =>', request)
-
   let result = await beforeEachRoute(getActiveHash(), request)
 
   // test if a local hook is configured for the route
   if (result && route.beforeNavigate) {
     result = await route.beforeNavigate(getActiveHash(), request)
   }
-  console.log('ABCDE Result beforenavigate =>', result)
   if (isBoolean(result)) {
     // only if resolve value is explicitly true
     // we continue the current route request
     if (result) {
-      console.log('ABCDE resolve hash change', request)
       return resolveHashChange(request)
     }
   } else {
@@ -305,9 +300,7 @@ const resolveHashChange = request => {
       let routerPath = route.path
       if (routerPath.endsWith('?'))
         routerPath = routerPath.substring(0, routerPath.lastIndexOf('/'))
-      console.log('ABCDE router path before value from hash =>', routerPath, hash)
       const urlParams = getValuesFromHash(hash, routerPath)
-      console.log('ABCDE url parameters =>', urlParams)
       const params = {}
       for (const key of urlParams.keys()) {
         params[key] = urlParams.get(key)

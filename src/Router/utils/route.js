@@ -123,7 +123,6 @@ export const getRouteByHash = hash => {
         // we only need to the static and regex drive parts
         continue
       } else if (hashPart && routePart.toLowerCase() !== hashPart.toLowerCase()) {
-        // console.log("ABC router is matching =>", routePart, hashPart, false)
         isMatching = false
       }
     }
