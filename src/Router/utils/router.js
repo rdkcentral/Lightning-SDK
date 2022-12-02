@@ -262,6 +262,17 @@ const init = config => {
       console.error(`[Router]: ${config.bootComponent} is not a valid boot component`)
     }
   }
+  config.routes.forEach(item => {
+    let path = item.path
+    if (path.lastIndexOf('?') !== -1) {
+      const optionalPath = path.substring(0, path.lastIndexOf('/'))
+      item.path = path.substring(0, path.lastIndexOf('?'))
+      //Create another entry with the optional path
+      let optionalItem = { ...item }
+      optionalItem.path = optionalPath
+      config.routes.push(optionalItem)
+    }
+  })
   initialised = true
 }
 
