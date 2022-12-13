@@ -119,6 +119,22 @@ export default function(App, appData, platformSettings) {
       Accessibility.colorshift(this, type, config)
     }
 
+    get keymapping() {
+      return this.stage.application.config.keys
+    }
+
+    set keymapping(overrideKeymap) {
+      const baseKeymap = this.stage.application.config.keys
+      Object.keys(overrideKeymap).reduce((keymapping, key) => {
+        // prevent duplicate values to exist in final keymapping (i.e. 2 keys listening to 'Back')
+        const duplicateIndex = Object.values(baseKeymap).indexOf(overrideKeymap[key])
+        duplicateIndex > -1 && delete keymapping[Object.keys(baseKeymap)[duplicateIndex]]
+
+        keymapping[key] = overrideKeymap[key]
+        return keymapping
+      }, baseKeymap)
+    }
+
     _setup() {
       Promise.all([
         this.loadFonts((App.config && App.config.fonts) || (App.getFonts && App.getFonts()) || []),
