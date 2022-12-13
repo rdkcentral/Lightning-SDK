@@ -130,6 +130,9 @@ export default function(App, appData, platformSettings) {
         .then(() => {
           Metrics.app.loaded()
 
+          this.w = this.config.stage.w
+          this.h = this.config.stage.h
+
           AppData = appData
 
           AppInstance = this.stage.c({
