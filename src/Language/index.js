@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+import fetchJson from '../helpers/fetchJson'
 import Log from '../Log'
 import Utils from '../Utils'
 
@@ -27,8 +28,7 @@ let dictionary = null
 
 export const initLanguage = (file, language = null) => {
   return new Promise((resolve, reject) => {
-    fetch(file)
-      .then(response => response.json())
+    fetchJson(file)
       .then(json => {
         setTranslations(json)
         // set language (directly or in a promise)
@@ -102,8 +102,7 @@ const setLanguage = lng => {
       } else if (typeof translationsObj === 'string') {
         const url = Utils.asset(translationsObj)
 
-        fetch(url)
-          .then(response => response.json())
+        fetchJson(url)
           .then(json => {
             // save the translations for this language (to prevent loading twice)
             translations[language] = json
