@@ -18,15 +18,13 @@
  */
 
 import { symbols, getQueryStringParams } from './helpers'
-import { app, routes, routeExists } from './router'
+import { app, routes, routeExists, setPreviousState } from './router'
 import { getValuesFromHash } from './route'
 import emit from './emit'
 
-export let previousState
-
 export const dataHooks = {
   on: request => {
-    previousState = app.state || ''
+    setPreviousState(app.state || '')
     app._setState('Loading')
     return execProvider(request)
   },
