@@ -263,12 +263,12 @@ const init = config => {
     }
   }
   config.routes.forEach(item => {
-    let path = item.path
+    const path = item.path
     if (path.lastIndexOf('?') !== -1) {
       const optionalPath = path.substring(0, path.lastIndexOf('/'))
       item.path = path.substring(0, path.lastIndexOf('?'))
       //Create another entry with the optional path
-      let optionalItem = { ...item }
+      const optionalItem = { ...item }
       optionalItem.path = optionalPath
       config.routes.push(optionalItem)
     }
