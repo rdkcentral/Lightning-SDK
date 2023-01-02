@@ -28,28 +28,29 @@ export default () => {
     }
     static _template() {
       return {
-        Banner: {
+        Wrapper: {
           zIndex: 100,
-          x: 960,
-          y: 750,
-          mountX: 0.5,
-          Wrapper: {
+          BG: {
             color: 0xffb39f69,
             rect: true,
             w: 200,
             h: 200,
             alpha: 0.3,
-            Title: {
-              text: {
-                text: 'Default Text',
-                textColor: 0xffff0000,
-                fontSize: 40,
-                wordWrapWidth: 500,
-                shadow: false,
-                shadowColor: 0xffffffff,
-                lineHeight: 30,
-                fontFace: 'Arial',
-              },
+            mountX: 0.5,
+            mountY: 1,
+          },
+          Title: {
+            mountX: 0.5,
+            mountY: 1,
+            text: {
+              text: 'Default Text',
+              textColor: 0xffff0000,
+              fontSize: 40,
+              wordWrapWidth: 700,
+              shadow: false,
+              shadowColor: 0xffffffff,
+              lineHeight: 48,
+              fontFace: 'Arial',
             },
           },
         },
@@ -57,8 +58,8 @@ export default () => {
     }
     _init() {
       this.tag('Title').on('txLoaded', () => {
-        this.tag('Wrapper').w = this.tag('Title').renderWidth
-        this.tag('Wrapper').h = this.tag('Title').renderHeight
+        this.tag('BG').w = this.tag('Title').renderWidth
+        this.tag('BG').h = this.tag('Title').renderHeight
       })
     }
 
@@ -86,9 +87,19 @@ export default () => {
      * @param options
      */
     set subTitleTextPosition(options) {
-      this.tag('Banner').x = options.x
-      this.tag('Banner').y = options.y
-      this.tag('Banner').mountX = options.mountX
+      this.tag('Wrapper').x = options.x
+      this.tag('Wrapper').y = options.y
+    }
+
+    /**
+     * subTitleTextAlignment - Alignment of the Subtitle text - mountX, mountY
+     * @param options
+     */
+    set subTitleTextAlignment(options) {
+      this.tag('BG').mountY = options.mountY ? options.mountY : 0
+      this.tag('Title').mountY = options.mountY ? options.mountY : 0
+      this.tag('BG').mountX = options.mountX ? options.mountX : 0.5
+      this.tag('Title').mountX = options.mountX ? options.mountX : 0.5
     }
 
     /**
@@ -114,7 +125,8 @@ export default () => {
      */
     set subTitleContainerOpacity(percent) {
       percent = percent / 100
-      this.tag('Wrapper').alpha = percent ? percent : 0.5
+      this._backgroundOpacity = percent
+      this.tag('BG').alpha = percent ? percent : 0.5
     }
 
     /**
@@ -123,6 +135,7 @@ export default () => {
      */
     set subTitleTextSize(size) {
       this.tag('Title').text.fontSize = size ? size : 40
+      this.tag('Title').text.lineHeight = size ? size + 8 : 48
     }
 
     /**
@@ -130,7 +143,7 @@ export default () => {
      * @param color
      */
     set subTitleBackground(color) {
-      this.tag('Wrapper').color = color ? color : 0xfaf5f500
+      this.tag('BG').color = color ? color : 0xfaf5f500
     }
 
     /**

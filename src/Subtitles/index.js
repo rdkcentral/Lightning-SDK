@@ -150,4 +150,14 @@ export default {
       subTitleDialog.subTitleFontFamily = family
     }
   },
+
+  /**
+   * alignment - Sets the alignment of the subtitle text
+   * @param options
+   */
+  alignment(options) {
+    if (subTitleDialog !== null) {
+      subTitleDialog.subTitleTextAlignment = options
+    }
+  },
 }
