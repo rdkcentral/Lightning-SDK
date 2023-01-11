@@ -130,8 +130,8 @@ export default function(App, appData, platformSettings) {
         .then(() => {
           Metrics.app.loaded()
 
-          this.w = this.config.stage.w
-          this.h = this.config.stage.h
+          this.w = this.config.stage.w / this.config.stage.precision
+          this.h = this.config.stage.h / this.config.stage.precision
 
           AppData = appData
 
