@@ -96,6 +96,41 @@ Router.navigate({
 
 This results in: `#player/12/44`
 
+## Optional router path
+
+You can also specify the optional router path parameter to the Router path.
+This is an advantage as we need not specify two different routes to the same component, instead we can specify optional field in router path with a '?' suffix for the optional params.
+
+```js
+{
+  path: 'player/:assetId/:playlistId?',
+  component: Player
+  name: 'player'
+}
+```
+
+This will generate two paths as below:
+
+```js
+{
+    path: 'player/:assetId/:playlistId'
+    component: Player
+    name: 'player'
+}
+```
+```js
+{
+    path: 'player/:assetId/',
+    component: Player,
+    name: 'player'
+}
+```
+
+Note: This will not work if the optional parameter ? is in the middle of the path. For Ex :
+```js
+    path: 'player/:assetId?/:playlistId'
+```
+
 
 ## isNavigating Method
 
