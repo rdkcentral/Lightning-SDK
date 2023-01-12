@@ -1,21 +1,13 @@
 # Keymap
 
-The Keymap plugin provides functionality to easily overide the existing keymap with the new keymap provided.
-
 ## Usage
 
-Import the Keymap plugin from the Lightning SDK in components where you want to overide the existing keymap.
+SDK provides an option to over-ride the default keymap with the new keymap.
+
+This can be done using the below snippet :
 
 ```js
-import { Keymap } from '@lightningjs/sdk'
+this.application.keymapping = <custom_key_map>
 ```
 
-## Available Methods
-
-### update
-
-Updates the existing keymap with the latest keymap
-
-```js
-update(keyMap)
-```
+This will Update the existing keymap with the latest keymap
