@@ -18,7 +18,7 @@
  */
 
 import Settings from '../Settings'
-import localCookie from 'localCookie/module/localCookie.js'
+import localCookie from 'localcookies'
 
 let namespace
 let lc
