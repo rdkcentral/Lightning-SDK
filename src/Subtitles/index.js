@@ -17,137 +17,79 @@
  * limitations under the License.
  */
 
-import { ApplicationInstance } from '../Launch'
-import SubTitleDialog from './SubtitleDialog'
+import { AppInstance } from '../Application'
+import SubtitleComponent from './SubtitleComponent'
 
-let subTitleDialog = null
+let subtitlesComponent
+const getOrCreateSubtitlesComponent = () => {
+  return subtitlesComponent
+    ? subtitlesComponent
+    : (subtitlesComponent =
+        AppInstance.application.tag('Subtitles') ||
+        AppInstance.application.childList.a(
+          AppInstance.stage.c({
+            ref: 'Subtitles',
+            type: SubtitleComponent,
+            zIndex: 2,
+          })
+        ))
+}
 
-// Public API
 export default {
-  /**
-   * Show - Shows the Subtitle dialog
-   * @returns {Promise<unknown>}
-   */
   show() {
-    return new Promise((resolve, reject) => {
-      subTitleDialog = ApplicationInstance.stage.c({
-        ref: 'SubTitleDialog',
-        type: SubTitleDialog(),
-        resolve,
-        reject,
-      })
-      ApplicationInstance.childList.a(subTitleDialog)
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.show()
+  },
+  hide() {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.hide()
+  },
+  styles(v) {
+    Object.keys(v).forEach(key => {
+      if (key in this && typeof this[key] === 'function') {
+        this[key](v[key])
+      }
     })
   },
-
-  /**
-   * Hide - Hides the subtitle dialog
-   */
-  hide() {
-    ApplicationInstance.focus = null
-    ApplicationInstance.children = ApplicationInstance.children.map(
-      child => child !== subTitleDialog && child
-    )
-    subTitleDialog = null
+  fontFamily(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.fontFamily = v
   },
-
-  /**
-   * position - Positions the subtitle with x, y and mountX
-   * @param obj
-   */
-  position(obj) {
-    if (subTitleDialog !== null) {
-      subTitleDialog.subTitleTextPosition = obj
-    }
+  fontSize(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.fontSize = v
   },
-
-  /**
-   * text - Subtitle text
-   * @param txt
-   */
-  text(txt) {
-    if (subTitleDialog !== null) {
-      subTitleDialog.subTitleText = txt
-    }
+  fontColor(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.fontColor = v
   },
-
-  /**
-   * textProperties - Text Properties that are to be passed - textColor, wordWrapWidth, fontSize, lineHeight
-   * @param obj
-   */
-  textProperties(obj) {
-    if (subTitleDialog !== null) {
-      subTitleDialog.subTitleTextProperties = obj
-    }
+  backgroundColor(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.backgroundColor = v
   },
-
-  /**
-   * color - Sets the color of the subtitle
-   * @param color
-   */
-  color(color) {
-    if (subTitleDialog !== null) {
-      subTitleDialog.subTitleColor = color
-    }
+  textAlign(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.textAlign = v
   },
-
-  /**
-   * opacity - Sets the opacity of the subtitle
-   * @param opacity
-   */
-  opacity(opacity) {
-    if (subTitleDialog !== null) {
-      subTitleDialog.subTitleOpacity = opacity
-    }
+  textAlignVertical(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.textAlignVertical = v
   },
-
-  /**
-   * opacity - Sets the opacity of the subtitle container
-   * @param opacity
-   */
-  containerOpacity(opacity) {
-    if (subTitleDialog !== null) {
-      subTitleDialog.subTitleContainerOpacity = opacity
-    }
+  position(x, y) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.xPos = x
+    subtitles.yPos = y
   },
-
-  /**
-   * txtSize - Sets the text size of the subtitle
-   * @param size
-   */
-  txtSize(size) {
-    if (subTitleDialog !== null) {
-      subTitleDialog.subTitleTextSize = size
-    }
+  maxWidth(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.maxWidth = v
   },
-
-  /**
-   * background - Sets the background color of the subtitle
-   * @param color
-   */
-  background(color) {
-    if (subTitleDialog !== null) {
-      subTitleDialog.subTitleBackground = color
-    }
+  text(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.text = v
   },
-
-  /**
-   * shadow - Sets the shadow color for the subtitle text
-   * @param shadowColor
-   */
-  shadow(shadowColor) {
-    if (subTitleDialog !== null) {
-      subTitleDialog.subTitleTextShadowColor = shadowColor
-    }
-  },
-
-  /**
-   * font - Sets the fontFace of the subtitle
-   * @param family
-   */
-  font(family) {
-    if (subTitleDialog !== null) {
-      subTitleDialog.subTitleFontFamily = family
-    }
+  clear() {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.text = ''
   },
 }
