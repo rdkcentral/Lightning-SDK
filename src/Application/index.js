@@ -123,16 +123,28 @@ export default function(App, appData, platformSettings) {
       return this.stage.application.config.keys
     }
 
-    set keymapping(overrideKeymap) {
-      const baseKeymap = this.stage.application.config.keys
-      Object.keys(overrideKeymap).reduce((keymapping, key) => {
-        // prevent duplicate values to exist in final keymapping (i.e. 2 keys listening to 'Back')
-        const duplicateIndex = Object.values(baseKeymap).indexOf(overrideKeymap[key])
-        duplicateIndex > -1 && delete keymapping[Object.keys(baseKeymap)[duplicateIndex]]
-
-        keymapping[key] = overrideKeymap[key]
-        return keymapping
-      }, baseKeymap)
+    /**
+     * This function overides the default keymap with the latest keymap.
+     * @param overrideKeymap
+     * @param keepDefaults
+     */
+    overRideKeyMap(overrideKeymap, keepDefaults = false) {
+      let baseKeymap = this.stage.application.config.keys
+      if (keepDefaults) {
+        baseKeymap = Object.assign({}, baseKeymap, overrideKeymap)
+      } else {
+        Object.keys(overrideKeymap).reduce((keymapping, key) => {
+          // prevent duplicate values to exist in final keymapping (i.e. 2 keys listening to 'Back')
+          const duplicateIndex = Object.values(baseKeymap).indexOf(
+            overrideKeymap[key]
+          )
+          duplicateIndex > -1 &&
+          delete keymapping[Object.keys(baseKeymap)[duplicateIndex]]
+          keymapping[key] = overrideKeymap[key]
+          return keymapping
+        }, baseKeymap)
+      }
+      return baseKeymap
     }
 
     _setup() {
