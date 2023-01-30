@@ -35,6 +35,20 @@ const getOrCreateSubtitlesComponent = () => {
         ))
 }
 
+const styling = [
+  'fontFamily',
+  'fontSize',
+  'fontColor',
+  'backgroundColor',
+  'textAlign',
+  'textAlignVertical',
+  'maxWidth',
+  'viewportW',
+  'viewportH',
+  'xPos',
+  'xPos',
+]
+
 export default {
   show() {
     const subtitles = getOrCreateSubtitlesComponent()
@@ -45,9 +59,10 @@ export default {
     subtitles.hide()
   },
   styles(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
     Object.keys(v).forEach(key => {
-      if (key in this && typeof this[key] === 'function') {
-        this[key](v[key])
+      if (styling.indexOf(v) > -1) {
+        subtitles[key] = v[key]
       }
     })
   },
@@ -74,6 +89,27 @@ export default {
   textAlignVertical(v) {
     const subtitles = getOrCreateSubtitlesComponent()
     subtitles.textAlignVertical = v
+  },
+  viewportW(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.viewportW = v
+  },
+  viewportH(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.viewportH = v
+  },
+  viewport(w, h) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.viewportW = w
+    subtitles.viewportH = h
+  },
+  xPos(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.xPos = v
+  },
+  yPos(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.yPos = v
   },
   position(x, y) {
     const subtitles = getOrCreateSubtitlesComponent()
