@@ -36,20 +36,6 @@ const getOrCreateSubtitlesComponent = () => {
         ))
 }
 
-const styling = [
-  'fontFamily',
-  'fontSize',
-  'fontColor',
-  'backgroundColor',
-  'textAlign',
-  'textAlignVertical',
-  'maxWidth',
-  'viewportW',
-  'viewportH',
-  'xPos',
-  'xPos',
-]
-
 export default {
   show() {
     const subtitles = getOrCreateSubtitlesComponent()
@@ -60,10 +46,9 @@ export default {
     subtitles.hide()
   },
   styles(v) {
-    const subtitles = getOrCreateSubtitlesComponent()
     Object.keys(v).forEach(key => {
-      if (styling.indexOf(v) > -1) {
-        subtitles[key] = v[key]
+      if (key in this && typeof this[key] === 'function') {
+        this[key](v[key])
       }
     })
   },
