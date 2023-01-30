@@ -30,6 +30,7 @@ const getOrCreateSubtitlesComponent = () => {
           AppInstance.stage.c({
             ref: 'Subtitles',
             type: SubtitleComponent,
+            forceZIndexContext: true,
             zIndex: 2,
           })
         ))
