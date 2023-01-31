@@ -22,7 +22,9 @@ export default (file) => {
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = function() {
       if (xhr.readyState == XMLHttpRequest.DONE) {
-        if (xhr.status === 200) resolve(JSON.parse(xhr.responseText))
+        // file protocol returns 0
+        // http(s) protocol returns 200
+        if (xhr.status === 0 || xhr.status === 200) resolve(JSON.parse(xhr.responseText))
         else reject(xhr.statusText)
       }
     }
