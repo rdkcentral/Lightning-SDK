@@ -44,7 +44,7 @@ export default class SubtitleComponent extends Lightning.Component {
   }
 
   _init() {
-    this._textureDefaults = new Lightning.textures.TextTexture(this.stage).cloneArgs()
+    this._textTextureDefaults = new Lightning.textures.TextTexture(this.stage).cloneArgs()
 
     this.tag('Text').on('txLoaded', ({ _source }) => {
       this.w = _source.w + this.tag('Text').x * 2
@@ -159,7 +159,7 @@ export default class SubtitleComponent extends Lightning.Component {
       this.stage,
       this.stage.platform.getDrawingCanvas(),
       {
-        ...this._textureDefaults,
+        ...this._textTextureDefaults,
         ...this.textFormat,
         ...{ wordWrapWidth: breakpoint },
         text,

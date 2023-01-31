@@ -76,26 +76,10 @@ export default {
     const subtitles = getOrCreateSubtitlesComponent()
     subtitles.textAlignVertical = v
   },
-  viewportW(v) {
-    const subtitles = getOrCreateSubtitlesComponent()
-    subtitles.viewportW = v
-  },
-  viewportH(v) {
-    const subtitles = getOrCreateSubtitlesComponent()
-    subtitles.viewportH = v
-  },
   viewport(w, h) {
     const subtitles = getOrCreateSubtitlesComponent()
     subtitles.viewportW = w
     subtitles.viewportH = h
-  },
-  xPos(v) {
-    const subtitles = getOrCreateSubtitlesComponent()
-    subtitles.xPos = v
-  },
-  yPos(v) {
-    const subtitles = getOrCreateSubtitlesComponent()
-    subtitles.yPos = v
   },
   position(x, y) {
     const subtitles = getOrCreateSubtitlesComponent()
