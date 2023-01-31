@@ -31,7 +31,7 @@ import { step, navigateQueue } from '../index'
 import { createRoute, getOption } from './route'
 import { createComponent } from './components'
 import Log from '../../Log'
-import { isWildcard } from './regex'
+import { isWildcard, stripRegex } from './regex'
 import emit from './emit'
 import { updateWidgets } from './widgets'
 import { setHistory, updateHistory } from './history'
@@ -263,11 +263,11 @@ const init = config => {
     }
   }
   config.routes.forEach(item => {
-    let path = item.path
+    const path = stripRegex(item.path)
     // Pattern to identify the last path of the route
     // It should start with "/:" + any word  and ends with "?"
     // Example /player/:asset/:assetId?
-    const pattern = /\/:{1}\w+\?$/
+    const pattern = /.*\/:.*?\?$/u
     if (pattern.test(item.path)) {
       const optionalPath = path.substring(0, path.lastIndexOf('/'))
       const originalPath = path.substring(0, path.lastIndexOf('?'))
