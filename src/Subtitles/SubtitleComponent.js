@@ -54,6 +54,7 @@ export default class SubtitleComponent extends Lightning.Component {
 
   get textFormat() {
     const textTag = this.tag('Text').text
+
     return {
       fontFace: textTag.fontFace || 'sans-serif',
       fontSize: textTag.fontSize,
