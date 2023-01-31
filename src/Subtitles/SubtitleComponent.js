@@ -81,7 +81,7 @@ export default class SubtitleComponent extends Lightning.Component {
     this.x = this._calculateX(this.xPos)
   }
 
-  get viewPortW() {
+  get viewportW() {
     return this._viewportW || this.application.finalW
   }
 
@@ -96,11 +96,11 @@ export default class SubtitleComponent extends Lightning.Component {
 
   _calculateX(x) {
     if (x === 'center') {
-      x = (this.viewPortW - this.finalW) / 2
+      x = (this.viewportW - this.finalW) / 2
     } else if (x === 'left') {
       x = 60
     } else if (x === 'right') {
-      x = this.viewPortW - this.finalW - 60
+      x = this.viewportW - this.finalW - 60
     }
     return x
   }
@@ -116,11 +116,11 @@ export default class SubtitleComponent extends Lightning.Component {
 
   _calculateY(y) {
     if (y === 'center') {
-      return (this.viewPortH - this.finalH) / 2
+      return (this.viewportH - this.finalH) / 2
     } else if (y === 'top') {
       return 60
     } else if (y === 'bottom') {
-      return this.viewPortH - this.finalH - 60
+      return this.viewportH - this.finalH - 60
     }
     return y
   }
