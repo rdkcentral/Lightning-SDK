@@ -45,6 +45,7 @@ export default class SubtitleComponent extends Lightning.Component {
 
   _init() {
     this._textureDefaults = new Lightning.textures.TextTexture(this.stage).cloneArgs()
+
     this.tag('Text').on('txLoaded', ({ _source }) => {
       this.w = _source.w + this.tag('Text').x * 2
       this.h = _source.h
@@ -54,7 +55,6 @@ export default class SubtitleComponent extends Lightning.Component {
 
   get textFormat() {
     const textTag = this.tag('Text').text
-
     return {
       fontFace: textTag.fontFace || 'sans-serif',
       fontSize: textTag.fontSize,
