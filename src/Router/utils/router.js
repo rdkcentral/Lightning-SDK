@@ -263,14 +263,20 @@ const init = config => {
     }
   }
   config.routes.forEach(item => {
-    const path = stripRegex(item.path)
+    // replacing regexes with 'R' to avoid issues with pattern matching below
+    const strippedPath = stripRegex(item.path)
+
     // Pattern to identify the last path of the route
     // It should start with "/:" + any word  and ends with "?"
-    // Example /player/:asset/:assetId?
+    // It should be the last path of the route
+    // valid => /player/:asset/:assetId? (:assetId is optional)
+    // invalid => /player/:asset/:assetId?/test (:assetId? is not an optional path)
+    // invalid => /player/:asset?/:assetId? (second path is not considered as an optional path)
     const pattern = /.*\/:.*?\?$/u
-    if (pattern.test(item.path)) {
-      const optionalPath = path.substring(0, path.lastIndexOf('/'))
-      const originalPath = path.substring(0, path.lastIndexOf('?'))
+
+    if (pattern.test(strippedPath)) {
+      const optionalPath = item.path.substring(0, item.path.lastIndexOf('/'))
+      const originalPath = item.path.substring(0, item.path.lastIndexOf('?'))
       item.path = originalPath
       //Create another entry with the optional path
       let optionalItem = { ...item }
