@@ -126,9 +126,9 @@ export default function(App, appData, platformSettings) {
     /**
      * This function overides the default keymap with the latest keymap.
      * @param overrideKeymap
-     * @param keepDefaults
+     * @param keepDuplicates
      */
-    overRideKeyMap(overrideKeymap, keepDefaults = false) {
+    overRideKeyMap(overrideKeymap, keepDuplicates = false) {
       let baseKeymap = this.stage.application.config.keys
       if (keepDefaults) {
         baseKeymap = Object.assign({}, baseKeymap, overrideKeymap)
