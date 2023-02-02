@@ -130,7 +130,7 @@ export default function(App, appData, platformSettings) {
      */
     overRideKeyMap(overrideKeymap, keepDuplicates = false) {
       let baseKeymap = this.stage.application.config.keys
-      if (keepDefaults) {
+      if (keepDuplicates) {
         baseKeymap = Object.assign({}, baseKeymap, overrideKeymap)
       } else {
         Object.keys(overrideKeymap).reduce((keymapping, key) => {
