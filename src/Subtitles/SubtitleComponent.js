@@ -22,7 +22,7 @@ import Lightning from '../Lightning'
 export default class SubtitleComponent extends Lightning.Component {
   static _template() {
     return {
-      visibility: false,
+      visible: false,
       rect: true,
       color: 0x90000000,
       shader: { type: Lightning.shaders.RoundedRectangle, radius: 5 },
@@ -66,11 +66,11 @@ export default class SubtitleComponent extends Lightning.Component {
   }
 
   show() {
-    this.visibility = true
+    this.visible = true
   }
 
   hide() {
-    this.visibilty = false
+    this.visible = false
   }
 
   position() {
@@ -78,13 +78,31 @@ export default class SubtitleComponent extends Lightning.Component {
     this.y = this._calculateY(this.yPos)
   }
 
+  set viewportW(v) {
+    this._viewportW = v
+    this.x = this._calculateX(this.xPos)
+  }
+
+  get viewportW() {
+    return this._viewportW || this.application.finalW
+  }
+
+  set viewportH(v) {
+    this._viewportH = v
+    this.y = this._calculateY(this.yPos)
+  }
+
+  get viewportH() {
+    return this._viewportH || this.application.finalH
+  }
+
   _calculateX(x) {
     if (x === 'center') {
-      x = (this.application.finalW - this.finalW) / 2
+      x = (this.viewportW - this.finalW) / 2
     } else if (x === 'left') {
       x = 60
     } else if (x === 'right') {
-      x = this.application.finalW - this.finalW - 60
+      x = this.viewportW - this.finalW - 60
     }
     return x
   }
@@ -100,11 +118,11 @@ export default class SubtitleComponent extends Lightning.Component {
 
   _calculateY(y) {
     if (y === 'center') {
-      return (this.application.finalH - this.finalH) / 2
+      return (this.viewportH - this.finalH) / 2
     } else if (y === 'top') {
       return 60
     } else if (y === 'bottom') {
-      return this.application.finalH - this.finalH - 60
+      return this.viewportH - this.finalH - 60
     }
     return y
   }
@@ -162,9 +180,7 @@ export default class SubtitleComponent extends Lightning.Component {
 
       this.tag('Text').text.wordWrapWidth = breakpoint
       this.tag('Text').text = v
-      setTimeout(() => {
-        this.setSmooth('alpha', 1, { duration: 0.2 })
-      }, 100)
+      this.alpha = 1
     }
   }
 

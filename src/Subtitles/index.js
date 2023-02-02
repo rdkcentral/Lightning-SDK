@@ -30,6 +30,7 @@ const getOrCreateSubtitlesComponent = () => {
           AppInstance.stage.c({
             ref: 'Subtitles',
             type: SubtitleComponent,
+            forceZIndexContext: true,
             zIndex: 2,
           })
         ))
@@ -74,6 +75,11 @@ export default {
   textAlignVertical(v) {
     const subtitles = getOrCreateSubtitlesComponent()
     subtitles.textAlignVertical = v
+  },
+  viewport(w, h) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.viewportW = w
+    subtitles.viewportH = h
   },
   position(x, y) {
     const subtitles = getOrCreateSubtitlesComponent()
