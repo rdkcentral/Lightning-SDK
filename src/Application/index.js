@@ -142,6 +142,7 @@ export default function(App, appData, platformSettings) {
         keymapping[key] = customKeymap[key]
         return keymapping
       }, baseKeymap)
+      return baseKeymap
     }
 
     _setup() {
