@@ -7,7 +7,7 @@ SDK provides various methods that can be used within the application.
 
 ###overRideKeyMap
 
-Over-rides the default keymap with the new keymap.
+Returns the new keymap by overriding the existing keymap with the new keymap based on the flag keepDefaults
 
 This can be done using the below snippet :
 
