@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+import fetchJson from '../helpers/fetchJson'
 import Log from '../Log'
 import { mergeColors, calculateAlpha, isObject, isString, argbToHSLA, hslaToARGB } from './utils.js'
 
@@ -60,8 +61,7 @@ export const initColors = file => {
       addColors(file)
       return resolve()
     }
-    fetch(file)
-      .then(response => response.json())
+    fetchJson(file)
       .then(json => {
         addColors(json)
         return resolve()
