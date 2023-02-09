@@ -2,21 +2,32 @@
 
 SDK provides various methods that can be used within the application.
 
-
 ## Available Methods
 
-###overRideKeyMap
+### overRideKeyMap
 
-Returns the new keymap by overriding the existing keymap with the new keymap based on the flag keepDefaults
+This method can be used to merge and override the existing keymap (coming from `settings.json`) by using a custom keymap in runtime. The method will merge all key mappings by overriding the existing key mappings with the new ones when a key is defined in both keymaps.
 
-This can be done using the below snippet :
+`keepDuplicates` flag is set to `false` by default, which means duplicated values (like two keys listening to `Back`) will be removed from the final keymap. If `keepDuplicates` is set to `true`, duplicated **values** will be kept in the final keymap.
+
+#### Usage
 
 ```js
-this.application.overRideKeyMap(customKeyMap, keepDefaults)
+const customKeyMap = {
+    13: "Enter",
+    83: "Search"
+}
+
+this.application.overRideKeyMap(customKeyMap) // keepDuplicates = false
 ```
 
-- `customKeyMap` : Keymap to be overidden
-- `keepDefaults`: Flag to overide the the default keymap or not.
-    - By default `keepDefaults` will be false.
-    - If set to `false`, it will override the existing keymap.
-    - If set to `true`, it will be merged with the base keymap along with the exsiting keymap, where it has all the keys which has same values.
+or
+
+```js
+this.application.overRideKeyMap(customKeyMap, true) // keepDuplicates = true
+```
+
+#### Parameters
+
+- `customKeyMap` : keymap object
+- `keepDuplicates`: flag to keep duplicated values in the final keymap or not. The default value is `false`.
