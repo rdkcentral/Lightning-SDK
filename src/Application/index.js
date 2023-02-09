@@ -37,7 +37,7 @@ export let AppInstance
 export let AppData
 
 const defaultOptions = {
-  stage: { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false },
+  stage: { w: 1920, h: 1080, precision: 1, clearColor: 0x00000000, canvas2d: false },
   debug: false,
   defaultFontFace: 'RobotoRegular',
   keys: {
