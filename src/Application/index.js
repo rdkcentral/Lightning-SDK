@@ -131,7 +131,7 @@ export default function(App, appData, platformSettings) {
     overRideKeyMap(customKeymap, keepDuplicates = false) {
       const baseKeymap = this.stage.application.config.keys
       Object.keys(customKeymap).reduce((keymapping, key) => {
-        // prevent duplicate values to exist in final keymapping (i.e. 2 keys listening to 'Back')
+        // prevent duplicate values to exist in final keymapping (i.e. 2 keys triggering 'Back')
         if (!keepDuplicates) {
           Object.keys(baseKeymap).forEach(baseKey => {
             if (baseKey != key && baseKeymap[baseKey] == customKeymap[key]) {
