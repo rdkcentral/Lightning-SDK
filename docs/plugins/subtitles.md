@@ -116,10 +116,29 @@ Subtitles.position('center', 'top')
 Subtitles.position(100, 100)
 ```
 
+### viewport
+
+Sets the width and height for the viewport of the Subtitles text. The viewport is the area in which the Subtitles text will be displayed. By default, Subtitles assumes the viewport is the same size as the App. If your video player is smaller, you can set the viewport to match the size of the video player to correctly position the Subtitles text.
+
+The first argument is the width of the viewport, the second argument is the height of the viewport.
+
+
+```js
+Subtitles.viewport(854, 480)
+```
+
 ### maxWidth
 
 Sets the maximum width of the Subtitles text.
 
 ```js
 Subtitles.maxWidth(1200)
+```
+
+### maxLines
+
+Sets the maximum number of lines for the Subtitles text.
+
+```js
+Subtitles.maxLines(2)
 ```
