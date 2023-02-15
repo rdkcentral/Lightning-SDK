@@ -102,4 +102,8 @@ export default {
     const subtitles = getOrCreateSubtitlesComponent()
     subtitles.text = ''
   },
+  textFormat() {
+    const subtitles = getOrCreateSubtitlesComponent()
+    return subtitles.textFormat
+  }
 }
