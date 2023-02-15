@@ -62,12 +62,12 @@ export interface RouterPlatformSettings {
    *
    * @remarks
    * See [Router Settings](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/settings?id=router-settings)
-   * and [Deeplinking - Backtracking](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/deeplinking?id=backtracking)
+   * and [Deeplinking - Backtrack](https://lightningjs.io/docs/#/lightning-sdk-reference/plugins/router/deeplinking?id=backtrack)
    * for more information.
    *
    * @defaultValue `false`
    */
-  backtracking?: boolean;
+  backtrack?: boolean;
 
   /**
    * If set to `true` (default), a navigation to a hash with the same route blueprint as the current hash will cause the

@@ -18,7 +18,7 @@ For example:
           "lazyCreate": true,
           "lazyDestroy": true,
           "gcOnUnload": true,
-          "backtracking": true,
+          "backtrack": true,
           "reuseInstance": false,
           "destroyOnHistoryBack": false
         }
@@ -44,9 +44,9 @@ By default, Lazy Destroy is *disabled*. This results in faster navigating back t
 
 If you want to free up texture memory *directly* after a previous page has been destroyed and you do not want to wait for Lightning's (texture) garbage collection, you can set `gcOnUnload` to `true`. This forces a texture garbage collect directly after destroying the page.
 
-### backtracking
+### backtrack
 
-If you want to enable *backtracking* in your app, you set `backtracking` to `true`.
+If you want to enable *backtracking* in your app, you set `backtrack` to `true`.
 
 ### destroyOnHistoryBack
 
