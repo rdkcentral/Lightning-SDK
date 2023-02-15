@@ -30,7 +30,7 @@ export default class SubtitleComponent extends Lightning.Component {
         y: 5,
         x: 20,
         text: {
-          fontColor: 0xffffffff,
+          textColor: 0xffffffff,
           fontSize: 38,
           lineHeight: 38 * 1.4,
           textAlign: 'center',

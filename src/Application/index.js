@@ -124,11 +124,11 @@ export default function(App, appData, platformSettings) {
     }
 
     /**
-     * This function overides the default keymap with the latest keymap.
+     * This function overrides the default keymap with the latest keymap.
      * @param customKeymap
      * @param keepDuplicates
      */
-    overRideKeyMap(customKeymap, keepDuplicates = false) {
+    overrideKeyMap(customKeymap, keepDuplicates = false) {
       const baseKeymap = this.stage.application.config.keys
       Object.keys(customKeymap).reduce((keymapping, key) => {
         // prevent duplicate values to exist in final keymapping (i.e. 2 keys triggering 'Back')
