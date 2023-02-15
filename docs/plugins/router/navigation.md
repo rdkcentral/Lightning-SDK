@@ -96,6 +96,46 @@ Router.navigate({
 
 This results in: `#player/12/44`
 
+## Optional router path
+
+There might be some cases in which you need a route path with an optional parameter at the end. Normally, you would have to define two different routes to the same component, one with the optional parameter and one without. Starting with Lightning-SDK `v5.3.0`, you can specify an optional router path parameter by adding a `?` suffix to the last parameter name.
+
+Please note that only the last parameter of any path is allowed to be an optional parameter. For example, if you have a route path with three parameters, you can make only the last parameter optional, but not the second parameter.
+
+When we define an optional parameter like this:
+```js
+{
+  path: 'player/:assetId/:playlistId?',
+  component: Player
+  name: 'player'
+}
+```
+
+This will generate two paths internally as below:
+
+```js
+{
+    path: 'player/:assetId/:playlistId'
+    component: Player
+    name: 'player'
+}
+{
+    path: 'player/:assetId',
+    component: Player,
+    name: 'player'
+}
+```
+
+The following example would *not* work because only the last parameter of the path can be optional:
+
+```js
+{
+  path: 'player/:assetId?/:playlistId',
+  component: Player
+  name: 'player'
+}
+```
+
 
 ## isNavigating Method
 
