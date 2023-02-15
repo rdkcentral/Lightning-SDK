@@ -4,7 +4,7 @@ SDK provides various methods that can be used within the application.
 
 ## Available Methods
 
-### overRideKeyMap
+### overrideKeyMap
 
 This method can be used to merge and override the existing keymap (coming from `settings.json`) by using a custom keymap in runtime. The method will merge all key mappings by overriding the existing key mappings with the new ones when a key is defined in both keymaps.
 
@@ -18,13 +18,13 @@ const customKeyMap = {
     83: "Search"
 }
 
-this.application.overRideKeyMap(customKeyMap) // keepDuplicates = false
+this.application.overrideKeyMap(customKeyMap) // keepDuplicates = false
 ```
 
 or
 
 ```js
-this.application.overRideKeyMap(customKeyMap, true) // keepDuplicates = true
+this.application.overrideKeyMap(customKeyMap, true) // keepDuplicates = true
 ```
 
 #### Parameters
