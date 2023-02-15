@@ -81,22 +81,6 @@ export default {
     subtitles.viewportW = w
     subtitles.viewportH = h
   },
-  viewportW(w) {
-    const subtitles = getOrCreateSubtitlesComponent()
-    subtitles.viewportW = w
-  },
-  viewportH(h) {
-    const subtitles = getOrCreateSubtitlesComponent()
-    subtitles.viewportH = h
-  },
-  xPos(v) {
-    const subtitles = getOrCreateSubtitlesComponent()
-    subtitles.xPos = v
-  },
-  yPos(v) {
-    const subtitles = getOrCreateSubtitlesComponent()
-    subtitles.yPos = v
-  },
   position(x, y) {
     const subtitles = getOrCreateSubtitlesComponent()
     subtitles.xPos = x
@@ -105,6 +89,10 @@ export default {
   maxWidth(v) {
     const subtitles = getOrCreateSubtitlesComponent()
     subtitles.maxWidth = v
+  },
+  maxLines(v) {
+    const subtitles = getOrCreateSubtitlesComponent()
+    subtitles.maxLines = v
   },
   text(v) {
     const subtitles = getOrCreateSubtitlesComponent()
