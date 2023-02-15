@@ -119,6 +119,32 @@ export default function(App, appData, platformSettings) {
       Accessibility.colorshift(this, type, config)
     }
 
+    get keymapping() {
+      return this.stage.application.config.keys
+    }
+
+    /**
+     * This function overides the default keymap with the latest keymap.
+     * @param customKeymap
+     * @param keepDuplicates
+     */
+    overRideKeyMap(customKeymap, keepDuplicates = false) {
+      const baseKeymap = this.stage.application.config.keys
+      Object.keys(customKeymap).reduce((keymapping, key) => {
+        // prevent duplicate values to exist in final keymapping (i.e. 2 keys triggering 'Back')
+        if (!keepDuplicates) {
+          Object.keys(baseKeymap).forEach(baseKey => {
+            if (baseKey != key && baseKeymap[baseKey] == customKeymap[key]) {
+              delete keymapping[baseKey]
+            }
+          })
+        }
+        keymapping[key] = customKeymap[key]
+        return keymapping
+      }, baseKeymap)
+      return baseKeymap
+    }
+
     _setup() {
       Promise.all([
         this.loadFonts((App.config && App.config.fonts) || (App.getFonts && App.getFonts()) || []),
