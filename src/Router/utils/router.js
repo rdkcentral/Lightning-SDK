@@ -31,7 +31,7 @@ import { step, navigateQueue } from '../index'
 import { createRoute, getOption } from './route'
 import { createComponent } from './components'
 import Log from '../../Log'
-import { isWildcard } from './regex'
+import { isWildcard, stripRegex } from './regex'
 import emit from './emit'
 import { updateWidgets } from './widgets'
 import { setHistory, updateHistory } from './history'
@@ -262,6 +262,28 @@ const init = config => {
       console.error(`[Router]: ${config.bootComponent} is not a valid boot component`)
     }
   }
+  config.routes.forEach(item => {
+    // replacing regexes with 'R' to avoid issues with pattern matching below
+    const strippedPath = stripRegex(item.path)
+
+    // Pattern to identify the last path of the route
+    // It should start with "/:" + any word  and ends with "?"
+    // It should be the last path of the route
+    // valid => /player/:asset/:assetId? (:assetId is optional)
+    // invalid => /player/:asset/:assetId?/test (:assetId? is not an optional path)
+    // invalid => /player/:asset?/:assetId? (second path is not considered as an optional path)
+    const pattern = /.*\/:.*?\?$/u
+
+    if (pattern.test(strippedPath)) {
+      const optionalPath = item.path.substring(0, item.path.lastIndexOf('/'))
+      const originalPath = item.path.substring(0, item.path.lastIndexOf('?'))
+      item.path = originalPath
+      //Create another entry with the optional path
+      let optionalItem = { ...item }
+      optionalItem.path = optionalPath
+      config.routes.push(optionalItem)
+    }
+  })
   initialised = true
 }
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.3.0
+*16 feb 2023*
+
+- Added Subtitles plugin
+- Added support for overriding the key mappping at runtime (i.e. after the App is launched) (#276)
+- Added support for an optional path at the end of router paths (#362)
+- Added support for plugins to load local JSON files (#360)
+- Fixed a bug related to the Router plugin which results in not setting previous state when "on" data provider is used (#365)
+- Fixed incorrect positioning of the version label (#359)
+- Updated `@metrological/sdk` and `localCookie` NPM package paths
+- Fixed the Router plugin documentation regarding `backtrack` feature (#375)
+
 ## v5.2.0
 
 *20 oct 2022*
