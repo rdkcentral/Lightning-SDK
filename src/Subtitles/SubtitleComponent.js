@@ -49,7 +49,7 @@ export default class SubtitleComponent extends Lightning.Component {
     this.tag('Text').on('txLoaded', ({ _source }) => {
       this.w = _source.w + this.tag('Text').x * 2
       this.h = _source.h
-      this.position() //TODO
+      this.position()
     })
   }
 
@@ -62,7 +62,6 @@ export default class SubtitleComponent extends Lightning.Component {
       textAlign: textTag.textAlign,
       wordWrap: true,
       maxLines: textTag.maxLines,
-      textColor: textTag.textColor
     }
   }
 
@@ -147,7 +146,7 @@ export default class SubtitleComponent extends Lightning.Component {
   }
 
   set fontColor(v) {
-    this.tag('Text').text.textColor = v
+    this.tag('Text').color = v
   }
 
   set backgroundColor(v) {

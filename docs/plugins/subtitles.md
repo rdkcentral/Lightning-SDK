@@ -142,11 +142,3 @@ Sets the maximum number of lines for the Subtitles text.
 ```js
 Subtitles.maxLines(2)
 ```
-
-### textFormat
-
-Gets the text format(fontFace, fontSize, lineHeight, textAlign, wordWrap, maxLines, textColor) of the text
-
-```js
-Subtitles.textFormat()
-```
