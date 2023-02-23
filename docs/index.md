@@ -3,6 +3,10 @@
 
 The Reference Documentation for Lightning SDK contains detailed descriptions of the Lightning SDK *Plugins* that you can use when you are developing Apps with Lightning SDK.
 
+<!---TOC_start--->
+* [Getting Started](getting-started.md)
+* [TypeScript Support](typescript.md)
+<!---TOC_end--->
 
 The available Lightning SDK plugins are, in alphabetical order:
 
@@ -35,5 +39,4 @@ The available Lightning SDK plugins are, in alphabetical order:
 * [Utils](plugins/utils.md)
 * [VersionLabel](plugins/versionlabel.md)
 * [VideoPlayer](plugins/videoplayer.md)
-* [TypeScript Support](typescript.md)
 <!---TOC_end--->
