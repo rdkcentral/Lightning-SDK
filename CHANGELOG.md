@@ -1,5 +1,10 @@
 # Changelog
 
+## v5.3.1
+*23 feb 2023*
+
+- Fixed bug where localCookie library could not loaded correctly when using webpack(#377)
+
 ## v5.3.0
 *16 feb 2023*
 
