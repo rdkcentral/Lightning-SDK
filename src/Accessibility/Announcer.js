@@ -31,7 +31,7 @@ export default function Announcer(Base, speak = Speech, announcerOptions = {}) {
         return
       }
 
-      const speech = speak(toSpeak, options.language)
+      const speech = speak(toSpeak)
       // event using speech synthesis api promise
       if (speech && speech.series) {
         speech.series.then(() => {
@@ -156,12 +156,8 @@ export default function Announcer(Base, speak = Speech, announcerOptions = {}) {
       this._currentlySpeaking && this._currentlySpeaking.cancel()
     }
 
-    $announcerRefresh(depth) {
-      if (depth) {
-        this._lastFocusPath = this._lastFocusPath.slice(0, depth)
-      } else {
-        this._lastFocusPath = undefined
-      }
+    $announcerRefresh(depth = 0) {
+      this._lastFocusPath = this._lastFocusPath.slice(0, depth)
       this._resetFocusTimer()
       this._focusChange()
     }
