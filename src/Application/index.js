@@ -37,7 +37,7 @@ export let AppInstance
 export let AppData
 
 const defaultOptions = {
-  stage: { w: 1920, h: 1080, clearColor: 0x00000000, canvas2d: false },
+  stage: { w: 1920, h: 1080, precision: 1, clearColor: 0x00000000, canvas2d: false },
   debug: false,
   defaultFontFace: 'RobotoRegular',
   keys: {
@@ -119,6 +119,32 @@ export default function(App, appData, platformSettings) {
       Accessibility.colorshift(this, type, config)
     }
 
+    get keymapping() {
+      return this.stage.application.config.keys
+    }
+
+    /**
+     * This function overrides the default keymap with the latest keymap.
+     * @param customKeyMap
+     * @param keepDuplicates
+     */
+    overrideKeyMap(customKeyMap, keepDuplicates = false) {
+      const baseKeyMap = this.stage.application.config.keys
+      Object.keys(customKeyMap).reduce((keymapping, key) => {
+        // prevent duplicate values to exist in final keymapping (i.e. 2 keys triggering 'Back')
+        if (!keepDuplicates) {
+          Object.keys(baseKeyMap).forEach(baseKey => {
+            if (baseKey != key && baseKeyMap[baseKey] == customKeyMap[key]) {
+              delete keymapping[baseKey]
+            }
+          })
+        }
+        keymapping[key] = customKeyMap[key]
+        return keymapping
+      }, baseKeyMap)
+      return baseKeyMap
+    }
+
     _setup() {
       Promise.all([
         this.loadFonts((App.config && App.config.fonts) || (App.getFonts && App.getFonts()) || []),
@@ -130,8 +156,8 @@ export default function(App, appData, platformSettings) {
         .then(() => {
           Metrics.app.loaded()
 
-          this.w = this.config.stage.w
-          this.h = this.config.stage.h
+          this.w = this.config.stage.w / this.config.stage.precision
+          this.h = this.config.stage.h / this.config.stage.precision
 
           AppData = appData
 

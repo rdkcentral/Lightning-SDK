@@ -2,6 +2,7 @@
 
 - Plugins
   - [Accessibility](/plugins/accessibility.md)
+  - [App](/plugins/app.md)
   - [Utils](/plugins/utils.md)
   - [Storage](/plugins/storage.md)
   - [Settings](/plugins/settings.md)
