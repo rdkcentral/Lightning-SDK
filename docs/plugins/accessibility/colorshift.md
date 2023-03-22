@@ -1,9 +1,3 @@
-# Accessibility
-
-The Accessibility plugin provides functionality to easily make your App more accessible.
-
-Currently it provides functionality to apply a **Colorshifting filter** to your App, helping people with different types of color blindness to properly use your App.
-
 ## Usage
 
 The Accessibility plugin is automatically included in the root of your App. In most cases there is no need to specifically import the Accessibility plugin into your App code.
