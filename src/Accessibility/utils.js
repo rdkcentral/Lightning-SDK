@@ -21,7 +21,7 @@
  * Licensed under the MIT License based off:
  * http://unscriptable.com/2009/03/20/debouncing-javascript-methods/ which is:
  * Copyright (c) 2007-2009 unscriptable.com and John M. Hann
- *  Licensed under the MIT License
+ * Licensed under the MIT License (with X11 advertising exception)
  */
 
 export function getElmName(elm) {
