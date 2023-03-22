@@ -7,3 +7,10 @@ listed below. Your use of this material within the component is also subject to 
 conditions of these licenses. The LICENSE file contains the text of all the licenses which apply
 within this component.
  
+Code from: https://github.com/jashkenas/underscore is
+Copyright (c) 2009-2022 Jeremy Ashkenas, Julian Gonggrijp, and DocumentCloud and Investigative Reporters & Editors
+Licensed under the MIT License
+based off:
+http://unscriptable.com/2009/03/20/debouncing-javascript-methods/ which is:
+Copyright (c) 2007-2009 unscriptable.com and John M. Hann
+Licensed under the MIT License

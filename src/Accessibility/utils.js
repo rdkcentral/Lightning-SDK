@@ -15,6 +15,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * Code from: https://github.com/jashkenas/underscore is
+ * Copyright (c) 2009-2022 Jeremy Ashkenas, Julian Gonggrijp, and DocumentCloud and Investigative Reporters & Editors
+ * Licensed under the MIT License based off:
+ * http://unscriptable.com/2009/03/20/debouncing-javascript-methods/ which is:
+ * Copyright (c) 2007-2009 unscriptable.com and John M. Hann
+ *  Licensed under the MIT License
  */
 
 export function getElmName(elm) {
