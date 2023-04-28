@@ -29,6 +29,7 @@
     "@metrological/sdk": "^1.0.0",
     "@michieljs/execute-as-promise": "^1.0.0",
     "deepmerge": "^4.2.2",
+    "is-plain-object": "^5.0.0",
     "localcookies": "^2.0.0",
     "shelljs": "^0.8.5",
     "url-polyfill": "^1.1.10",
