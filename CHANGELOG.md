@@ -1,5 +1,12 @@
 # Changelog
 
+## v5.3.2
+
+*28 apr 2023*
+
+- Fixed issue where some stage options are not properly preserved during deep merge (i.e canvas and webgl context) ([#388](https://github.com/rdkcentral/Lightning-SDK/pull/388))
+- Fixed router backtrack issue ([#385](https://github.com/rdkcentral/Lightning-SDK/issues/385)
+
 ## v5.3.1
 *23 feb 2023*
 
