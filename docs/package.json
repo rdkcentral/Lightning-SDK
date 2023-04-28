@@ -1,6 +1,6 @@
 {
   "name": "@lightningjs/sdk",
-  "version": "5.3.1",
+  "version": "5.3.2",
   "license": "Apache-2.0",
   "types": "index.d.ts",
   "scripts": {
@@ -29,6 +29,7 @@
     "@metrological/sdk": "^1.0.0",
     "@michieljs/execute-as-promise": "^1.0.0",
     "deepmerge": "^4.2.2",
+    "is-plain-object": "^5.0.0",
     "localcookies": "^2.0.0",
     "shelljs": "^0.8.5",
     "url-polyfill": "^1.1.10",
