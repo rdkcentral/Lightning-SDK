@@ -123,6 +123,12 @@ export let routes = new Map()
 export let components = new Map()
 
 /**
+ * Copy of components created at boot time
+ * @type {Map<string, object>}
+ */
+export let bootcomponents = new Map()
+
+/**
  * Flag if router has been initialised
  * @type {boolean}
  */
@@ -218,6 +224,7 @@ const setup = config => {
             pagesHost.a(type)
           }
         }
+        bootcomponents.set(path, type)
         components.set(path, type)
       }
     } else {
@@ -299,6 +306,14 @@ export const getComponent = route => {
   }
   return null
 }
+
+// repace the current with boot instance
+export const deleteCurrentInstance = route => {
+  if(bootcomponents.has(route)){
+    components.set(route, bootcomponents.get(route))
+  }
+}
+
 /**
  * Test if router needs to update browser location hash
  * @returns {boolean}
