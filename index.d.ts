@@ -27,6 +27,7 @@ export { default as Img } from './src/Img/index.js';
 export const Keyboard: any; // export { default as Keyboard } from './src/Keyboard'
 export { default as Launch } from './src/Launch/index.js';
 export { default as Lightning } from './src/Lightning/index.js';
+export { default as EventEmitter } from './src/EventEmitter'
 export const Locale: any; // export { default as Locale } from './src/Locale'
 export const Language: any; // export { default as Language } from './src/Language'
 export const Log: any; // export { default as Log } from './src/Log'
