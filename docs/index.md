@@ -8,6 +8,7 @@ The available Lightning SDK plugins are, in alphabetical order:
 
 <!---TOC_start--->
 * [Colors](plugins/colors.md)
+* [Event Emitter](plugins/eventemitter.md)
 * [FPS Counter](plugins/fpscounter.md)
 * [Image](plugins/image.md)
 * [Language](plugins/language.md)
