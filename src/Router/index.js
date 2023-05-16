@@ -357,14 +357,8 @@ export const step = (level = 0) => {
   // for now we only support negative numbers
   level = Math.abs(level)
 
-  // we can't step back past the amount
-  // of history entries
-  if (level > history.length) {
-    if (isFunction(app._handleAppClose)) {
-      return app._handleAppClose()
-    }
-    return app.application.closeApp()
-  } else if (history.length) {
+  //Check whether we have any history avaialble or not
+  if (history.length) {
     // for now we only support history back
     const route = history.splice(history.length - level, level)[0]
     // store changed history
@@ -394,6 +388,15 @@ export const step = (level = 0) => {
         }
       }
     }
+  }
+
+  // we can't step back past the amount
+  // of history entries
+  if (level > history.length) {
+    if (isFunction(app._handleAppClose)) {
+      return app._handleAppClose()
+    }
+    return app.application.closeApp()
   }
   return false
 }
