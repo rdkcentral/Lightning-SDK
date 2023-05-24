@@ -20,11 +20,11 @@
 import SpeechEngine from './Speech.js'
 import { debounce, getElmName } from './utils.js'
 
-let resetFocusTimer;
-let prevFocusPath = [];
-let currentlySpeaking;
-let voiceOutDisabled = false;
-const fiveMinutes =  300000;
+let resetFocusPathTimer
+let prevFocusPath = []
+let currentlySpeaking
+let voiceOutDisabled = false
+const fiveMinutes = 300000
 
 function onFocusChangeCore(focusPath = []) {
   if (!Announcer.enabled) {
@@ -34,8 +34,7 @@ function onFocusChangeCore(focusPath = []) {
   const loaded = focusPath.every(elm => !elm.loading)
   const focusDiff = focusPath.filter(elm => !prevFocusPath.includes(elm))
 
-  resetFocusTimer()
-  Announcer.cancel()
+  resetFocusPathTimer()
 
   if (!loaded) {
     Announcer.onFocusChange()
@@ -44,7 +43,7 @@ function onFocusChangeCore(focusPath = []) {
 
   prevFocusPath = focusPath.slice(0)
 
-  let toAnnounceText = [];
+  let toAnnounceText = []
   let toAnnounce = focusDiff.reduce((acc, elm) => {
     if (elm.announce) {
       acc.push([getElmName(elm), 'Announce', elm.announce])
@@ -71,8 +70,7 @@ function onFocusChangeCore(focusPath = []) {
   }
 
   if (toAnnounceText.length) {
-    Announcer.cancel()
-    return currentlySpeaking = Announcer._textToSpeech(
+    return Announcer.speak(
       toAnnounceText.reduce((acc, val) => acc.concat(val), [])
     )
   }
@@ -84,49 +82,46 @@ const Announcer = {
   cancel: function() {
     currentlySpeaking && currentlySpeaking.cancel()
   },
-  refresh: function(depth = 0) {
+  clearPrevFocus: function(depth = 0) {
     prevFocusPath = prevFocusPath.slice(0, depth)
-    resetFocusTimer()
+    resetFocusPathTimer()
   },
   speak: function(text, { append = false, notification = false } = {}) {
-      if (Announcer.enabled) {
-        Announcer.onFocusChange.flush()
-        if (append && currentlySpeaking && currentlySpeaking.active) {
-          currentlySpeaking.append(text)
-        } else {
-          Announcer.cancel()
-          currentlySpeaking = Announcer._textToSpeech(text)
-        }
-
-        if (notification) {
-          voiceOutDisabled = true
-          currentlySpeaking.series.finally(() => {
-            voiceOutDisabled = false
-            Announcer.refresh()
-          })
-        }
+    if (Announcer.enabled) {
+      Announcer.onFocusChange.flush()
+      if (append && currentlySpeaking && currentlySpeaking.active) {
+        currentlySpeaking.append(text)
+      } else {
+        Announcer.cancel()
+        Announcer._textToSpeech(text)
       }
 
-      return currentlySpeaking
+      if (notification) {
+        voiceOutDisabled = true
+        currentlySpeaking.series.finally(() => {
+          voiceOutDisabled = false
+          Announcer.refresh()
+        })
+      }
+    }
+
+    return currentlySpeaking
   },
   _textToSpeech(toSpeak) {
     if (voiceOutDisabled) {
       return
     }
 
-    return SpeechEngine(toSpeak)
+    return (currentlySpeaking = SpeechEngine(toSpeak))
   },
-  init: function(focusDebounce = 400, focusChangeTimeout = fiveMinutes) {
-    Announcer.onFocusChange = debounce(
-      onFocusChangeCore,
-      focusDebounce
-    );
+  setupTimers: function({focusDebounce = 400, focusChangeTimeout = fiveMinutes} = {}) {
+    Announcer.onFocusChange = debounce(onFocusChangeCore, focusDebounce)
 
-    resetFocusTimer = debounce(() => {
+    resetFocusPathTimer = debounce(() => {
       // Reset focus path for full announce
       prevFocusPath = []
     }, focusChangeTimeout)
-  }
+  },
 }
-Announcer.init();
-export default Announcer;
+Announcer.setupTimers()
+export default Announcer

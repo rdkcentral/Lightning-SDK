@@ -1,25 +1,26 @@
-# Announcer Mixin
+# Announcer Library
 
-Extend your app with the `Announcer` class, that when enabled, allows for relevant information to be voiced along the focus path of the application. On Focus Change events, the `Announcer` class traverses the `_focusPath` property collecting strings or promises of strings to announce to the user. The array of information is passed to a speak function which is responsible for converting the text to speech. We include a default speak function
-which uses the [speechSynthesis API](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis), but you can replace this with your own implementation by passing a speak function as the second argument to `Announcer`.
+The `Announcer` library allows for relevant information to be voiced along the focus path of the application. By passing the focus path to `Announcer.onFocusChange` the function traverses the `_focusPath` property collecting strings or promises of strings to announce to the user. The array of information is passed to a SpeechEngine which is responsible for converting the text to speech. By default we use the [speechSynthesis API](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis), but you can replace this by overwriting `Announcer._textToSpeech`.
 
-Note: The speechSynth api has some known problems:
-https://stackoverflow.com/questions/39391502/js-speechsynthesis-problems-with-the-cancel-method
-https://stackoverflow.com/questions/23483990/speechsynthesis-api-onend-callback-not-working
+Note: The speechSynth api has some known problems:<br />
+https://stackoverflow.com/questions/39391502/js-speechsynthesis-problems-with-the-cancel-method<br />
+https://stackoverflow.com/questions/23483990/speechsynthesis-api-onend-callback-not-working<br />
 
 This class does its best to work around these issues, but speech synth api can randomly fail.
 
 ## Usage
 
-Extend your application with `Announcer` before boot:
-
 ```js
-import { Router, Accessibility } from '@lightningjs/sdk';
-const Base = Announcer(Router.App)
-export default class App extends Base {
+import { Router, {Announcer} = Accessibility } from '@lightningjs/sdk';
+export default class App extends Router.App {
+  ...
+  _focusChange() {
+    Announcer.onFocusChange(this.application._focusPath);
+  }
+}
 ```
 
-Set `announcerEnabled` to true in your app and optionally `debug` to true to see console tables of the output as shown below.
+Set `Announcer.debug = true` to see console tables of the output as shown below.
 
 | Index | Component    | Property   | Value                                            |
 | ----- | ------------ | ---------- | ------------------------------------------------ |
@@ -38,7 +39,7 @@ Set `announcerEnabled` to true in your app and optionally `debug` to true to see
 | 12    | Grid         | No Context |                                                  |
 | 13    | BrowsePage-1 | Context    | PAUSE-2 Press LEFT or RIGHT to                   |
 
-The `Announcer` will travel through the `_focusPath` looking for `component.announce` then `component.title` properties. After collecting those properties it reverses the `_focusPath` looking for `component.announceContext` properties.
+The `Announcer` will travel through the `_focusPath` looking for `component.announce` then `component.title` properties. After collecting those properties it reverses the `_focusPath` looking for `component.announceContext`.
 
 ### SpeechType
 
@@ -80,36 +81,20 @@ You may also use `PAUSE-#` to pause speech for # seconds before saying the next 
 ```
 
 ## API
-
-### Options
-
-| name                | type    | readonly | default                                                                                                                         | description                                                                                         |
-| ------------------- | ------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| voiceOutDelay       | integer | false    | 500ms | time in ms to determine when voice out is read.                                                                                 |                                                                                                     |
-| announcerFocusDebounce       | integer | false    | 400ms | time in ms to determine when voice out is read.                                                                                 |                                                                                                     |
-| announcerTimeout       | integer | false    | 30000ms | time in ms till focus history is reset causing full readout                                                                                |                                                                                                     |
 ### Properties
 
 | name             | type    | readonly | description                                                                                                                                                                                                                                        |
 | ---------------- | ------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| announcerEnabled | boolean | false    | flag to turn on or off Announcer                                                                                                                                                                                                                   |
+| enabled | boolean | false    | default true - flag to turn on or off Announcer                                                                                                                                                                                                                   |
 | announcerTimeout | number  | false    | By default the announcer only gets information about what changed between focus paths. The announcerTimeout resets the cache to announce the full focus path when the user has been inactive a certain amount of time. Default value is 5 minutes. |
 
-### Signals
+### Methods
 
 | name              | args           | description                                                                                                                                                                                                               |
 | ----------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| $announce         |                | Performs a manual announce                                                                                                                                                                                                |
+| speak         |                | Performs a manual announce                                                                                                                                                                                                |
 | &nbsp;            | `announcement` | See _SpeechType_ above                                                                                                                                                                                                    |
 | &nbsp;            | `options`      | Object containing one or more boolean flags: <br/><ul><li>append - Appends announcement to the currently announcing series.</li><li>notification - Speaks out notification and then performs $announcerRefresh.</li></ul> |
-| $announcerRefresh | depth          | Performs an announce using the focusPath - depth can trim known focusPath                                                                                                                                                 |
-| $announcerCancel  | none           | Cancels current speaking                                                                                                                                                                                                  |
-
-### Events
-
-These stage level events can be listened to using the syntax `this.stage.on('EVENT_NAME', callback);`
-
-| name                | args | description                                                                                                                   |
-| ------------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------- |
-| announceEnded       | -    | emitted when all contents of the announce array have finished being read out                                                  |
-| announceTimoutEnded | -    | emitted after the amount of time of announded word count \* 500ms, used to account for the known speechSynth api issues above |
+| clearPrevFocus | `depth`          | Clears the last known focusPath - depth can trim known focusPath                                                                                                                                                 |
+| cancel  | none           | Cancels current speaking                                                                                                                                                                                            |
+| setupTimers | `options` | Object containing: <br/><ul><li>focusDebounce - default amount of time to wait after last input before focus change announcing will occur.</li><li>focusChangeTimeout - Amount of time with no input before full announce will occur on next focusChange</li></ul> |
