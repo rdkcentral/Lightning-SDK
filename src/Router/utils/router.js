@@ -307,10 +307,11 @@ export const getComponent = route => {
   return null
 }
 
-// repace the current with boot instance
+// delete existing route instance from memory
 export const deleteCurrentInstance = route => {
-  if(bootcomponents.has(route)){
-    components.set(route, bootcomponents.get(route))
+  if (components.has(route) && pagesHost.getIndex(components.get(route)) !== -1) {
+    pagesHost.remove(components.get(route))
+    storeComponent(route, components.get(route)._routedType || components.get(route).constructor)
   }
 }
 
