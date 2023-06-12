@@ -70,10 +70,16 @@ function onFocusChangeCore(focusPath = []) {
   }
 
   if (toAnnounceText.length) {
-    return Announcer.speak(
-      toAnnounceText.reduce((acc, val) => acc.concat(val), [])
-    )
+    return Announcer.speak(toAnnounceText.reduce((acc, val) => acc.concat(val), []))
   }
+}
+
+function textToSpeech(toSpeak) {
+  if (voiceOutDisabled) {
+    return
+  }
+
+  return (currentlySpeaking = SpeechEngine(toSpeak))
 }
 
 const Announcer = {
@@ -93,7 +99,7 @@ const Announcer = {
         currentlySpeaking.append(text)
       } else {
         Announcer.cancel()
-        Announcer._textToSpeech(text)
+        textToSpeech(text)
       }
 
       if (notification) {
@@ -107,14 +113,7 @@ const Announcer = {
 
     return currentlySpeaking
   },
-  _textToSpeech(toSpeak) {
-    if (voiceOutDisabled) {
-      return
-    }
-
-    return (currentlySpeaking = SpeechEngine(toSpeak))
-  },
-  setupTimers: function({focusDebounce = 400, focusChangeTimeout = fiveMinutes} = {}) {
+  setupTimers: function({ focusDebounce = 400, focusChangeTimeout = fiveMinutes } = {}) {
     Announcer.onFocusChange = debounce(onFocusChangeCore, focusDebounce)
 
     resetFocusPathTimer = debounce(() => {
