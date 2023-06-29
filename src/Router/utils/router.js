@@ -123,12 +123,6 @@ export let routes = new Map()
 export let components = new Map()
 
 /**
- * Copy of components created at boot time
- * @type {Map<string, object>}
- */
-export let bootcomponents = new Map()
-
-/**
  * Flag if router has been initialised
  * @type {boolean}
  */
@@ -224,7 +218,6 @@ const setup = config => {
             pagesHost.a(type)
           }
         }
-        bootcomponents.set(path, type)
         components.set(path, type)
       }
     } else {
