@@ -139,6 +139,7 @@ export default {
       // remove reference to the target when target has no event listeners registered
       if (Object.keys(registry.eventListeners[targetIndex]).length === 0) {
         registry.targets.splice(targetIndex)
+        registry.eventListeners.splice(targetIndex)
       }
     } else {
       Log.error(
