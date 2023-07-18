@@ -11,7 +11,17 @@ It contains [Lightning](https://github.com/rdkcentral/Lightning) and several use
 - Various helpers
 
 Check out the complete [SDK documentation](https://rdkcentral.github.io/Lightning-SDK/) for more information.
+## Installation
 
+Install with NPM
+```bash
+npm install -g @lightningjs/cli
+```
+
+Install with Yarn
+```bash
+yarn global add @lightningjs/cli
+```
 ## Feedback, bugs, questions and support
 
 In case you find any _bugs_ or have _feature requests_, feel free to open an [issue](https://github.com/rdkcentral/Lightning-SDK/issues/new) on the GitHub repository.
