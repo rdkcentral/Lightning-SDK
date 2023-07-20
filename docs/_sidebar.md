@@ -1,7 +1,7 @@
 - [Getting started](/getting-started.md)
 
 - Plugins
-  - [Accessibility](/plugins/accessibility.md)
+  - [Accessibility](/plugins/accessibility/index.md)
   - [App](/plugins/app.md)
   - [Utils](/plugins/utils.md)
   - [Storage](/plugins/storage.md)

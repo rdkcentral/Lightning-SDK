@@ -19,8 +19,10 @@
 
 import Log from '../Log'
 import { colorshiftShader } from './shaders'
+import Announcer from './Announcer'
 
 export default {
+  Announcer,
   colorshift(component, type = false, config = { brightness: 50, contrast: 50, gamma: 50 }) {
     config = { ...{ brightness: 50, contrast: 50, gamma: 50 }, ...config }
 
