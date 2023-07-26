@@ -805,6 +805,11 @@ declare namespace Router {
   export function getActivePage(): Lightning.Component | null;
 
   /**
+   * Returns the reference of the active Page instance
+   */
+  export function deletePage(param: string): void;
+
+  /**
    * Returns the active route path blueprint
    */
   export function getActiveRoute(): string | undefined;

@@ -44,6 +44,7 @@ import {
   beforeEachRoute,
   getActiveHash,
   getActiveRoute,
+  deleteCurrentInstance,
 } from './utils/router'
 
 import { focusWidget, getActiveWidget, restoreFocus } from './utils/widgets'
@@ -517,6 +518,10 @@ const root = () => {
   }
 }
 
+const deletePage = (param) => {
+  deleteCurrentInstance(param)
+}
+
 // export API
 export default {
   startRouter,
@@ -530,6 +535,7 @@ export default {
     // warning
     return getActivePage()
   },
+  deletePage,
   getActiveRoute,
   getActiveHash,
   focusWidget,
