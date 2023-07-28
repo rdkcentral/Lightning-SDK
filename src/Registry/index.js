@@ -130,6 +130,17 @@ export default {
         handler.toString()
       )
       target.removeEventListener(event, handler)
+      // remove key from event listeners object when no events are registered for that event
+      Object.keys(registry.eventListeners[targetIndex]).forEach(event => {
+        if (registry.eventListeners[targetIndex][event].length === 0) {
+          delete registry.eventListeners[targetIndex][event]
+        }
+      })
+      // remove reference to the target when target has no event listeners registered
+      if (Object.keys(registry.eventListeners[targetIndex]).length === 0) {
+        registry.targets.splice(targetIndex)
+        registry.eventListeners.splice(targetIndex)
+      }
     } else {
       Log.error(
         'Remove eventListener',

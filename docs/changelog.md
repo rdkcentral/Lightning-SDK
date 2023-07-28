@@ -1,11 +1,20 @@
 # Changelog
 
+## v5.4.0
+
+*27 jul 2023*
+
+- Added Announcer plugin
+- Added support for cleanup of event listeners and targets to prevent retaining memory during app lifetime.
+- Added support to kill previously keepAlive page instance
+
+
 ## v5.3.2
 
 *28 apr 2023*
 
 - Fixed issue where some stage options are not properly preserved during deep merge (i.e canvas and webgl context) ([#388](https://github.com/rdkcentral/Lightning-SDK/pull/388))
-- Fixed router backtrack issue ([#385](https://github.com/rdkcentral/Lightning-SDK/issues/385)
+- Fixed router backtrack issue ([#385](https://github.com/rdkcentral/Lightning-SDK/issues/385))
 
 ## v5.3.1
 *23 feb 2023*

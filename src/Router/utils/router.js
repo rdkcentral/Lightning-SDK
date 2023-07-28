@@ -299,6 +299,15 @@ export const getComponent = route => {
   }
   return null
 }
+
+// delete existing route instance from memory
+export const deleteCurrentInstance = route => {
+  if (components.has(route) && pagesHost.getIndex(components.get(route)) !== -1) {
+    pagesHost.remove(components.get(route))
+    storeComponent(route, components.get(route)._routedType || components.get(route).constructor)
+  }
+}
+
 /**
  * Test if router needs to update browser location hash
  * @returns {boolean}
