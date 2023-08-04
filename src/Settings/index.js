@@ -70,4 +70,5 @@ export default {
       delete subscribers[key]
     }
   },
+  initSettings,
 }
