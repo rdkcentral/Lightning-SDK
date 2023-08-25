@@ -1,5 +1,11 @@
 # Changelog
 
+## v5.4.1
+
+*24 aug 2023*
+
+- Hot fix for the issue observe on even listeners cleanup
+
 ## v5.4.0
 
 *27 jul 2023*
