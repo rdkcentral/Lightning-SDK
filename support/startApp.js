@@ -185,7 +185,7 @@ var getSettings = function getSettings() {
           if (stage.gl) {
             stage.gl.clearColor(0.0, 0.0, 0.0, 0.0);
             stage.gl.clear(stage.gl.COLOR_BUFFER_BIT);
-          } else {
+          } else if(stage.c2d) {
             stage.c2d.clearRect(0, 0, canvas.width, canvas.height);
           }
         } // cleanup
