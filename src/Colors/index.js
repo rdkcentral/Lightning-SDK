@@ -79,7 +79,7 @@ const normalizeColorToARGB = color => {
   if (!targetColor) {
     targetColor = color
   }
-  const check = /^#([0-9A-F]{3}|[0-9A-F]{6})$/i
+  const check = /^#([0-9A-F]{3}|[0-9A-F]{6}|[0-9A-F]{8})$/i
   if (isString(targetColor) && check.test(targetColor)) {
     let hex = check.exec(targetColor)[1]
     if (hex.length === 3) {
@@ -90,7 +90,7 @@ const normalizeColorToARGB = color => {
         })
         .join('')
     }
-    targetColor = `0xff${hex}` * 1
+    targetColor = (hex.length === 8 ? `0x${hex}` : `0xff${hex}`) * 1
   }
   if (!normalizedColors[color]) {
     normalizedColors[color] = targetColor
