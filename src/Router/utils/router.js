@@ -433,8 +433,8 @@ const cleanUp = (page, request) => {
       x: 0,
       y: 0,
       scale: 1,
-      alpha: 1,
       visible: false,
+      alpha: 1,
     })
   }
 }
