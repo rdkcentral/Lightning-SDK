@@ -22,7 +22,7 @@ export const Ads: any; // export { default as Ads } from './src/Ads'
 export { AppData, FontFaceDefinition } from './src/Application/index.js';
 export { default as Application } from './src/Application/index.js';
 export const AudioPlayer: any; // export { default as AudioPlayer } from './src/AudioPlayer'
-export const Colors: any; // export { default as Colors } from './src/Colors'
+export { default as Colors } from './src/Colors'
 export { default as Img } from './src/Img/index.js';
 export const Keyboard: any; // export { default as Keyboard } from './src/Keyboard'
 export { default as Launch } from './src/Launch/index.js';
