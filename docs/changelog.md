@@ -1,5 +1,14 @@
 # Changelog
 
+## v5.5.0
+
+*26 oct 2023*
+
+- Added colors type definitions ([#394](https://github.com/rdkcentral/Lightning-SDK/issues/394))
+- Added support to allow Colors to take ARGB values([#399](https://github.com/rdkcentral/Lightning-SDK/issues/399))
+- Added condition for c2d upon app close([#403](https://github.com/rdkcentral/Lightning-SDK/issues/403))
+- Fixed Router cross fade issue([#406](https://github.com/rdkcentral/Lightning-SDK/issues/406))
+
 ## v5.4.1
 
 *30 aug 2023*
