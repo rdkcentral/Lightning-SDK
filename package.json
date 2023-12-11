@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.11.5",
-    "@lightningjs/core": "^2.7.0",
+    "@lightningjs/core": "^2.12.0",
     "@metrological/sdk": "^1.0.0",
     "@michieljs/execute-as-promise": "^1.0.0",
     "deepmerge": "^4.2.2",
