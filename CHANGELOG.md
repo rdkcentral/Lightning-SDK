@@ -4,8 +4,8 @@
 
 *7 feb 2024*
 
-- Updated metrological-sdk version to 1.0.2
 - Updated Lightning core version to 2.12.0
+- Updated metrological-sdk version to 1.0.2
 
 
 ## v5.5.0
