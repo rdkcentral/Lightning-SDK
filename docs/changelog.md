@@ -1,5 +1,12 @@
 # Changelog
 
+## v5.5.3
+
+*19 apr 2024*
+
+- Updated Lightning core version to 2.13.1
+- Fixed Router augmentation TSD test
+
 ## v5.5.2
 
 *17 apr 2024*
