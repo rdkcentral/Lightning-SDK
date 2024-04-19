@@ -1,5 +1,11 @@
 # Changelog
 
+## v5.5.2
+
+*17 apr 2024*
+
+- Updated Lightning core version to 2.13.0
+
 ## v5.5.1
 
 *14 feb 2024*
