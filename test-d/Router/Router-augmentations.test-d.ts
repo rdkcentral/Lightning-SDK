@@ -26,8 +26,8 @@ import { Lightning, Router } from "../../index.js";
 declare module '../../index.js' {
   namespace Router {
     interface CustomWidgets {
-      MyClockWidget: Lightning.components.BloomComponent
-      MyMenuWidget: Lightning.components.ListComponent
+      MyClockWidget: typeof Lightning.components.BloomComponent
+      MyMenuWidget: typeof Lightning.components.ListComponent
     }
   }
 }
