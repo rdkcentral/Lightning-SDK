@@ -12,6 +12,10 @@ It contains [Lightning](https://github.com/rdkcentral/Lightning) and several use
 
 Check out the complete [SDK documentation](https://rdkcentral.github.io/Lightning-SDK/) for more information.
 
+## Lightning 3
+
+[Lightning 3](https://github.com/lightning-js/renderer) and [Blits](https://github.com/lightning-js/blits) are now available.
+
 ## Feedback, bugs, questions and support
 
 In case you find any _bugs_ or have _feature requests_, feel free to open an [issue](https://github.com/rdkcentral/Lightning-SDK/issues/new) on the GitHub repository.
