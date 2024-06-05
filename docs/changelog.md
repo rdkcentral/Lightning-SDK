@@ -5,7 +5,6 @@
 *05 June 2024*
 
 - Fixed the issue with `Colors` type definitions
-- Updated the documentation
 
 ## v5.5.3
 
