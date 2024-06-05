@@ -1,6 +1,6 @@
 {
   "name": "@lightningjs/sdk",
-  "version": "5.5.3",
+  "version": "5.5.4",
   "license": "Apache-2.0",
   "types": "index.d.ts",
   "scripts": {
