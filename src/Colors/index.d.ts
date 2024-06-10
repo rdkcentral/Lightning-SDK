@@ -9,8 +9,6 @@ export type ColorTransform = {
   get(): number;
 };
 
-export type Colors = {
-  (colorName: string): ColorTransform;
-} & {
-  [colorName: string]: ColorTransform;
-};
+declare const Color: (colorName: string) => ColorTransform;
+
+export default Color;
