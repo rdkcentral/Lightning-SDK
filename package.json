@@ -1,6 +1,6 @@
 {
   "name": "@lightningjs/sdk",
-  "version": "5.5.4",
+  "version": "5.5.5",
   "license": "Apache-2.0",
   "types": "index.d.ts",
   "scripts": {
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.11.5",
-    "@lightningjs/core": "^2.13.1",
+    "@lightningjs/core": "^2.15.0",
     "@metrological/sdk": "^1.0.2",
     "@michieljs/execute-as-promise": "^1.0.0",
     "deepmerge": "^4.2.2",
