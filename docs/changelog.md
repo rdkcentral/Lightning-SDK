@@ -27,6 +27,13 @@
 
 ## v5.5.1
 
+*8 feb 2024*
+
+- Updated Lightning core version to 2.16.1
+
+
+## v5.5.1
+
 *14 feb 2024*
 
 - Updated Lightning core version to 2.12.1
